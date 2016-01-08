@@ -1,0 +1,95 @@
+<!--STUDENT-CORE-BEGIN-->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <!-- libs-->
+		<script type="text/javascript" src="/libs/jquery.js"></script>
+		<script type="text/javascript" src="/libs/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="/libs/ractive.js"></script>
+		<script type="text/javascript" src="/libs/cookies.js"></script>
+		<!-- common -->
+		<script type="text/javascript" src="/js/Core.js"></script> 
+		<!-- specific -->
+		<script type="text/javascript" src="/js/setup/FormSubmission.js"></script> 
+		<!-- unique -->
+		<script type="text/javascript" src="/js/setup/JoinGameMenu.js"></script> 
+		
+        <!-- libs-->
+        <link rel="stylesheet" type="text/css" href="/libs/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="/libs/bootstrap/css/bootstrap-responsive.css" >
+        <!-- common-->
+		<link rel="stylesheet" href="/css/play/Button.css">
+		<link rel="stylesheet" href="/css/Color.css">
+        <!-- unique-->
+		<link rel="stylesheet" href="/css/setup/JoinGame.css" >
+		
+		<title>Settlers of Catan-Menu</title>
+	</head>
+	<body style = "padding:20px;">
+		<script>
+			$(function(){
+				view = new GameMenu.View();
+				controller = new GameMenu.Controller(view);
+				controller.refreshGames();
+                
+                override_submit(
+                    "#make-game",
+                    addAndStartJoin,
+                    showErrorMessage
+                )
+                
+                function showErrorMessage(data){
+                    alert(data || "Server error")
+                }
+                
+                function addAndStartJoin(gameJSON){
+                    console.log("HERE")
+                    var game = (typeof game === "string") 
+                                    ? JSON.parse(gameJSON) 
+                                    : gameJSON
+                                    
+                    $("#createModal").modal().hide(); // This is necessary because have two modals up breaks some things
+                    controller.addGame(game);
+                    controller.startJoinGameByID(game.id);
+                }
+			});
+		</script>
+		<div class="page-header">
+			<h1>Welcome to the game hub <small>Join an existing game, or create your own</small></h1>
+		</div>
+		<div id=table1></div>
+		<a class="btn btn-large btn-success" href="#createModal" data-toggle="modal">Create new game</a>
+		<div id="createModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 id="myModalLabel">New Game Settings</h3>
+			</div>
+			<div class="modal-body">
+				<form id="make-game" method="post" action="/games/create">
+					<label>Title: </label><input type="text" name="name">
+					<label class="checkbox"><input type="checkbox" value=true name="randomNumbers"> Randomly place Numbers</label>
+					<label class="checkbox"><input type="checkbox" value=true name="randomTiles"> Randomly place Hexes</label>
+					<label class="checkbox"><input type="checkbox" value=true name="randomPorts"> Use Random ports</label>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+				<button class="btn btn-primary" form="make-game" type="submit">Create Game</button>
+			</div>
+		</div>	
+		<div id="joinModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 id="myModalLabel">Join Game - Select Color</h3>
+			</div>
+			<div class="modal-body" id='join-game-body'>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+				<button class="btn btn-primary" form="join-game-form" type="submit" id=join-game-submit>Join Game</button>
+			</div>
+		</div>			
+	</body>
+</html>
+
+

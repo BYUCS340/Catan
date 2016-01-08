@@ -1,0 +1,78 @@
+/* Generic pane rules */
+ * {
+  box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box
+}
+canvas {
+   display: inline;
+   left:0;
+}
+
+body 
+	{ margin: 0}
+div
+	{	cursor:default;	}
+.myrow, .mycol 
+	{position: absolute; }
+.myrow 
+	{ left: 0; right: 0; }
+.mycol 
+	{ top: 0; bottom: 0; }
+.scroll-x 
+	{ overflow-x: auto; }
+.scroll-y 
+	{ overflow-y: auto; }
+.no-overflow 
+	{overflow-x:hidden;}
+.align-left
+	{ text-align:left;	margin-left:50px;	}
+.auto-margins
+	{	margin-left:auto;	margin-right:auto;	}
+
+li[draggable] > .btn
+	{float:right;}
+.sortable li
+	{height:40px;}	
+
+
+.h-filler 
+	{ left:0; 	right:0; 	position:absolute;}
+.v-filler 
+	{ top:0; 	bottom:0; 	position:absolute;}
+.center-content
+	{ text-align:center; }
+
+.tab-pane
+	{	left:0;				right:0;
+		top: 0px;			bottom:0px;
+		position: absolute;				
+		margin-top:auto;		margin-bottom:auto;	}
+.below-tabs
+	{	left:0; 			right:0;
+		top:40px; 			bottom:0px;
+		overflow: hidden; 	position: absolute;	}
+.title
+	{	top: 15px;
+		font-family:"Copperplate, "Copperplate Gothic Light", fantasy;";
+		font-size:35px;
+		font-weight:bold;	}
+
+/*	Overrides for bootstrap/chrome wrangling	*/
+ul.nav {
+	margin-bottom:0px;
+}
+.nav-tabs{
+	-webkit-margin-before: 0;
+	-webkit-margin-after: 0;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+	-webkit-padding-start: 0;
+}
+
+#sound-player{
+	position:absolute;
+	visibility:hidden;
+}
+
+

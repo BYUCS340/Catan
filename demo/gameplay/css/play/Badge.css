@@ -1,0 +1,54 @@
+.badge {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    line-height: 1;
+    height: 19px;
+    padding: 0 5px;
+    font-family: Arial, sans-serif;
+    color: white;
+    text-shadow: 0 1px rgba(black, .25);
+    border: 1px solid;
+    border-radius: 10px;
+    @include box-shadow(inset 0 1px rgba(white, .3), 0 1px 1px rgba(black, .08));
+}
+.badge.green {
+	background: #77cc51;
+	border-color: darken(#77cc51, 12%);
+	@include linear-gradient(top, lighten(#77cc51, 15%), #77cc51);
+}
+    
+.badge.yellow
+{
+	background:red;
+	position:absolute;
+	animation-name:myfirst;
+	animation-duration:1s;
+	animation-timing-function:linear;
+	animation-iteration-count:infinite;
+	animation-direction:alternate;
+	animation-play-state:running;
+	/* Safari and Chrome: */
+	-webkit-animation-name:myfirst;
+	-webkit-animation-duration:1s;
+	-webkit-animation-timing-function:linear;
+	-webkit-animation-iteration-count:infinite;
+	-webkit-animation-direction:alternate;
+	-webkit-animation-play-state:running;
+}
+
+@keyframes myfirst
+{
+0%   {background:red;}
+100% {background:yellow;}
+}
+
+@-webkit-keyframes myfirst /* Safari and Chrome */
+{
+0%   {background:red;}
+100%  {background:yellow;}
+}
+
+.nav-tabs > li{
+	position:relative;
+}

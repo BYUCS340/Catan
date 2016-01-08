@@ -1,0 +1,43 @@
+ol{
+	counter-reset: li; /* Initiate a counter */
+	list-style: none; /* Remove default numbering */
+	*list-style: decimal; /* Keep using default numbering for IE6/7 */
+	font: 15px 'trebuchet MS', 'lucida sans';
+	padding: 0;
+	margin-bottom: em;
+	text-shadow: 0 1px 0 rgba(255,255,255,.5);
+}
+
+
+.rounded-list li{
+	position: relative;
+	display: block;
+	padding: .4em .4em .4em 2em;
+	*padding: .4em;
+	margin: .5em 0;
+	text-decoration: none;
+	border-radius: .3em;
+	transition: all .3s ease-out;	
+}
+
+.rounded-list li:hover:before{
+    transform: rotate(360deg);	
+}
+
+.rounded-list li:before{
+	content: counter(li);
+	counter-increment: li;
+	position: absolute;	
+	left: -1.3em;
+	top: 50%;
+	margin-top: -1.3em;
+	background: #fff;
+	height: 2em;
+	width: 2em;
+	line-height: 2em;
+	border: .3em solid #777;
+	text-align: center;
+	font-weight: bold;
+	border-radius: 2em;
+	transition: all .3s ease-out;
+}

@@ -1,0 +1,72 @@
+.t-pane{
+    top:0;
+    height:100;
+}
+.tt-pane{
+    top:0;
+    height:150;
+}
+.bb-pane{
+    top:150;
+    bottom:0;
+}
+.l-pane{
+    left:0;
+    width:50%;
+}
+.r-pane{
+    right:0;
+    width:50%;
+}
+.footer{
+    height:50;
+    bottom:0;
+}
+
+#demos section {
+    overflow: hidden;
+}
+.sortable {
+    width: 310px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.sortable.grid {
+    overflow: hidden;
+}
+.sortable li {
+    list-style: none;
+    border: 1px solid #CCC;
+    background: #F6F6F6;
+    color: #1C94C4;
+    margin: 5px;
+    padding: 5px;
+    height: 40px;
+}
+.sortable.grid li {
+    line-height: 80px;
+    float: left;
+    width: 80px;
+    height: 80px;
+    text-align: center;
+}
+.handle {
+    cursor: move;
+}
+.sortable.connected {
+    width: 200px;
+    min-height: 100px;
+    float: left;
+}
+li.disabled {
+    opacity: 0.5;
+}
+li.highlight {
+    background: #FEE25F;
+}
+li.sortable-placeholder {
+    border: 1px dashed #CCC;
+    background: none;
+}

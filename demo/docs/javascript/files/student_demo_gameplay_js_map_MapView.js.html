@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>student/demo/gameplay/js/map/MapView.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/comm.BaseCommController.html">comm.BaseCommController</a></li>
+            
+                <li><a href="../classes/comm.BaseCommView.html">comm.BaseCommView</a></li>
+            
+                <li><a href="../classes/comm.ChatController.html">comm.ChatController</a></li>
+            
+                <li><a href="../classes/comm.ChatView.html">comm.ChatView</a></li>
+            
+                <li><a href="../classes/comm.LogController.html">comm.LogController</a></li>
+            
+                <li><a href="../classes/comm.LogView.html">comm.LogView</a></li>
+            
+                <li><a href="../classes/core.Core.html">core.Core</a></li>
+            
+                <li><a href="../classes/devCards.BuyCardView.html">devCards.BuyCardView</a></li>
+            
+                <li><a href="../classes/devCards.DevCardController.html">devCards.DevCardController</a></li>
+            
+                <li><a href="../classes/devCards.DevCardView.html">devCards.DevCardView</a></li>
+            
+                <li><a href="../classes/discard.DiscardController.html">discard.DiscardController</a></li>
+            
+                <li><a href="../classes/discard.DiscardView.html">discard.DiscardView</a></li>
+            
+                <li><a href="../classes/domestic.AcceptView.html">domestic.AcceptView</a></li>
+            
+                <li><a href="../classes/domestic.DomesticController.html">domestic.DomesticController</a></li>
+            
+                <li><a href="../classes/domestic.DomesticView.html">domestic.DomesticView</a></li>
+            
+                <li><a href="../classes/hex_core.BaseLocation.html">hex_core.BaseLocation</a></li>
+            
+                <li><a href="../classes/hex_core.EdgeDirection.html">hex_core.EdgeDirection</a></li>
+            
+                <li><a href="../classes/hex_core.EdgeLocation.html">hex_core.EdgeLocation</a></li>
+            
+                <li><a href="../classes/hex_core.HexDirection.html">hex_core.HexDirection</a></li>
+            
+                <li><a href="../classes/hex_core.HexLocation.html">hex_core.HexLocation</a></li>
+            
+                <li><a href="../classes/hex_core.VertexDirection.html">hex_core.VertexDirection</a></li>
+            
+                <li><a href="../classes/hex_core.VertexLocation.html">hex_core.VertexLocation</a></li>
+            
+                <li><a href="../classes/map.MapController.html">map.MapController</a></li>
+            
+                <li><a href="../classes/map.MapOverlay.html">map.MapOverlay</a></li>
+            
+                <li><a href="../classes/map.MapView.html">map.MapView</a></li>
+            
+                <li><a href="../classes/map.Point.html">map.Point</a></li>
+            
+                <li><a href="../classes/map.RobberOverlay.html">map.RobberOverlay</a></li>
+            
+                <li><a href="../classes/maritime.MaritimeController.html">maritime.MaritimeController</a></li>
+            
+                <li><a href="../classes/maritime.MaritimeView.html">maritime.MaritimeView</a></li>
+            
+                <li><a href="../classes/misc.BaseController.html">misc.BaseController</a></li>
+            
+                <li><a href="../classes/misc.BaseOverlay.html">misc.BaseOverlay</a></li>
+            
+                <li><a href="../classes/misc.GameFinishedView.html">misc.GameFinishedView</a></li>
+            
+                <li><a href="../classes/misc.WaitOverlay.html">misc.WaitOverlay</a></li>
+            
+                <li><a href="../classes/models.CatanEdge.html">models.CatanEdge</a></li>
+            
+                <li><a href="../classes/models.CatanHex.html">models.CatanHex</a></li>
+            
+                <li><a href="../classes/models.CatanVertex.html">models.CatanVertex</a></li>
+            
+                <li><a href="../classes/models.ClientModel.html">models.ClientModel</a></li>
+            
+                <li><a href="../classes/points.PointController.html">points.PointController</a></li>
+            
+                <li><a href="../classes/points.PointView.html">points.PointView</a></li>
+            
+                <li><a href="../classes/resources.ResourceBarController.html">resources.ResourceBarController</a></li>
+            
+                <li><a href="../classes/resources.ResourceBarView.html">resources.ResourceBarView</a></li>
+            
+                <li><a href="../classes/roll.RollController.html">roll.RollController</a></li>
+            
+                <li><a href="../classes/roll.RollResultView.html">roll.RollResultView</a></li>
+            
+                <li><a href="../classes/roll.RollView.html">roll.RollView</a></li>
+            
+                <li><a href="../classes/setup.SetupRoundController.html">setup.SetupRoundController</a></li>
+            
+                <li><a href="../classes/turntracker.TurnTrackerController.html">turntracker.TurnTrackerController</a></li>
+            
+                <li><a href="../classes/turntracker.TurnTrackerView.html">turntracker.TurnTrackerView</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/catan.comm.html">catan.comm</a></li>
+            
+                <li><a href="../modules/catan.devCards.html">catan.devCards</a></li>
+            
+                <li><a href="../modules/catan.discard.html">catan.discard</a></li>
+            
+                <li><a href="../modules/catan.hex_core.html">catan.hex_core</a></li>
+            
+                <li><a href="../modules/catan.map.html">catan.map</a></li>
+            
+                <li><a href="../modules/catan.misc.html">catan.misc</a></li>
+            
+                <li><a href="../modules/catan.models.html">catan.models</a></li>
+            
+                <li><a href="../modules/catan.points.html">catan.points</a></li>
+            
+                <li><a href="../modules/catan.resources.html">catan.resources</a></li>
+            
+                <li><a href="../modules/catan.roll.html">catan.roll</a></li>
+            
+                <li><a href="../modules/catan.setup.html">catan.setup</a></li>
+            
+                <li><a href="../modules/catan.trade.html">catan.trade</a></li>
+            
+                <li><a href="../modules/catan.trade.domestic.html">catan.trade.domestic</a></li>
+            
+                <li><a href="../modules/catan.trade.maritime.html">catan.trade.maritime</a></li>
+            
+                <li><a href="../modules/catan.turntracker.html">catan.turntracker</a></li>
+            
+                <li><a href="../modules/core.html">core</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: student/demo/gameplay/js/map/MapView.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+// STUDENT-CORE-BEGIN
+// DO NOT EDIT THIS FILE
+/**
+	This this contains interfaces used by the map and robber views
+	@module catan.map
+	@namespace map
+*/
+
+var catan = catan || {};
+catan.map = catan.map || {};
+
+catan.map.View = (function makeMapView(){
+    
+    var hex_core = catan.hex_core;
+    
+    var HexLocation = catan.hex_core.HexLocation;
+	var VertexLocation = catan.hex_core.VertexLocation;
+	var EdgeLocation= catan.hex_core.EdgeLocation;
+	var VertexDirection = catan.hex_core.VertexDirection;
+	var EdgeDirection= catan.hex_core.EdgeDirection; 
+    
+	var Definitions = catan.definitions;
+	var ColorDefs = catan.definitions.ColorDefs;
+	
+	//Private - common for vertex and hexagon factories
+	function Colors(playerColor){
+		this.color = ColorDefs[playerColor];
+		this.outline = ColorDefs[playerColor+&quot;Outline&quot;];
+	}
+    
+	// These stores the paths to the images
+	var config = {
+		imagesFolder:&quot;../images/misc/&quot;,
+		hexImagesFolder:&quot;../images/land/&quot;,
+		numberImagesFolder:&quot;../images/numbers/small_prob/&quot;,
+		portImagesPrefix:&quot;../images/ports/port_&quot;,
+	}
+	
+	// The full paths to the hex images
+	var hexImages = {
+		water:config.hexImagesFolder+&quot;water.png&quot;,
+		desert:config.hexImagesFolder+&quot;desert.gif&quot;,
+		wood:config.hexImagesFolder+&quot;forest.gif&quot;,
+		brick:config.hexImagesFolder+&quot;brick.gif&quot;,
+		sheep:config.hexImagesFolder+&quot;pasture.gif&quot;,
+		wheat:config.hexImagesFolder+&quot;wheat.gif&quot;,
+		ore:config.hexImagesFolder+&quot;ore.gif&quot;,
+        ocean:config.hexImagesFolder+&quot;ocean.jpg&quot;
+	}
+	
+	// The full paths to the number images
+	var numberImages = {
+		&quot;2&quot;:config.numberImagesFolder+&quot;2.png&quot;,
+		&quot;3&quot;:config.numberImagesFolder+&quot;3.png&quot;,
+		&quot;4&quot;:config.numberImagesFolder+&quot;4.png&quot;,
+		&quot;5&quot;:config.numberImagesFolder+&quot;5.png&quot;,
+		&quot;6&quot;:config.numberImagesFolder+&quot;6.png&quot;,
+		&quot;8&quot;:config.numberImagesFolder+&quot;8.png&quot;,
+		&quot;9&quot;:config.numberImagesFolder+&quot;9.png&quot;,
+		&quot;10&quot;:config.numberImagesFolder+&quot;10.png&quot;,
+		&quot;11&quot;:config.numberImagesFolder+&quot;11.png&quot;,
+		&quot;12&quot;:config.numberImagesFolder+&quot;12.png&quot;,
+	}
+	
+	// The full paths to the port images
+	var portImages = {
+		wood:config.portImagesPrefix+&quot;wood.png&quot;,
+		brick:config.portImagesPrefix+&quot;brick.png&quot;,
+		sheep:config.portImagesPrefix+&quot;sheep.png&quot;,
+		wheat:config.portImagesPrefix+&quot;wheat.png&quot;,
+		ore:config.portImagesPrefix+&quot;ore.png&quot;,
+		three:config.portImagesPrefix+&quot;three.png&quot;,
+	}
+	
+	// Full paths to the robber and illegal placement images
+	var miscImages = {
+		robber:config.imagesFolder+&quot;robber.gif&quot;,
+		nogo:config.imagesFolder+&quot;noIcon.png&quot;
+	}
+
+	// A &#x27;unit&#x27; outline of a settlement
+	var settlementShape = (function makeSettlementShapeDef(){
+		var w = 1;
+		var h = 0.9;
+		return new ShapeDef(
+			[0,h/3,w/2,0,w,h/3,w,h,0,h],
+			{x:w/2,y:2*h/3}
+			);
+	}())
+	
+	// A &#x27;unit&#x27; outline of a city 
+	var cityShape = (function makeSettlementShapeDef(){
+		var w = 1;
+		var h = 1;
+		return new ShapeDef(
+			[0,h/2,w/2,h/2,w/2,h/4,3*w/4,0,w,h/4,w,h,0,h],
+			{x:w/2,y:2*h/3}
+			);
+	}())
+	// A &#x27;unit&#x27; outline for a hex
+	var hexShape = (function makeSettlementShapeDef(){
+		var w = 1;
+		var h = Math.sqrt(3)/2;
+		return new ShapeDef(
+			[w/2,0,3/2*w,0,2*w,h,3/2*w,2*h,w/2,2*h,0,h],
+			{x:w,y:h}
+			);
+	}())
+	
+	// This contains a list of points and a center to define a shape
+	function ShapeDef(points,center){
+		this.points = points;
+		this.center = center;
+	}
+	// Returns an object for extension to pass into kineticjs for shape creation (polygon)
+	ShapeDef.prototype.scale = function(scale){
+		return {
+			points:this.points.map(function(point){
+				return scale * point;
+			}),
+			offsetX: scale * this.center.x,
+			offsetY: scale * this.center.y,
+		}
+	}
+    
+    
+    var ImageLookup = {}
+	
+	//http://www.html5canvastutorials.com/kineticjs/html5-canvas-kineticjs-image-tutorial/
+	// calls the callback when all images (two deep) are loaded	
+	function loadAllImages(allSources) {
+		var allImages = {};
+		var loadedImages = 0;
+		var numImages = 0;
+		
+		// get num of sources
+		for (var sources in allSources){
+			for(var src in allSources[sources]) {
+				numImages++;
+			}
+		}
+		s = &quot;&quot;
+		for (var sources in allSources){
+			var images = {}
+			allImages[sources] = images;
+			for(var src in allSources[sources]) {
+                images[src] = $(&#x27;[src=&quot;&#x27;+allSources[sources][src]+&#x27;&quot;]&#x27;).get(0);
+            }
+		}
+        return allImages;
+	}
+	
+	// mouse normalization
+	function getMousePos(canvas, evt) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+          x: evt.clientX - rect.left,
+          y: evt.clientY - rect.top
+        };
+    }
+      
+      
+    /**
+	An (x,y) point
+	@Constructor
+	@Param {integer} x The x location
+	@Param {Integer} y The y location
+	@Class Point
+	*/
+	function Point(x,y){
+		this.setX(x);
+		this.setY(y);
+	}
+    /**
+     * @property x
+     * @type integer
+     */
+	core.defineProperty(Point.prototype,&quot;x&quot;);
+    /**
+     * @property y
+     * @type integer
+     */
+	core.defineProperty(Point.prototype,&quot;y&quot;);
+	Point.prototype.equals = function(point){
+		return this.x == point.x &amp;&amp; point.y == point.y;
+	}
+	
+    // used to add to shapes - thus it&#x27;s called a mixin
+	var MapLoc_Mixin = {};
+	core.defineProperty(MapLoc_Mixin,&quot;mapLoc&quot;);
+	core.defineProperty(MapLoc_Mixin,&quot;pieceType&quot;);
+	
+	
+	//Private - common for vertex and hexagon factories
+	function makeShape(scaledShapeDef,loc,color, outlineColor){
+		var center = this.getCenter(loc);
+		var image = image;
+		if(outlineColor == undefined){
+			//console.log(outlineColor)
+			outlineColor = &quot;#c6c6c6&quot;;
+		}
+		var commonInfo = {
+          closed:true,
+		  x: center.x,
+		  y: center.y,
+		  fill:color,
+		  strokeWidth:3,
+		  stroke:outlineColor,
+		}
+		var shape = new Kinetic.Line($.extend(commonInfo,scaledShapeDef));
+		return $.extend(shape,MapLoc_Mixin, {mapLoc:loc});
+	}
+	
+	// This is the basis for the magic of this class	
+	var LocFactory = (function Make_LocFactory_Class(){
+		core.defineProperty(LocFactory.prototype,&quot;narrowHexWidth&quot;);
+		core.defineProperty(LocFactory.prototype,&quot;hexHeight&quot;);
+		core.defineProperty(LocFactory.prototype,&quot;radius&quot;);
+		core.defineProperty(LocFactory.prototype,&quot;offsets&quot;);
+		
+		function LocFactory(narrowWidth,height,radius,offsets){
+			this.setNarrowHexWidth(narrowWidth);
+			this.setHexHeight(height);			
+			this.setRadius(radius);
+			this.setOffsets(offsets);
+		}
+		
+		LocFactory.prototype.getHexCenter = function getHexCenter(loc){
+			var x = loc.x;
+			var y = loc.y;
+			var center =  {
+				x: this.getNarrowHexWidth() * x ,
+				y: this.getHexHeight() * (x*0.5 + y),
+			}
+			return center;
+		}
+		
+		LocFactory.prototype.getVertexCenter = function getVertexCenter(vertexLoc){
+			var hexCenter = this.getHexCenter(vertexLoc);
+			var diff = this.getRadius()
+			var diff = diff * ((vertexLoc.getDirection() === VertexDirection[&quot;W&quot;]) ? -1 : 1);
+			hexCenter.x = hexCenter.x + diff;
+			return hexCenter;
+		}
+		
+		LocFactory.prototype.getEdgeCenter = function getEdgeCenter(edgeLoc){
+			var hexCenter = this.getHexCenter(edgeLoc);
+			var diff;
+			switch (edgeLoc.getDirection()){
+				case EdgeDirection[&quot;NW&quot;]:
+					hexCenter.x = hexCenter.x - this.getRadius()*0.75;
+					hexCenter.y = hexCenter.y - this.getHexHeight()/4;
+					break;
+				case EdgeDirection[&quot;S&quot;]:
+					hexCenter.y = hexCenter.y + this.getHexHeight()/2;
+					break;
+				case EdgeDirection[&quot;NE&quot;]:
+					hexCenter.x = hexCenter.x + this.getRadius()*0.75
+					hexCenter.y = hexCenter.y - this.getHexHeight()/4;
+					break;
+			}
+			return hexCenter;
+		}
+		
+		LocFactory.prototype.getHexLocation = function(mouseX,mouseY){
+			var floor = Math.floor;
+			var sqrt = Math.sqrt;
+			
+			var size = this.getRadius() * sqrt(3);
+			var center = this.getOffsets();
+			
+			var x = mouseX - center.x;
+			var y = mouseY - center.y;
+			var x = x / size;
+			var y = y / size;
+			
+			var temp = floor(y + sqrt(3) * x + 1)
+			var q = floor((floor(2*y+1) + temp) / 3);
+			var r = floor((temp + floor(-y + sqrt(3) * x + 1))/3);
+			
+			x = r;
+			var zneg = q;
+			z = 0-zneg;
+			y = 0-x-z;
+			return {x:x,y:y};
+		}
+		
+		function distanceBetween(point1,point2){
+			return (Math.sqrt(Math.pow(point1.x-point2.x,2)+
+								Math.pow(point1.y-point2.y,2)));
+		}
+		
+		function pickClosest(target,points){
+			var smallest = 0;
+			var distance = distanceBetween(target,points[0])
+			for (var index = 1; index &lt; points.length; index++){
+				var newDistance = distanceBetween(target,points[index]);
+				if ( newDistance &lt; distance){
+					distance = newDistance;
+					smallest = index;
+				}
+			}
+			return smallest;
+		}
+		
+		LocFactory.prototype.getVertexLocation = function(mouseX,mouseY){
+			var mousePoint = {x:mouseX,y:mouseY};
+			var hexLoc = this.getHexLocation(mouseX,mouseY);
+			var hexCenter = this.getHexCenter(hexLoc);
+			var center = this.getOffsets();
+			 hexCenter.x = hexCenter.x + center.x;
+			 hexCenter.y = hexCenter.y + center.y;
+			var radius = this.getRadius();
+			var hOffset = this.getHexHeight() / 2;
+			var wOffset = radius/2;
+			var points = 
+				[{x:hexCenter.x - radius,	y:hexCenter.y},
+				 {x:hexCenter.x - wOffset,	y:hexCenter.y-hOffset},
+				 {x:hexCenter.x + wOffset,	y:hexCenter.y-hOffset},
+				 {x:hexCenter.x + radius,	y:hexCenter.y},
+				 {x:hexCenter.x + wOffset,	y:hexCenter.y+hOffset},
+				 {x:hexCenter.x - wOffset,	y:hexCenter.y+hOffset}				 
+				 ]
+			var index = pickClosest(mousePoint,points);
+			switch (index){
+				case 0:
+					return new VertexLocation(hexLoc.x,hexLoc.y,VertexDirection[&quot;W&quot;]);
+				case 1:
+					return new VertexLocation(hexLoc.x-1,hexLoc.y,VertexDirection[&quot;E&quot;]);
+				case 2:
+					return new VertexLocation(hexLoc.x+1,hexLoc.y-1,VertexDirection[&quot;W&quot;]);
+				case 3:
+					return new VertexLocation(hexLoc.x,hexLoc.y,VertexDirection[&quot;E&quot;]);
+				case 4:
+					return new VertexLocation(hexLoc.x+1,hexLoc.y,VertexDirection[&quot;W&quot;]);
+				case 5:
+					return new VertexLocation(hexLoc.x-1,hexLoc.y+1,VertexDirection[&quot;E&quot;]);
+				default:
+					throw Error(&quot;Illegal vertex chosen - that should&#x27;ve been impossible&quot;);
+			}
+		}
+			
+		LocFactory.prototype.getEdgeLocation = function(mouseX,mouseY){
+			var mousePoint = {x:mouseX,y:mouseY};
+			var hexLoc = this.getHexLocation(mouseX,mouseY);
+			var hexCenter = this.getHexCenter(hexLoc);
+			var center = this.getOffsets();
+			 hexCenter.x = hexCenter.x + center.x;
+			 hexCenter.y = hexCenter.y + center.y;
+			var radius = this.getRadius();
+			var height = this.getHexHeight();
+			var hOffset = this.getHexHeight() / 4;
+			var wOffset = 0.75*radius;
+			var points = [
+				 {x:hexCenter.x - wOffset,	y:hexCenter.y-hOffset},
+				 {x:hexCenter.x,			y:hexCenter.y-height/2},
+				 {x:hexCenter.x + wOffset,	y:hexCenter.y-hOffset},
+				 {x:hexCenter.x + wOffset,	y:hexCenter.y+hOffset},
+				 {x:hexCenter.x,			y:hexCenter.y+height/2},
+				 {x:hexCenter.x - wOffset,	y:hexCenter.y+hOffset}]
+			var index = pickClosest(mousePoint,points);
+			return new EdgeLocation(hexLoc.x,hexLoc.y,index).getCanonical();
+		}
+		
+		return LocFactory;
+	}());
+	
+	var LocationDefinition = (function Make_LocationDefinition_Class(){
+		core.defineProperty(LocationDefinition.prototype,&quot;locFactory&quot;);
+		core.defineProperty(LocationDefinition.prototype,&quot;noGoRadius&quot;);
+		function LocationDefinition (locFactory){
+			this.setLocFactory(locFactory);			
+		}
+
+		// gives you the center of the bounding spot;
+		LocationDefinition.prototype.getCenter = core.abstractFunction;
+		// gives type location of the mouse
+		LocationDefinition.prototype.getTypeLocation = core.abstractFunction;
+		// gets the nogo symbol radius for this typedef:
+		LocationDefinition.prototype.makeNoGo = function(loc,image){
+			var radius = this.getNoGoRadius();
+			var image = image;
+			var nogo = new Kinetic.Image({
+			  x: 0,
+			  y: 0,
+			  offsetX: radius,
+			  offsetY: radius,
+			  image: image,
+			  width: radius*2,
+			  height: radius*2,
+			});
+			return $.extend(nogo,MapLoc_Mixin);
+		}
+		
+		
+		return LocationDefinition;
+	}());
+	
+	var HexDefinition = (function Make_HexDefinition_Class(){
+		
+		core.forceClassInherit(HexDefinition,LocationDefinition);
+		
+		core.defineProperty(HexDefinition.prototype,&quot;locFactory&quot;);
+		core.defineProperty(HexDefinition.prototype,&quot;hexImages&quot;);
+		core.defineProperty(HexDefinition.prototype,&quot;numberImages&quot;);
+		core.defineProperty(HexDefinition.prototype,&quot;portImages&quot;);
+		
+		function HexDefinition(locFactory,hexImages,numberImages,portImages){
+			this.setLocFactory(locFactory);
+			this.setHexImages(hexImages);
+			this.setNumberImages(numberImages);
+			this.setPortImages(portImages);
+			this.setNoGoRadius(this.getNumberRadius());
+		}
+		
+		HexDefinition.prototype.getTypeLocation = function(x,y){
+			return this.getLocFactory().getHexLocation(x,y);
+		}
+
+		HexDefinition.prototype.getCenter = function(loc){
+			return this.getLocFactory().getHexCenter(loc);
+		}
+		
+		// Public factory utility methods;
+		HexDefinition.prototype.getHexRadius = function(){
+			return this.getLocFactory().getRadius();
+		}
+		
+		HexDefinition.prototype.getNumberRadius = function(){
+			return this.getLocFactory().getRadius()/2.5;
+		}
+		
+		function makeHexLike(loc,type,imageLookup,rotation){
+			var image = imageLookup[type];
+			var shape = makeShape.call(this,hexShape.scale(this.getHexRadius()),loc,&quot;black&quot;);
+			var scale = (this.getLocFactory().getHexHeight()) / image.height;
+			shape.setFillPatternImage(image);
+			shape.setFillPriority(&quot;pattern&quot;);
+			
+			if (rotation == undefined){
+				rotation = 0;
+			} else {
+                rotation = (rotation + 2) % 6
+            }
+			
+			shape.setRotation(rotation*60);
+			//shape.setStrokeWidth(0);
+			shape.setFillPatternScale({x:scale,y:scale});
+			//shape.setFillPatternRepeat(&#x27;no-repeat&#x27;);
+			shape.setFillPatternOffsetX(0-this.getHexRadius()+image.width/2*scale);
+			shape.setFillPatternOffsetY(0 - shape.getOffsetY() + image.height/2*scale);
+			return shape;
+		}
+
+		// Factory functions;
+		HexDefinition.prototype.makeHex = function(loc,type){
+		    return makeHexLike.call(this,loc,type,this.getHexImages());
+		}
+		
+		// Factory functions;
+		HexDefinition.prototype.makePort = function(loc,type){
+		    return makeHexLike.call(this,loc,type,this.getPortImages(),loc.getDirection());
+		}
+		
+		//Factory functions;
+		HexDefinition.prototype.makeRobber = function(loc,image){
+			var center = this.getCenter(loc);
+			var height = this.getHexRadius()*1.3;
+			var width = this.getHexRadius()*1.3/2;
+			var image = image;
+			var robber = new Kinetic.Image({
+			  x: center.x,
+			  y: center.y,
+			  offsetX: width/2,
+			  offsetY: height/2,
+			  image: image,
+			  width: width,
+			  height: height,
+			});
+			return $.extend(robber,MapLoc_Mixin);
+		}
+		
+		//Factory functions;
+		HexDefinition.prototype.makeNumber = function(loc,number){
+			var center = this.getCenter(loc);
+			var radius = this.getNumberRadius();
+			var image = this.getNumberImages()[number];
+			var scale = 122/(radius*2)
+			var number = new Kinetic.Image({
+			  x: center.x,
+			  y: center.y,
+			  offsetX: radius,
+			  offsetY: radius,
+			  image: image,
+			  width: radius*2,
+			  height: radius*2,
+			});
+			return $.extend(number,MapLoc_Mixin);
+		}
+		
+		return HexDefinition;
+	}());
+	
+	var VertexDefinition = (function Make_VertexDefinition_Class(){
+		
+		core.forceClassInherit(VertexDefinition,LocationDefinition);
+		
+		core.defineProperty(VertexDefinition.prototype,&quot;locFactory&quot;);
+		
+		function VertexDefinition(locFactory){
+			this.setLocFactory(locFactory);
+			this.setNoGoRadius(locFactory.getRadius()*0.5);
+		}
+		
+		VertexDefinition.prototype.getTypeLocation = function(x,y){
+			return this.getLocFactory().getVertexLocation(x,y);
+		}
+
+		VertexDefinition.prototype.getCenter = function(vertLoc){
+			return this.getLocFactory().getVertexCenter(vertLoc);
+		}
+		
+		VertexDefinition.prototype.getBigRadius = function(){
+			return this.getLocFactory().getRadius()*0.6;
+		}
+		
+		VertexDefinition.prototype.getSmallRadius = function(){
+			return this.getLocFactory().getRadius()*0.4;
+		}
+		var VertexLoc_Mixin = {
+			setMapLoc:function(loc){
+				var _this = this;
+				this.mapLoc = undefined;
+				var shapes = this.getParent().getChildren();
+				shapes.map(function removeDups(shape){
+					if (shape){
+						var newloc = shape.mapLoc;
+						if (newloc){
+							if (newloc.getX() == loc.getX()  &amp;&amp; 
+                                newloc.getY()  == loc.getY()  &amp;&amp; 
+                                newloc.getDirection() == loc.getDirection()){
+								shape.remove();
+							}
+						}
+					}
+				});
+			}
+		}
+		//Factory functions;
+		function makeVertexShape(scaledShapeDef,loc,color,outline){
+			return $.extend(
+				makeShape.call(this,scaledShapeDef,loc,color,outline), 
+				VertexLoc_Mixin,
+				{pieceType:scaledShapeDef.constructor.name.toLowerCase()}
+			);
+		}
+		
+		VertexDefinition.prototype.makeSettlement = function(loc,color,outline){
+			return makeVertexShape.call(this,settlementShape.scale(this.getSmallRadius()),loc,color,outline);
+		}
+		
+		VertexDefinition.prototype.makeCity = function(loc,color,outline){
+			return makeVertexShape.call(this,cityShape.scale(this.getBigRadius()),loc,color,outline);
+		}
+		
+		return VertexDefinition;
+	}());
+	
+	var EdgeDefinition = (function Make_EdgeDefinition_Class(){
+		
+		core.forceClassInherit(EdgeDefinition,LocationDefinition);
+		
+		core.defineProperty(EdgeDefinition.prototype,&quot;locFactory&quot;);
+		
+		function EdgeDefinition(locFactory){
+			this.setLocFactory(locFactory);
+			this.setNoGoRadius(locFactory.getRadius()/2);
+		}
+		
+		EdgeDefinition.prototype.getTypeLocation = function(x,y){
+			return this.getLocFactory().getEdgeLocation(x,y);
+		}
+
+		EdgeDefinition.prototype.getCenter = function(edgeLoc){
+			return this.getLocFactory().getEdgeCenter(edgeLoc);
+		}
+		
+		var Road_Mixin = {
+			setMapLoc:function(loc){
+                this.mapLoc = loc;
+                switch (loc.getDirection()){
+                    case EdgeDirection[&quot;NW&quot;]:
+                        this.setRotation(2*60);
+                        break;
+                    case EdgeDirection[&quot;S&quot;]:
+                        this.setRotation(0);
+                        break;
+                    case EdgeDirection[&quot;NE&quot;]:
+                        this.setRotation(1*60);
+                        break;
+                }
+			}
+		}
+		
+		//Factory functions;
+		EdgeDefinition.prototype.makeRoad = function(loc,color,outline){
+			var center = this.getCenter(loc);
+			var image = image;
+			var w = this.getLocFactory().getRadius()*0.9;
+			var h = this.getLocFactory().getRadius()*0.18;
+			if(outline == undefined)
+				outline = &quot;#dfdfdf&quot;;
+			var shape = new Kinetic.Rect({
+				width: w,
+				height: h,
+				x: center.x,
+				y: center.y,
+				offsetX:w/2,
+				offsetY:h/2,
+				fill:color,
+				strokeWidth:3,
+				stroke:outline,
+			})
+			var shape =  $.extend(shape,MapLoc_Mixin,Road_Mixin);
+			shape.setMapLoc(loc);
+			return shape;
+		}
+		
+		return EdgeDefinition;
+	}());
+	
+	var DragController = (function Make_DragLayer_Class(){
+		function DragController(typeDefinition,newLayer,dragLayer,type){
+			this.setTypeDefinition(typeDefinition);
+			this.setTargetLayer(newLayer);
+			this.setDragLayer(dragLayer);
+			this.setType(type);
+//			console.log(type);
+		}
+		
+		DragController.prototype.startPlacement = function(goodShape,badShape,dragFunction,dropFunction){
+			
+			this.setOnDrag(dragFunction);
+			this.setOnDrop(dropFunction);
+			this.setGoodShape(goodShape);
+			this.setBadShape(badShape);
+			
+			goodShape.remove();
+			badShape.remove();
+			var dragLayer = this.getDragLayer();
+			var width = dragLayer.getParent().getWidth();
+			var height = dragLayer.getParent().getHeight();
+			
+			
+			dragLayer.add(new Kinetic.Rect({
+				x:0-width/2,
+				y:0-height/2,
+				width:width,
+				height:height,
+				fill:&quot;black&quot;,
+				opacity:0.0
+			}));
+			dragLayer.add(goodShape);
+			dragLayer.add(badShape);
+			
+			badShape.setOpacity(0);
+			goodShape.setOpacity(0);
+			
+			if (!(dragLayer.getParent())){
+				this.getTargetLayer().getParent().add(dragLayer);
+			} else {
+				dragLayer.draw();
+			}
+			dragLayer.on(&#x27;mousemove&#x27;, this.makeDragHandler(dragFunction));
+			dragLayer.on(&#x27;mousedown&#x27;,this.makeDropHandler(dragFunction,dropFunction));
+		}
+		
+		DragController.prototype.makeDragHandler = function makeDragHandler(callback){
+			var _this = this;
+			return function(mousePos){
+				mousePos = _this.getDragLayer().getParent().getPointerPosition();
+				var loc = _this.getTypeDefinition().getTypeLocation(mousePos.x,mousePos.y);
+				
+				var center = _this.getTypeDefinition().getCenter(loc);
+				var shapeToShow;
+				var shapeToHide;
+				var toReturn;
+				if (callback(loc,_this.getType())){
+					shapeToShow = _this.getGoodShape();
+					shapeToHide = _this.getBadShape();
+					toReturn = true;
+				} else {
+					shapeToShow = _this.getBadShape();
+					shapeToHide = _this.getGoodShape();
+					toReturn = false;
+				}
+				shapeToHide.opacity(0);
+				shapeToShow.setMapLoc(loc);
+				shapeToShow.position({x:center.x,y:center.y});
+				shapeToShow.opacity(0.60);
+				_this.getDragLayer().draw();
+				return toReturn;
+			}		
+		}
+		
+		DragController.prototype.makeDropHandler = function makeDropHandler(placeableCallback,placementCallback){
+			var _this = this;
+			return function(mousePos){
+				mousePos = _this.getDragLayer().getParent().getPointerPosition();
+				if (_this.makeDragHandler(placeableCallback)(mousePos,_this.getType())){
+					var loc = _this.getTypeDefinition().getTypeLocation(mousePos.x,mousePos.y);
+					placementCallback(loc,_this.getType());
+					_this.finishPlacement(true,loc);
+				}
+			}		
+		}
+		
+		DragController.prototype.finishPlacement = function(success,loc){
+			
+			this.getGoodShape().remove();
+			this.getBadShape().remove();
+			
+			if (success){
+				this.getGoodShape().setOpacity(1);
+				this.getTargetLayer().add(this.getGoodShape());
+				this.getGoodShape().setMapLoc(loc);
+				this.getTargetLayer().getParent().draw();			
+			}
+
+			this.getDragLayer().off(&#x27;mousemove mousedown&#x27;);
+
+		}
+		
+		core.defineProperty(DragController.prototype,&quot;dragLayer&quot;);
+		core.defineProperty(DragController.prototype,&quot;typeDefinition&quot;);
+		core.defineProperty(DragController.prototype,&quot;goodShape&quot;);
+		core.defineProperty(DragController.prototype,&quot;badShape&quot;);
+		core.defineProperty(DragController.prototype,&quot;targetLayer&quot;);
+		core.defineProperty(DragController.prototype,&quot;onDrag&quot;);
+		core.defineProperty(DragController.prototype,&quot;onDrop&quot;);
+		core.defineProperty(DragController.prototype,&quot;type&quot;);
+		
+		return DragController;
+	}());
+	
+	var MapView = (function Make_MapView_Class(){	
+
+
+		/**
+         * You need to pass in how many pixels tall/wide the map is 
+         * and how many hexes tall/wide the map is 
+         * (the hex dim can be calculated from the client model)
+         * 
+		 * @param {int} pixelDim the height of the map measured in pixels
+		 * @param {int} hexDim the height of the map measured in hexes
+         * @class MapView
+         * @constructor
+		 */
+		function MapView(pixelDim,hexDim){
+			var containerID = Definitions.PageViewIDs.mapArea;
+			
+			makeStage.call(this,containerID,pixelDim,pixelDim);
+			defineImages.call(this);
+			calculateSizes.call(this,pixelDim,pixelDim,hexDim,hexDim);
+            loadImages.call(this);
+		}
+        
+		core.defineProperty(MapView.prototype,&quot;stage&quot;);
+		core.defineProperty(MapView.prototype,&quot;hexLayer&quot;);		
+		core.defineProperty(MapView.prototype,&quot;portLayer&quot;);
+		core.defineProperty(MapView.prototype,&quot;numberLayer&quot;);
+		core.defineProperty(MapView.prototype,&quot;robberLayer&quot;);
+		core.defineProperty(MapView.prototype,&quot;edgeLayer&quot;);
+		core.defineProperty(MapView.prototype,&quot;vertexLayer&quot;);
+		core.defineProperty(MapView.prototype,&quot;dragLayer&quot;);
+		
+		core.defineProperty(MapView.prototype,&quot;robber&quot;);
+		
+		core.defineProperty(MapView.prototype,&quot;dragController&quot;);
+		
+		core.defineProperty(MapView.prototype,&quot;offsets&quot;);
+		core.defineProperty(MapView.prototype,&quot;locFactory&quot;);
+		
+		core.defineProperty(MapView.prototype,&quot;hexDefinition&quot;);
+		core.defineProperty(MapView.prototype,&quot;edgeDefinition&quot;);
+		core.defineProperty(MapView.prototype,&quot;vertexDefinition&quot;);
+		
+		core.defineProperty(MapView.prototype,&quot;images&quot;);
+		/**
+		@Property controller
+		@Type MapController
+		*/
+		core.defineProperty(MapView.prototype,&quot;controller&quot;);
+
+		
+		function setupRest(){
+			readyHexLayers.call(this);
+			readyEdgeLayers.call(this);
+			readyVertexLayers.call(this);
+			this.setDragLayer(makeLayer.call(this));
+            console.log(this.images);
+            var ocean = new Kinetic.Image({
+              x: -this.getStage().getWidth()/2,
+              y: -this.getStage().getHeight()/2,
+              width: this.getStage().getWidth(),
+              height: this.getStage().getHeight(),
+              fillPatternScaleX:2,
+              fillPatternScaleY:2,
+              image: this.images.hexes.ocean,
+              fillPatternRepeat:&quot;repeat&quot;
+            });
+
+            // add the shape to the layer
+            this.hexLayer.add(ocean);
+		}
+		
+		function loadImages(){
+			var _this = this;
+            function imagesDoneLoading(images){
+				_this.setImages(images);
+				setupRest.call(_this);
+            };
+            
+            imagesDoneLoading(loadAllImages(this.getImages()));
+		}
+		
+		function makeStage(containerID,pixelWidth,pixelHeight){
+			var stage = new Kinetic.Stage({
+				container: containerID,
+				width: pixelWidth,
+				height: pixelHeight
+			});
+			this.setStage(stage);
+		};
+		
+		function calculateSizes(pixelWidth,pixelHeight,hexHeight,hexWidth){
+			core.assert(hexHeight % 2 == 1);
+			core.assert(hexWidth % 2 == 1);
+			
+			var height = (pixelHeight/hexHeight);
+			var rad = height / (2 * 0.8660254037844386);
+			var width = rad * 1.5;
+			var offsets = {x:pixelWidth/2,y:pixelHeight/2};
+			this.setLocFactory(new LocFactory(width,height,rad,offsets));
+			this.setOffsets(offsets);
+		}
+		
+		MapView.prototype.clearPlaceables = function(){
+			this.getVertexLayer().clear();
+			this.getVertexLayer().removeChildren();
+			this.getEdgeLayer().clear();
+			this.getEdgeLayer().removeChildren();
+			this.getRobberLayer().clear();
+			this.getRobberLayer().removeChildren();
+		}
+		
+		function readyHexLayers(){
+			var hexLayer = makeLayer.call(this);
+			this.setHexLayer(hexLayer);
+			var numberLayer = makeLayer.call(this);
+			this.setNumberLayer(numberLayer);
+			var portLayer = makeLayer.call(this);
+			this.setPortLayer(portLayer);
+			var robberLayer = makeLayer.call(this);
+			this.setRobberLayer(robberLayer);
+			
+			var images = this.getImages();
+			
+			var hexDef = new HexDefinition(this.getLocFactory(),images.hexes,images.numbers,images.ports);
+			this.setRobber(hexDef.makeRobber(new Point(0,0),this.getImages().misc.robber));	
+			
+			this.setHexDefinition(hexDef);
+		}
+		
+		function readyEdgeLayers(){
+			var edgeLayer = makeLayer.call(this);
+			this.setEdgeLayer(edgeLayer);
+			var edgeDef = new EdgeDefinition(this.getLocFactory());
+			this.setEdgeDefinition(edgeDef);
+		}		
+		
+		function readyVertexLayers(){
+			var vertexLayer = makeLayer.call(this);
+			this.setVertexLayer(vertexLayer);
+			var vertDef = new VertexDefinition(this.getLocFactory());
+			this.setVertexDefinition(vertDef);
+		}
+
+		function makeLayer(){
+			var layer = new Kinetic.Layer({
+				offsetX:-this.getOffsets().x,
+				offsetY:-this.getOffsets().y
+			});
+			this.getStage().add(layer);
+			return layer;
+		}
+		
+		function defineImages(){
+			this.setImages({
+				hexes:hexImages,
+				numbers:numberImages,
+				misc:miscImages,
+				ports:portImages,
+			});
+		}
+		
+		/**
+		 This starts the piece placement process - it has no knowledge of the model, so you must tell it the piece type and color.
+		 Color can be omitted and has no effect if it&#x27;s the robber
+		 After calling this, the view will use the controller&#x27;s &quot;onDrag&quot; and &quot;onDrop&quot; methods to check whether a piece can be placed.
+		 
+		 @param {String} objectType The type of piece to be placed (&quot;city&quot;,&quot;settlement&quot;,&quot;road&quot;,&quot;robber&quot;)
+		 @param {String} color The color of the piece you want to place. (Omit for &quot;robber&quot;.)
+		 @method startDrop
+		*/
+		MapView.prototype.startDrop = function startDrop(objectType,playerColor){
+			objectType = objectType.toLowerCase();
+			var typeDef, goodShape, badShape, targetLayer;
+			
+			var colors = new Colors(playerColor);
+			var color = colors.color;
+			var outline = colors.outline;
+			
+			
+			switch(objectType){
+				case &quot;city&quot;:
+					targetLayer = this.getVertexLayer();
+					typeDef = this.getVertexDefinition();
+					goodShape = typeDef.makeCity(new VertexLocation().getCanonical(),color,outline);
+					break;
+				case &quot;settlement&quot;:
+					targetLayer = this.getVertexLayer();
+					typeDef = this.getVertexDefinition();
+					goodShape = typeDef.makeSettlement(new VertexLocation().getCanonical(),color,outline);
+					break;
+				case &quot;road&quot;:
+					targetLayer = this.getEdgeLayer();
+					typeDef = this.getEdgeDefinition();
+					goodShape = typeDef.makeRoad(new EdgeLocation().getCanonical(),color,outline);
+					break;
+				case &quot;robber&quot;:
+					targetLayer = this.getRobberLayer();
+					typeDef = this.getHexDefinition();
+					goodShape = this.getRobber();
+					break;
+				default:
+					throw Error(&quot;You didn&#x27;t specify a legal piece type to drag&quot;);
+			}
+	
+			var dragController = new DragController(typeDef,targetLayer,this.getDragLayer(),{type:objectType,color:color});
+			this.setDragController(dragController);
+			
+			var shapeNo = typeDef.makeNoGo(new Point(0,0),this.getImages().misc.nogo);
+			dragController.startPlacement(goodShape,shapeNo,this.getOnDrag(),this.getOnDrop());
+		}
+        
+		MapView.prototype.getOnDrag = function(){
+			var cont = this.getController();
+			return function(loc,type){
+				return cont.onDrag(loc,type);
+			};
+		}		
+		MapView.prototype.getOnDrop = function(){
+			var cont = this.getController();
+			return function(loc,type){
+				return cont.onDrop(loc,type);
+			};
+		}
+		
+		/**
+		 This cancels the piece placement process.
+		 @method cancelDrop
+		*/
+		MapView.prototype.cancelDrop = function cancelDrop(){
+			this.getDragController().finishPlacement(false);
+			this.getStage().draw();
+		}
+
+        /**
+        This causes the pieces on the board to be drawn.
+        @method drawPieces
+        */
+		MapView.prototype.drawPieces = function () {
+			this.getEdgeLayer().draw();
+			this.getVertexLayer().draw();
+        };
+        
+		/**
+		 This adds a hex to the board.
+
+		 @param {HexLocation} loc The location to put the hex. This should only be called at most once per hex location
+		 @param {String} type The type of the hex: a resource(&quot;wood&quot;,&quot;brick&quot;,&quot;sheep&quot;,&quot;wheat&quot;,&quot;ore&quot;), &quot;desert&quot;, or &quot;water&quot;
+		 @param {Boolean} [noDraw] Optional - if omitted or false, the view is not redrawn.	 
+		 @method addHex
+		*/
+		MapView.prototype.addHex = function addHex(loc,type,noDraw){
+			placeObject.call(this,this.getHexLayer(),this.getHexDefinition(),&quot;makeHex&quot;,loc,type,noDraw);
+		}
+		
+		/**
+		 This adds a number to the board.
+
+		 @param {HexLocation} loc The location to put the number. This should only be called at most once per hex location
+		 @param {Integer} number The number to put on the map	 
+		 @param {Boolean} [noDraw] Optional - if omitted or false, the view is not redrawn.
+		 @method addNumber
+		*/
+		MapView.prototype.addNumber = function addNumber(loc,number,noDraw){
+			placeObject.call(this,this.getNumberLayer(),this.getHexDefinition(),&quot;makeNumber&quot;,loc,number,noDraw);
+		}
+
+		/**
+		 This adds a port to the board.
+
+		 @param {PortLoc} loc The location to put the port. This should only be called only once per port
+		 @param {String} type The port type: a resource(&quot;wood&quot;,&quot;brick&quot;,&quot;sheep&quot;,&quot;wheat&quot;,&quot;ore&quot;), or &quot;three&quot;	 
+		 @param {Boolean} [noDraw] Optional - if omitted or false, the view is not redrawn.
+		 @method addPort
+		*/
+		MapView.prototype.addPort = function addPort(loc,type,noDraw){
+			placeObject.call(this,this.getPortLayer(),this.getHexDefinition(),&quot;makePort&quot;,loc,type,noDraw);
+		}
+
+		/**
+		 This places the robber on the board. Subsequent calls move the robber.
+
+		 @param {HexLocation} loc The location to put the robber. 
+		 @param {Boolean} [noDraw] Optional - if omitted or false, the view is not redrawn.	 
+		 @method placeRobber
+		*/
+		MapView.prototype.placeRobber = function setRobber(loc,noDraw){
+			this.getRobberLayer().removeChildren();
+			placeObject.call(this,this.getRobberLayer(),this.getHexDefinition(),&quot;makeRobber&quot;,loc,this.getImages().misc.robber,noDraw);
+			this.setRobber(this.getRobberLayer().getChildren()[0]);
+		}
+		
+		/**
+		 This adds a settlement to the board. 
+
+		 @param {VertexLoc} loc The location to put the settlement. 
+		 @param {String} playerColor The player color
+		 @param {Boolean} [noDraw] Optional - if omitted or false, the view is not redrawn.	 
+		 @method placeSettlement
+		*/
+		MapView.prototype.placeSettlement = function placeSettlement(loc,playerColor,noDraw){
+            loc = loc.getCanonical();
+			var colors = new Colors(playerColor);
+			var color = colors.color;
+			var outline = colors.outline;
+			if (!getPieceAt(this.getVertexLayer(),loc)){
+				placeObject.call(this,this.getVertexLayer(),this.getVertexDefinition(),&quot;makeSettlement&quot;,loc,color,outline,noDraw);
+            }
+		}
+
+		/**
+		 This adds a city to the board. 
+
+		 @param {VertexLoc} loc The location to put the city. 
+		 @param {String} playerColor The player color
+		 @param {Boolean} [noDraw] Optional - if omitted or false, the view is not redrawn.	 
+		 @method placeCity
+		*/
+		MapView.prototype.placeCity = function placeCity(loc,playerColor,noDraw){
+            loc = loc.getCanonical();
+			var colors = new Colors(playerColor);
+			var color = colors.color;
+			var outline = colors.outline;
+			placeObject.call(this,this.getVertexLayer(),this.getVertexDefinition(),&quot;makeCity&quot;,loc,color,outline,noDraw);
+		}
+
+		/**
+		 This adds a road to the board. 
+
+		 @param {EdgeLoc} loc The location to put the road. 
+		 @param {String} playerColor The player color
+		 @param {Boolean} [noDraw] Optional - if omitted or false, the view is not redrawn.	 
+		 @method placeRoad
+		*/
+		MapView.prototype.placeRoad = function placeRoad(loc,playerColor,noDraw){
+            loc = loc.getCanonical();
+			var colors = new Colors(playerColor);
+			var color = colors.color;
+			var outline = colors.outline;
+			if (!getPieceAt(this.getEdgeLayer(),loc)){
+				placeObject.call(this,this.getEdgeLayer(),this.getEdgeDefinition(),&quot;makeRoad&quot;,loc,color,outline,noDraw);
+            }
+		}
+		
+		function placeObject(layer,definition,functionName,loc,color,outline,noDraw){
+			if (!layer || !definition) throw Error (&quot;The system wasn&#x27;t inited&quot;);
+			layer.add(definition[functionName](loc,color,outline));
+			if (!(noDraw))layer.draw();
+		}
+        
+		
+		function getPieceAt(layer,loc){
+            var children = layer.getChildren()
+			for (var childCount = 0; childCount &lt; children.length; childCount++){
+				if (loc.equals(children[childCount].getMapLoc())){
+					return children[childCount];
+				}
+			}
+		}
+		
+		
+		return MapView;
+	}());
+    
+    return MapView
+}());
+
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

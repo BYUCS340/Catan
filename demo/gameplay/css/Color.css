@@ -1,0 +1,127 @@
+/* color rules for game play: buttons and background*/
+
+
+/*blue*/
+.blue{	background-color:#6fb7f6;	}
+button.blue, label.blue{
+	color:#333333;
+	background: -moz-linear-gradient(top, #b7dbfb 0%, #6fb7f6 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#b7dbfb 0%,#6fb7f6 100%); /* W3C */
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b7dbfb), color-stop(1, #6fb7f6) );/* Chrome */
+}button.blue:hover, label.blue:hover{
+	background: -moz-linear-gradient(top, #6fb7f6 0%,  #b7dbfb 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#6fb7f6 0%,#b7dbfb 100%); /* W3C */
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #6fb7f6), color-stop(1, #b7dbfb) ); /* Chrome */
+}
+
+/*brown*/
+.brown{	background-color:#a18f70;	}
+button.brown, label.brown{
+	color:#333333;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #bfb39e), color-stop(1, #a18f70) );/* Chrome */
+	background: -moz-linear-gradient(top, #bfb39e 0%, #a18f70 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#bfb39e 0%,#a18f70 100%); /* W3C */
+}button.brown:hover, label.brown:hover{
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #a18f70), color-stop(1, #bfb39e) );/* Chrome */
+	background: -moz-linear-gradient(top, #a18f70 0%,  #bfb39e 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#a18f70 0%,#bfb39e 100%); /* W3C */
+}
+
+/*green*/
+.green{	background-color:#6dc066;	}
+button.green, label.green{
+	color:#333333;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #a1d69c), color-stop(1, #6dc066) );/* Chrome */
+	background: -moz-linear-gradient(top, #a1d69c 0%, #6dc066 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#a1d69c 0%,#6dc066 100%); /* W3C */
+}button.green:hover, label.green:hover{
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #6dc066), color-stop(1, #a1d69c) );/* Chrome */
+	background: -moz-linear-gradient(top, #6dc066 0%,  #a1d69c 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#6dc066 0%,#a1d69c 100%); /* W3C */
+}
+
+/*orange*/
+.orange{	background-color:orange;	}
+button.orange, label.orange{
+	color:#333333;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffd280), color-stop(1, orange) );/* Chrome */
+	background: -moz-linear-gradient(top, #ffd280 0%, orange 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#ffd280 0%,orange 100%); /* W3C */
+}button.orange:hover, label.orange:hover{
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, orange), color-stop(1, #ffd280) );/* Chrome */
+	background: -moz-linear-gradient(top, orange 0%, #ffd280 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,orange 0%,#ffd280 100%); /* W3C */
+}
+
+/* puce*/
+.puce{	background-color:#CC8899;	}
+button.puce, label.puce{
+	color:#333333;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #e3bec7), color-stop(1, #CC8899) );/* Chrome */
+	background: -moz-linear-gradient(top, #e3bec7 0%, #CC8899 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#e3bec7 0%,#CC8899 100%); /* W3C */
+}button.puce:hover, label.puce:hover{
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #CC8899), color-stop(1, #e3bec7) );/* Chrome */
+	background: -moz-linear-gradient(top, #CC8899 0%,  #e3bec7 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#CC8899 0%,#e3bec7 100%); /* W3C */
+}
+
+/* purple*/
+.purple{	background-color:#9d8cd4;	}
+button.purple, label.purple{
+	color:#333333;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ccc4e9), color-stop(1, #9d8cd4) );/* Chrome */
+	background: -moz-linear-gradient(top, #ccc4e9 0%, #9d8cd4 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#ccc4e9 0%,#9d8cd4 100%); /* W3C */
+}button.purple:hover, label.purple:hover{
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #9d8cd4), color-stop(1, #ccc4e9) );/* Chrome */
+	background: -moz-linear-gradient(top, #9d8cd4 0%,  #ccc4e9 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#9d8cd4 0%,#ccc4e9 100%); /* W3C */
+}
+
+/* red*/
+.red{	background-color:#e34234;	}
+button.red, label.red{
+	color:#333333;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ec8177), color-stop(1, #e34234) );/* Chrome */
+	background: -moz-linear-gradient(top, #ec8177 0%, #e34234 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#ec8177 0%,#e34234 100%); /* W3C */
+}button.red:hover, label.red:hover{
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #e34234), color-stop(1, #ec8177) );/* Chrome */
+	background: -moz-linear-gradient(top, #e34234 0%,  #ec8177 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#e34234 0%,#ec8177 100%); /* W3C */
+}
+
+/* white(ish)*/
+.white{	background-color:#dfdfdf;	}
+button.white, label.white{
+	color:#333333;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, white), color-stop(1, #dfdfdf) );/* Chrome */
+	background: -moz-linear-gradient(top, white 0%, #dfdfdf 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,white 0%,#dfdfdf 100%); /* W3C */
+}button.white:hover, label.white:hover{
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, white) );/* Chrome */
+	background: -moz-linear-gradient(top, #dfdfdf 0%,  white 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#dfdfdf 0%,white 100%); /* W3C */
+}
+
+/* yellow*/
+.yellow{	background-color:#fde069;	}
+button.yellow, label.yellow{
+	color:#333333;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fef0b4), color-stop(1, #fde069) );/* Chrome */
+	background: -moz-linear-gradient(top, #fef0b4 0%, #fde069 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#fef0b4 0%,#fde069 100%); /* W3C */
+}button.yellow:hover, label.yellow:hover{
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fde069), color-stop(1, #fef0b4) );/* Chrome */
+	background: -moz-linear-gradient(top, #fde069 0%,  #fef0b4 100%); /* FF3.6+ */
+	background: linear-gradient(to bottom,#fde069 0%,#fef0b4 100%); /* W3C */
+}
+
+
+/*need this here so no overrides.*/
+button:hover[disabled]{
+	background:none;	border:none;	text-shadow:none;
+	background-color:#dfdfdf;	color:#666666;
+	cursor:default;
+}

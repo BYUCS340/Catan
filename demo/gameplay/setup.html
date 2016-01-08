@@ -1,0 +1,139 @@
+<!-- STUDENT-EDITABLE-BEGIN -->
+<html>	
+	<head>
+		<meta charset="UTF-8">
+		<!--------------  LIBRARIES ------------------------------------->
+		<script type="text/javascript" src="/libs/jquery.js"></script>
+		<script type="text/javascript" src="/libs/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/libs/kinetic.js"></script>
+		<script type="text/javascript" src="/libs/cookies.js"></script>
+		<link href="/libs/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+		
+		
+		<!--  LOCAL CSS ---------------------------------------------------->
+		<link href="/css/Layout.css" rel="stylesheet" type="text/css" /><!---->
+		<link href="/css/Document.css" rel="stylesheet" type="text/css" /><!---->
+		
+		<link href="/css/play/Container.css" rel="stylesheet" type="text/css" /><!---->
+		<link href="/css/play/Input.css" rel="stylesheet" type="text/css" /><!---->
+		<link href="/css/play/Label.css" rel="stylesheet" type="text/css" /><!---->
+		<link href="/css/Color.css" rel="stylesheet" type="text/css" /><!---->
+		
+		<link href="/css/play/Image.css" rel="stylesheet" type="text/css" /><!---->
+		<link href="/css/play/Button.css" rel="stylesheet" type="text/css" />	<!---->
+		
+		<!---------    CORE   ------------------------------------------->
+		<script type="text/javascript" src="/js/Core.js"></script>
+		<script type="text/javascript" src="/js/hex_core.js"></script> 
+	    
+        <!---------    DISPLAY ELEMENTS ----------------------------------->
+		<script type="text/javascript" src="/js/view_basics/BasicController.js"></script>
+		<script type="text/javascript" src="/js/view_basics/BasicDefs.js"></script>
+		<script type="text/javascript" src="/js/view_basics/BasicDisplayElement.js"></script>
+	
+		<script type="text/javascript" src="/js/display_elements/AmountChangeDisplayElement.js"></script>
+		<script type="text/javascript" src="/js/display_elements/ButtonDisplayElement.js"></script>
+		<script type="text/javascript" src="/js/display_elements/ChooserDisplayElement.js"></script>
+		<script type="text/javascript" src="/js/display_elements/ComboDisplayElement.js"></script>
+		<script type="text/javascript" src="/js/display_elements/PointDisplayElement.js"></script>
+		<script type="text/javascript" src="/js/display_elements/RobDisplayElement.js"></script>
+		<script type="text/javascript" src="/js/display_elements/TrackerDisplayElement.js"></script>
+		<script type="text/javascript" src="/js/display_elements/CommDisplayElement.js"></script>
+	    
+		<!---------    MODEL    ----------------------------------->
+		<script type="text/javascript" src="/js/model/clientmodel.js"></script>
+        
+		<!---------    VIEWS & CONTROLLERS ----------------------------------->
+		<!-- modals-->
+		<script type="text/javascript" src="/js/view_basics/BasicOverlay.js"></script>
+		<script type="text/javascript" src="/js/view_basics/WaitOverlay.js"></script>
+		<script type="text/javascript" src="/js/map/MapOverlay.js"></script>
+		
+		<!-- misc views (needs controllers) -->
+		<script type="text/javascript" src="/js/turn_tracker/TrackerView.js"></script>
+		<script type="text/javascript" src="/js/turn_tracker/TrackerController.js"></script>
+		<script type="text/javascript" src="/js/resources/ResourcesView.js"></script>
+		<script type="text/javascript" src="/js/resources/ResourcesController.js"></script>
+		<script type="text/javascript" src="/js/points/PointsView.js"></script>		
+		<script type="text/javascript" src="/js/points/PointsController.js"></script>
+	
+		<!-- chat, log views-->
+		<script type="text/javascript" src="/js/comms_box/CommView.js"></script>
+		<script type="text/javascript" src="/js/comms_box/CommController.js"></script>
+		
+		<!-- map view-->
+		<script type="text/javascript" src="/js/map/MapView.js"></script>
+		<script type="text/javascript" src="/js/map/MapController.js"></script>
+
+		<!--------- Tying it together ------------------------------>
+		<script type="text/javascript" src="/js/setup/SetupRoundController.js"></script>
+		<script type="text/javascript" src="/js/SetupRoundConnections.js"></script><!--this has to go last-->
+		
+		<title>Settlers Setup</title>
+	</head>
+    <body onload = 'game = catan.client.Client.getPlayable()'>
+         <div style="display:none" class="map-view-dom-elements">
+            <img src="../images/land/water.png">
+            <img src="../images/land/desert.gif">
+            <img src="../images/land/forest.gif">
+            <img src="../images/land/brick.gif">
+            <img src="../images/land/pasture.gif">
+            <img src="../images/land/wheat.gif">
+            <img src="../images/land/ore.gif">
+            <img src="../images/land/ocean.jpg">
+            <img src="../images/numbers/small_prob/2.png">
+            <img src="../images/numbers/small_prob/3.png">
+            <img src="../images/numbers/small_prob/4.png">
+            <img src="../images/numbers/small_prob/5.png">
+            <img src="../images/numbers/small_prob/6.png">
+            <img src="../images/numbers/small_prob/8.png">
+            <img src="../images/numbers/small_prob/9.png">
+            <img src="../images/numbers/small_prob/10.png">
+            <img src="../images/numbers/small_prob/11.png">
+            <img src="../images/numbers/small_prob/12.png">
+            <img src="../images/misc/robber.gif">
+            <img src="../images/misc/noIcon.png">
+            <img src="../images/ports/port_wood.png">
+            <img src="../images/ports/port_brick.png">
+            <img src="../images/ports/port_sheep.png">
+            <img src="../images/ports/port_wheat.png">
+            <img src="../images/ports/port_ore.png">
+            <img src="../images/ports/port_three.png">
+        </div>
+		<div class = "myrow header no-overflow">
+			<div class = "mycol header title" id = "title-pane">CS 340: Settlers Setup</div>
+			<div class = "mycol header" id = "costs-pane"></div>
+		</div> 
+		<div class ="myrow body">
+			<div class = "mycol" id ="left-pane">
+				<!----><div id=tabs class="tabbable tabs-top"><ul class="nav nav-tabs">
+					<li class="active top-tab" id="log-tab">
+						<a href="#log-pane" data-toggle="tab" id="log">Log<span class="badge yellow"></span></a>
+					</li>
+                </ul></div>
+				<div id="side-bar" class="myrow tab-content below-tabs">
+					<div id="log-pane" class ="tab-pane v-filler h-filler active"></div>
+				</div>
+				<div id = "turn-tracker-pane" class = "myrow"></div>
+			</div>
+			<div class = "mycol" id ="middle-pane">
+				<div id=tabs2 class="tabbable tabs-top myrow"><ul class="nav nav-tabs" id="main-tab-set">
+					<li class="active top-tab"><a href="#map-pane" data-toggle="tab" id=map >Game Map</a></li>
+                </ul></div>
+                <div class="myrow below-tabs" id=right-area>
+					<div id="main-area" class="mycol tab-content scroll-y">
+						<!----><div id="map-pane" class ="tab-pane active"></div>
+						<div id = "game-state-pane" class = "myrow"></div>
+					</div>
+					<div class = "mycol scroll-y center-vertical" id ="right-pane">
+						<div id = "points" class = "mycol victory-points-area"></div>
+						<div id = "resources" class = "mycol"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+            
+
+

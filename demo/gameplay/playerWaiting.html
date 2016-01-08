@@ -1,0 +1,39 @@
+<!-- STUDENT-CORE-BEGIN -->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 <!-- libs-->
+		<script type="text/javascript" src="/libs/jquery.js"></script>
+		<script type="text/javascript" src="/libs/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="/libs/ractive.js"></script>
+		<script type="text/javascript" src="/libs/cookies.js"></script>
+		<!-- common -->
+		<script type="text/javascript" src="/js/Core.js"></script> 
+		<script type="text/javascript" src="/js/view_basics/BasicOverlay.js"></script>
+		<!-- unique -->
+		<script type="text/javascript" src="/js/setup/WaitForPlayers.js"></script> 
+        <!-- libs-->
+        <link rel="stylesheet" type="text/css" href="/libs/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="/libs/bootstrap/css/bootstrap-responsive.css" >
+        <!-- common-->
+		<link rel="stylesheet" href="/css/play/Button.css">
+		<link rel="stylesheet" href="/css/Color.css">
+        <!-- unique-->
+		<link href="/css/setup/PlayerWaiting.css" rel="stylesheet">
+
+		<title>Waiting for other players</title>
+	</head>
+	<body>
+		<script>
+			$(function(){
+				view = new PlayerWaiting.View();
+				controller = new PlayerWaiting.Controller(view);
+				controller.refreshGames(function(){
+					view.showModal();
+				});
+			});
+		</script>	
+	</body>
+</html>
+
+

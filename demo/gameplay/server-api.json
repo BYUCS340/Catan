@@ -1,0 +1,408 @@
+[
+    {
+        "args": [
+            {
+                "name": "username",
+                "description": "username",
+                "type": "STRING"
+            },
+            {
+                "name": "password",
+                "description": "user password",
+                "type": "STRING"
+            }
+        ],
+        "url": "/user/login",
+        "method": "POST",
+        "description": "To login.",
+        "type": "FORM"
+    },
+    {
+        "args": [
+            {
+                "name": "username",
+                "description": "username",
+                "type": "STRING"
+            },
+            {
+                "name": "password",
+                "description": "user password",
+                "type": "STRING"
+            }
+        ],
+        "url": "/user/register",
+        "method": "POST",
+        "description": "Registers a user.",
+        "type": "FORM"
+    },
+    {
+        "args": [],
+        "url": "/games/list",
+        "method": "GET",
+        "description": "Get a list of all games in progress."
+    },
+    {
+        "args": [
+            {
+                "name": "randomTiles",
+                "description": "whether the tiles should be randomly placed",
+                "type": "BOOLEAN"
+            },
+            {
+                "name": "randomNumbers",
+                "description": "whether the numbers should be randomly placed",
+                "type": "BOOLEAN"
+            },
+            {
+                "name": "randomPorts",
+                "description": "whether the port should be randomly placed",
+                "type": "BOOLEAN"
+            },
+            {
+                "name": "name",
+                "description": "The name of the game",
+                "type": "STRING"
+            }
+        ],
+        "url": "/games/create",
+        "method": "POST",
+        "description": "Creates a game. Returns a game JSON stub.",
+        "type": "FORM"
+    },
+    {
+        "args": [
+            {
+                "name": "color",
+                "description": "What color you want to join (or rejoin) as.",
+                "type": "ENUMERATION",
+                "values": [
+                    "red",
+                    "green",
+                    "blue",
+                    "yellow",
+                    "puce",
+                    "brown",
+                    "white",
+                    "purple",
+                    "orange"
+                ]
+            },
+            {
+                "name": "id",
+                "description": "The id of the game to join",
+                "type": "INTEGER"
+            }
+        ],
+        "url": "/games/join",
+        "method": "POST",
+        "description": "Join or re-join a game (set's your game cookie)",
+        "type": "FORM"
+    },
+    {
+        "args": [],
+        "url": "/game/model",
+        "method": "GET",
+        "description": "Fetch the model"
+    },
+    {
+        "args": [],
+        "url": "/game/reset",
+        "method": "POST",
+        "description": "Resets the current game"
+    },
+    {
+        "args": [],
+        "url": "/game/commands",
+        "method": "POST",
+        "description": "Send a list of moves to the server",
+        "type": "JSON",
+        "template": "List of Commands"
+    },
+    {
+        "args": [],
+        "url": "/game/commands",
+        "method": "GET",
+        "description": "Fetch a list of commands for your current game."
+    },
+    {
+        "args": [
+            {
+                "name": "AIType",
+                "description": "The name of the AI player to add",
+                "type": "STRING"
+            }
+        ],
+        "url": "/game/addAI",
+        "method": "POST",
+        "description": "Add an AI player to your game",
+        "type": "FORM"
+    },
+    {
+        "args": [],
+        "url": "/game/listAI",
+        "method": "GET",
+        "description": "Get a list of the AI players"
+    },
+    {
+        "args": [
+            {
+                "name": "logLevel",
+                "description": "",
+                "type": "STRING"
+            }
+        ],
+        "url": "/util/changeLogLevel",
+        "method": "POST",
+        "description": "Set's the server's log level ( ALL, SEVERE, WARNING ,INFO, CONFIG, FINE, FINER, FINEST, OFF) ",
+        "type": "FORM"
+    },
+    {
+        "args": [],
+        "url": "/moves/sendChat",
+        "method": "POST",
+        "description": "Sends a chat message.",
+        "type": "JSON",
+        "template": {
+            "type": "sendChat",
+            "playerIndex": -1,
+            "content": ""
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/rollNumber",
+        "method": "POST",
+        "description": "Used to roll a number at the beginning of your turn.",
+        "type": "JSON",
+        "template": {
+            "type": "rollNumber",
+            "playerIndex": -1,
+            "number": -1
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/robPlayer",
+        "method": "POST",
+        "description": "Moves the robber, selecting the new robber position and player to rob.",
+        "type": "JSON",
+        "template": {
+            "type": "robPlayer",
+            "playerIndex": -1,
+            "victimIndex": -1,
+            "location": {
+                "x": "",
+                "y": ""
+            }
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/finishTurn",
+        "method": "POST",
+        "description": "Used to finish your turn",
+        "type": "JSON",
+        "template": {
+            "type": "finishTurn",
+            "playerIndex": -1
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/buyDevCard",
+        "method": "POST",
+        "description": "Buys a development card for yourself.",
+        "type": "JSON",
+        "template": {
+            "type": "buyDevCard",
+            "playerIndex": -1
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/Year_of_Plenty",
+        "method": "POST",
+        "description": "Plays a 'Year of Plenty' card from your hand to gain the two specified resources.",
+        "type": "JSON",
+        "template": {
+            "type": "Year_of_Plenty",
+            "playerIndex": -1,
+            "resource1": "Resource 1",
+            "resource2": "Resource 2"
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/Road_Building",
+        "method": "POST",
+        "description": "Plays a 'Road Building' card from your hand to build at the two spots specified.",
+        "type": "JSON",
+        "template": {
+            "type": "Road_Building",
+            "playerIndex": -1,
+            "spot1": {
+                "x": -1,
+                "y": -1,
+                "direction": ""
+            },
+            "spot2": {
+                "x": -1,
+                "y": -1,
+                "direction": ""
+            }
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/Soldier",
+        "method": "POST",
+        "description": "Plays a 'Soldier' from your hand, selecting the new robber position and player to rob.",
+        "type": "JSON",
+        "template": {
+            "type": "Soldier",
+            "playerIndex": -1,
+            "victimIndex": -1,
+            "location": {
+                "x": "",
+                "y": ""
+            }
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/Monopoly",
+        "method": "POST",
+        "description": "Plays a 'Monopoly' card from you hand to monopolize the requested resource.",
+        "type": "JSON",
+        "template": {
+            "type": "Monopoly",
+            "resource": "",
+            "playerIndex": -1
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/Monument",
+        "method": "POST",
+        "description": "Plays a 'Monument' card from your hand to give you a point.",
+        "type": "JSON",
+        "template": {
+            "type": "Monument",
+            "playerIndex": -1
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/buildRoad",
+        "method": "POST",
+        "description": "Builds a road for the specified player at the specified spot. Set true to free if it's during the setup.",
+        "type": "JSON",
+        "template": {
+            "type": "buildRoad",
+            "playerIndex": -1,
+            "roadLocation": {
+                "x": -1,
+                "y": -1,
+                "direction": ""
+            },
+            "free": false
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/buildSettlement",
+        "method": "POST",
+        "description": "Builds a settlement for the specified player at the specified spot. Set true to free if it's during the setup.",
+        "type": "JSON",
+        "template": {
+            "type": "buildSettlement",
+            "playerIndex": -1,
+            "vertexLocation": {
+                "x": -1,
+                "y": -1,
+                "direction": ""
+            },
+            "free": false
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/buildCity",
+        "method": "POST",
+        "description": "Builds a city for the specified player at the specified spot. Set true to free if it's during the setup.",
+        "type": "JSON",
+        "template": {
+            "type": "buildCity",
+            "playerIndex": -1,
+            "vertexLocation": {
+                "x": -1,
+                "y": -1,
+                "direction": ""
+            },
+            "free": false
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/offerTrade",
+        "method": "POST",
+        "description": "Offers a trade to another player.",
+        "type": "JSON",
+        "template": {
+            "type": "offerTrade",
+            "playerIndex": -1,
+            "offer": {
+                "brick": -1,
+                "ore": -1,
+                "sheep": -1,
+                "wheat": -1,
+                "wood": -1
+            },
+            "receiver": -1
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/acceptTrade",
+        "method": "POST",
+        "description": "Accept or reject a trade offered to you.",
+        "type": "JSON",
+        "template": {
+            "type": "acceptTrade",
+            "playerIndex": -1,
+            "willAccept": false
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/maritimeTrade",
+        "method": "POST",
+        "description": "Accept or reject a trade offered to you.",
+        "type": "JSON",
+        "template": {
+            "type": "maritimeTrade",
+            "playerIndex": -1,
+            "ratio": -1,
+            "inputResource": "",
+            "outputResource": ""
+        }
+    },
+    {
+        "args": [],
+        "url": "/moves/discardCards",
+        "method": "POST",
+        "description": "Discards selected cards because of a 7 rolled.",
+        "type": "JSON",
+        "template": {
+            "type": "discardCards",
+            "playerIndex": -1,
+            "discardedCards": {
+                "brick": -1,
+                "ore": -1,
+                "sheep": -1,
+                "wheat": -1,
+                "wood": -1
+            }
+        }
+    }
+]

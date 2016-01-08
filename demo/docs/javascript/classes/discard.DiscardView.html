@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>discard.DiscardView</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/comm.BaseCommController.html">comm.BaseCommController</a></li>
+            
+                <li><a href="../classes/comm.BaseCommView.html">comm.BaseCommView</a></li>
+            
+                <li><a href="../classes/comm.ChatController.html">comm.ChatController</a></li>
+            
+                <li><a href="../classes/comm.ChatView.html">comm.ChatView</a></li>
+            
+                <li><a href="../classes/comm.LogController.html">comm.LogController</a></li>
+            
+                <li><a href="../classes/comm.LogView.html">comm.LogView</a></li>
+            
+                <li><a href="../classes/core.Core.html">core.Core</a></li>
+            
+                <li><a href="../classes/devCards.BuyCardView.html">devCards.BuyCardView</a></li>
+            
+                <li><a href="../classes/devCards.DevCardController.html">devCards.DevCardController</a></li>
+            
+                <li><a href="../classes/devCards.DevCardView.html">devCards.DevCardView</a></li>
+            
+                <li><a href="../classes/discard.DiscardController.html">discard.DiscardController</a></li>
+            
+                <li><a href="../classes/discard.DiscardView.html">discard.DiscardView</a></li>
+            
+                <li><a href="../classes/domestic.AcceptView.html">domestic.AcceptView</a></li>
+            
+                <li><a href="../classes/domestic.DomesticController.html">domestic.DomesticController</a></li>
+            
+                <li><a href="../classes/domestic.DomesticView.html">domestic.DomesticView</a></li>
+            
+                <li><a href="../classes/hex_core.BaseLocation.html">hex_core.BaseLocation</a></li>
+            
+                <li><a href="../classes/hex_core.EdgeDirection.html">hex_core.EdgeDirection</a></li>
+            
+                <li><a href="../classes/hex_core.EdgeLocation.html">hex_core.EdgeLocation</a></li>
+            
+                <li><a href="../classes/hex_core.HexDirection.html">hex_core.HexDirection</a></li>
+            
+                <li><a href="../classes/hex_core.HexLocation.html">hex_core.HexLocation</a></li>
+            
+                <li><a href="../classes/hex_core.VertexDirection.html">hex_core.VertexDirection</a></li>
+            
+                <li><a href="../classes/hex_core.VertexLocation.html">hex_core.VertexLocation</a></li>
+            
+                <li><a href="../classes/map.MapController.html">map.MapController</a></li>
+            
+                <li><a href="../classes/map.MapOverlay.html">map.MapOverlay</a></li>
+            
+                <li><a href="../classes/map.MapView.html">map.MapView</a></li>
+            
+                <li><a href="../classes/map.Point.html">map.Point</a></li>
+            
+                <li><a href="../classes/map.RobberOverlay.html">map.RobberOverlay</a></li>
+            
+                <li><a href="../classes/maritime.MaritimeController.html">maritime.MaritimeController</a></li>
+            
+                <li><a href="../classes/maritime.MaritimeView.html">maritime.MaritimeView</a></li>
+            
+                <li><a href="../classes/misc.BaseController.html">misc.BaseController</a></li>
+            
+                <li><a href="../classes/misc.BaseOverlay.html">misc.BaseOverlay</a></li>
+            
+                <li><a href="../classes/misc.GameFinishedView.html">misc.GameFinishedView</a></li>
+            
+                <li><a href="../classes/misc.WaitOverlay.html">misc.WaitOverlay</a></li>
+            
+                <li><a href="../classes/models.CatanEdge.html">models.CatanEdge</a></li>
+            
+                <li><a href="../classes/models.CatanHex.html">models.CatanHex</a></li>
+            
+                <li><a href="../classes/models.CatanVertex.html">models.CatanVertex</a></li>
+            
+                <li><a href="../classes/models.ClientModel.html">models.ClientModel</a></li>
+            
+                <li><a href="../classes/points.PointController.html">points.PointController</a></li>
+            
+                <li><a href="../classes/points.PointView.html">points.PointView</a></li>
+            
+                <li><a href="../classes/resources.ResourceBarController.html">resources.ResourceBarController</a></li>
+            
+                <li><a href="../classes/resources.ResourceBarView.html">resources.ResourceBarView</a></li>
+            
+                <li><a href="../classes/roll.RollController.html">roll.RollController</a></li>
+            
+                <li><a href="../classes/roll.RollResultView.html">roll.RollResultView</a></li>
+            
+                <li><a href="../classes/roll.RollView.html">roll.RollView</a></li>
+            
+                <li><a href="../classes/setup.SetupRoundController.html">setup.SetupRoundController</a></li>
+            
+                <li><a href="../classes/turntracker.TurnTrackerController.html">turntracker.TurnTrackerController</a></li>
+            
+                <li><a href="../classes/turntracker.TurnTrackerView.html">turntracker.TurnTrackerView</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/catan.comm.html">catan.comm</a></li>
+            
+                <li><a href="../modules/catan.devCards.html">catan.devCards</a></li>
+            
+                <li><a href="../modules/catan.discard.html">catan.discard</a></li>
+            
+                <li><a href="../modules/catan.hex_core.html">catan.hex_core</a></li>
+            
+                <li><a href="../modules/catan.map.html">catan.map</a></li>
+            
+                <li><a href="../modules/catan.misc.html">catan.misc</a></li>
+            
+                <li><a href="../modules/catan.models.html">catan.models</a></li>
+            
+                <li><a href="../modules/catan.points.html">catan.points</a></li>
+            
+                <li><a href="../modules/catan.resources.html">catan.resources</a></li>
+            
+                <li><a href="../modules/catan.roll.html">catan.roll</a></li>
+            
+                <li><a href="../modules/catan.setup.html">catan.setup</a></li>
+            
+                <li><a href="../modules/catan.trade.html">catan.trade</a></li>
+            
+                <li><a href="../modules/catan.trade.domestic.html">catan.trade.domestic</a></li>
+            
+                <li><a href="../modules/catan.trade.maritime.html">catan.trade.maritime</a></li>
+            
+                <li><a href="../modules/catan.turntracker.html">catan.turntracker</a></li>
+            
+                <li><a href="../modules/core.html">core</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1>discard.DiscardView Class</h1>
+<div class="box meta">
+    
+
+    
+        <div class="extends">
+            Extends <a href="../classes/misc.BaseOverlay.html" class="crosslink">misc.BaseOverlay</a>
+        </div>
+    
+
+    
+        <div class="foundat">
+            Defined in: <a href="../files/student_demo_gameplay_js_discard_DiscardOverlay.js.html#l20"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;discard&#x2F;DiscardOverlay.js:20</code></a>
+        </div>
+    
+
+    
+        
+            Module: <a href="../modules/catan.discard.html">catan.discard</a>
+        
+    
+
+    
+</div>
+
+
+
+<div class="box intro">
+    <p>A view for discarding cards.  Inherits from misc.BaseOverlay.</p>
+
+</div>
+
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_discard.DiscardView" class="method item">
+    <h3 class="name"><code>discard.DiscardView</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_discard_DiscardOverlay.js.html#l20"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;discard&#x2F;DiscardOverlay.js:20</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+    </div>
+
+
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
+
+        
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+        
+        
+        
+        
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+            
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods extends">
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_closeModal">closeModal</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setController">setController</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setDiscardButtonEnabled">setDiscardButtonEnabled</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setResourceAmount">setResourceAmount</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setResourceAmountChangeEnabled">setResourceAmountChangeEnabled</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setResourceMaxAmount">setResourceMaxAmount</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setStateMessage">setStateMessage</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_showModal">showModal</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+
+            
+
+            
+        </div>
+
+        
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_closeModal" class="method item inherited">
+    <h3 class="name"><code>closeModal</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/misc.BaseOverlay.html#method_closeModal">misc.BaseOverlay</a>:
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_view_basics_BasicOverlay.js.html#l142"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;view_basics&#x2F;BasicOverlay.js:142</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>makes the overlay invisible</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>void</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setController" class="method item">
+    <h3 class="name"><code>setController</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>controller</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/misc.BaseOverlay.html#method_setController">
+                misc.BaseOverlay
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_discard_DiscardOverlay.js.html#l40"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;discard&#x2F;DiscardOverlay.js:40</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attaches the controller to the view and builds the view on the page.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">controller</code>
+                        <span class="type">discard.Controller</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>void</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setDiscardButtonEnabled" class="method item">
+    <h3 class="name"><code>setDiscardButtonEnabled</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>shouldEnable</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_discard_DiscardOverlay.js.html#l94"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;discard&#x2F;DiscardOverlay.js:94</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Enables or disabled the discard button.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">shouldEnable</code>
+                        <span class="type">Boolean</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>whether or not a player can discard yet</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>void</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setResourceAmount" class="method item">
+    <h3 class="name"><code>setResourceAmount</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>resource</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>amount</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_discard_DiscardOverlay.js.html#l81"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;discard&#x2F;DiscardOverlay.js:81</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the amount displayed for a single resource.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">resource</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the resource to discard (see catan.definitions.ResourceTypes)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">amount</code>
+                        <span class="type">Int</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the current amount to display</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>void</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setResourceAmountChangeEnabled" class="method item">
+    <h3 class="name"><code>setResourceAmountChangeEnabled</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>resource</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>increase</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>decrease</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_discard_DiscardOverlay.js.html#l64"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;discard&#x2F;DiscardOverlay.js:64</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Enables/disables increasing or decreasing for a single resource.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">resource</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the resource to discard (see catan.definitions.ResourceTypes)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">increase</code>
+                        <span class="type">Boolean</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>whether you can increase the amount displayed</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">decrease</code>
+                        <span class="type">Boolean</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>whether you can decrease the amount displayed</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>void</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setResourceMaxAmount" class="method item">
+    <h3 class="name"><code>setResourceMaxAmount</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>resource</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>amt</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_discard_DiscardOverlay.js.html#l53"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;discard&#x2F;DiscardOverlay.js:53</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the maximum amount of a resource that the player can discard</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">resource</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the resource to discard (see catan.definitions.ResourceTypes)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">amt</code>
+                        <span class="type">Int</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the max amount you can discard of the resource</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>void</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setStateMessage" class="method item">
+    <h3 class="name"><code>setStateMessage</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>message</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_discard_DiscardOverlay.js.html#l107"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;discard&#x2F;DiscardOverlay.js:107</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the state message, which indicates how many cards a player has set to discard, and how many remain to set.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">message</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the message to display</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>void</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_showModal" class="method item inherited">
+    <h3 class="name"><code>showModal</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/misc.BaseOverlay.html#method_showModal">misc.BaseOverlay</a>:
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_view_basics_BasicOverlay.js.html#l58"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;view_basics&#x2F;BasicOverlay.js:58</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>makes the overlay visible</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>void</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+            </div>
+        
+
+        
+
+        
+
+        
+    </div>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

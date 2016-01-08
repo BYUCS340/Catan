@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>student/demo/gameplay/js/comms_box/CommView.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/comm.BaseCommController.html">comm.BaseCommController</a></li>
+            
+                <li><a href="../classes/comm.BaseCommView.html">comm.BaseCommView</a></li>
+            
+                <li><a href="../classes/comm.ChatController.html">comm.ChatController</a></li>
+            
+                <li><a href="../classes/comm.ChatView.html">comm.ChatView</a></li>
+            
+                <li><a href="../classes/comm.LogController.html">comm.LogController</a></li>
+            
+                <li><a href="../classes/comm.LogView.html">comm.LogView</a></li>
+            
+                <li><a href="../classes/core.Core.html">core.Core</a></li>
+            
+                <li><a href="../classes/devCards.BuyCardView.html">devCards.BuyCardView</a></li>
+            
+                <li><a href="../classes/devCards.DevCardController.html">devCards.DevCardController</a></li>
+            
+                <li><a href="../classes/devCards.DevCardView.html">devCards.DevCardView</a></li>
+            
+                <li><a href="../classes/discard.DiscardController.html">discard.DiscardController</a></li>
+            
+                <li><a href="../classes/discard.DiscardView.html">discard.DiscardView</a></li>
+            
+                <li><a href="../classes/domestic.AcceptView.html">domestic.AcceptView</a></li>
+            
+                <li><a href="../classes/domestic.DomesticController.html">domestic.DomesticController</a></li>
+            
+                <li><a href="../classes/domestic.DomesticView.html">domestic.DomesticView</a></li>
+            
+                <li><a href="../classes/hex_core.BaseLocation.html">hex_core.BaseLocation</a></li>
+            
+                <li><a href="../classes/hex_core.EdgeDirection.html">hex_core.EdgeDirection</a></li>
+            
+                <li><a href="../classes/hex_core.EdgeLocation.html">hex_core.EdgeLocation</a></li>
+            
+                <li><a href="../classes/hex_core.HexDirection.html">hex_core.HexDirection</a></li>
+            
+                <li><a href="../classes/hex_core.HexLocation.html">hex_core.HexLocation</a></li>
+            
+                <li><a href="../classes/hex_core.VertexDirection.html">hex_core.VertexDirection</a></li>
+            
+                <li><a href="../classes/hex_core.VertexLocation.html">hex_core.VertexLocation</a></li>
+            
+                <li><a href="../classes/map.MapController.html">map.MapController</a></li>
+            
+                <li><a href="../classes/map.MapOverlay.html">map.MapOverlay</a></li>
+            
+                <li><a href="../classes/map.MapView.html">map.MapView</a></li>
+            
+                <li><a href="../classes/map.Point.html">map.Point</a></li>
+            
+                <li><a href="../classes/map.RobberOverlay.html">map.RobberOverlay</a></li>
+            
+                <li><a href="../classes/maritime.MaritimeController.html">maritime.MaritimeController</a></li>
+            
+                <li><a href="../classes/maritime.MaritimeView.html">maritime.MaritimeView</a></li>
+            
+                <li><a href="../classes/misc.BaseController.html">misc.BaseController</a></li>
+            
+                <li><a href="../classes/misc.BaseOverlay.html">misc.BaseOverlay</a></li>
+            
+                <li><a href="../classes/misc.GameFinishedView.html">misc.GameFinishedView</a></li>
+            
+                <li><a href="../classes/misc.WaitOverlay.html">misc.WaitOverlay</a></li>
+            
+                <li><a href="../classes/models.CatanEdge.html">models.CatanEdge</a></li>
+            
+                <li><a href="../classes/models.CatanHex.html">models.CatanHex</a></li>
+            
+                <li><a href="../classes/models.CatanVertex.html">models.CatanVertex</a></li>
+            
+                <li><a href="../classes/models.ClientModel.html">models.ClientModel</a></li>
+            
+                <li><a href="../classes/points.PointController.html">points.PointController</a></li>
+            
+                <li><a href="../classes/points.PointView.html">points.PointView</a></li>
+            
+                <li><a href="../classes/resources.ResourceBarController.html">resources.ResourceBarController</a></li>
+            
+                <li><a href="../classes/resources.ResourceBarView.html">resources.ResourceBarView</a></li>
+            
+                <li><a href="../classes/roll.RollController.html">roll.RollController</a></li>
+            
+                <li><a href="../classes/roll.RollResultView.html">roll.RollResultView</a></li>
+            
+                <li><a href="../classes/roll.RollView.html">roll.RollView</a></li>
+            
+                <li><a href="../classes/setup.SetupRoundController.html">setup.SetupRoundController</a></li>
+            
+                <li><a href="../classes/turntracker.TurnTrackerController.html">turntracker.TurnTrackerController</a></li>
+            
+                <li><a href="../classes/turntracker.TurnTrackerView.html">turntracker.TurnTrackerView</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/catan.comm.html">catan.comm</a></li>
+            
+                <li><a href="../modules/catan.devCards.html">catan.devCards</a></li>
+            
+                <li><a href="../modules/catan.discard.html">catan.discard</a></li>
+            
+                <li><a href="../modules/catan.hex_core.html">catan.hex_core</a></li>
+            
+                <li><a href="../modules/catan.map.html">catan.map</a></li>
+            
+                <li><a href="../modules/catan.misc.html">catan.misc</a></li>
+            
+                <li><a href="../modules/catan.models.html">catan.models</a></li>
+            
+                <li><a href="../modules/catan.points.html">catan.points</a></li>
+            
+                <li><a href="../modules/catan.resources.html">catan.resources</a></li>
+            
+                <li><a href="../modules/catan.roll.html">catan.roll</a></li>
+            
+                <li><a href="../modules/catan.setup.html">catan.setup</a></li>
+            
+                <li><a href="../modules/catan.trade.html">catan.trade</a></li>
+            
+                <li><a href="../modules/catan.trade.domestic.html">catan.trade.domestic</a></li>
+            
+                <li><a href="../modules/catan.trade.maritime.html">catan.trade.maritime</a></li>
+            
+                <li><a href="../modules/catan.turntracker.html">catan.turntracker</a></li>
+            
+                <li><a href="../modules/core.html">core</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: student/demo/gameplay/js/comms_box/CommView.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+// STUDENT-CORE-BEGIN
+// DO NOT EDIT THIS FILE
+/**
+    This is the namespace for the communication classes (log and chat)
+
+    @module catan.comm
+    @namespace comm
+**/
+
+var catan = catan || {};
+catan.comm = catan.comm || {};
+
+catan.comm.View = (function () {
+	
+	var CommunicationDisplay = catan.definitions.DisplayElement.CommunicationDisplay;
+	var NULL_LIST = [];
+	var NULL_LENGTH = -1;
+
+	/**
+         The superclass for displaying a message history.
+		 @class BaseCommView
+		 @constructor
+		 @params {Object} params an object with information for displaying the view
+		 @params {HTMLDivElement} params.parentElem the HTMLDivElement where the view resides
+		 @params {String} params.message a message to display when no output has been generated
+		 @params {String} params.id the prefix id for the element
+		 @params {Boolean} params.haveInput whether the view is display-only or not
+	*/
+	function CommView(params){
+		this.setParentElem(params.parentElem);
+		this.setNoDisplayMessage(params.message);
+		this.setID(params.id);
+		this.setOutputElem(new CommunicationDisplay.OutputElement(params.id+&quot;-output&quot;, NULL_LIST, NULL_LENGTH));
+		if(params.haveInput)
+			this.setInputElem(new CommunicationDisplay.InputElement(params.id+&quot;-input&quot;, &quot;Enter Text Here&quot;, &quot;Send&quot;));
+		else
+			this.setInputElem(undefined);
+		
+		this.buildView();
+	};
+    
+    core.defineProperty(CommView.prototype,&quot;ParentElem&quot;);
+    core.defineProperty(CommView.prototype,&quot;NoDisplayMessage&quot;);
+    core.defineProperty(CommView.prototype,&quot;OutputElem&quot;);
+    core.defineProperty(CommView.prototype,&quot;InputElem&quot;);
+    core.defineProperty(CommView.prototype,&quot;ID&quot;);	
+    core.defineProperty(CommView.prototype,&quot;lengthDiff&quot;);	
+	
+    /*
+        Adds a &quot;null message&quot; label, output display, and input display if they exist
+        @method buildView
+    */
+	CommView.prototype.buildView = function(){
+		var div = this.getParentElem();
+		
+		var noDisplayLabel = document.createElement(&quot;label&quot;);
+			noDisplayLabel.textContent = this.getNoDisplayMessage();
+			div.appendChild(noDisplayLabel);
+		
+		if(this.getOutputElem()!=undefined)
+			div.appendChild(this.getOutputElem().getView());
+		if(this.getInputElem()!=undefined)
+			div.appendChild(this.getInputElem().getView());
+	};
+	
+	/**
+		 Sets new content for the display
+		 @method resetLines
+		 @param {Array} lines a list of objects with three attributes: source(the player name attached to the event),
+		 message(the contents of the line), and className(the color of the object)	 
+	*/
+	CommView.prototype.resetLines = function(lines){
+		var isDifferent = lines.length - this.getOutputElem().getLines().length &gt; 0;
+		
+		this.getOutputElem().setLines([]);
+		for(lineNum in lines){
+			this.getOutputElem().addLine(lines[lineNum]);
+		}
+		if(isDifferent)
+			this.getOutputElem().updateScroll();		
+	};
+	
+    /**
+        Sets the controller and action for the input element
+        @method setController
+        @param {Object} controller The controller
+    */
+	CommView.prototype.setController = function(controller){
+
+		if(this.getInputElem()!=undefined){
+			this.getInputElem().setController(controller);
+			this.getInputElem().setHitAction();
+		}
+	};
+		
+	//return CommView;
+	
+	var LogView = (function LogView_Class(){
+    
+		LogView.prototype = core.inherit(CommView.prototype);
+		LogView.prototype.constructor = CommView;
+        
+		/**
+		The view class for the Log
+		@class LogView
+		@constructor
+		@extends comm.BaseCommView
+		**/
+		function LogView(){
+			var logPane = document.getElementById(&quot;log-pane&quot;);
+			var params = {
+				message: &quot;No game history to display&quot;,
+				parentElem:logPane,
+				id:&quot;log&quot;,
+			}
+			CommView.call(this, params);
+		}
+		
+		return LogView;
+	}());
+	
+	var ChatView = (function ChatView_Class(){
+    
+		ChatView.prototype = core.inherit(CommView.prototype);
+		ChatView.prototype.constructor = CommView;
+        
+		/**
+		The view class for the Chat
+		@class ChatView
+		@constructor
+		@extends comm.BaseCommView
+		**/
+		function ChatView(){
+			var chatPane = document.getElementById(&quot;chat-pane&quot;);
+			var params = {
+				message: &quot;No messages have been sent&quot;,
+				parentElem:chatPane,
+				id:&quot;chat&quot;,
+				haveInput:true
+			}
+			CommView.call(this, params);
+		}
+		
+		return ChatView;
+	}());
+	
+	return {
+		LogView:LogView,
+		ChatView:ChatView
+	};	
+} ());
+
+
+
+
+
+
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

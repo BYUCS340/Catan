@@ -1,0 +1,57 @@
+/*specific positioning, partitioning, sizing rules*/
+.header 
+	{ top:0px; height:80px; padding:10px; }
+.body 
+	{ top:80px; 	bottom:0px;}
+#left-pane 
+	{ left:0px; 		width:300px;}
+#side-bar 
+	{ bottom: 120px;}
+#turn-tracker-pane 
+	{	bottom: 5px;	}
+
+#middle-pane 
+	{ left:300px; 	right:0px;}
+#main-area 
+	{	left: 0px; right:155px;	overflow-y:scroll;}
+#map-pane 
+	{	top: 0px; bottom: 0px;	}
+#game-state-pane 
+	{	bottom: 5px;	}
+#right-area
+	{	top:38;	bottom: 0px;	}
+#right-pane
+	{	right:0px; width:155px;	overflow-y:scroll;}
+#points
+	{	width:55px; height:70%; right:91px;}
+#resources
+	{	width:95px;	height:70%;right:0px;}
+#costs-pane
+	{	float:right;	 width:300px;	}
+
+
+/*   Centering of the elements within their displays*/
+#undefined-display
+	{	margin-left: auto;  margin-right: auto;	}
+#main-area > div, #right-pane > div
+	{	text-align:center;	margin-top:30;	}
+#map-pane, #domestic-trade-pane, #maritime-trade-pane
+	{	text-align:center;	margin-bottom:30;	}
+	
+#rob.modal 
+	{	width: 300px;	margin-left: -180px; /* half of the width, minus scrollbar on the left (30px) */	}
+
+/* visual stuff*/
+#right-pane, #middle-pane 
+	{	border-left-style:solid;
+		border-left-width:1px;
+		border-left-color:lightgrey;	}
+
+.front
+	{	position:absolute; z-index:1;		}
+.back
+	{	position:absolute; z-index:-1;		}
+.centered
+	{	margin-left:auto; margin-right:auto;	}
+
+

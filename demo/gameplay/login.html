@@ -1,0 +1,123 @@
+<!-- STUDENT-CORE-BEGIN -->
+<!DOCTYPE html>
+<html lang="en">
+	<head> 
+		<script type="text/javascript" src="/libs/jquery.js"></script>
+		<script type="text/javascript" src="/libs/bootstrap/js/bootstrap.js"></script>
+
+		<script type="text/javascript" src="/js/setup/FormSubmission.js"></script>
+        
+		<link href="/libs/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+		<link href="/libs/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+		
+		<style>
+			html, body { height: 100% }
+			.container {
+				min-height:100%;
+				overflow:hidden;
+				}
+			.col{
+				margin-bottom:-9999px;
+				padding-bottom:9999px
+			}
+			/*http://blog.credera.com/technology-solutions/full-height-column-layout-with-bootstrap/*/
+		</style>
+		<script>
+			function checkPasswords() {
+				var pass = document.getElementById('password');
+				var pass2 = document.getElementById('password2');
+				if (pass2.value != pass.value) {
+					pass2.setCustomValidity('The two passwords must match.');
+				} else {
+					pass2.setCustomValidity('');
+				}
+			}
+		</script>
+		<script type="text/javascript">           
+			$(window).load(function(){
+				if(window.location.search=="?duplicateUsername"){
+					$('#duplicateUsername').modal('show');
+				} else if (window.location.search=="?failedLogin"){
+					$('#failedLogin').modal('show');
+				}
+                
+                ajax_submit(
+                    'form[name=login]',
+                    function success(data){location="/joinGame.html"},
+                    function failure(data){alert(data.responseText)}
+                );
+                    
+                ajax_submit(
+                    'form[name=register]',
+                    function success(data){location="/joinGame.html"},
+                    function failure(data){alert(data.responseText)}
+                )
+			})
+		</script>
+		<title>Settlers Login</title>
+	</head>
+   
+   
+	<body>
+		<div class="container">
+			<div class="row-fluid">
+				<div class="span4 hero-unit col">
+					<h1> Settlers of Catan</h1>
+				</div>
+				<div class="span4 hero-unit col">
+					<h2>Login</h2>
+					<form method = "post" name=login action="/user/login">
+						<label>Username: </label> 
+						<input type="text" class="span12" name="username" required><br>
+						<label> Password:</label>
+						<input type="password" class="span12" name="password" required>
+						<input value="Sign in" class="btn btn-primary pull-left" type="submit">
+						<div class="clearfix"></div>
+					</form>
+				</div>
+				<div class="span4 hero-unit col">
+					<h2>Register</h2>
+					<form method="post" name=register action="/user/register">
+						<label>Username</label>
+						<input name="username" class="span12" type="text" required pattern="[A-z0-9_-]{3,7}"
+       title="The username must be between three and seven characters: letters, digits, _ and -"/>
+						<label>Password</label>
+						<input id=password name="password" class="span12" type="password" required oninput="checkPasswords()" onblur="checkPasswords()" pattern="[A-z0-9_-]{5,}"
+       title="The password must be five or more characters: letters, digits, _ and -"/>
+						<label>Password (Again)</label>
+						<input id=password2 class="span12" type="password" required	oninput="checkPasswords()" onblur="checkPasswords()">
+						<input value="Register" class="btn btn-primary pull-left" type="submit">
+						<div class="clearfix"></div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div id="failedLogin" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>Login Error</h3>
+			</div>
+			<div class="modal-body">
+				<p>Login failed - bad password or username</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			</div>
+		</div>
+		<div id="duplicateUsername" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>Registration Error</h3>
+			</div>
+			<div class="modal-body">
+				<p>Registration failed - that username is already taken</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			</div>
+		</div>
+	</body>
+</html>
+
+
+

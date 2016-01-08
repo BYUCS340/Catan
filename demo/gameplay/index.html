@@ -1,0 +1,67 @@
+<!-- STUDENT-EDITABLE-BEGIN -->
+<html>	
+	<head>		
+		<title>Settlers of Catan</title>
+	</head>
+    <body>
+		<div>
+            <h2> Intro </h2>
+            <h4> Please be warned - this game has only be shown to work in chrome (windows) / chromium (linux). Sorry for the inconvenience.</h4>
+            <p> Welcome to the Settler's of Catan C S 340 class project. This page contains links to the important files you'll want to be aware about. It links to 1) documentation and 2) pages used to join and play games.</p>
+            
+            <h2> Doc Pages</h2>
+            <p> We give you a lot of documentation. This server provides documenation for it self and the javascript files we give you. They are both automatically generated. Drop us a line if the documentation is ambiguous. We'll try and update to avoid rough patches.</p>
+            
+            <h3> Java </h3>
+            <a href="/docs/java/index.html"> Java docs</a>
+            <p>This page contains the documentation on the Java files we give you. You can use 'ant make-java-doc to update the documentation, including any documentation you've written in your files!</p>
+            
+            <h3> Javascript </h3>
+            <a href="/docs/javascript/index.html"> Javascript docs</a>
+            <p>This page contains the documentation on the javascript files we give you. We decided to go with YUIdoc because their parser looks inside javascript closures. In order to run it, you'll need to have node.js and npm installed, and then install YUIdoc with something along the lines of "node install -g yuidocjs". After that you can use 'ant make-js-doc to update the documentation, including any documentation you've written in your files!</p>
+            
+            <h3> Server API</h3>
+            <a href="/docs/api/view/index.html"> Interactive Server API</a>
+            <p>We documented the server using the swagger specification. It allows you to try out the commands we've documented. We've documented them all, you'll only have to worry about using the ones under '/game' and '/moves' in your javascript. You'll need to implement them all on your server though.</p>
+
+            <h2> Game Pages</h2>
+            <p> Here is a list of pages we give you to make the game work. The 'login' and 'join game' pages are completely implemented for you. We provide the 'setup' and 'catan' pages, but you'll have to modify them to include the javascript files you write.</p>
+            <p> They are all located in the gameplay folder of the files we give you.</p>
+            <ul>
+                <li>
+                    <a href="/login.html">login.html</a> 
+                    <p>You can login as one of the default users (Sam, Brooke, Pete or Mark) by using their name as the username and then their name lowercase as the password (ie. username=Sam, password=sam)</p>
+                    <p>You can register a user if you want as well. However, the server we give you doesn't provide persistence between server runs. The fields are highlighted red if they don't meet the minimum length requirements</p>
+                    <p>After you login or register (which then logs you in), you'll have a cookie set in your browser that identifies you with the server. This cookie only lasts until you close the browser.</p>
+                </li>
+                <li>
+                    <a href="/joinGame.html">joinGame.html</a> 
+                    <p>It's here that you can join games. The web-page loads the list of games from the server and lists all games currently being played. We allow you to be in more than one game even though it's not very feasible to play two at one (unless you use two different browsers, or an incognito instance).</p>
+                    <p> If there are games listed, you may join any game with an open slot, or rejoin a game you are already in (allowing you to pick a different color). We have plans to allow for AI players in the future.</p>
+                    <p> When you go to join a game, it will bring a screen where you may pick your color. There are 9 colors in all, and you aren't allowed to pick the same color as another player.</p>
+                    <p> If there are no games you like, you may create a new game. To create one, you will need to provide a title, and indicate if the numbers, tiles and ports are going to be randomized. After you create the game, you will be prompted to join it.</p>
+                </li>
+                <li>
+                    <a href="/playerWaiting.html">playerWaiting.html</a> 
+                    <p>This is the page you go to once you've joined a game. When the game is full, it will redirect to the setup page.</p>
+                    <p>We have plans to allow for AI's to be selected here.</p>
+                    <p>Since this page redirects you once all players have joined, you'll have to modify it to ping the server for the model and check if there are enough players.</p>
+                </li>
+                <li>
+                    <a href="/setup.html">setup.html</a> 
+                    <p>This is the page where the first two rounds of setup are played. Players get to place the pieces for free.</p>
+                    <p>We provide the views and html file, but you'll have to supply the controllers and implement the views necessary for it to work.</p>
+                    <p>When everyone is done playing pieces, it should redirect to the catan.html page</p>
+                </li>
+                <li>
+                    <a href="/catan.html">catan.html</a> 
+                    <p>This is the where you play the games once you've placed all your initial pieces. Again, we give you the views, but you'll have to add a lot of javascript code to get it to work.</p>
+                    <p>We have plans to make videos of us playing. I don't know who we'll get to play as Mark.</p>
+                </li>
+            </ul>
+        </div>
+	</body>
+</html>
+            
+
+

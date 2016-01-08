@@ -1,0 +1,22 @@
+.amount-textbox[readonly]
+	{	width:100%;	}
+
+/*input image buttons*/
+input:hover[readonly]
+	{	cursor:default;	}
+input[type=text]
+	{	height:100%; margin-left:5; margin-right:5;	}
+input[readonly]
+	{	background-color:transparent;
+		outline: none;	border:none;	box-shadow:none;	}
+input[type=image][disabled]
+	{	visibility:hidden;	}
+input[type=image][readonly]
+	{	background-color:transparent; opacity: 0.4;	cursor:default;	}
+input[type=image].tracker-award-img[readonly]
+	{	opacity: 1;	}
+input[type=image].domestic-resource-img[readonly]
+	{	opacity: 1;	}
+/*add in ability to click on resource to trade in DT: when click on it, send/receive option appear. readonly on not your turn.
+ * change maritimeTrading to readonly when not your turn
+ * */

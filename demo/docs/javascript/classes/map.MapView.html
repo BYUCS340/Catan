@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>map.MapView</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/comm.BaseCommController.html">comm.BaseCommController</a></li>
+            
+                <li><a href="../classes/comm.BaseCommView.html">comm.BaseCommView</a></li>
+            
+                <li><a href="../classes/comm.ChatController.html">comm.ChatController</a></li>
+            
+                <li><a href="../classes/comm.ChatView.html">comm.ChatView</a></li>
+            
+                <li><a href="../classes/comm.LogController.html">comm.LogController</a></li>
+            
+                <li><a href="../classes/comm.LogView.html">comm.LogView</a></li>
+            
+                <li><a href="../classes/core.Core.html">core.Core</a></li>
+            
+                <li><a href="../classes/devCards.BuyCardView.html">devCards.BuyCardView</a></li>
+            
+                <li><a href="../classes/devCards.DevCardController.html">devCards.DevCardController</a></li>
+            
+                <li><a href="../classes/devCards.DevCardView.html">devCards.DevCardView</a></li>
+            
+                <li><a href="../classes/discard.DiscardController.html">discard.DiscardController</a></li>
+            
+                <li><a href="../classes/discard.DiscardView.html">discard.DiscardView</a></li>
+            
+                <li><a href="../classes/domestic.AcceptView.html">domestic.AcceptView</a></li>
+            
+                <li><a href="../classes/domestic.DomesticController.html">domestic.DomesticController</a></li>
+            
+                <li><a href="../classes/domestic.DomesticView.html">domestic.DomesticView</a></li>
+            
+                <li><a href="../classes/hex_core.BaseLocation.html">hex_core.BaseLocation</a></li>
+            
+                <li><a href="../classes/hex_core.EdgeDirection.html">hex_core.EdgeDirection</a></li>
+            
+                <li><a href="../classes/hex_core.EdgeLocation.html">hex_core.EdgeLocation</a></li>
+            
+                <li><a href="../classes/hex_core.HexDirection.html">hex_core.HexDirection</a></li>
+            
+                <li><a href="../classes/hex_core.HexLocation.html">hex_core.HexLocation</a></li>
+            
+                <li><a href="../classes/hex_core.VertexDirection.html">hex_core.VertexDirection</a></li>
+            
+                <li><a href="../classes/hex_core.VertexLocation.html">hex_core.VertexLocation</a></li>
+            
+                <li><a href="../classes/map.MapController.html">map.MapController</a></li>
+            
+                <li><a href="../classes/map.MapOverlay.html">map.MapOverlay</a></li>
+            
+                <li><a href="../classes/map.MapView.html">map.MapView</a></li>
+            
+                <li><a href="../classes/map.Point.html">map.Point</a></li>
+            
+                <li><a href="../classes/map.RobberOverlay.html">map.RobberOverlay</a></li>
+            
+                <li><a href="../classes/maritime.MaritimeController.html">maritime.MaritimeController</a></li>
+            
+                <li><a href="../classes/maritime.MaritimeView.html">maritime.MaritimeView</a></li>
+            
+                <li><a href="../classes/misc.BaseController.html">misc.BaseController</a></li>
+            
+                <li><a href="../classes/misc.BaseOverlay.html">misc.BaseOverlay</a></li>
+            
+                <li><a href="../classes/misc.GameFinishedView.html">misc.GameFinishedView</a></li>
+            
+                <li><a href="../classes/misc.WaitOverlay.html">misc.WaitOverlay</a></li>
+            
+                <li><a href="../classes/models.CatanEdge.html">models.CatanEdge</a></li>
+            
+                <li><a href="../classes/models.CatanHex.html">models.CatanHex</a></li>
+            
+                <li><a href="../classes/models.CatanVertex.html">models.CatanVertex</a></li>
+            
+                <li><a href="../classes/models.ClientModel.html">models.ClientModel</a></li>
+            
+                <li><a href="../classes/points.PointController.html">points.PointController</a></li>
+            
+                <li><a href="../classes/points.PointView.html">points.PointView</a></li>
+            
+                <li><a href="../classes/resources.ResourceBarController.html">resources.ResourceBarController</a></li>
+            
+                <li><a href="../classes/resources.ResourceBarView.html">resources.ResourceBarView</a></li>
+            
+                <li><a href="../classes/roll.RollController.html">roll.RollController</a></li>
+            
+                <li><a href="../classes/roll.RollResultView.html">roll.RollResultView</a></li>
+            
+                <li><a href="../classes/roll.RollView.html">roll.RollView</a></li>
+            
+                <li><a href="../classes/setup.SetupRoundController.html">setup.SetupRoundController</a></li>
+            
+                <li><a href="../classes/turntracker.TurnTrackerController.html">turntracker.TurnTrackerController</a></li>
+            
+                <li><a href="../classes/turntracker.TurnTrackerView.html">turntracker.TurnTrackerView</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/catan.comm.html">catan.comm</a></li>
+            
+                <li><a href="../modules/catan.devCards.html">catan.devCards</a></li>
+            
+                <li><a href="../modules/catan.discard.html">catan.discard</a></li>
+            
+                <li><a href="../modules/catan.hex_core.html">catan.hex_core</a></li>
+            
+                <li><a href="../modules/catan.map.html">catan.map</a></li>
+            
+                <li><a href="../modules/catan.misc.html">catan.misc</a></li>
+            
+                <li><a href="../modules/catan.models.html">catan.models</a></li>
+            
+                <li><a href="../modules/catan.points.html">catan.points</a></li>
+            
+                <li><a href="../modules/catan.resources.html">catan.resources</a></li>
+            
+                <li><a href="../modules/catan.roll.html">catan.roll</a></li>
+            
+                <li><a href="../modules/catan.setup.html">catan.setup</a></li>
+            
+                <li><a href="../modules/catan.trade.html">catan.trade</a></li>
+            
+                <li><a href="../modules/catan.trade.domestic.html">catan.trade.domestic</a></li>
+            
+                <li><a href="../modules/catan.trade.maritime.html">catan.trade.maritime</a></li>
+            
+                <li><a href="../modules/catan.turntracker.html">catan.turntracker</a></li>
+            
+                <li><a href="../modules/core.html">core</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1>map.MapView Class</h1>
+<div class="box meta">
+    
+
+    
+
+    
+        <div class="foundat">
+            Defined in: <a href="../files/student_demo_gameplay_js_map_MapView.js.html#l749"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;map&#x2F;MapView.js:749</code></a>
+        </div>
+    
+
+    
+        
+            Module: <a href="../modules/catan.map.html">catan.map</a>
+        
+    
+
+    
+</div>
+
+
+
+<div class="box intro">
+    <p>You need to pass in how many pixels tall/wide the map is 
+and how many hexes tall/wide the map is 
+(the hex dim can be calculated from the client model)</p>
+
+</div>
+
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_map.MapView" class="method item">
+    <h3 class="name"><code>map.MapView</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>pixelDim</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>hexDim</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_map_MapView.js.html#l749"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;map&#x2F;MapView.js:749</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">pixelDim</code>
+                        <span class="type">Int</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the height of the map measured in pixels</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">hexDim</code>
+                        <span class="type">Int</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the height of the map measured in hexes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+    </div>
+
+
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
+
+        
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+        
+        
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
+        
+        
+        
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+            
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods">
+                        
+                            <li class="index-item method">
+                                <a href="#method_addHex">addHex</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_addNumber">addNumber</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_addPort">addPort</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_cancelDrop">cancelDrop</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_drawPieces">drawPieces</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_placeCity">placeCity</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_placeRoad">placeRoad</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_placeRobber">placeRobber</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_placeSettlement">placeSettlement</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_startDrop">startDrop</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties">
+                        
+                            <li class="index-item property">
+                                <a href="#property_controller">controller</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+
+            
+        </div>
+
+        
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_addHex" class="method item">
+    <h3 class="name"><code>addHex</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>loc</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>type</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[noDraw]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_map_MapView.js.html#l988"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;map&#x2F;MapView.js:988</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This adds a hex to the board.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">loc</code>
+                        <span class="type">HexLocation</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The location to put the hex. This should only be called at most once per hex location</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">type</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The type of the hex: a resource(&quot;wood&quot;,&quot;brick&quot;,&quot;sheep&quot;,&quot;wheat&quot;,&quot;ore&quot;), &quot;desert&quot;, or &quot;water&quot;</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[noDraw]</code>
+                        <span class="type">Boolean</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Optional - if omitted or false, the view is not redrawn.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_addNumber" class="method item">
+    <h3 class="name"><code>addNumber</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>loc</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>number</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[noDraw]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_map_MapView.js.html#l1000"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;map&#x2F;MapView.js:1000</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This adds a number to the board.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">loc</code>
+                        <span class="type">HexLocation</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The location to put the number. This should only be called at most once per hex location</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">number</code>
+                        <span class="type">Integer</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The number to put on the map</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[noDraw]</code>
+                        <span class="type">Boolean</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Optional - if omitted or false, the view is not redrawn.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_addPort" class="method item">
+    <h3 class="name"><code>addPort</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>loc</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>type</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[noDraw]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_map_MapView.js.html#l1012"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;map&#x2F;MapView.js:1012</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This adds a port to the board.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">loc</code>
+                        <span class="type">PortLoc</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The location to put the port. This should only be called only once per port</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">type</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The port type: a resource(&quot;wood&quot;,&quot;brick&quot;,&quot;sheep&quot;,&quot;wheat&quot;,&quot;ore&quot;), or &quot;three&quot;</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[noDraw]</code>
+                        <span class="type">Boolean</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Optional - if omitted or false, the view is not redrawn.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_cancelDrop" class="method item">
+    <h3 class="name"><code>cancelDrop</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_map_MapView.js.html#l970"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;map&#x2F;MapView.js:970</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This cancels the piece placement process.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_drawPieces" class="method item">
+    <h3 class="name"><code>drawPieces</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_map_MapView.js.html#l979"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;map&#x2F;MapView.js:979</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This causes the pieces on the board to be drawn.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_placeCity" class="method item">
+    <h3 class="name"><code>placeCity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>loc</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>playerColor</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[noDraw]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_map_MapView.js.html#l1055"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;map&#x2F;MapView.js:1055</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This adds a city to the board.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">loc</code>
+                        <span class="type">VertexLoc</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The location to put the city.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">playerColor</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The player color</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[noDraw]</code>
+                        <span class="type">Boolean</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Optional - if omitted or false, the view is not redrawn.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_placeRoad" class="method item">
+    <h3 class="name"><code>placeRoad</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>loc</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>playerColor</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[noDraw]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_map_MapView.js.html#l1071"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;map&#x2F;MapView.js:1071</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This adds a road to the board.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">loc</code>
+                        <span class="type">EdgeLoc</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The location to put the road.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">playerColor</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The player color</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[noDraw]</code>
+                        <span class="type">Boolean</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Optional - if omitted or false, the view is not redrawn.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_placeRobber" class="method item">
+    <h3 class="name"><code>placeRobber</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>loc</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[noDraw]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_map_MapView.js.html#l1024"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;map&#x2F;MapView.js:1024</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This places the robber on the board. Subsequent calls move the robber.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">loc</code>
+                        <span class="type">HexLocation</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The location to put the robber.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[noDraw]</code>
+                        <span class="type">Boolean</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Optional - if omitted or false, the view is not redrawn.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_placeSettlement" class="method item">
+    <h3 class="name"><code>placeSettlement</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>loc</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>playerColor</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[noDraw]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_map_MapView.js.html#l1037"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;map&#x2F;MapView.js:1037</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This adds a settlement to the board.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">loc</code>
+                        <span class="type">VertexLoc</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The location to put the settlement.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">playerColor</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The player color</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[noDraw]</code>
+                        <span class="type">Boolean</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Optional - if omitted or false, the view is not redrawn.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_startDrop" class="method item">
+    <h3 class="name"><code>startDrop</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>objectType</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>color</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_map_MapView.js.html#l907"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;map&#x2F;MapView.js:907</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This starts the piece placement process - it has no knowledge of the model, so you must tell it the piece type and color.
+Color can be omitted and has no effect if it&#39;s the robber
+After calling this, the view will use the controller&#39;s &quot;onDrag&quot; and &quot;onDrop&quot; methods to check whether a piece can be placed.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">objectType</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The type of piece to be placed (&quot;city&quot;,&quot;settlement&quot;,&quot;road&quot;,&quot;robber&quot;)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">color</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The color of the piece you want to place. (Omit for &quot;robber&quot;.)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+            </div>
+        
+
+        
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_controller" class="property item">
+    <h3 class="name"><code>controller</code></h3>
+    <span class="type">MapController</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/student_demo_gameplay_js_map_MapView.js.html#l789"><code>student&#x2F;demo&#x2F;gameplay&#x2F;js&#x2F;map&#x2F;MapView.js:789</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+            </div>
+        
+
+        
+
+        
+    </div>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

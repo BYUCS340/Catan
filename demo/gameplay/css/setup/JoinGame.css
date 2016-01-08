@@ -1,0 +1,47 @@
+/*http://jsfiddle.net/496c9/   and 
+/* http://stackoverflow.com/questions/5523735/how-to-make-a-radio-button-look-like-a-toggle-button by Simon Darby */
+body {
+    font-family:sans-serif;
+}
+
+#select-color {
+    margin:4px;
+   
+    float:left;
+}
+
+#select-color label {
+    float:left;
+    width:160px;
+    margin:4px;
+    border-radius:4px;
+    border:1px solid #D0D0D0;
+    overflow:auto;
+       
+}
+
+#select-color label span {
+    text-align:center;
+    font-size: 30px;
+    padding:13px 0px;
+    display:block;
+}
+
+#select-color label input {
+    position:absolute;
+    top:-20px;
+}
+
+#select-color input:checked + span {
+    color:#F7F7F7;
+}
+
+#select-color .color{
+	color:#333;
+	}
+
+
+
+#select-color label.disabled{
+	background:grey;
+}

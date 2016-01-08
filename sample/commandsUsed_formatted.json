@@ -1,0 +1,256 @@
+[
+  {
+    "offer": {
+      "brick": 2,
+      "wood": 2,
+      "sheep": 2,
+      "wheat": 2,
+      "ore": 2
+    },
+    "type": "maritimeTrade",
+    "playerIndex": 0
+  },
+  {
+    "number": 5,
+    "type": "rollNumber",
+    "playerIndex": 0
+  },
+  {
+    "roadLocation": {
+      "direction": "NW",
+      "x": 0,
+      "y": 2
+    },
+    "free": true,
+    "type": "buildRoad",
+    "playerIndex": 0
+  },
+  {
+    "vertexLocation": {
+      "direction": "W",
+      "x": 0,
+      "y": 2
+    },
+    "free": false,
+    "type": "buildSettlement",
+    "playerIndex": 0
+  },
+  {
+    "vertexLocation": {
+      "direction": "NE",
+      "x": 0,
+      "y": 2
+    },
+    "free": true,
+    "type": "buildCity",
+    "playerIndex": 0
+  },
+  {
+    "receiver": 1,
+    "offer": {
+      "brick": 0,
+      "wood": 1,
+      "sheep": 0,
+      "wheat": 0,
+      "ore": 0
+    },
+    "type": "offerTrade",
+    "playerIndex": 0
+  },
+  {
+    "willAccept": true,
+    "type": "acceptTrade",
+    "playerIndex": 1
+  },
+  {
+    "discardedCards": {
+      "brick": 0,
+      "wood": 1,
+      "sheep": 0,
+      "wheat": 0,
+      "ore": 1
+    },
+    "type": "discardCards",
+    "playerIndex": 0
+  },
+  {
+    "victimIndex": 2,
+    "robberSpot": {
+      "x": 0,
+      "y": 0
+    },
+    "type": "robPlayer",
+    "playerIndex": 0
+  },
+  {
+    "type": "buyDevCard",
+    "playerIndex": 0
+  },
+  {
+    "type": "finishTurn",
+    "playerIndex": 0
+  },
+  {
+    "type": "finishTurn",
+    "playerIndex": 1
+  },
+  {
+    "type": "finishTurn",
+    "playerIndex": 2
+  },
+  {
+    "type": "finishTurn",
+    "playerIndex": 3
+  },
+  {
+    "offer": {
+      "brick": 2,
+      "wood": 2,
+      "sheep": 2,
+      "wheat": 2,
+      "ore": 2
+    },
+    "type": "maritimeTrade",
+    "playerIndex": 0
+  },
+  {
+    "number": 5,
+    "type": "rollNumber",
+    "playerIndex": 0
+  },
+  {
+    "roadLocation": {
+      "direction": "NW",
+      "x": 0,
+      "y": 2
+    },
+    "free": true,
+    "type": "buildRoad",
+    "playerIndex": 0
+  },
+  {
+    "vertexLocation": {
+      "direction": "W",
+      "x": 0,
+      "y": 2
+    },
+    "free": false,
+    "type": "buildSettlement",
+    "playerIndex": 0
+  },
+  {
+    "vertexLocation": {
+      "direction": "NE",
+      "x": 0,
+      "y": 2
+    },
+    "free": true,
+    "type": "buildCity",
+    "playerIndex": 0
+  },
+  {
+    "receiver": 1,
+    "offer": {
+      "brick": 0,
+      "wood": 1,
+      "sheep": 0,
+      "wheat": 0,
+      "ore": 0
+    },
+    "type": "offerTrade",
+    "playerIndex": 0
+  },
+  {
+    "willAccept": true,
+    "type": "acceptTrade",
+    "playerIndex": 1
+  },
+  {
+    "discardedCards": {
+      "brick": 0,
+      "wood": 1,
+      "sheep": 0,
+      "wheat": 0,
+      "ore": 1
+    },
+    "type": "discardCards",
+    "playerIndex": 0
+  },
+  {
+    "victimIndex": 2,
+    "robberSpot": {
+      "x": 0,
+      "y": 0
+    },
+    "type": "robPlayer",
+    "playerIndex": 0
+  },
+  {
+    "type": "buyDevCard",
+    "playerIndex": 0
+  },
+  {
+    "type": "finishTurn",
+    "playerIndex": 0
+  },
+  {
+    "type": "finishTurn",
+    "playerIndex": 1
+  },
+  {
+    "type": "finishTurn",
+    "playerIndex": 2
+  },
+  {
+    "type": "finishTurn",
+    "playerIndex": 3
+  },
+  {
+    "number": 2,
+    "type": "rollNumber",
+    "playerIndex": 0
+  },
+  {
+    "resource": "Wheat",
+    "cardType": "Monopoly",
+    "type": "Monopoly",
+    "playerIndex": 0
+  },
+  {
+    "cardType": "Monument",
+    "type": "Monument",
+    "playerIndex": 0
+  },
+  {
+    "location": {
+      "x": -1,
+      "y": -1
+    },
+    "victimIndex": 1,
+    "cardType": "Soldier",
+    "type": "Soldier",
+    "playerIndex": 0
+  },
+  {
+    "spot1": {
+      "direction": "N",
+      "x": 1,
+      "y": 1
+    },
+    "spot2": {
+      "direction": "NW",
+      "x": 1,
+      "y": 1
+    },
+    "cardType": "Road_Building",
+    "type": "Road_Building",
+    "playerIndex": 0
+  },
+  {
+    "resource1": "Wood",
+    "resource2": "Brick",
+    "cardType": "Year_of_Plenty",
+    "type": "Year_of_Plenty",
+    "playerIndex": 0
+  }
+]
