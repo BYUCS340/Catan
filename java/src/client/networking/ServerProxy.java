@@ -1,40 +1,37 @@
 package client.networking;
 
+import java.util.List;
+
 public interface ServerProxy 
 {
-	public void loginUser();
-	public void registerUser();
+	public void loginUser(String username, String password);
+	public void registerUser(String username, String password);
 	
 	public String listGames();
-	public void createGame();
-	public void joinGame();
-	public void saveGame();
-	public void loadGame();
-	
-	public String getGameModel();
-	public void resetGame();
-	public void executeCommand();
-	public String getCommands();
-	public void addAI();
-	public String listAI();
-	
-	public void sendChat();
-	public void rollNumber();
-	public void robPlayer();
-	public void finishTurn();
-	public void buyDevCard();
-	public void yearOfPlentyCard();
-	public void roadBuildingCard();
-	public void soldierCard();
-	public void monopolyCard();
-	public void buildRoad();
-	public void buildSettlement();
-	public void buildCity();
-	public void offerTrade();
-	public void acceptTrade();
-	public void maritimeTrade();
-	public void discardCards();
-	
-	public void changeLogLevel();
+	public String createGame();
+	public void joinGame(int id, String color);
 
+	
+	public String getGameModel(User user);
+	public void addAI(User user);
+	public String listAI(User user);
+	
+	public String sendChat(User user);
+	public String rollNumber(User user);
+	public String robPlayer(User user);
+	public String finishTurn(User user);
+	public String buyDevCard(User user);
+	public String yearOfPlentyCard(User user);
+	public String roadBuildingCard(User user);
+	public String soldierCard(User user);
+	public String monopolyCard(User user);
+	public String monumentCard(User user);
+	public String buildRoad(User user, EdgeLocation edgeLocation, boolean free);
+	public String buildSettlement(User user, VertexLocation vertexLocation, boolean free);
+	public String buildCity(User user, VertexLocation vertexLocation);
+	public String offerTrade(User user, List<String> resourceList, int receiver);
+	public String acceptTrade(User user, boolean willAccept);
+	public String maritimeTrade(User user, int ratio, String inputResource, String outputResource);
+	public String discardCards(User user);
+	
 }

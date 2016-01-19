@@ -1,5 +1,6 @@
 package client.networking;
 
-public class Poller {
+public class Poller 
+{
 
 }
