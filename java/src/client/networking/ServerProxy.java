@@ -4,8 +4,8 @@ import java.util.List;
 
 public interface ServerProxy 
 {
-	public void loginUser(String username, String password);
-	public void registerUser(String username, String password);
+	public User loginUser(String username, String password);
+	public boolean registerUser(String username, String password);
 	
 	public List<Game> listGames();
 	public Game createGame();
