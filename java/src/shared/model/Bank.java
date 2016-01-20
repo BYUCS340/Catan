@@ -4,6 +4,11 @@ import java.util.Arrays;
 
 import shared.definitions.*;
 
+/**
+ * The bank class the holds cards, pieces, and dev cards
+ * @author matthewcarlson, garrettegan
+ *
+ */
 public class Bank
 {
 	private int[] resources;
@@ -11,6 +16,7 @@ public class Bank
 	private int[] pieces;
 	
 	/**
+	 * Creates a bank
 	 */
 	public Bank() {
 		super();
