@@ -21,7 +21,6 @@ public class MapView extends PanelView implements IMapView
 	
 	public MapView()
 	{
-		
 		this.setLayout(new BorderLayout());
 		
 		map = new MapComponent();

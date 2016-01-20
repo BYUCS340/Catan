@@ -6,6 +6,7 @@ import shared.definitions.*;
 import shared.locations.*;
 import client.base.*;
 import client.data.*;
+import client.map.model.MapModel;
 
 
 /**
@@ -13,11 +14,14 @@ import client.data.*;
  */
 public class MapController extends Controller implements IMapController {
 	
+	private MapModel model;
 	private IRobView robView;
 	
 	public MapController(IMapView view, IRobView robView) {
 		
 		super(view);
+		
+		model = new MapModel();
 		
 		setRobView(robView);
 		
