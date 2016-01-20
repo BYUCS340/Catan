@@ -150,6 +150,10 @@
 			</assertions>
 		</java>
 	</target>
+	
+	<target name="test" depends="compile" description="compiles and runs the JUNIT tests">
+			
+	</target>
     
     <target name="make-tester-zip" depends="package" description="makes a zip file for your testing team">
         <zip destfile="./tester.zip" basedir="${java.dist}" />
