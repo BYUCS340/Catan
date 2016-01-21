@@ -9,9 +9,14 @@ public class GameManager
 	private List<Player> players;
 	private VictoryPointManager victoryPointManager;
 	
+	/**
+	 * 
+	 * @see <a href="https://imgs.xkcd.com/comics/random_number.png">Sauce</a>
+	 * @return
+	 */
 	public int rollDice()
 	{
-		//we rolled a die and it was 4 so that's pretty random
-		return 4;
+		return 4; // chosen by fair dice roll
+				  // guaranteed to be random
 	}
 }
