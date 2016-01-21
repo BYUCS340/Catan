@@ -28,7 +28,7 @@ public interface ServerProxy
 	 * Fetches a list of ongoing games
 	 * @return a list of all ongoing games on the server
 	 */
-	public List<Game> listGames();
+	public List<NetGame> listGames();
 	
 	/**
 	 * Creates a game on the server
@@ -36,16 +36,16 @@ public interface ServerProxy
 	 * @param randomNumbers Whether the server should place random number chits
 	 * @param randomPorts Whether the server should place random ports
 	 * @param name The name of the game to be created
-	 * @return a game object that represents the game that was created
+	 * @return a ProxyGame object that represents the game that was created
 	 */
-	public Game createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name);
+	public NetGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name);
 	
 	/**
 	 * 
 	 * @param color the color the user wishes to represent him
-	 * @return a game object that represents the game the user joined
+	 * @return a ProxyGame object that represents the game the user joined
 	 */
-	public Game joinGame(String color); 
+	public NetGame joinGame(String color); 
 
 	/**
 	 * Retrieves the game model from the server
@@ -65,7 +65,7 @@ public interface ServerProxy
 	 * @return a list of supported AI player types
 	 * @throws ProxyException if there is no logged in user
 	 */
-	public List<AI> listAI();
+	public List<NetAI> listAI();
 	
 	
 	/**
