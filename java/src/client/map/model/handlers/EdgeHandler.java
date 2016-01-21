@@ -5,6 +5,11 @@ import java.util.Map;
 
 import client.map.model.objects.Edge;
 
+/**
+ * Stores and manages the edges contained in a map.
+ * @author Jonathan Sadler
+ *
+ */
 public class EdgeHandler {
 
 	private static final int INITIAL_CAPACITY = 72;
@@ -12,6 +17,9 @@ public class EdgeHandler {
 	
 	private Map<Integer, Edge> edges;
 	
+	/**
+	 * Creates a EdgeHandler object.
+	 */
 	public EdgeHandler()
 	{
 		edges = new HashMap<Integer, Edge>(INITIAL_CAPACITY);
@@ -46,11 +54,27 @@ public class EdgeHandler {
 		}
 	}
 	
+	/**
+	 * Determines if an edge exists. Point order doesn't matter.
+	 * @param x1 First x coordinate.
+	 * @param y1 First y coordinate.
+	 * @param x2 Second x coordinate.
+	 * @param y2 Second y coordinate.
+	 * @return True if the edge exists, else false.
+	 */
 	public Boolean ContainsEdge(int x1, int y1, int x2, int y2)
 	{
 		return edges.containsKey(GetKey(x1, y1, x2, y2));
 	}
 	
+	/**
+	 * Returns the edge between the provided end points. Point order doesn't matter.
+	 * @param x1 First x coordinate.
+	 * @param y1 First y coordinate.
+	 * @param x2 Second x coordinate.
+	 * @param y2 Second y coordinate.
+	 * @return The associated edge.
+	 */
 	public Edge GetEdge(int x1, int y1, int x2, int y2)
 	{
 		return edges.get(GetKey(x1, y1, x2, y2));

@@ -5,6 +5,11 @@ import java.util.Map;
 
 import client.map.model.objects.Vertex;
 
+/**
+ * Stores and manages the vertices found in a map.
+ * @author Jonathan Sadler
+ *
+ */
 public class VertexHandler {
 
 	private static final int INITIAL_CAPACITY = 54;
@@ -12,6 +17,9 @@ public class VertexHandler {
 	
 	private Map<Integer, Vertex> verticies;
 	
+	/**
+	 * Creates a VertexHandler object.
+	 */
 	public VertexHandler()
 	{
 		verticies = new HashMap<Integer, Vertex>(INITIAL_CAPACITY);
@@ -22,6 +30,17 @@ public class VertexHandler {
 			for (int y = -yLimit; y <= yLimit; y++)
 				verticies.put(GetKey(x, y), new Vertex(x, y));
 		}
+	}
+	
+	/**
+	 * Gets the vertex at the specified coordinate.
+	 * @param x X coordinate.
+	 * @param y Y coordinate.
+	 * @return The assocatied vertex.
+	 */
+	public Vertex GetVertex(int x, int y)
+	{
+		return verticies.get(GetKey(x, y));
 	}
 	
 	private int GetKey(int x, int y)
