@@ -1,5 +1,9 @@
 package client.networking;
 
+import shared.networking.*;
+import shared.definitions.*;
+import shared.locations.*;
+import shared.model.*;
 import java.util.List;
 
 public interface ServerProxy 

@@ -1,4 +1,4 @@
-package client.networking;
+package shared.networking;
 
 public class User 
 {
