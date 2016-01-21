@@ -8,8 +8,7 @@ import java.util.Map;
 
 import client.map.model.handlers.*;
 import client.map.model.objects.*;
-import shared.definitions.HexType;
-import shared.definitions.PieceType;
+import shared.definitions.*;
 
 /**
  * The Map Model stores all information about the map. This data includes information
@@ -25,6 +24,10 @@ public class MapModel {
 	private HexHandler hexes;
 	private EdgeHandler edges;
 	private VertexHandler verticies;	
+	
+	private int longestRoadLength;
+	private Vertex longestRoad;
+	private Map<CatanColor, List<PortType>> availablePorts;
 	
 	private Robber robber;
 	
@@ -48,6 +51,10 @@ public class MapModel {
 		hexes = new HexHandler();
 		edges = new EdgeHandler();
 		verticies = new VertexHandler();
+		
+		longestRoadLength = 2;
+		longestRoad = null;
+		availablePorts = new HashMap<CatanColor, List<PortType>>();
 		
 		if (method == Method.random)
 			RandomSetup();
@@ -77,6 +84,17 @@ public class MapModel {
 	public List<Hex> GetHex(int role)
 	{
 		return java.util.Collections.unmodifiableList(values.get(role));
+	}
+	
+	/**
+	 * Creates a hex at the specified location.
+	 * @param type The resource type associated with the hex.
+	 * @param x The x coordinate of the hex.
+	 * @param y The y coordiante of the hex. 
+	 */
+	public void SetHex(HexType type, int x, int y)
+	{
+		hexes.AddHex(new Hex(type, x, y));
 	}
 	
 	/**
@@ -124,6 +142,17 @@ public class MapModel {
 		AddOccupiedVertex(GetVertex(x + 1, y - 1), verticies);
 		
 		return java.util.Collections.unmodifiableList(verticies);
+	}
+	
+	/**
+	 * Sets a vertex as a port
+	 * @param type The type of port to set.
+	 * @param x X coordinate of the port.
+	 * @param y Y coordinate of the port.
+	 */
+	public void SetPort(PortType type, int x, int y)
+	{
+		verticies.GetVertex(x, y).setPortType(type);
 	}
 	
 	private void RandomSetup()
