@@ -6,24 +6,37 @@ import shared.definitions.*;
 import shared.locations.*;
 import client.base.*;
 import client.data.*;
+import client.map.model.MapModel;
 
 
 /**
- * Implementation for the map controller
+ * Implementation for the map controller. Used to make updates or changes to
+ * any object on the map.
  */
 public class MapController extends Controller implements IMapController {
 	
+	private MapModel model;
 	private IRobView robView;
 	
+	/**
+	 * Creates a MapController object.
+	 * @param view The MapView object.
+	 * @param robView The RobberView object.
+	 */
 	public MapController(IMapView view, IRobView robView) {
 		
 		super(view);
+		
+		model = new MapModel();
 		
 		setRobView(robView);
 		
 		initFromModel();
 	}
 	
+	/**
+	 * Gets the MapView object associated with the controller.
+	 */
 	public IMapView getView() {
 		
 		return (IMapView)super.getView();
@@ -104,6 +117,7 @@ public class MapController extends Controller implements IMapController {
 	}
 
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) {
+		
 		
 		return true;
 	}

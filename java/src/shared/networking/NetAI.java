@@ -1,5 +1,6 @@
 package shared.networking;
 
-public class NetAI {
+public class NetAI 
+{
 
 }

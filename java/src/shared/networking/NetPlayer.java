@@ -1,6 +1,6 @@
 package shared.networking;
 
-public class NetGame 
+public class NetPlayer
 {
 
 }
