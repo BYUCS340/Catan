@@ -119,3 +119,11 @@ dist/
 nbdist/
 nbactions.xml
 .nb-gradle/
+
+*.html
+
+doc/package-list
+
+doc/script.js
+
+doc/stylesheet.css
