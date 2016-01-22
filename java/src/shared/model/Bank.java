@@ -128,6 +128,191 @@ public class Bank
 		return 0;
 	}
 	
+	/**
+	 * Checks if has enough cards to build a road (one wood, one brick, one road)
+	 * @return true if allowed, false otherwise
+	 */
+	public boolean canBuildRoad()
+	{
+		int woodIndex = ResourceType.WOOD.ordinal();
+		int brickIndex = ResourceType.BRICK.ordinal();
+		int roadIndex = PieceType.ROAD.ordinal();
+		
+		if (this.resources[woodIndex] > 0 && this.resources[brickIndex] > 0
+				&& this.pieces[roadIndex] > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * Removes resource cards, if allowed, needed to build a road (one wood, one brick, one road)
+	 * @return true if successful, false otherwise
+	 */
+	public boolean buildRoad()
+	{
+		if (canBuildRoad())
+		{
+			int woodIndex = ResourceType.WOOD.ordinal();
+			int brickIndex = ResourceType.BRICK.ordinal();
+			int roadIndex = PieceType.ROAD.ordinal();
+			
+			this.resources[woodIndex]--;
+			this.resources[brickIndex]--;
+			this.pieces[roadIndex]--;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks if has enough cards to build a settlement (one wood, one brick, one sheep, one wheat, one settlement)
+	 * @return true if allowed, false otherwise
+	 */
+	public boolean canBuildSettlement()
+	{
+		int woodIndex = ResourceType.WOOD.ordinal();
+		int brickIndex = ResourceType.BRICK.ordinal();
+		int sheepIndex = ResourceType.SHEEP.ordinal();
+		int wheatIndex = ResourceType.WHEAT.ordinal();
+		int settlementIndex = PieceType.SETTLEMENT.ordinal();
+		
+		if (this.resources[woodIndex] > 0 && this.resources[brickIndex] > 0
+				&& this.resources[sheepIndex] > 0 && this.resources[wheatIndex] > 0
+				&& this.pieces[settlementIndex] > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * Removes resource cards, if allowed, needed to build a settlement (one wood, one brick, one sheep, one wheat, one settlement)
+	 * @return true if successful, false otherwise
+	 */
+	public boolean buildSettlement()
+	{
+		if (canBuildSettlement())
+		{
+			int woodIndex = ResourceType.WOOD.ordinal();
+			int brickIndex = ResourceType.BRICK.ordinal();
+			int sheepIndex = ResourceType.SHEEP.ordinal();
+			int wheatIndex = ResourceType.WHEAT.ordinal();
+			int settlementIndex = PieceType.SETTLEMENT.ordinal();
+			
+			this.resources[woodIndex]--;
+			this.resources[brickIndex]--;
+			this.resources[sheepIndex]--;
+			this.resources[wheatIndex]--;
+			this.pieces[settlementIndex]--;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks if has enough cards to build a city (two wheat, three ore, one city)
+	 * @return true if allowed, false otherwise
+	 */
+	public boolean canBuildCity()
+	{
+		int wheatIndex = ResourceType.WHEAT.ordinal();
+		int oreIndex = ResourceType.ORE.ordinal();
+		int cityIndex = PieceType.CITY.ordinal();
+		
+		if (this.resources[wheatIndex] > 1 && this.resources[oreIndex] > 2
+				&& this.pieces[cityIndex] > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * Removes resource cards, if allowed, needed to build a city (two wheat, three ore, one city)
+	 * @return true if successful, false otherwise
+	 */
+	public boolean buildCity()
+	{
+		if (canBuildCity())
+		{
+			int wheatIndex = ResourceType.WHEAT.ordinal();
+			int oreIndex = ResourceType.ORE.ordinal();
+			int cityIndex = PieceType.CITY.ordinal();
+			int settlementIndex = PieceType.SETTLEMENT.ordinal();
+			
+			this.resources[wheatIndex] -= 2;
+			this.resources[oreIndex] -= 3;
+			this.pieces[cityIndex]--;
+			this.pieces[settlementIndex]++;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks if has enough cards to buy a development card (one wheat, one sheep, one ore)
+	 * @return true if allowed, false otherwise
+	 */
+	public boolean canBuyDevCard()
+	{
+		int wheatIndex = ResourceType.WHEAT.ordinal();
+		int sheepIndex = ResourceType.SHEEP.ordinal();
+		int oreIndex = ResourceType.ORE.ordinal();
+		
+		if (this.resources[wheatIndex] > 0 && this.resources[sheepIndex] > 0
+				&& this.resources[oreIndex] > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * Removes resource cards, if allowed, needed to buy a development card (one wheat, one sheep, one ore)
+	 * @return true if successful, false otherwise
+	 */
+	public boolean buyDevCard()
+	{
+		if (canBuyDevCard())
+		{
+			int wheatIndex = ResourceType.WHEAT.ordinal();
+			int sheepIndex = ResourceType.SHEEP.ordinal();
+			int oreIndex = ResourceType.ORE.ordinal();
+			
+			this.resources[wheatIndex]--;
+			this.resources[sheepIndex]--;
+			this.resources[oreIndex]--;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

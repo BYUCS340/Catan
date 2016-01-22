@@ -40,9 +40,10 @@ public class VictoryPointManager
 	 * Tells the VP manager which player now has the largest army - determined by @see map?
 	 * @param playerIndex 0 to 3
 	 * @see Map
-	 * @return successful or not (almost always is true
+	 * @return successful or not (almost always is true)
 	 */
-	public boolean setPlayerToHaveLargestArmy(int playerIndex){
+	public boolean setPlayerToHaveLargestArmy(int playerIndex)
+	{
 		if (playerIndex < 0 || playerIndex > 3) return false;
 		
 		return true;
@@ -54,7 +55,8 @@ public class VictoryPointManager
 	 * @see Map
 	 * @return an int between 0 and 10, -1 if invalid index
 	 */
-	public int currentPlayerScore(int playerIndex){
+	public int currentPlayerScore(int playerIndex)
+	{
 		if (playerIndex < 0 || playerIndex > 3) 
 			return -1;
 		return victoryPoints[playerIndex];
