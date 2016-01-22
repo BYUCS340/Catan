@@ -12,7 +12,7 @@ public class ChatBox {
 	
 	public void put(String message, int playerID){
 		ChatMessage mess = new ChatMessage(playerID,message);
-		messages.add(e);
+		messages.add(mess);
 	}
 	public ChatMessage get(int i){
 		return null;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import client.map.MapController;
 import shared.definitions.ResourceType;
+import shared.model.chat.ChatBox;
 
 /**
  * The game manager class acts as a facade between the player/game objects and the ServerProxy/UI
@@ -17,6 +18,7 @@ public class GameManager
 	private List<Player> players;
 	private VictoryPointManager victoryPointManager;
 	private MapController mapController;
+	private ChatBox waterCooler;
 	
 	/**
 	 * @see <a href="https://imgs.xkcd.com/comics/random_number.png">Sauce</a>
@@ -79,6 +81,15 @@ public class GameManager
 		//Otherwise return the default trade in value
 		return 4;
 
+	}
+	
+	/**
+	 * When the player chats
+	 * @param message
+	 */
+	public void currentPlayerChat(String message)
+	{
+		waterCooler.put(message, gameState.activePlayerIndex);
 	}
 	
 	/**
