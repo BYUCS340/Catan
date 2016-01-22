@@ -56,14 +56,14 @@ public interface ServerProxy
 	/**
 	 * Adds an AI to the game
 	 * @param aiType the type of AI the user wishes to add
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public void addAI(String aiType);
 	
 	/**
 	 * 
 	 * @return a list of supported AI player types
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public List<NetAI> listAI();
 	
@@ -72,7 +72,7 @@ public interface ServerProxy
 	 * Sends a chat message from the specified user to the server
 	 * @param content The content of the chat message
 	 * @return A NetGameModel object
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel sendChat(String content);
 	
@@ -80,7 +80,7 @@ public interface ServerProxy
 	 * Reports the result of a dice roll to the server
 	 * @param roll The result of the user's roll
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel rollNumber(int roll);
 	
@@ -89,7 +89,7 @@ public interface ServerProxy
 	 * @param victimIndex The index of the victim of the user's robbing
 	 * @param location The new hex location of the robber
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel robPlayer(int victimIndex, HexLocation location);
 	
@@ -97,14 +97,14 @@ public interface ServerProxy
 	 * Notifies the server that the user has finished his turn
 	 * @param user The User who has finished his turn
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel finishTurn();
 	
 	/**
 	 * Notifies the server that the user has bought a development card
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel buyDevCard();
 	
@@ -113,7 +113,7 @@ public interface ServerProxy
 	 * @param resource1 The first chosen resource
 	 * @param resource2 The second chosen resource
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel yearOfPlentyCard(String resource1, String resource2);
 	
@@ -122,7 +122,7 @@ public interface ServerProxy
 	 * @param location1 The EdgeLocation location of the first road
 	 * @param location2 The EdgeLocation location of the second card
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel roadBuildingCard(EdgeLocation location1, EdgeLocation location2);
 	
@@ -131,7 +131,7 @@ public interface ServerProxy
 	 * @param victimIndex The index of the player who is being robbed
 	 * @param hexLocation The new hex location of the robber
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel soldierCard(int victimIndex, HexLocation hexLocation);
 	
@@ -139,14 +139,14 @@ public interface ServerProxy
 	 * Notifies the server that the user has played a monopoly card
 	 * @param resource The resource that the player has chosen to have a monopoly on
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel monopolyCard(String resource);
 	
 	/**
 	 * Notifies the server that the user has played a monument card
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel monumentCard();
 	
@@ -155,7 +155,7 @@ public interface ServerProxy
 	 * @param edgeLocation The edge location of the road
 	 * @param free Whether this road was free (only true during the set up phases)
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel buildRoad(EdgeLocation edgeLocation, boolean free);
 	
@@ -164,7 +164,7 @@ public interface ServerProxy
 	 * @param vertexLocation The vertex location of the settlement
 	 * @param free Whether this settlement was free (only true during the set up phases)
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel buildSettlement(VertexLocation vertexLocation, boolean free);
 	
@@ -172,7 +172,7 @@ public interface ServerProxy
 	 * Notifies the server that the user has decided to build a city
 	 * @param vertexLocation The vertex location of the city
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel buildCity(VertexLocation vertexLocation);
 	
@@ -183,7 +183,7 @@ public interface ServerProxy
 	 * the resources that will be received
 	 * @param receiver The index of the player who will receive this trade offer
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel offerTrade(List<Integer> resourceList, int receiver);
 	
@@ -191,7 +191,7 @@ public interface ServerProxy
 	 * Notifies the server whether this player has decided to accept or reject a trade
 	 * @param willAccept true if the user will accept the trade, false if not
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel acceptTrade(boolean willAccept);
 	
@@ -201,7 +201,7 @@ public interface ServerProxy
 	 * @param inputResource The resources traded away
 	 * @param outputResource The resource received
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel maritimeTrade(int ratio, String inputResource, String outputResource);
 	
@@ -210,7 +210,7 @@ public interface ServerProxy
 	 * @param resourceList A list of integers that denotes how many of each resource the user will discard. The
 	 * order is brick, ore, sheep, wheat, and wood
 	 * @return a NetGameModel object that reflects the current state of the Game
-	 * @throws ProxyException if there is no logged in user
+	 * @throws ServerProxyException if there is no logged in user
 	 */
 	public NetGameModel discardCards(List<Integer> resourceList);
 	
