@@ -28,9 +28,10 @@ public class Bank
 	/**
 	 * Attempts to get a resource from the bank
 	 * @param type the type requested
+	 * @throws if there don't have the resource
 	 * @return true or false depending on whether it was successful or not
 	 */
-	public boolean getResource(ResourceType type)
+	public boolean getResource(ResourceType type) throws ModelException
 	{
 		int resourceIndex = type.ordinal();
 		if (this.resources[resourceIndex] > 0)
@@ -46,24 +47,26 @@ public class Bank
 	/**
 	 * Attempts to get a piece (road, settlement, city)
 	 * @param type it can be anything but the robber
-	 * @return true or false depending on success
+	 * @throws if there don't have the resource
 	 */
-	public boolean getPiece(PieceType type)
+	public boolean getPiece(PieceType type) throws ModelException
 	{
 		if (type == PieceType.ROBBER) return false;
 		return false;
 	}
 	/**
 	 * This gets a dev card which by default are shuffled when given. 
+	 * @throws if there don't have the resource
 	 * @return the type of the card you received or UNKNOWN if there are no more cards left
 	 */
-	public DevCardType getDevCard()
+	public DevCardType getDevCard() throws ModelException
 	{
 		return DevCardType.UNKNOWN;
 	}
 	
 	/**
 	 * Gives the bank one resource of type
+	 * @throws if there don't have the resource
 	 * @param type the resource given
 	 */
 	public void giveResource(ResourceType type)
@@ -131,6 +134,7 @@ public class Bank
 	/**
 	 * Checks if has enough cards to build a road (one wood, one brick, one road)
 	 * @return true if allowed, false otherwise
+	 * @throws if there don't have the resource
 	 */
 	public boolean canBuildRoad()
 	{
@@ -151,9 +155,9 @@ public class Bank
 	
 	/**
 	 * Removes resource cards, if allowed, needed to build a road (one wood, one brick, one road)
-	 * @return true if successful, false otherwise
+	 * @throws if there don't have the resource
 	 */
-	public boolean buildRoad()
+	public boolean buildRoad() throws ModelException
 	{
 		if (canBuildRoad())
 		{
@@ -199,8 +203,9 @@ public class Bank
 	/**
 	 * Removes resource cards, if allowed, needed to build a settlement (one wood, one brick, one sheep, one wheat, one settlement)
 	 * @return true if successful, false otherwise
+	 * @throws if there don't have the resource
 	 */
-	public boolean buildSettlement()
+	public boolean buildSettlement() throws ModelException
 	{
 		if (canBuildSettlement())
 		{
@@ -246,9 +251,9 @@ public class Bank
 	
 	/**
 	 * Removes resource cards, if allowed, needed to build a city (two wheat, three ore, one city)
-	 * @return true if successful, false otherwise
+	 * @throws if there don't have the resource
 	 */
-	public boolean buildCity()
+	public boolean buildCity() throws ModelException
 	{
 		if (canBuildCity())
 		{
@@ -292,9 +297,9 @@ public class Bank
 	
 	/**
 	 * Removes resource cards, if allowed, needed to buy a development card (one wheat, one sheep, one ore)
-	 * @return true if successful, false otherwise
+	 * @throws if there don't have the resource
 	 */
-	public boolean buyDevCard()
+	public boolean buyDevCard() throws ModelException
 	{
 		if (canBuyDevCard())
 		{
