@@ -3,6 +3,6 @@ package shared.definitions;
 public enum PortType
 {
 	
-	WOOD, BRICK, SHEEP, WHEAT, ORE, THREE
+	WOOD, BRICK, SHEEP, WHEAT, ORE, THREE, NONE
 }
 

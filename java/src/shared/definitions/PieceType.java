@@ -3,6 +3,6 @@ package shared.definitions;
 public enum PieceType
 {
 	
-	ROAD, SETTLEMENT, CITY, ROBBER
+	ROAD, SETTLEMENT, CITY, ROBBER, NONE
 }
 
