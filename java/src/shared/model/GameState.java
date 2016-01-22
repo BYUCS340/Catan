@@ -1,7 +1,5 @@
 package shared.model;
 
-import shared.model.State;
-
 /**
  * An object that keeps track of whose turn it is.
  * @author matthewcarlson, garrettegan

@@ -3,6 +3,7 @@ package shared.model;
 import java.util.List;
 
 import client.map.MapController;
+import shared.definitions.ResourceType;
 
 /**
  * The game manager class acts as a facade between the player/game objects and the ServerProxy/UI
@@ -30,11 +31,54 @@ public class GameManager
 	/**
 	 * Attempts to build a road
 	 * @param playerID
-	 * @throws ModelIllegalAction if the player doesn't have the resources
+	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void buildRoad(int playerID) throws ModelIllegalAction
+	public void buildRoad(int playerID) throws ModelException
 	{
-		
+		//check to see if player has resources
+	}
+	
+	/**
+	 * Attempts to build a road
+	 * @param playerID
+	 * @throws ModelException if the player doesn't have the resources
+	 */
+	public void buildSettlement(int playerID) throws ModelException
+	{
+		//check to see if player has resources
+	}
+	
+	/**
+	 * Attempts to build a road
+	 * @param playerID
+	 * @throws ModelException if the player doesn't have the resources
+	 */
+	public void buildCity(int playerID) throws ModelException
+	{
+		//check to see if player has resources
+	}
+	
+	/**
+	 * Attempts to build a road
+	 * @param playerID
+	 * @throws ModelException if the player doesn't have the resources
+	 */
+	public void buyDevCard(int playerID) throws ModelException
+	{
+		//check to see if player has resources
+	}
+	
+	/**
+	 * Gets the trade ratio for a given resource for a player
+	 * @param playerID
+	 * @return never more than 4 or less than 2
+	 */
+	public int getTradeRatio(int playerID, ResourceType type)
+	{
+		//Check the Map to see if they're connected to a port
+		//Otherwise return the default trade in value
+		return 4;
+
 	}
 	
 	/**
@@ -66,7 +110,7 @@ public class GameManager
 	 * Returns the current State of the game
 	 * @return
 	 */
-	public GameState currentState(){
-		return 
+	public GameStatus currentState(){
+		return gameState.gameState;
 	}
 }
