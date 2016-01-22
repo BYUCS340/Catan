@@ -9,8 +9,8 @@ import shared.model.State;
  */
 public class GameState
 {
-	public State gameState;  //This shows which part of a player's turn it is
-	public int playerIndex;  //This keeps track of which player's turn it is
+	public GameStatus gameState;  //This shows which part of a player's turn it is
+	public int activePlayerIndex;  //This keeps track of which player's turn it is
 	
 	/**
 	 * Sets the game state to the first player's turn (roll phase)
@@ -18,7 +18,8 @@ public class GameState
 	 */
 	public boolean startGame()
 	{
-		if (gameState != State.START) return false;
+		if (gameState != GameStatus.START) return false;
+		activePlayerIndex = 0;
 		
 		return true;
 	}
@@ -28,7 +29,7 @@ public class GameState
 	 */
 	public boolean nextTurn()
 	{
-		if (gameState != State.BUILDING) return false;
+		if (gameState != GameStatus.BUILDING) return false;
 
 		return true;
 	}
@@ -38,7 +39,7 @@ public class GameState
 	 */
 	public boolean startBuildPhase()
 	{
-		if (gameState != State.ROLLING) return false;
+		if (gameState != GameStatus.ROLLING) return false;
 
 		return true;
 	}

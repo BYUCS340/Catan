@@ -18,7 +18,6 @@ public class GameManager
 	private MapController mapController;
 	
 	/**
-	 * 
 	 * @see <a href="https://imgs.xkcd.com/comics/random_number.png">Sauce</a>
 	 * @return
 	 */
@@ -26,5 +25,48 @@ public class GameManager
 	{
 		return 4; // chosen by fair dice roll
 				  // guaranteed to be random
+	}
+	
+	/**
+	 * Attempts to build a road
+	 * @param playerID
+	 * @throws ModelIllegalAction if the player doesn't have the resources
+	 */
+	public void buildRoad(int playerID) throws ModelIllegalAction
+	{
+		
+	}
+	
+	/**
+	 * Starts the game
+	 */
+	public void startGame()
+	{
+		gameState.startGame();
+		
+	}
+	
+	/**
+	 * Ends the current player's turn
+	 */
+	public void finishTurn()
+	{
+		
+	}
+	
+	/**
+	 * Gets the player index of the current player
+	 * @return 0 to 3 or -1 if no player is playing
+	 */
+	public int currentPlayersTurn(){
+		return -1;
+	}
+	
+	/**
+	 * Returns the current State of the game
+	 * @return
+	 */
+	public GameState currentState(){
+		return 
 	}
 }
