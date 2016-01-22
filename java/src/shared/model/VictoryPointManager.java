@@ -11,6 +11,12 @@ public class VictoryPointManager
 	private int currentLargestArmyPlayer = -1;
 	private int[] victoryPoints = new int[4];
 	
+	private final int LongestRoadValue = 2;
+	private final int LargestArmyValue = 2;
+	private final int RoadValue = 1;
+	private final int SettlementValue = 1;
+	private final int CityValue = 2;
+	
 	
 	//This class keeps track of each players' victory points.
 	
@@ -24,6 +30,10 @@ public class VictoryPointManager
 		return 0;
 	}
 	
+	private void adjustPlayersPoints(int playerID, int points){
+		
+	}
+	
 	/**
 	 * Tells the victory point manager which player now has the longest road- determined by map?
 	 * @param playerIndex 0 to 3
@@ -32,6 +42,17 @@ public class VictoryPointManager
 	public boolean setPlayerToHaveLongestRoad(int playerIndex)
 	{
 		if (playerIndex < 0 || playerIndex > 3) return false;
+		
+		if (currentLongestRoadPlayer != -1)
+		{
+			//A player has the card already so deduct points from them
+			adjustPlayersPoints(currentLongestRoadPlayer, -1 * LongestRoadValue);
+		}
+		
+		currentLongestRoadPlayer = playerIndex;
+		
+		//give the new player the points
+		adjustPlayersPoints(currentLongestRoadPlayer, LongestRoadValue);
 		
 		return true;
 	}
@@ -46,7 +67,52 @@ public class VictoryPointManager
 	{
 		if (playerIndex < 0 || playerIndex > 3) return false;
 		
+		if (currentLargestArmyPlayer != -1)
+		{
+			//A player has the card already so deduct points from them
+			adjustPlayersPoints(currentLargestArmyPlayer, -1 * LargestArmyValue);
+		}
+		
+		currentLargestArmyPlayer = playerIndex;
+		
+		//give the new player the points
+		adjustPlayersPoints(currentLargestArmyPlayer, LargestArmyValue);
+		
 		return true;
+	}
+	
+	/**
+	 * The player built a road, so give them the points
+	 * @param playerIndex
+	 */
+	public void playerBuiltRoad(int playerIndex){
+		
+	}
+	
+	/**
+	 * The player built a settlement, so points to them
+	 * @param playerIndex
+	 */
+	public void playerBuiltSettlement(int playerIndex){
+		
+	}
+	
+	/**
+	 * The player built a city, so points to them
+	 * @param playerIndex
+	 */
+	public void playerBuiltCity(int playerIndex){
+		//take away the city points
+		
+		//add the settlement points
+	}
+	
+	/**
+	 * The player bought a dev card to give them the parts
+	 * @param playerIndex
+	 */
+	public void playerGotDevCard(int playerIndex){
+		
 	}
 	
 	/**
@@ -60,5 +126,14 @@ public class VictoryPointManager
 		if (playerIndex < 0 || playerIndex > 3) 
 			return -1;
 		return victoryPoints[playerIndex];
+	}
+	
+	/**
+	 * Checks if anyone has won yet
+	 * @return true if there is a winner
+	 */
+	public boolean anyWinner()
+	{
+		return false;
 	}
 }

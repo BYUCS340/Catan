@@ -1,6 +1,6 @@
 package shared.model;
 
-public enum State
+public enum GameStatus
 {
 	START, ROLLING, BUILDING, FINISH
 }
