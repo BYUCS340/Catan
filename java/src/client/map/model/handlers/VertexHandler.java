@@ -3,6 +3,7 @@ package client.map.model.handlers;
 import java.util.HashMap;
 import java.util.Map;
 
+import client.map.model.Coordinate;
 import client.map.model.objects.Vertex;
 
 /**
@@ -28,26 +29,28 @@ public class VertexHandler {
 		{
 			int yLimit = (int) (-Math.abs(x - 3.5) + 5.5);
 			for (int y = -yLimit; y <= yLimit; y++)
-				verticies.put(GetKey(x, y), new Vertex(x, y));
+			{
+				Coordinate point = new Coordinate(x, y);
+				verticies.put(GetKey(point), new Vertex(point));
+			}
 		}
 	}
 	
 	/**
 	 * Gets the vertex at the specified coordinate.
-	 * @param x X coordinate.
-	 * @param y Y coordinate.
+	 * @param point The coordinate of the vertex.
 	 * @return The assocatied vertex.
 	 */
-	public Vertex GetVertex(int x, int y)
+	public Vertex GetVertex(Coordinate point)
 	{
-		return verticies.get(GetKey(x, y));
+		return verticies.get(GetKey(point));
 	}
 	
-	private int GetKey(int x, int y)
+	private int GetKey(Coordinate point)
 	{
-		assert x >= 0;
-		assert y + Y_SHIFT >= 0;
+//		assert x >= 0;
+//		assert y + Y_SHIFT >= 0;
 		
-		return x * 100 + y + Y_SHIFT;
+		return point.getX() * 100 + point.getY() + Y_SHIFT;
 	}
 }

@@ -67,13 +67,12 @@ public class MapModel {
 	
 	/**
 	 * Returns the hex associated with the coordinate.
-	 * @param x The x coordinate of the hex.
-	 * @param y The y coordinate of the hex.
+	 * @param point The coordinate of the hex.
 	 * @return The associated hex
 	 */
-	public Hex GetHex(int x, int y)
+	public Hex GetHex(Coordinate point)
 	{
-		return hexes.GetHex(x, y);
+		return hexes.GetHex(point);
 	}
 	
 	/**
@@ -89,37 +88,33 @@ public class MapModel {
 	/**
 	 * Creates a hex at the specified location.
 	 * @param type The resource type associated with the hex.
-	 * @param x The x coordinate of the hex.
-	 * @param y The y coordiante of the hex. 
+	 * @param point The coordinate of the hex.
 	 */
-	public void SetHex(HexType type, int x, int y)
+	public void SetHex(HexType type, Coordinate point)
 	{
-		hexes.AddHex(new Hex(type, x, y));
+		hexes.AddHex(new Hex(type, point));
 	}
 	
 	/**
 	 * Gets the edge associated with the two end points. The order of the points
 	 * does not matter.
-	 * @param x1 The first x coordinate.
-	 * @param y1 The first y coordinate.
-	 * @param x2 The second x coordinate.
-	 * @param y2 The second y coordinate.
+	 * @param p1 The coordinate of the first point.
+	 * @param p2 The coordinate of the second point.
 	 * @return The associated edge.
 	 */
-	public Edge GetEdge(int x1, int y1, int x2, int y2)
+	public Edge GetEdge(Coordinate p1, Coordinate p2)
 	{
-		return edges.GetEdge(x1, y1, x2, y2);
+		return edges.GetEdge(p1, p2);
 	}
 	
 	/**
 	 * Gets the vertex associated with the coordinate.
-	 * @param x The x coordinate.
-	 * @param y The y coordinate.
+	 * @param point The coordinate of the vertex.
 	 * @return The associated vertex.
 	 */
-	public Vertex GetVertex(int x, int y)
+	public Vertex GetVertex(Coordinate point)
 	{
-		return verticies.GetVertex(x, y);
+		return verticies.GetVertex(point);
 	}
 	
 	/**
@@ -129,17 +124,16 @@ public class MapModel {
 	 */
 	public List<Vertex> GetOccupiedVerticies(Hex hex)
 	{
-		int x = hex.getxLocation();
-		int y = hex.getyLocation();
+		Coordinate point = hex.getPoint();
 		
 		List<Vertex> verticies = new ArrayList<Vertex>();
 		
-		AddOccupiedVertex(GetVertex(x, y + 1), verticies);
-		AddOccupiedVertex(GetVertex(x, y), verticies);
-		AddOccupiedVertex(GetVertex(x, y - 1), verticies);
-		AddOccupiedVertex(GetVertex(x + 1, y + 1), verticies);
-		AddOccupiedVertex(GetVertex(x + 1, y), verticies);
-		AddOccupiedVertex(GetVertex(x + 1, y - 1), verticies);
+		AddOccupiedVertex(GetVertex(point.GetNorth()), verticies);
+		AddOccupiedVertex(GetVertex(point), verticies);
+		AddOccupiedVertex(GetVertex(point.GetSouth()), verticies);
+		AddOccupiedVertex(GetVertex(point.GetNorthEast()), verticies);
+		AddOccupiedVertex(GetVertex(point.GetEast()), verticies);
+		AddOccupiedVertex(GetVertex(point.GetSouthEast()), verticies);
 		
 		return java.util.Collections.unmodifiableList(verticies);
 	}
@@ -147,12 +141,11 @@ public class MapModel {
 	/**
 	 * Sets a vertex as a port
 	 * @param type The type of port to set.
-	 * @param x X coordinate of the port.
-	 * @param y Y coordinate of the port.
+	 * @param point The coordinate of the port.
 	 */
-	public void SetPort(PortType type, int x, int y)
+	public void SetPort(PortType type, Coordinate point)
 	{
-		verticies.GetVertex(x, y).setPortType(type);
+		verticies.GetVertex(point).setPortType(type);
 	}
 	
 	private void RandomSetup()
@@ -162,53 +155,53 @@ public class MapModel {
 	
 	private void BeginnerSetup()
 	{
-		hexes.AddHex(new Hex(HexType.ORE, 1, -2));
-		hexes.AddHex(new Hex(HexType.SHEEP, 1, 0));
-		hexes.AddHex(new Hex(HexType.WOOD, 1, 2));
+		hexes.AddHex(new Hex(HexType.ORE, new Coordinate(1, -2)));
+		hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(1, 0)));
+		hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(1, 2)));
 		
-		hexes.AddHex(new Hex(HexType.WHEAT, 2, -3));
-		hexes.AddHex(new Hex(HexType.BRICK, 2, -1));
-		hexes.AddHex(new Hex(HexType.SHEEP, 2, 1));
-		hexes.AddHex(new Hex(HexType.BRICK, 2, 3));
+		hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(2, -3)));
+		hexes.AddHex(new Hex(HexType.BRICK, new Coordinate(2, -1)));
+		hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(2, 1)));
+		hexes.AddHex(new Hex(HexType.BRICK, new Coordinate(2, 3)));
 		
-		hexes.AddHex(new Hex(HexType.WHEAT, 3, -4));
-		hexes.AddHex(new Hex(HexType.WOOD, 3, -2));
-		hexes.AddHex(new Hex(HexType.DESERT, 3, 0));
-		hexes.AddHex(new Hex(HexType.WOOD, 3, 2));
-		hexes.AddHex(new Hex(HexType.ORE, 3, 4));
+		hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(3, -4)));
+		hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(3, -2)));
+		hexes.AddHex(new Hex(HexType.DESERT, new Coordinate(3, 0)));
+		hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(3, 2)));
+		hexes.AddHex(new Hex(HexType.ORE, new Coordinate(3, 4)));
 		
-		hexes.AddHex(new Hex(HexType.WOOD, 4, -3));
-		hexes.AddHex(new Hex(HexType.ORE, 4, -1));
-		hexes.AddHex(new Hex(HexType.WHEAT, 4, 1));
-		hexes.AddHex(new Hex(HexType.SHEEP, 4, 3));
+		hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(4, -3)));
+		hexes.AddHex(new Hex(HexType.ORE, new Coordinate(4, -1)));
+		hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(4, 1)));
+		hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(4, 3)));
 		
-		hexes.AddHex(new Hex(HexType.BRICK, 5, -2));
-		hexes.AddHex(new Hex(HexType.WHEAT, 5, 0));
-		hexes.AddHex(new Hex(HexType.SHEEP, 5, 2));
+		hexes.AddHex(new Hex(HexType.BRICK, new Coordinate(5, -2)));
+		hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(5, 0)));
+		hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(5, 2)));
 		
-		robber = new Robber(hexes.GetHex(3, 0));
+		robber = new Robber(hexes.GetHex(new Coordinate(3, 0)));
 	}
 	
 	private void PlaceWater()
 	{
-		hexes.AddHex(new Hex(HexType.WATER, 0, -1));
-		hexes.AddHex(new Hex(HexType.WATER, 0, -3));
-		hexes.AddHex(new Hex(HexType.WATER, 1, -4));
-		hexes.AddHex(new Hex(HexType.WATER, 2, -5));
-		hexes.AddHex(new Hex(HexType.WATER, 3, -6));
-		hexes.AddHex(new Hex(HexType.WATER, 4, -5));
-		hexes.AddHex(new Hex(HexType.WATER, 5, -4));
-		hexes.AddHex(new Hex(HexType.WATER, 6, -3));
-		hexes.AddHex(new Hex(HexType.WATER, 6, -1));
-		hexes.AddHex(new Hex(HexType.WATER, 6, 1));
-		hexes.AddHex(new Hex(HexType.WATER, 6, 3));
-		hexes.AddHex(new Hex(HexType.WATER, 5, 4));
-		hexes.AddHex(new Hex(HexType.WATER, 4, 5));
-		hexes.AddHex(new Hex(HexType.WATER, 3, 6));
-		hexes.AddHex(new Hex(HexType.WATER, 2, 5));
-		hexes.AddHex(new Hex(HexType.WATER, 1, 4));
-		hexes.AddHex(new Hex(HexType.WATER, 0, 3));
-		hexes.AddHex(new Hex(HexType.WATER, 0, 1));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, -1)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, -3)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(1, -4)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(2, -5)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(3, -6)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(4, -5)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(5, -4)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, -3)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, -1)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, 1)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, 3)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(5, 4)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(4, 5)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(3, 6)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(2, 5)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(1, 4)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, 3)));
+		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, 1)));
 	}
 
 	private void PlacePips()
@@ -261,25 +254,25 @@ public class MapModel {
 	{
 		List<Hex> hexList = new ArrayList<Hex>(19);
 		
-		hexList.add(hexes.GetHex(1, -2));
-		hexList.add(hexes.GetHex(2, -3));
-		hexList.add(hexes.GetHex(3, -4));
-		hexList.add(hexes.GetHex(4, -3));
-		hexList.add(hexes.GetHex(5, -2));
-		hexList.add(hexes.GetHex(5, 0));
-		hexList.add(hexes.GetHex(5, 2));
-		hexList.add(hexes.GetHex(4, 3));
-		hexList.add(hexes.GetHex(3, 4));
-		hexList.add(hexes.GetHex(2, 3));
-		hexList.add(hexes.GetHex(1, 2));
-		hexList.add(hexes.GetHex(1, 0));
-		hexList.add(hexes.GetHex(2, -1));
-		hexList.add(hexes.GetHex(3, -2));
-		hexList.add(hexes.GetHex(4, -1));
-		hexList.add(hexes.GetHex(4, 1));
-		hexList.add(hexes.GetHex(3, 2));
-		hexList.add(hexes.GetHex(2, 1));
-		hexList.add(hexes.GetHex(3, 0));
+		hexList.add(hexes.GetHex(new Coordinate(1, -2)));
+		hexList.add(hexes.GetHex(new Coordinate(2, -3)));
+		hexList.add(hexes.GetHex(new Coordinate(3, -4)));
+		hexList.add(hexes.GetHex(new Coordinate(4, -3)));
+		hexList.add(hexes.GetHex(new Coordinate(5, -2)));
+		hexList.add(hexes.GetHex(new Coordinate(5, 0)));
+		hexList.add(hexes.GetHex(new Coordinate(5, 2)));
+		hexList.add(hexes.GetHex(new Coordinate(4, 3)));
+		hexList.add(hexes.GetHex(new Coordinate(3, 4)));
+		hexList.add(hexes.GetHex(new Coordinate(2, 3)));
+		hexList.add(hexes.GetHex(new Coordinate(1, 2)));
+		hexList.add(hexes.GetHex(new Coordinate(1, 0)));
+		hexList.add(hexes.GetHex(new Coordinate(2, -1)));
+		hexList.add(hexes.GetHex(new Coordinate(3, -2)));
+		hexList.add(hexes.GetHex(new Coordinate(4, -1)));
+		hexList.add(hexes.GetHex(new Coordinate(4, 1)));
+		hexList.add(hexes.GetHex(new Coordinate(3, 2)));
+		hexList.add(hexes.GetHex(new Coordinate(2, 1)));
+		hexList.add(hexes.GetHex(new Coordinate(3, 0)));
 		
 		return hexList;
 	}

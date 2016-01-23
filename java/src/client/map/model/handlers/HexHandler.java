@@ -3,6 +3,7 @@ package client.map.model.handlers;
 import java.util.HashMap;
 import java.util.Map;
 
+import client.map.model.Coordinate;
 import client.map.model.objects.Hex;
 
 /**
@@ -38,39 +39,34 @@ public class HexHandler {
 	
 	/**
 	 * Determines if a hex is contained at the location.
-	 * @param x X coordinate.
-	 * @param y Y Coordinate.
+	 * @param x The coordinate of the hex.
 	 * @return True if yes, else false.
 	 */
-	public boolean ContainsHex(int x, int y)
+	public boolean ContainsHex(Coordinate point)
 	{
-		return hexes.containsKey(GetKey(x, y));
+		return hexes.containsKey(GetKey(point));
 	}
 	
 	/**
-	 * Gets the hex at the given Y coordinate.
-	 * @param x X coordinate
-	 * @param y Y coordinate
+	 * Gets the hex at the given coordinate.
+	 * @param x The coordinate of the hex.
 	 * @return The assocaited hex.
 	 */
-	public Hex GetHex(int x, int y)
+	public Hex GetHex(Coordinate point)
 	{
-		return hexes.get(GetKey(x, y));
+		return hexes.get(GetKey(point));
 	}
 	
 	private int GetKey(Hex hex)
 	{
-		int x = hex.getxLocation();
-		int y = hex.getyLocation();
-		
-		return GetKey(x, y);
+		return GetKey(hex.getPoint());
 	}
 	
-	private int GetKey(int x, int y)
+	private int GetKey(Coordinate point)
 	{
-		assert x >= 0;
-		assert y + Y_SHIFT >= 0;
+//		assert x >= 0;
+//		assert y + Y_SHIFT >= 0;
 		
-		return 100 * x + y + Y_SHIFT;
+		return 100 * point.getX() + point.getY() + Y_SHIFT;
 	}
 }

@@ -65,6 +65,9 @@ public class MapComponent extends JComponent
 		
 		for (PortType portType : PortType.values())
 		{
+			if (portType == PortType.NONE)
+				continue;
+			
 			PORT_IMAGES.put(portType, loadPortImage(portType));
 		}
 		

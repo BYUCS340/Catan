@@ -3,6 +3,7 @@ package client.map.model.handlers;
 import java.util.HashMap;
 import java.util.Map;
 
+import client.map.model.Coordinate;
 import client.map.model.objects.Edge;
 
 /**
@@ -24,6 +25,9 @@ public class EdgeHandler {
 	{
 		edges = new HashMap<Integer, Edge>(INITIAL_CAPACITY);
 		
+		Coordinate p1;
+		Coordinate p2;
+		
 		//Place Vertical Edges
 		for (int x = 1; x <= 6; x++)
 		{
@@ -31,8 +35,13 @@ public class EdgeHandler {
 			
 			for (int y = 0; y < yLimit; y++)
 			{
-				edges.put(GetKey(x, y, x, y + 1), new Edge());
-				edges.put(GetKey(x, -y, x, -y - 1), new Edge());
+				p1 = new Coordinate(x, y);
+				p2 = new Coordinate(x, y+1);
+				edges.put(GetKey(p1, p2), new Edge());
+				
+				p1 = new Coordinate(x, -y);
+				p2 = new Coordinate(x, -y - 1);
+				edges.put(GetKey(p1, p2), new Edge());
 			}
 		}
 		
@@ -46,63 +55,66 @@ public class EdgeHandler {
 				if ((x + y) % 2 == 1)
 					continue;
 				
-				edges.put(GetKey(x, y, x + 1, y), new Edge());
+				p1 = new Coordinate(x, y);
+				p2 = new Coordinate(x + 1, y);
+				edges.put(GetKey(p1, p2), new Edge());
 				
 				if (y != 0)
-					edges.put(GetKey(x, -y, x + 1, -y), new Edge());
+				{
+					p1 = new Coordinate(x, -y);
+					p2 = new Coordinate(x + 1, -y);
+					edges.put(GetKey(p1, p2), new Edge());
+				}
 			}
 		}
 	}
 	
 	/**
 	 * Determines if an edge exists. Point order doesn't matter.
-	 * @param x1 First x coordinate.
-	 * @param y1 First y coordinate.
-	 * @param x2 Second x coordinate.
-	 * @param y2 Second y coordinate.
+	 * @param p1 The coordinate of the first end point.
+	 * @param p2 The coordinate of the second end point.
 	 * @return True if the edge exists, else false.
 	 */
-	public Boolean ContainsEdge(int x1, int y1, int x2, int y2)
+	public Boolean ContainsEdge(Coordinate p1, Coordinate p2)
 	{
-		return edges.containsKey(GetKey(x1, y1, x2, y2));
+		return edges.containsKey(GetKey(p1, p2));
 	}
 	
 	/**
 	 * Returns the edge between the provided end points. Point order doesn't matter.
-	 * @param x1 First x coordinate.
-	 * @param y1 First y coordinate.
-	 * @param x2 Second x coordinate.
-	 * @param y2 Second y coordinate.
+	 * @param p1 The coordinate of the first end point.
+	 * @param p2 The coordinate of the second end point.
 	 * @return The associated edge.
 	 */
-	public Edge GetEdge(int x1, int y1, int x2, int y2)
+	public Edge GetEdge(Coordinate p1, Coordinate p2)
 	{
-		return edges.get(GetKey(x1, y1, x2, y2));
+		return edges.get(GetKey(p1, p2));
 	}
 	
-	private int GetKey(int x1, int y1, int x2, int y2)
+	private int GetKey(Coordinate p1, Coordinate p2)
 	{
-		assert x1 >= 0;
-		assert y1 + Y_SHIFT >= 0;
-		assert x2 >= 0;
-		assert y2 + Y_SHIFT >= 0;
+//		assert x1 >= 0;
+//		assert y1 + Y_SHIFT >= 0;
+//		assert x2 >= 0;
+//		assert y2 + Y_SHIFT >= 0;
 		
-		if (ReverseOrder(x1, y1, x2, y2))
-			return ComputeKey(x2, y2, x1, y1);
+		if (ReverseOrder(p1, p2))
+			return ComputeKey(p2, p1);
 		else
-			return ComputeKey(x1, y1, x2, y2);
+			return ComputeKey(p1, p2);
 	}
 	
-	private boolean ReverseOrder(int x1, int y1, int x2, int y2)
+	private boolean ReverseOrder(Coordinate p1, Coordinate p2)
 	{
-		if (x1 == x2)
-			return y1 > y2;
+		if (p1.getX() == p2.getX())
+			return p1.getY() > p2.getY();
 		else
-			return x1 > x2;
+			return p1.getX() > p2.getX();
 	}
 	
-	private int ComputeKey(int x1, int y1, int x2, int y2)
+	private int ComputeKey(Coordinate p1, Coordinate p2)
 	{
-		return 1000000 * x1 + 10000 * (y1 + Y_SHIFT) + 100 * x2 + (y2 + Y_SHIFT);
+		return 1000000 * p1.getX() + 10000 * (p1.getY() + Y_SHIFT)
+				+ 100 * p2.getX() + (p2.getY() + Y_SHIFT);
 	}
 }

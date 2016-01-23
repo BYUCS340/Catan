@@ -1,5 +1,6 @@
 package client.map.model.objects;
 
+import client.map.model.Coordinate;
 import shared.definitions.*;
 
 /**
@@ -9,8 +10,7 @@ import shared.definitions.*;
  */
 public class Vertex {
 
-	private int xLocation;
-	private int yLocation;
+	private Coordinate point;
 	
 	private PieceType type;
 	private CatanColor color;
@@ -22,11 +22,10 @@ public class Vertex {
 	 * @param x X coordinate
 	 * @param y Y coordinate
 	 */
-	public Vertex(int x, int y)
+	public Vertex(Coordinate point)
 	{
 		type = PieceType.NONE;
-		this.xLocation = x;
-		this.yLocation = y;
+		this.point = point;
 		
 		portType = PortType.NONE;
 	}
@@ -50,19 +49,9 @@ public class Vertex {
 		this.type = PieceType.NONE;
 		this.color = null;
 	}
-	
-	/**
-	 * @return the xLocation
-	 */
-	public int getxLocation() {
-		return xLocation;
-	}
 
-	/**
-	 * @return the yLocation
-	 */
-	public int getyLocation() {
-		return yLocation;
+	public Coordinate getPoint() {
+		return point;
 	}
 
 	/**
