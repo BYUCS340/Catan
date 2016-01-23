@@ -3,6 +3,7 @@ package client.map.model.handlers;
 import java.util.HashMap;
 import java.util.Map;
 
+import client.map.MapException;
 import client.map.model.Coordinate;
 import client.map.model.objects.Edge;
 
@@ -85,10 +86,14 @@ public class EdgeHandler {
 	 * @param p1 The coordinate of the first end point.
 	 * @param p2 The coordinate of the second end point.
 	 * @return The associated edge.
+	 * @throws MapException Thrown if the edge isn't found
 	 */
-	public Edge GetEdge(Coordinate p1, Coordinate p2)
+	public Edge GetEdge(Coordinate p1, Coordinate p2) throws MapException
 	{
-		return edges.get(GetKey(p1, p2));
+		if (ContainsEdge(p1, p2))
+			return edges.get(GetKey(p1, p2));
+		else
+			throw new MapException("The requested edge doesn't exist.");
 	}
 	
 	private int GetKey(Coordinate p1, Coordinate p2)

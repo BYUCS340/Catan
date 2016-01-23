@@ -3,6 +3,7 @@ package client.map.model.handlers;
 import java.util.HashMap;
 import java.util.Map;
 
+import client.map.MapException;
 import client.map.model.Coordinate;
 import client.map.model.objects.Vertex;
 
@@ -36,21 +37,27 @@ public class VertexHandler {
 		}
 	}
 	
+	public boolean ContainsVertex(Coordinate point)
+	{
+		return verticies.containsKey(GetKey(point));
+	}
+	
 	/**
 	 * Gets the vertex at the specified coordinate.
 	 * @param point The coordinate of the vertex.
 	 * @return The assocatied vertex.
+	 * @throws MapException Thrown if the vertex doesn't exist.
 	 */
-	public Vertex GetVertex(Coordinate point)
+	public Vertex GetVertex(Coordinate point) throws MapException
 	{
-		return verticies.get(GetKey(point));
+		if (ContainsVertex(point))
+			return verticies.get(GetKey(point));
+		else
+			throw new MapException("The requested vertex doesn't exist.");
 	}
 	
 	private int GetKey(Coordinate point)
 	{
-//		assert x >= 0;
-//		assert y + Y_SHIFT >= 0;
-		
 		return point.getX() * 100 + point.getY() + Y_SHIFT;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import client.map.MapException;
 import client.map.model.handlers.*;
 import client.map.model.objects.*;
 import shared.definitions.*;
@@ -66,11 +67,22 @@ public class MapModel {
 	}
 	
 	/**
+	 * Returns if a hex is contained on the board.
+	 * @param point The coordinate.
+	 * @return True if the hex exists, else false.
+	 */
+	public boolean ContainsHex(Coordinate point)
+	{
+		return hexes.ContainsHex(point);
+	}
+	
+	/**
 	 * Returns the hex associated with the coordinate.
 	 * @param point The coordinate of the hex.
 	 * @return The associated hex
+	 * @throws MapException Thrown if the hex doesn't exist.
 	 */
-	public Hex GetHex(Coordinate point)
+	public Hex GetHex(Coordinate point) throws MapException
 	{
 		return hexes.GetHex(point);
 	}
@@ -89,10 +101,22 @@ public class MapModel {
 	 * Creates a hex at the specified location.
 	 * @param type The resource type associated with the hex.
 	 * @param point The coordinate of the hex.
+	 * @throws MapException Thrown if there is an issue adding the hex.
 	 */
-	public void SetHex(HexType type, Coordinate point)
+	public void SetHex(HexType type, Coordinate point) throws MapException
 	{
 		hexes.AddHex(new Hex(type, point));
+	}
+	
+	/**
+	 * Returns if an edge is on the board.
+	 * @param p1 The first end point.
+	 * @param p2 The second end point.
+	 * @return True if the edge exists, else false.
+	 */
+	public boolean ContainsEdge(Coordinate p1, Coordinate p2)
+	{
+		return edges.ContainsEdge(p1, p2);
 	}
 	
 	/**
@@ -101,18 +125,30 @@ public class MapModel {
 	 * @param p1 The coordinate of the first point.
 	 * @param p2 The coordinate of the second point.
 	 * @return The associated edge.
+	 * @throws MapException Thrown if the edge doesn't exist
 	 */
-	public Edge GetEdge(Coordinate p1, Coordinate p2)
+	public Edge GetEdge(Coordinate p1, Coordinate p2) throws MapException
 	{
 		return edges.GetEdge(p1, p2);
+	}
+	
+	/**
+	 * Returns if a vertex is on the board.
+	 * @param point The coordinate.
+	 * @return True if the vertex is on the board, else false.
+	 */
+	public boolean ContainsVertex(Coordinate point)
+	{
+		return verticies.ContainsVertex(point);
 	}
 	
 	/**
 	 * Gets the vertex associated with the coordinate.
 	 * @param point The coordinate of the vertex.
 	 * @return The associated vertex.
+	 * @throws MapException Thrown if the vertex doesn't exist.
 	 */
-	public Vertex GetVertex(Coordinate point)
+	public Vertex GetVertex(Coordinate point) throws MapException
 	{
 		return verticies.GetVertex(point);
 	}
@@ -128,12 +164,12 @@ public class MapModel {
 		
 		List<Vertex> verticies = new ArrayList<Vertex>();
 		
-		AddOccupiedVertex(GetVertex(point.GetNorth()), verticies);
-		AddOccupiedVertex(GetVertex(point), verticies);
-		AddOccupiedVertex(GetVertex(point.GetSouth()), verticies);
-		AddOccupiedVertex(GetVertex(point.GetNorthEast()), verticies);
-		AddOccupiedVertex(GetVertex(point.GetEast()), verticies);
-		AddOccupiedVertex(GetVertex(point.GetSouthEast()), verticies);
+		HandleAddingOccupiedVertex(point, verticies);
+		HandleAddingOccupiedVertex(point.GetNorth(), verticies);
+		HandleAddingOccupiedVertex(point.GetSouth(), verticies);
+		HandleAddingOccupiedVertex(point.GetEast(), verticies);
+		HandleAddingOccupiedVertex(point.GetNorthEast(), verticies);
+		HandleAddingOccupiedVertex(point.GetSouthEast(), verticies);
 		
 		return java.util.Collections.unmodifiableList(verticies);
 	}
@@ -142,10 +178,16 @@ public class MapModel {
 	 * Sets a vertex as a port
 	 * @param type The type of port to set.
 	 * @param point The coordinate of the port.
+	 * @throws MapException Thrown if the port is added to a vertex that doesn't exist.
 	 */
-	public void SetPort(PortType type, Coordinate point)
+	public void SetPort(PortType type, Coordinate point) throws MapException
 	{
-		verticies.GetVertex(point).setPortType(type);
+		try {
+			verticies.GetVertex(point).setPortType(type);
+		} 
+		catch (MapException e) {
+			throw new MapException("Attempt to add port to non-existent vertex", e);
+		}
 	}
 	
 	private void RandomSetup()
@@ -155,53 +197,75 @@ public class MapModel {
 	
 	private void BeginnerSetup()
 	{
-		hexes.AddHex(new Hex(HexType.ORE, new Coordinate(1, -2)));
-		hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(1, 0)));
-		hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(1, 2)));
+		try
+		{
+			hexes.AddHex(new Hex(HexType.ORE, new Coordinate(1, -2)));
+			hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(1, 0)));
+			hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(1, 2)));
+			
+			hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(2, -3)));
+			hexes.AddHex(new Hex(HexType.BRICK, new Coordinate(2, -1)));
+			hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(2, 1)));
+			hexes.AddHex(new Hex(HexType.BRICK, new Coordinate(2, 3)));
+			
+			hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(3, -4)));
+			hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(3, -2)));
+			hexes.AddHex(new Hex(HexType.DESERT, new Coordinate(3, 0)));
+			hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(3, 2)));
+			hexes.AddHex(new Hex(HexType.ORE, new Coordinate(3, 4)));
+			
+			hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(4, -3)));
+			hexes.AddHex(new Hex(HexType.ORE, new Coordinate(4, -1)));
+			hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(4, 1)));
+			hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(4, 3)));
+			
+			hexes.AddHex(new Hex(HexType.BRICK, new Coordinate(5, -2)));
+			hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(5, 0)));
+			hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(5, 2)));
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			//This shouldn't happen. Otherwise, we just suck.
+		}
 		
-		hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(2, -3)));
-		hexes.AddHex(new Hex(HexType.BRICK, new Coordinate(2, -1)));
-		hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(2, 1)));
-		hexes.AddHex(new Hex(HexType.BRICK, new Coordinate(2, 3)));
-		
-		hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(3, -4)));
-		hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(3, -2)));
-		hexes.AddHex(new Hex(HexType.DESERT, new Coordinate(3, 0)));
-		hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(3, 2)));
-		hexes.AddHex(new Hex(HexType.ORE, new Coordinate(3, 4)));
-		
-		hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(4, -3)));
-		hexes.AddHex(new Hex(HexType.ORE, new Coordinate(4, -1)));
-		hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(4, 1)));
-		hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(4, 3)));
-		
-		hexes.AddHex(new Hex(HexType.BRICK, new Coordinate(5, -2)));
-		hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(5, 0)));
-		hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(5, 2)));
-		
-		robber = new Robber(hexes.GetHex(new Coordinate(3, 0)));
+		try {
+			robber = new Robber(hexes.GetHex(new Coordinate(3, 0)));
+		}
+		catch (MapException e) {
+			e.printStackTrace();
+			//This shouldn't happen either.
+		}
 	}
 	
 	private void PlaceWater()
 	{
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, -1)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, -3)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(1, -4)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(2, -5)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(3, -6)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(4, -5)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(5, -4)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, -3)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, -1)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, 1)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, 3)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(5, 4)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(4, 5)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(3, 6)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(2, 5)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(1, 4)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, 3)));
-		hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, 1)));
+		try
+		{
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, -1)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, -3)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(1, -4)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(2, -5)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(3, -6)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(4, -5)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(5, -4)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, -3)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, -1)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, 1)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, 3)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(5, 4)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(4, 5)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(3, 6)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(2, 5)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(1, 4)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, 3)));
+			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, 1)));
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			//This shouldn't happen. If it does, then you suck.
+		}
 	}
 
 	private void PlacePips()
@@ -254,25 +318,34 @@ public class MapModel {
 	{
 		List<Hex> hexList = new ArrayList<Hex>(19);
 		
-		hexList.add(hexes.GetHex(new Coordinate(1, -2)));
-		hexList.add(hexes.GetHex(new Coordinate(2, -3)));
-		hexList.add(hexes.GetHex(new Coordinate(3, -4)));
-		hexList.add(hexes.GetHex(new Coordinate(4, -3)));
-		hexList.add(hexes.GetHex(new Coordinate(5, -2)));
-		hexList.add(hexes.GetHex(new Coordinate(5, 0)));
-		hexList.add(hexes.GetHex(new Coordinate(5, 2)));
-		hexList.add(hexes.GetHex(new Coordinate(4, 3)));
-		hexList.add(hexes.GetHex(new Coordinate(3, 4)));
-		hexList.add(hexes.GetHex(new Coordinate(2, 3)));
-		hexList.add(hexes.GetHex(new Coordinate(1, 2)));
-		hexList.add(hexes.GetHex(new Coordinate(1, 0)));
-		hexList.add(hexes.GetHex(new Coordinate(2, -1)));
-		hexList.add(hexes.GetHex(new Coordinate(3, -2)));
-		hexList.add(hexes.GetHex(new Coordinate(4, -1)));
-		hexList.add(hexes.GetHex(new Coordinate(4, 1)));
-		hexList.add(hexes.GetHex(new Coordinate(3, 2)));
-		hexList.add(hexes.GetHex(new Coordinate(2, 1)));
-		hexList.add(hexes.GetHex(new Coordinate(3, 0)));
+		try
+		{
+			hexList.add(hexes.GetHex(new Coordinate(1, -2)));
+			hexList.add(hexes.GetHex(new Coordinate(2, -3)));
+			hexList.add(hexes.GetHex(new Coordinate(3, -4)));
+			hexList.add(hexes.GetHex(new Coordinate(4, -3)));
+			hexList.add(hexes.GetHex(new Coordinate(5, -2)));
+			hexList.add(hexes.GetHex(new Coordinate(5, 0)));
+			hexList.add(hexes.GetHex(new Coordinate(5, 2)));
+			hexList.add(hexes.GetHex(new Coordinate(4, 3)));
+			hexList.add(hexes.GetHex(new Coordinate(3, 4)));
+			hexList.add(hexes.GetHex(new Coordinate(2, 3)));
+			hexList.add(hexes.GetHex(new Coordinate(1, 2)));
+			hexList.add(hexes.GetHex(new Coordinate(1, 0)));
+			hexList.add(hexes.GetHex(new Coordinate(2, -1)));
+			hexList.add(hexes.GetHex(new Coordinate(3, -2)));
+			hexList.add(hexes.GetHex(new Coordinate(4, -1)));
+			hexList.add(hexes.GetHex(new Coordinate(4, 1)));
+			hexList.add(hexes.GetHex(new Coordinate(3, 2)));
+			hexList.add(hexes.GetHex(new Coordinate(2, 1)));
+			hexList.add(hexes.GetHex(new Coordinate(3, 0)));
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			//These are all standard coordinates. The only reason these wouldn't
+			//exist is if you haven't created the map yet.
+		}
 		
 		return hexList;
 	}
@@ -288,6 +361,21 @@ public class MapModel {
 			List<Hex> tempList = new ArrayList<Hex>();
 			tempList.add(hex);
 			values.put(value, tempList);
+		}
+	}
+	
+	private void HandleAddingOccupiedVertex(Coordinate point, List<Vertex> vertexList)
+	{
+		try
+		{
+			if (verticies.ContainsVertex(point))
+				AddOccupiedVertex(GetVertex(point), vertexList);
+		}
+		catch (MapException ex)
+		{
+			ex.printStackTrace();
+			//Yeah, so this code shouldn't ever execute. If it does, somebody messed with
+			//the methods that are being called.
 		}
 	}
 	

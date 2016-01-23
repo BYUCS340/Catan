@@ -3,6 +3,7 @@ package client.map.model.handlers;
 import java.util.HashMap;
 import java.util.Map;
 
+import client.map.MapException;
 import client.map.model.Coordinate;
 import client.map.model.objects.Hex;
 
@@ -29,11 +30,19 @@ public class HexHandler {
 	/**
 	 * Adds a hex object to the handler.
 	 * @param hex The hex to add.
+	 * @throws MapException Thrown if attempting to add to many hexes or duplicate hexes.
 	 */
-	public void AddHex(Hex hex)
+	public void AddHex(Hex hex) throws MapException
 	{
-		//Todo Add exception for too many hexes
+		//TODO Make this more specific.
+		if (hexes.size() == 37)
+			throw new MapException("Attempt to add too many hexes to board.");
+		
 		int key = GetKey(hex);
+		
+		if (hexes.containsKey(key))
+			throw new MapException("Attempt to overwrite existing hex.");
+		
 		hexes.put(key, hex);
 	}
 	
@@ -51,10 +60,15 @@ public class HexHandler {
 	 * Gets the hex at the given coordinate.
 	 * @param x The coordinate of the hex.
 	 * @return The assocaited hex.
+	 * @throws MapException 
 	 */
-	public Hex GetHex(Coordinate point)
+	public Hex GetHex(Coordinate point) throws MapException
 	{
-		return hexes.get(GetKey(point));
+		if (ContainsHex(point))
+			return hexes.get(GetKey(point));
+		else
+			throw new MapException("Like Genosis, the requested hex could not be found. "
+					+ "It must not exist.");
 	}
 	
 	private int GetKey(Hex hex)
@@ -64,9 +78,6 @@ public class HexHandler {
 	
 	private int GetKey(Coordinate point)
 	{
-//		assert x >= 0;
-//		assert y + Y_SHIFT >= 0;
-		
 		return 100 * point.getX() + point.getY() + Y_SHIFT;
 	}
 }
