@@ -2,6 +2,7 @@ package shared.networking;
 
 import java.util.List;
 
+import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
@@ -88,7 +89,7 @@ public interface Serializer
 	 * @param resource2 The second resource to take from the bank
 	 * @return Serialized data
 	 */
-	public String sYearOfPlentyCardReq(int playerIndex, String resource1, String resource2);
+	public String sYearOfPlentyCardReq(int playerIndex, ResourceType resource1, ResourceType resource2);
 	
 	/**
 	 * Serializes a request to play a road building card
@@ -114,7 +115,7 @@ public interface Serializer
 	 * @param resource The resource to have a monopoly on
 	 * @return Serialized data
 	 */
-	public String sMonopolyCardReq(int playerIndex, String resource);
+	public String sMonopolyCardReq(int playerIndex, ResourceType resource);
 	
 	/**
 	 * Serializes a request to play a monument card
@@ -174,7 +175,7 @@ public interface Serializer
 	 * @param outputResource The resource being traded for
 	 * @return Serialized data
 	 */
-	public String sMaritimeTrade(int playerIndex, int ratio, String inputResource, String outputResource);
+	public String sMaritimeTrade(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource);
 	
 	/**
 	 * Serializes a request to discard cards
