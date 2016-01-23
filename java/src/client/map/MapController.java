@@ -29,6 +29,8 @@ public class MapController extends Controller implements IMapController {
 		
 		model = new MapModel();
 		
+		view.SetModel(model);
+		
 		setRobView(robView);
 		
 		initFromModel();
@@ -62,7 +64,7 @@ public class MapController extends Controller implements IMapController {
 				int r = rand.nextInt(HexType.values().length);
 				HexType hexType = HexType.values()[r];
 				HexLocation hexLoc = new HexLocation(x, y);
-				getView().addHex(hexLoc, hexType);
+//				getView().addHex(hexLoc, hexType);
 				getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.NorthWest),
 						CatanColor.RED);
 				getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.SouthWest),
@@ -79,7 +81,7 @@ public class MapController extends Controller implements IMapController {
 					int r = rand.nextInt(HexType.values().length);
 					HexType hexType = HexType.values()[r];
 					HexLocation hexLoc = new HexLocation(-x, y);
-					getView().addHex(hexLoc, hexType);
+//					getView().addHex(hexLoc, hexType);
 					getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.NorthWest),
 							CatanColor.RED);
 					getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.SouthWest),

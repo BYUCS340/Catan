@@ -98,6 +98,15 @@ public class MapModel {
 	}
 	
 	/**
+	 * Gets all the hexes in the map.
+	 * @return A iterator to all the hexes.
+	 */
+	public Iterator<Hex> GetAllHexes()
+	{
+		return hexes.GetAllHexes();
+	}
+	
+	/**
 	 * Creates a hex at the specified location.
 	 * @param type The resource type associated with the hex.
 	 * @param point The coordinate of the hex.

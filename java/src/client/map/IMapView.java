@@ -3,6 +3,7 @@ package client.map;
 import shared.definitions.*;
 import shared.locations.*;
 import client.base.*;
+import client.map.model.MapModel;
 
 /**
  * Interface for the map view
@@ -10,15 +11,15 @@ import client.base.*;
 public interface IMapView extends IView
 {
 	
-	/**
-	 * This method adds a hex to the map.
-	 * 
-	 * @param hexLoc
-	 *            The hex's location
-	 * @param hexType
-	 *            The hex's type
-	 */
-	void addHex(HexLocation hexLoc, HexType hexType);
+//	/**
+//	 * This method adds a hex to the map.
+//	 * 
+//	 * @param hexLoc
+//	 *            The hex's location
+//	 * @param hexType
+//	 *            The hex's type
+//	 */
+//	void addHex(HexLocation hexLoc, HexType hexType);
 	
 	/**
 	 * This method adds a number to the map.
@@ -77,6 +78,8 @@ public interface IMapView extends IView
 	 *            The robber's location
 	 */
 	void placeRobber(HexLocation hexLoc);
+	
+	void SetModel(MapModel model);
 	
 	/**
 	 * This method displays the modal map overlay and allows the player to place

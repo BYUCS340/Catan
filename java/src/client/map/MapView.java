@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import client.base.*;
 import client.data.*;
+import client.map.model.MapModel;
 import shared.definitions.*;
 import shared.locations.*;
 
@@ -43,11 +44,11 @@ public class MapView extends PanelView implements IMapView
 		map.setController(controller);
 	}
 	
-	@Override
-	public void addHex(HexLocation hexLoc, HexType hexType)
-	{
-		map.addHex(hexLoc, hexType);
-	}
+//	@Override
+//	public void addHex(HexLocation hexLoc, HexType hexType)
+//	{
+//		map.addHex(hexLoc, hexType);
+//	}
 	
 	@Override
 	public void addNumber(HexLocation hexLoc, int num)
@@ -83,6 +84,12 @@ public class MapView extends PanelView implements IMapView
 	public void placeRobber(HexLocation hexLoc)
 	{
 		map.placeRobber(hexLoc);
+	}
+	
+	@Override
+	public void SetModel(MapModel model)
+	{
+		map.SetMapModel(model);
 	}
 	
 	@Override

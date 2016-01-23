@@ -67,8 +67,15 @@ public class MapComponent extends JComponent
 		
 		for (PortType portType : PortType.values())
 		{
+<<<<<<< Updated upstream
+			if (portType == PortType.NONE)
+				continue;
+			
+			PORT_IMAGES.put(portType, loadPortImage(portType));
+=======
 			if (portType != PortType.NONE)
 				PORT_IMAGES.put(portType, loadPortImage(portType));
+>>>>>>> Stashed changes
 		}
 		
 		NUMBER_IMAGES = new HashMap<Integer, BufferedImage>();
@@ -614,7 +621,7 @@ public class MapComponent extends JComponent
 		g2.translate(this.getWidth() / 2, this.getHeight() / 2);
 
 		g2.scale(scale, scale);
-		g2.translate(this.getWidth() / 2, -this.getHeight());
+		g2.translate(0, -this.getHeight() / 2);
 		
 		if (model == null)
 			return;
@@ -646,7 +653,7 @@ public class MapComponent extends JComponent
 			
 			BufferedImage hexImage = getHexImage(hex.getType());
 			
-			Point2D hexCenter = new Point2D.Double(hex.getPoint().getX(), hex.getPoint().getY());
+			Point2D hexCenter = new Point2D.Double(hex.getxLocation(), hex.getyLocation());
 			Point2D hexCorner = new Point2D.Double(
 												   (int)(hexCenter.getX() - HEX_IMAGE_WIDTH / 2),
 												   (int)(hexCenter.getY() - HEX_IMAGE_HEIGHT / 2));
