@@ -27,7 +27,7 @@ public class MapComponent extends JComponent
 {
 	
 	public static final int HEX_IMAGE_WIDTH = 298;
-	public static final int HEX_IMAGE_HEIGHT = 298; // 258;
+	public static final int HEX_IMAGE_HEIGHT = 258;
 	
 	private static final int WORLD_WIDTH = HEX_IMAGE_WIDTH * 5
 										   + HEX_IMAGE_WIDTH / 2;
@@ -890,10 +890,8 @@ public class MapComponent extends JComponent
 		double doubleX = hex.getPoint().getX();
 		double doubleY = hex.getPoint().getY();
 		
-		int wX = (int)(((3 * doubleX + 2) * HEX_IMAGE_WIDTH) / 4);
-		//The 2.5 should be a 2. The images seem too spaced in that case though, so
-		//I'm using .5 as a correction factor.
-		int wY = wCenterY + (int)(doubleY * HEX_IMAGE_HEIGHT / 2.5);
+		int wX = (int)(((3 * doubleX + 2) * HEX_IMAGE_WIDTH) / 4.0);
+		int wY = wCenterY + (int)(doubleY * HEX_IMAGE_HEIGHT / 2.0);
 		
 		return new Point2D.Double(wX, wY);
 	}
@@ -937,7 +935,7 @@ public class MapComponent extends JComponent
 			x = HEX_IMAGE_WIDTH / 4.0;
 		
 		x += point.getX() * 0.75 * HEX_IMAGE_WIDTH;
-		y = wCenterY + point.getY() * HEX_IMAGE_HEIGHT / 2.5;
+		y = wCenterY + point.getY() * HEX_IMAGE_HEIGHT / 2.0;
 		
 		return new Point2D.Double(x, y);
 	}
