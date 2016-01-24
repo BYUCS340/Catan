@@ -1,5 +1,6 @@
 package client.map.model.objects;
 
+import client.map.model.Coordinate;
 import shared.definitions.CatanColor;
 
 /**
@@ -9,14 +10,20 @@ import shared.definitions.CatanColor;
  */
 public class Edge {
 
+	private Coordinate start;
+	private Coordinate end;
+	
 	private boolean roadExists;
 	private CatanColor color;
 	
 	/**
 	 * Creates an edge object.
 	 */
-	public Edge()
+	public Edge(Coordinate start, Coordinate end)
 	{
+		this.start = start;
+		this.end = end;
+		
 		roadExists = false;
 		color = null;
 	}
@@ -45,6 +52,20 @@ public class Edge {
 	 */
 	public boolean doesRoadExists() {
 		return roadExists;
+	}
+
+	/**
+	 * @return the start
+	 */
+	public Coordinate getStart() {
+		return start;
+	}
+
+	/**
+	 * @return the end
+	 */
+	public Coordinate getEnd() {
+		return end;
 	}
 
 	/**

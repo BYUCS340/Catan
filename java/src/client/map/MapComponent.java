@@ -52,6 +52,7 @@ public class MapComponent extends JComponent
 	private static Map<EdgeDirection, List<Point2D>> ROADS;
 	private static List<Point2D> SETTLEMENT;
 	private static List<Point2D> CITY;
+	private static List<Point2D> ROAD;
 	private static Map<VertexDirection, Point2D> VERTEX_POINTS;
 	private static Map<EdgeDirection, Point2D> EDGE_POINTS;
 	private static Map<EdgeDirection, java.lang.Double> PORT_ROTATIONS;
@@ -91,6 +92,10 @@ public class MapComponent extends JComponent
 		ROAD_0.add(new Point2D.Double(ROAD_WIDTH / 2, -ROAD_HEIGHT / 2));
 		ROAD_0.add(new Point2D.Double(ROAD_WIDTH / 2, ROAD_HEIGHT / 2));
 		ROAD_0.add(new Point2D.Double(-ROAD_WIDTH / 2, ROAD_HEIGHT / 2));
+		
+		ROAD = ROAD_0;
+		
+		Rectangle rect = new Rectangle();
 		
 		List<Point2D> ROAD_60 = rotateShape(ROAD_0, -(Math.PI / 3));
 		List<Point2D> ROAD_120 = rotateShape(ROAD_0, -(2 * Math.PI / 3));
@@ -625,7 +630,7 @@ public class MapComponent extends JComponent
 //		drawPorts(g2);
 		drawNumbers(g2);
 		drawRobber(g2);
-//		drawRoads(g2);
+		drawRoads(g2);
 		drawVerticies(g2);
 //		drawDropShape(g2);
 	}
@@ -682,33 +687,23 @@ public class MapComponent extends JComponent
 	
 	private void drawRoads(Graphics2D g2)
 	{
-		for (Map.Entry<EdgeLocation, CatanColor> entry : roads.entrySet())
+		Iterator<Edge> edges = model.GetAllEdges();
+		while (edges.hasNext())
 		{
-			EdgeLocation edgeLoc = entry.getKey();
-			CatanColor color = entry.getValue();
-			drawRoad(g2, edgeLoc, color);
+			Edge edge = edges.next();
+			
+			if (edge.doesRoadExists())
+			{
+				Point2D edgeCenter = getEdgeCenterPoint(edge);
+				Double angle = getEdgeAngle(edge);
+				
+				List<Point2D> rotatedRoad = rotateShape(ROAD, angle);
+				List<Point2D> completedRoad = translateShape(rotatedRoad, edgeCenter);
+				
+				Polygon road = toPolygon(completedRoad);
+				drawGamePiece(g2, road, edge.getColor());
+			}
 		}
-	}
-	
-	private void
-			drawRoad(Graphics2D g2, EdgeLocation edgeLoc, CatanColor color)
-	{
-		
-		Point2D edgePoint = getEdgePoint(edgeLoc);
-		
-		List<Point2D> roadShape = translateShape(ROADS.get(edgeLoc.getDir()),
-												 edgePoint);
-		
-		Polygon poly = toPolygon(roadShape);
-		Color baseColor = color.getJavaColor();
-		Color darkColor = baseColor.darker();
-		
-		g2.setColor(baseColor);
-		g2.fillPolygon(poly);
-		
-		g2.setColor(darkColor);
-		g2.setStroke(new BasicStroke(ROAD_HEIGHT / 3));
-		g2.drawPolygon(poly);
 	}
 	
 	private void drawVerticies(Graphics2D g2)
@@ -721,7 +716,7 @@ public class MapComponent extends JComponent
 		while (verticies.hasNext())
 		{
 			Vertex vertex = verticies.next();
-			Point2D vertPoint = getVertexPoint(vertex);
+			Point2D vertPoint = getVertexPoint(vertex.getPoint());
 			
 			List<Point2D> settlementShape;
 			if (vertex.getType() == PieceType.SETTLEMENT)
@@ -732,11 +727,11 @@ public class MapComponent extends JComponent
 				continue;
 			
 			Polygon polygon = toPolygon(settlementShape);
-			drawVerticies(g2, polygon, vertex.getColor());
+			drawGamePiece(g2, polygon, vertex.getColor());
 		}
 	}
 	
-	private void drawVerticies(Graphics2D g2, Polygon polygon, CatanColor color)
+	private void drawGamePiece(Graphics2D g2, Polygon polygon, CatanColor color)
 	{
 		Color baseColor = color.getJavaColor();
 		Color darkColor = baseColor.darker();
@@ -909,24 +904,33 @@ public class MapComponent extends JComponent
 		return result;
 	}
 	
-	private static Point2D getEdgePoint(EdgeLocation edgeLoc)
+	private static Point2D getEdgeCenterPoint(Edge edge)
 	{
+		Coordinate start = edge.getStart();
+		Coordinate end = edge.getEnd();
 		
-//		EdgeLocation normEdgeLoc = edgeLoc.getNormalizedLocation();
-//		
-//		Point2D hexPoint = getHexPoint(normEdgeLoc.getHexLoc());
-//		
-//		Point2D edgePoint = EDGE_POINTS.get(normEdgeLoc.getDir());
-//		
-//		return add(hexPoint, edgePoint);
+		Point2D startPoint = getVertexPoint(start);
+		Point2D endPoint = getVertexPoint(end);
 		
-		return null;
+		return average(startPoint, endPoint);
 	}
 	
-	private static Point2D getVertexPoint(Vertex vertex)
+	private static double getEdgeAngle(Edge edge)
 	{
-		Coordinate point = vertex.getPoint();
+		Coordinate start = edge.getStart();
+		Coordinate end = edge.getEnd();
 		
+		Point2D startPoint = getVertexPoint(start);
+		Point2D endPoint = getVertexPoint(end);
+		
+		double slope = (startPoint.getY() - endPoint.getY()) / 
+				(startPoint.getX() - endPoint.getX());
+		
+		return Math.atan(slope);
+	}
+	
+	private static Point2D getVertexPoint(Coordinate point)
+	{
 		double wCenterY = WORLD_HEIGHT / 2;
 		double x = 0;
 		double y;

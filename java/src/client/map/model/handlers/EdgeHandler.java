@@ -1,6 +1,7 @@
 package client.map.model.handlers;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import client.map.MapException;
@@ -38,11 +39,11 @@ public class EdgeHandler {
 			{
 				p1 = new Coordinate(x, y);
 				p2 = new Coordinate(x, y+1);
-				edges.put(GetKey(p1, p2), new Edge());
+				edges.put(GetKey(p1, p2), new Edge(p1, p2));
 				
 				p1 = new Coordinate(x, -y);
 				p2 = new Coordinate(x, -y - 1);
-				edges.put(GetKey(p1, p2), new Edge());
+				edges.put(GetKey(p1, p2), new Edge(p1, p2));
 			}
 		}
 		
@@ -58,13 +59,13 @@ public class EdgeHandler {
 				
 				p1 = new Coordinate(x, y);
 				p2 = new Coordinate(x + 1, y);
-				edges.put(GetKey(p1, p2), new Edge());
+				edges.put(GetKey(p1, p2), new Edge(p1, p2));
 				
 				if (y != 0)
 				{
 					p1 = new Coordinate(x, -y);
 					p2 = new Coordinate(x + 1, -y);
-					edges.put(GetKey(p1, p2), new Edge());
+					edges.put(GetKey(p1, p2), new Edge(p1, p2));
 				}
 			}
 		}
@@ -96,13 +97,17 @@ public class EdgeHandler {
 			throw new MapException("The requested edge doesn't exist.");
 	}
 	
+	/**
+	 * Returns all the edges 
+	 * @return The edges. 'Nuff said.
+	 */
+	public Iterator<Edge> GetAllEdges()
+	{
+		return java.util.Collections.unmodifiableCollection(edges.values()).iterator();
+	}
+	
 	private int GetKey(Coordinate p1, Coordinate p2)
 	{
-//		assert x1 >= 0;
-//		assert y1 + Y_SHIFT >= 0;
-//		assert x2 >= 0;
-//		assert y2 + Y_SHIFT >= 0;
-		
 		if (ReverseOrder(p1, p2))
 			return ComputeKey(p2, p1);
 		else

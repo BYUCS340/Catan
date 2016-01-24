@@ -112,6 +112,15 @@ public class MapModel {
 	}
 	
 	/**
+	 * Gets all the edges.
+	 * @return An iterator of edges.
+	 */
+	public Iterator<Edge> GetAllEdges()
+	{
+		return edges.GetAllEdges();
+	}
+	
+	/**
 	 * Returns the hex associated with the coordinate.
 	 * @param point The coordinate of the hex.
 	 * @return The associated hex
