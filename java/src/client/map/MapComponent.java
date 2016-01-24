@@ -2,6 +2,7 @@ package client.map;
 
 import java.util.*;
 import java.util.List;
+import java.util.Map.Entry;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
@@ -11,7 +12,7 @@ import javax.swing.*;
 import client.base.*;
 import client.map.model.Coordinate;
 import client.map.model.MapModel;
-import client.map.model.objects.Hex;
+import client.map.model.objects.*;
 import client.utils.*;
 import shared.definitions.*;
 import shared.locations.*;
@@ -334,18 +335,18 @@ public class MapComponent extends JComponent
 		//allHexPoints.put(hexLoc, getHexPoint(hexLoc));
 		
 		// Compute edge points for the new hex
-		for (EdgeDirection edgeDir : EdgeDirection.values())
-		{
-			EdgeLocation edgeLoc = new EdgeLocation(hexLoc, edgeDir).getNormalizedLocation();
-			allEdgePoints.put(edgeLoc, getEdgePoint(edgeLoc));
-		}
+//		for (EdgeDirection edgeDir : EdgeDirection.values())
+//		{
+//			EdgeLocation edgeLoc = new EdgeLocation(hexLoc, edgeDir).getNormalizedLocation();
+//			allEdgePoints.put(edgeLoc, getEdgePoint(edgeLoc));
+//		}
 		
 		// Compute vertex points for the new hex
-		for (VertexDirection vertDir : VertexDirection.values())
-		{
-			VertexLocation vertLoc = new VertexLocation(hexLoc, vertDir).getNormalizedLocation();
-			allVertexPoints.put(vertLoc, getVertexPoint(vertLoc));
-		}
+//		for (VertexDirection vertDir : VertexDirection.values())
+//		{
+//			VertexLocation vertLoc = new VertexLocation(hexLoc, vertDir).getNormalizedLocation();
+//			allVertexPoints.put(vertLoc, getVertexPoint(vertLoc));
+//		}
 		
 		// Repaint
 		this.repaint();
@@ -625,8 +626,7 @@ public class MapComponent extends JComponent
 		drawNumbers(g2);
 		drawRobber(g2);
 //		drawRoads(g2);
-//		drawSettlements(g2);
-//		drawCities(g2);
+		drawVerticies(g2);
 //		drawDropShape(g2);
 	}
 	
@@ -655,8 +655,11 @@ public class MapComponent extends JComponent
 	
 	private void drawNumbers(Graphics2D g2)
 	{
-		for (Map.Entry<Integer, List<Hex>> entry : model.GetPips())
+		Iterator<Entry<Integer, List<Hex>>> pips = model.GetPips();
+		while(pips.hasNext())
 		{
+			Entry<Integer, List<Hex>> entry = pips.next();
+			
 			BufferedImage numImage = getNumberImage(entry.getKey());
 			
 			for (Hex hex : entry.getValue())
@@ -665,15 +668,6 @@ public class MapComponent extends JComponent
 				drawImage(g2, numImage, hexCenter);
 			}
 		}
-//		for (Map.Entry<HexLocation, Integer> entry : numbers.entrySet())
-//		{
-//			
-//			BufferedImage numImage = getNumberImage(entry.getValue());
-//			
-//			Point2D hexCenter = getHexPoint(entry.getKey());
-//			
-//			drawImage(g2, numImage, hexCenter);
-//		}
 	}
 	
 	private void drawRobber(Graphics2D g2)
@@ -717,72 +711,42 @@ public class MapComponent extends JComponent
 		g2.drawPolygon(poly);
 	}
 	
-	private void drawSettlements(Graphics2D g2)
+	private void drawVerticies(Graphics2D g2)
 	{
 		
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 							RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		for (Map.Entry<VertexLocation, CatanColor> entry : settlements.entrySet())
+		Iterator<Vertex> verticies = model.GetAllVerticies();
+		while (verticies.hasNext())
 		{
-			VertexLocation vertLoc = entry.getKey();
-			CatanColor color = entry.getValue();
-			drawSettlement(g2, vertLoc, color);
+			Vertex vertex = verticies.next();
+			Point2D vertPoint = getVertexPoint(vertex);
+			
+			List<Point2D> settlementShape;
+			if (vertex.getType() == PieceType.SETTLEMENT)
+				settlementShape = translateShape(SETTLEMENT, vertPoint);
+			else if (vertex.getType() == PieceType.CITY)
+				settlementShape = translateShape(CITY, vertPoint);
+			else
+				continue;
+			
+			Polygon polygon = toPolygon(settlementShape);
+			drawVerticies(g2, polygon, vertex.getColor());
 		}
 	}
 	
-	private void drawSettlement(Graphics2D g2, VertexLocation vertLoc,
-								CatanColor color)
+	private void drawVerticies(Graphics2D g2, Polygon polygon, CatanColor color)
 	{
-		
-		Point2D vertPoint = getVertexPoint(vertLoc);
-		
-		List<Point2D> settlementShape = translateShape(SETTLEMENT, vertPoint);
-		
-		Polygon poly = toPolygon(settlementShape);
 		Color baseColor = color.getJavaColor();
 		Color darkColor = baseColor.darker();
 		
 		g2.setColor(baseColor);
-		g2.fillPolygon(poly);
+		g2.fillPolygon(polygon);
 		
 		g2.setColor(darkColor);
 		g2.setStroke(new BasicStroke(ROAD_HEIGHT / 3));
-		g2.drawPolygon(poly);
-	}
-	
-	private void drawCities(Graphics2D g2)
-	{
-		
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-							RenderingHints.VALUE_ANTIALIAS_ON);
-		
-		for (Map.Entry<VertexLocation, CatanColor> entry : cities.entrySet())
-		{
-			VertexLocation vertLoc = entry.getKey();
-			CatanColor color = entry.getValue();
-			drawCity(g2, vertLoc, color);
-		}
-	}
-	
-	private void drawCity(Graphics2D g2, VertexLocation vertLoc,
-						  CatanColor color)
-	{
-		
-		Point2D vertPoint = getVertexPoint(vertLoc);
-		
-		List<Point2D> cityShape = translateShape(CITY, vertPoint);
-		
-		Polygon poly = toPolygon(cityShape);
-		Color baseColor = color.getJavaColor();
-		Color darkColor = baseColor.darker();
-		
-		g2.setColor(baseColor);
-		g2.fillPolygon(poly);
-		
-		g2.setColor(darkColor);
-		g2.setStroke(new BasicStroke(ROAD_HEIGHT / 3));
-		g2.drawPolygon(poly);
+		g2.drawPolygon(polygon);
 	}
 	
 	private void drawPorts(Graphics2D g2)
@@ -961,18 +925,21 @@ public class MapComponent extends JComponent
 		return null;
 	}
 	
-	private static Point2D getVertexPoint(VertexLocation vertLoc)
+	private static Point2D getVertexPoint(Vertex vertex)
 	{
+		Coordinate point = vertex.getPoint();
 		
-//		VertexLocation normVertLoc = vertLoc.getNormalizedLocation();
-//		
-//		Point2D hexPoint = getHexPoint(normVertLoc.getHexLoc());
-//		
-//		Point2D vertPoint = VERTEX_POINTS.get(normVertLoc.getDir());
-//		
-//		return add(hexPoint, vertPoint);
+		double wCenterY = WORLD_HEIGHT / 2;
+		double x = 0;
+		double y;
 		
-		return null;
+		if (point.isRightHandCoordinate())
+			x = HEX_IMAGE_WIDTH / 4.0;
+		
+		x += point.getX() * 0.75 * HEX_IMAGE_WIDTH;
+		y = wCenterY + point.getY() * HEX_IMAGE_HEIGHT / 2.5;
+		
+		return new Point2D.Double(x, y);
 	}
 	
 	private static List<Point2D> rotateShape(List<Point2D> points,

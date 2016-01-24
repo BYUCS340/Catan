@@ -1,6 +1,7 @@
 package client.map.model.handlers;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import client.map.MapException;
@@ -40,6 +41,15 @@ public class VertexHandler {
 	public boolean ContainsVertex(Coordinate point)
 	{
 		return verticies.containsKey(GetKey(point));
+	}
+	
+	/**
+	 * Gets all the registered verticies.
+	 * @return The vertex list.
+	 */
+	public Iterator<Vertex> GetVerticies()
+	{
+		return java.util.Collections.unmodifiableCollection(verticies.values()).iterator();
 	}
 	
 	/**

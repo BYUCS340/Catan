@@ -24,7 +24,9 @@ public class Vertex {
 	 */
 	public Vertex(Coordinate point)
 	{
-		type = PieceType.NONE;
+		this.type = PieceType.NONE;
+		this.color = null;
+		
 		this.point = point;
 		
 		portType = PortType.NONE;

@@ -145,9 +145,9 @@ public class MapModel {
 	 * Gets the list of all the pips on the playing board.
 	 * @return The pip list.
 	 */
-	public Set<Map.Entry<Integer, List<Hex>>> GetPips()
+	public Iterator<Map.Entry<Integer, List<Hex>>> GetPips()
 	{
-		return java.util.Collections.unmodifiableSet(values.entrySet());
+		return java.util.Collections.unmodifiableSet(values.entrySet()).iterator();
 	}
 	
 	/**
@@ -159,6 +159,11 @@ public class MapModel {
 	public Vertex GetVertex(Coordinate point) throws MapException
 	{
 		return verticies.GetVertex(point);
+	}
+	
+	public Iterator<Vertex> GetAllVerticies()
+	{
+		return verticies.GetVerticies();
 	}
 	
 	/**
