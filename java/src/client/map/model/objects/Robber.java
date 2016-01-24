@@ -36,4 +36,13 @@ public class Robber {
 	{
 		return hex.equals(placedOn);
 	}
+	
+	/**
+	 * Gets the hex that the robber is on.
+	 * @return The hex.
+	 */
+	public Hex GetHex()
+	{
+		return placedOn;
+	}
 }

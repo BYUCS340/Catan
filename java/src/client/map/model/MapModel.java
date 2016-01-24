@@ -68,6 +68,17 @@ public class MapModel {
 	}
 	
 	/**
+	 * Returns if an edge is on the board.
+	 * @param p1 The first end point.
+	 * @param p2 The second end point.
+	 * @return True if the edge exists, else false.
+	 */
+	public boolean ContainsEdge(Coordinate p1, Coordinate p2)
+	{
+		return edges.ContainsEdge(p1, p2);
+	}
+	
+	/**
 	 * Returns if a hex is contained on the board.
 	 * @param point The coordinate.
 	 * @return True if the hex exists, else false.
@@ -75,6 +86,29 @@ public class MapModel {
 	public boolean ContainsHex(Coordinate point)
 	{
 		return hexes.ContainsHex(point);
+	}
+	
+	/**
+	 * Returns if a vertex is on the board.
+	 * @param point The coordinate.
+	 * @return True if the vertex is on the board, else false.
+	 */
+	public boolean ContainsVertex(Coordinate point)
+	{
+		return verticies.ContainsVertex(point);
+	}
+	
+	/**
+	 * Gets the edge associated with the two end points. The order of the points
+	 * does not matter.
+	 * @param p1 The coordinate of the first point.
+	 * @param p2 The coordinate of the second point.
+	 * @return The associated edge.
+	 * @throws MapException Thrown if the edge doesn't exist
+	 */
+	public Edge GetEdge(Coordinate p1, Coordinate p2) throws MapException
+	{
+		return edges.GetEdge(p1, p2);
 	}
 	
 	/**
@@ -117,51 +151,6 @@ public class MapModel {
 	}
 	
 	/**
-	 * Creates a hex at the specified location.
-	 * @param type The resource type associated with the hex.
-	 * @param point The coordinate of the hex.
-	 * @throws MapException Thrown if there is an issue adding the hex.
-	 */
-	public void SetHex(HexType type, Coordinate point) throws MapException
-	{
-		hexes.AddHex(new Hex(type, point));
-	}
-	
-	/**
-	 * Returns if an edge is on the board.
-	 * @param p1 The first end point.
-	 * @param p2 The second end point.
-	 * @return True if the edge exists, else false.
-	 */
-	public boolean ContainsEdge(Coordinate p1, Coordinate p2)
-	{
-		return edges.ContainsEdge(p1, p2);
-	}
-	
-	/**
-	 * Gets the edge associated with the two end points. The order of the points
-	 * does not matter.
-	 * @param p1 The coordinate of the first point.
-	 * @param p2 The coordinate of the second point.
-	 * @return The associated edge.
-	 * @throws MapException Thrown if the edge doesn't exist
-	 */
-	public Edge GetEdge(Coordinate p1, Coordinate p2) throws MapException
-	{
-		return edges.GetEdge(p1, p2);
-	}
-	
-	/**
-	 * Returns if a vertex is on the board.
-	 * @param point The coordinate.
-	 * @return True if the vertex is on the board, else false.
-	 */
-	public boolean ContainsVertex(Coordinate point)
-	{
-		return verticies.ContainsVertex(point);
-	}
-	
-	/**
 	 * Gets the vertex associated with the coordinate.
 	 * @param point The coordinate of the vertex.
 	 * @return The associated vertex.
@@ -191,6 +180,22 @@ public class MapModel {
 		HandleAddingOccupiedVertex(point.GetSouthEast(), verticies);
 		
 		return java.util.Collections.unmodifiableList(verticies);
+	}
+	
+	public Hex GetRobberPlacement()
+	{
+		return robber.GetHex();
+	}
+	
+	/**
+	 * Creates a hex at the specified location.
+	 * @param type The resource type associated with the hex.
+	 * @param point The coordinate of the hex.
+	 * @throws MapException Thrown if there is an issue adding the hex.
+	 */
+	public void SetHex(HexType type, Coordinate point) throws MapException
+	{
+		hexes.AddHex(new Hex(type, point));
 	}
 	
 	/**

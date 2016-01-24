@@ -623,7 +623,7 @@ public class MapComponent extends JComponent
 		drawHexes(g2);
 //		drawPorts(g2);
 		drawNumbers(g2);
-//		drawRobber(g2);
+		drawRobber(g2);
 //		drawRoads(g2);
 //		drawSettlements(g2);
 //		drawCities(g2);
@@ -678,17 +678,12 @@ public class MapComponent extends JComponent
 	
 	private void drawRobber(Graphics2D g2)
 	{
-		if(robber != null)
-		{
-			drawRobber(g2, robber);
-		}
-	}
-	
-	private void drawRobber(Graphics2D g2, HexLocation hexLoc)
-	{
-//		Point2D hexPoint = getHexPoint(hexLoc);
-//		BufferedImage robberImage = getRobberImage();
-//		drawImage(g2, robberImage, hexPoint);
+		//TODO Originally, the robber was checked to be non-null. I'm assuming
+		//the robber exists when the model exists. Verify this assumption.
+		
+		Point2D hexPoint = getHexCenterPoint(model.GetRobberPlacement());
+		BufferedImage robberImage = getRobberImage();
+		drawImage(g2, robberImage, hexPoint);
 	}
 	
 	private void drawRoads(Graphics2D g2)
