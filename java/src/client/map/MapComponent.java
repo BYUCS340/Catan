@@ -9,6 +9,7 @@ import java.awt.image.*;
 import javax.swing.*;
 
 import client.base.*;
+import client.map.model.Coordinate;
 import client.map.model.MapModel;
 import client.map.model.objects.Hex;
 import client.utils.*;
@@ -330,7 +331,7 @@ public class MapComponent extends JComponent
 //		hexes.put(hexLoc, hexType);
 		
 		// Compute hex point for the new hex
-		allHexPoints.put(hexLoc, getHexPoint(hexLoc));
+		//allHexPoints.put(hexLoc, getHexPoint(hexLoc));
 		
 		// Compute edge points for the new hex
 		for (EdgeDirection edgeDir : EdgeDirection.values())
@@ -613,24 +614,20 @@ public class MapComponent extends JComponent
 		g2.fillRect(0, 0, this.getWidth(), this.getHeight());		
 		g2.translate(this.getWidth() / 2, this.getHeight() / 2);
 
-		g2.scale(scale, scale);
-		g2.translate(this.getWidth() / 2, -this.getHeight());
-		
 		if (model == null)
 			return;
-		
-		drawHexes(g2);
-		
-		g2.translate(0, this.getHeight() / 2);
+
+		g2.scale(scale, scale);
 		g2.translate(-WORLD_WIDTH / 2, -WORLD_HEIGHT / 2);
 		
-		drawPorts(g2);
-		drawNumbers(g2);
-		drawRobber(g2);
-		drawRoads(g2);
-		drawSettlements(g2);
-		drawCities(g2);
-		drawDropShape(g2);
+		drawHexes(g2);
+//		drawPorts(g2);
+//		drawNumbers(g2);
+//		drawRobber(g2);
+//		drawRoads(g2);
+//		drawSettlements(g2);
+//		drawCities(g2);
+//		drawDropShape(g2);
 	}
 	
 	private void drawHexes(Graphics2D g2)
@@ -641,15 +638,12 @@ public class MapComponent extends JComponent
 		{
 			Hex hex = hexes.next();
 			
-			if (hex.getType() == HexType.WATER)
-				continue;
-			
 			BufferedImage hexImage = getHexImage(hex.getType());
 			
-			Point2D hexCenter = new Point2D.Double(hex.getPoint().getX(), hex.getPoint().getY());
+			Point2D hexCenter = getHexCenterPoint(hex.getPoint());
 			Point2D hexCorner = new Point2D.Double(
-												   (int)(hexCenter.getX() - HEX_IMAGE_WIDTH / 2),
-												   (int)(hexCenter.getY() - HEX_IMAGE_HEIGHT / 2));
+								   (int)(hexCenter.getX() - HEX_IMAGE_WIDTH / 2),
+								   (int)(hexCenter.getY() - HEX_IMAGE_HEIGHT / 2));
 			
 			g2.drawImage(hexImage, (int)hexCorner.getX(),
 						 (int)hexCorner.getY(),
@@ -657,36 +651,20 @@ public class MapComponent extends JComponent
 						 (int)(hexCorner.getY() + HEX_IMAGE_HEIGHT), 0, 0,
 						 HEX_IMAGE_WIDTH, HEX_IMAGE_HEIGHT, null);
 		}
-//		for (Map.Entry<HexLocation, HexType> entry : hexes.entrySet())
-//		{
-//			
-//			BufferedImage hexImage = getHexImage(entry.getValue());
-//			
-//			Point2D hexCenter = getHexPoint(entry.getKey());
-//			Point2D hexCorner = new Point2D.Double(
-//												   (int)(hexCenter.getX() - HEX_IMAGE_WIDTH / 2),
-//												   (int)(hexCenter.getY() - HEX_IMAGE_HEIGHT / 2));
-//			
-//			g2.drawImage(hexImage, (int)hexCorner.getX(),
-//						 (int)hexCorner.getY(),
-//						 (int)(hexCorner.getX() + HEX_IMAGE_WIDTH),
-//						 (int)(hexCorner.getY() + HEX_IMAGE_HEIGHT), 0, 0,
-//						 HEX_IMAGE_WIDTH, HEX_IMAGE_HEIGHT, null);
-//		}
 	}
 	
 	private void drawNumbers(Graphics2D g2)
 	{
 		
-		for (Map.Entry<HexLocation, Integer> entry : numbers.entrySet())
-		{
-			
-			BufferedImage numImage = getNumberImage(entry.getValue());
-			
-			Point2D hexCenter = getHexPoint(entry.getKey());
-			
-			drawImage(g2, numImage, hexCenter);
-		}
+//		for (Map.Entry<HexLocation, Integer> entry : numbers.entrySet())
+//		{
+//			
+//			BufferedImage numImage = getNumberImage(entry.getValue());
+//			
+//			Point2D hexCenter = getHexPoint(entry.getKey());
+//			
+//			drawImage(g2, numImage, hexCenter);
+//		}
 	}
 	
 	private void drawRobber(Graphics2D g2)
@@ -699,9 +677,9 @@ public class MapComponent extends JComponent
 	
 	private void drawRobber(Graphics2D g2, HexLocation hexLoc)
 	{
-		Point2D hexPoint = getHexPoint(hexLoc);
-		BufferedImage robberImage = getRobberImage();
-		drawImage(g2, robberImage, hexPoint);
+//		Point2D hexPoint = getHexPoint(hexLoc);
+//		BufferedImage robberImage = getRobberImage();
+//		drawImage(g2, robberImage, hexPoint);
 	}
 	
 	private void drawRoads(Graphics2D g2)
@@ -816,9 +794,9 @@ public class MapComponent extends JComponent
 	private void
 			drawPort(Graphics2D g2, EdgeLocation edgeLoc, PortType portType)
 	{
-		Point2D imageLoc = getHexPoint(edgeLoc.getHexLoc());
-		drawRotatedImage(g2, getPortImage(portType), imageLoc,
-						 getPortRotation(edgeLoc));
+//		Point2D imageLoc = getHexPoint(edgeLoc.getHexLoc());
+//		drawRotatedImage(g2, getPortImage(portType), imageLoc,
+//						 getPortRotation(edgeLoc));
 	}
 	
 	private void drawDisallowImage(Graphics2D g2, Point2D location)
@@ -829,79 +807,79 @@ public class MapComponent extends JComponent
 	private void drawDropShape(Graphics2D g2)
 	{
 		
-		if(dropType == null)
-		{
-			return;
-		}
-		
-		switch (dropType)
-		{
-			case ROAD:
-			{
-				if(dropEdgeLoc != null)
-				{
-					if(dropAllowed)
-					{
-						drawRoad(g2, dropEdgeLoc, dropColor);
-					}
-					else
-					{
-						drawDisallowImage(g2, getEdgePoint(dropEdgeLoc));
-					}
-				}
-			}
-				break;
-			case CITY:
-			{
-				if(dropVertLoc != null)
-				{
-					if(dropAllowed)
-					{
-						drawCity(g2, dropVertLoc, dropColor);
-					}
-					else
-					{
-						drawDisallowImage(g2, getVertexPoint(dropVertLoc));
-					}
-				}
-			}
-				break;
-			case SETTLEMENT:
-			{
-				if(dropVertLoc != null)
-				{
-					if(dropAllowed)
-					{
-						drawSettlement(g2, dropVertLoc, dropColor);
-					}
-					else
-					{
-						drawDisallowImage(g2, getVertexPoint(dropVertLoc));
-					}
-				}
-			}
-				break;
-			case ROBBER:
-			{
-				if(dropHexLoc != null)
-				{
-					if(dropAllowed)
-					{
-						drawRobber(g2, dropHexLoc);
-					}
-					else
-					{
-						drawDisallowImage(g2, getHexPoint(dropHexLoc));
-					}
-				}
-			}
-				break;
-			default:
-			{
-				assert false;
-			}
-				break;
-		}
+//		if(dropType == null)
+//		{
+//			return;
+//		}
+//		
+//		switch (dropType)
+//		{
+//			case ROAD:
+//			{
+//				if(dropEdgeLoc != null)
+//				{
+//					if(dropAllowed)
+//					{
+//						drawRoad(g2, dropEdgeLoc, dropColor);
+//					}
+//					else
+//					{
+//						drawDisallowImage(g2, getEdgePoint(dropEdgeLoc));
+//					}
+//				}
+//			}
+//				break;
+//			case CITY:
+//			{
+//				if(dropVertLoc != null)
+//				{
+//					if(dropAllowed)
+//					{
+//						drawCity(g2, dropVertLoc, dropColor);
+//					}
+//					else
+//					{
+//						drawDisallowImage(g2, getVertexPoint(dropVertLoc));
+//					}
+//				}
+//			}
+//				break;
+//			case SETTLEMENT:
+//			{
+//				if(dropVertLoc != null)
+//				{
+//					if(dropAllowed)
+//					{
+//						drawSettlement(g2, dropVertLoc, dropColor);
+//					}
+//					else
+//					{
+//						drawDisallowImage(g2, getVertexPoint(dropVertLoc));
+//					}
+//				}
+//			}
+//				break;
+//			case ROBBER:
+//			{
+//				if(dropHexLoc != null)
+//				{
+//					if(dropAllowed)
+//					{
+//						drawRobber(g2, dropHexLoc);
+//					}
+//					else
+//					{
+//						drawDisallowImage(g2, getHexPoint(dropHexLoc));
+//					}
+//				}
+//			}
+//				break;
+//			default:
+//			{
+//				assert false;
+//			}
+//				break;
+//		}
 	}
 	
 	private void drawRotatedImage(Graphics2D g2, BufferedImage image,
@@ -937,20 +915,17 @@ public class MapComponent extends JComponent
 		return PORT_ROTATIONS.get(edgeLoc.getDir());
 	}
 	
-	private static Point2D getHexPoint(HexLocation hexLoc)
-	{
-		
-		final double SQRT_OF_3 = 1.7320508075688772935274463415059;
-		
-		int wCenterX = WORLD_WIDTH / 2;
+	private static Point2D getHexCenterPoint(Coordinate point)
+	{	
 		int wCenterY = WORLD_HEIGHT / 2;
 		
-		double doubleX = hexLoc.getX();
-		double doubleY = hexLoc.getY();
+		double doubleX = point.getX();
+		double doubleY = point.getY();
 		
-		int wX = wCenterX + (int)(3 * doubleX * HEX_IMAGE_WIDTH / 4);
-		int wY = wCenterY
-				 + (int)((double)HEX_IMAGE_HEIGHT / 2 * SQRT_OF_3 * (doubleY + doubleX / 2));
+		int wX = (int)(((3 * doubleX + 2) * HEX_IMAGE_WIDTH) / 4);
+		//The 2.5 should be a 2. The images seem too spaced in that case though, so
+		//I'm using .5 as a correction factor.
+		int wY = wCenterY + (int)(doubleY * HEX_IMAGE_HEIGHT / 2.5);
 		
 		return new Point2D.Double(wX, wY);
 	}
@@ -971,25 +946,29 @@ public class MapComponent extends JComponent
 	private static Point2D getEdgePoint(EdgeLocation edgeLoc)
 	{
 		
-		EdgeLocation normEdgeLoc = edgeLoc.getNormalizedLocation();
+//		EdgeLocation normEdgeLoc = edgeLoc.getNormalizedLocation();
+//		
+//		Point2D hexPoint = getHexPoint(normEdgeLoc.getHexLoc());
+//		
+//		Point2D edgePoint = EDGE_POINTS.get(normEdgeLoc.getDir());
+//		
+//		return add(hexPoint, edgePoint);
 		
-		Point2D hexPoint = getHexPoint(normEdgeLoc.getHexLoc());
-		
-		Point2D edgePoint = EDGE_POINTS.get(normEdgeLoc.getDir());
-		
-		return add(hexPoint, edgePoint);
+		return null;
 	}
 	
 	private static Point2D getVertexPoint(VertexLocation vertLoc)
 	{
 		
-		VertexLocation normVertLoc = vertLoc.getNormalizedLocation();
+//		VertexLocation normVertLoc = vertLoc.getNormalizedLocation();
+//		
+//		Point2D hexPoint = getHexPoint(normVertLoc.getHexLoc());
+//		
+//		Point2D vertPoint = VERTEX_POINTS.get(normVertLoc.getDir());
+//		
+//		return add(hexPoint, vertPoint);
 		
-		Point2D hexPoint = getHexPoint(normVertLoc.getHexLoc());
-		
-		Point2D vertPoint = VERTEX_POINTS.get(normVertLoc.getDir());
-		
-		return add(hexPoint, vertPoint);
+		return null;
 	}
 	
 	private static List<Point2D> rotateShape(List<Point2D> points,
@@ -1027,7 +1006,6 @@ public class MapComponent extends JComponent
 	
 	private static BufferedImage getHexImage(HexType hexType)
 	{
-		
 		return HEX_IMAGES.get(hexType);
 	}
 	
