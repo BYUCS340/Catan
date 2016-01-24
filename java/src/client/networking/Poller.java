@@ -16,9 +16,16 @@ public class Poller
 	
 	/**
 	 * Polls the server at the interval specified at the instantiation of the Poller.
-	 * This method never returns.
 	 */
 	public void beginPolling()
+	{
+		
+	}
+	
+	/**
+	 * Causes the client to stop polling the server.
+	 */
+	public void stopPolling()
 	{
 		
 	}
