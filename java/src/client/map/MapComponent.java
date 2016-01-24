@@ -622,7 +622,7 @@ public class MapComponent extends JComponent
 		
 		drawHexes(g2);
 //		drawPorts(g2);
-//		drawNumbers(g2);
+		drawNumbers(g2);
 //		drawRobber(g2);
 //		drawRoads(g2);
 //		drawSettlements(g2);
@@ -640,7 +640,7 @@ public class MapComponent extends JComponent
 			
 			BufferedImage hexImage = getHexImage(hex.getType());
 			
-			Point2D hexCenter = getHexCenterPoint(hex.getPoint());
+			Point2D hexCenter = getHexCenterPoint(hex);
 			Point2D hexCorner = new Point2D.Double(
 								   (int)(hexCenter.getX() - HEX_IMAGE_WIDTH / 2),
 								   (int)(hexCenter.getY() - HEX_IMAGE_HEIGHT / 2));
@@ -655,7 +655,16 @@ public class MapComponent extends JComponent
 	
 	private void drawNumbers(Graphics2D g2)
 	{
-		
+		for (Map.Entry<Integer, List<Hex>> entry : model.GetPips())
+		{
+			BufferedImage numImage = getNumberImage(entry.getKey());
+			
+			for (Hex hex : entry.getValue())
+			{
+				Point2D hexCenter = getHexCenterPoint(hex);
+				drawImage(g2, numImage, hexCenter);
+			}
+		}
 //		for (Map.Entry<HexLocation, Integer> entry : numbers.entrySet())
 //		{
 //			
@@ -915,12 +924,12 @@ public class MapComponent extends JComponent
 		return PORT_ROTATIONS.get(edgeLoc.getDir());
 	}
 	
-	private static Point2D getHexCenterPoint(Coordinate point)
+	private static Point2D getHexCenterPoint(Hex hex)
 	{	
 		int wCenterY = WORLD_HEIGHT / 2;
 		
-		double doubleX = point.getX();
-		double doubleY = point.getY();
+		double doubleX = hex.getPoint().getX();
+		double doubleY = hex.getPoint().getY();
 		
 		int wX = (int)(((3 * doubleX + 2) * HEX_IMAGE_WIDTH) / 4);
 		//The 2.5 should be a 2. The images seem too spaced in that case though, so

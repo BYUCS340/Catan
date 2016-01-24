@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import client.map.MapException;
 import client.map.model.handlers.*;
@@ -104,6 +105,15 @@ public class MapModel {
 	public Iterator<Hex> GetAllHexes()
 	{
 		return hexes.GetAllHexes();
+	}
+	
+	/**
+	 * Gets the list of all the pips on the playing board.
+	 * @return The pip list.
+	 */
+	public Set<Map.Entry<Integer, List<Hex>>> GetPips()
+	{
+		return java.util.Collections.unmodifiableSet(values.entrySet());
 	}
 	
 	/**
