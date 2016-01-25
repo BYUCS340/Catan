@@ -106,7 +106,10 @@ public class GameManager
 	 */
 	public void finishTurn()
 	{
-		
+		gameState.activePlayerIndex++;
+		if (gameState.activePlayerIndex > 3)
+			gameState.activePlayerIndex = 0;
+		gameState.gameState = GameStatus.ROLLING;
 	}
 	
 	/**
@@ -114,7 +117,11 @@ public class GameManager
 	 * @return 0 to 3 or -1 if no player is playing
 	 */
 	public int currentPlayersTurn(){
-		return -1;
+		if (gameState.gameState == GameStatus.START)
+		{
+			return -1;
+		}
+		return gameState.activePlayerIndex;
 	}
 	
 	/**
