@@ -1,7 +1,9 @@
 package client.map.model.objects;
 
+import client.map.MapException;
 import client.map.model.Coordinate;
 import shared.definitions.HexType;
+import shared.definitions.PortType;
 
 /**
  * Used to store information about a Hex.
@@ -12,6 +14,7 @@ public class Hex {
 
 	private HexType type;
 	private Coordinate point;
+	private PortType port;
 	
 	/**
 	 * Creates a hex object.
@@ -22,6 +25,7 @@ public class Hex {
 	{
 		this.type = type;
 		this.point = point;
+		this.port = PortType.NONE;
 	}
 
 	/**
@@ -36,6 +40,24 @@ public class Hex {
 	 */
 	public Coordinate getPoint() {
 		return point;
+	}
+
+	/**
+	 * @return the port
+	 */
+	public PortType getPort() {
+		return port;
+	}
+
+	/**
+	 * @param port the port to set
+	 * @throws MapException Thrown when a port can't be added to the hex.
+	 */
+	public void setPort(PortType port) throws MapException {
+		if (this.type != HexType.WATER)
+			throw new MapException("Whoa there. You can't add a port to dry land. Who do you think you are? Noah?");
+		
+		this.port = port;
 	}
 
 	@Override

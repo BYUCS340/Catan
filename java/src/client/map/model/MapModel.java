@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import client.map.MapException;
@@ -26,6 +27,7 @@ public class MapModel {
 	private HexHandler hexes;
 	private EdgeHandler edges;
 	private VertexHandler verticies;	
+	private PortHandler ports;
 	
 	private int longestRoadLength;
 	private Vertex longestRoad;
@@ -53,10 +55,9 @@ public class MapModel {
 		hexes = new HexHandler();
 		edges = new EdgeHandler();
 		verticies = new VertexHandler();
+		ports = new PortHandler();
 		
 		longestRoadLength = 2;
-		longestRoad = null;
-		availablePorts = new HashMap<CatanColor, List<PortType>>();
 		
 		if (method == Method.random)
 			RandomSetup();
@@ -64,6 +65,7 @@ public class MapModel {
 			BeginnerSetup();
 		
 		PlaceWater();
+		PlacePorts();
 		PlacePips();
 	}
 	
@@ -196,6 +198,11 @@ public class MapModel {
 		return java.util.Collections.unmodifiableList(verticies);
 	}
 	
+	public Iterator<Entry<Edge, Hex>> GetAllPorts()
+	{
+		return ports.GetAllPorts();
+	}
+	
 	public Hex GetRobberPlacement()
 	{
 		return robber.GetHex();
@@ -304,6 +311,56 @@ public class MapModel {
 			e.printStackTrace();
 			//This shouldn't happen. If it does, then you suck.
 		}
+	}
+	
+	private void PlacePorts()
+	{
+		Hex hex;
+		Edge edge;
+		
+		try
+		{
+			hex = hexes.GetHex(new Coordinate(0,3));
+			edge = edges.GetEdge(hex.getPoint().GetEast(), hex.getPoint().GetSouthEast());
+			ports.AddPort(PortType.THREE, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(2,5));
+			edge = edges.GetEdge(hex.getPoint().GetSouth(), hex.getPoint().GetSouthEast());
+			ports.AddPort(PortType.WHEAT, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(4,5));
+			edge = edges.GetEdge(hex.getPoint().GetSouth(), hex.getPoint().GetSouthEast());
+			ports.AddPort(PortType.ORE, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(6,3));
+			edge = edges.GetEdge(hex.getPoint().GetSouth(), hex.getPoint());
+			ports.AddPort(PortType.THREE, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(6,-1));
+			edge = edges.GetEdge(hex.getPoint().GetNorth(), hex.getPoint());
+			ports.AddPort(PortType.SHEEP, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(5,-4));
+			edge = edges.GetEdge(hex.getPoint().GetNorth(), hex.getPoint());
+			ports.AddPort(PortType.THREE, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(3,-6));
+			edge = edges.GetEdge(hex.getPoint().GetNorth(), hex.getPoint().GetNorthEast());
+			ports.AddPort(PortType.THREE, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(1,-4));
+			edge = edges.GetEdge(hex.getPoint().GetEast(), hex.getPoint().GetNorthEast());
+			ports.AddPort(PortType.BRICK, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(0,-1));
+			edge = edges.GetEdge(hex.getPoint().GetEast(), hex.getPoint().GetNorthEast());
+			ports.AddPort(PortType.WOOD, edge, hex);
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void PlacePips()

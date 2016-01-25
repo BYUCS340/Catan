@@ -627,7 +627,7 @@ public class MapComponent extends JComponent
 		g2.translate(-WORLD_WIDTH / 2, -WORLD_HEIGHT / 2);
 		
 		drawHexes(g2);
-//		drawPorts(g2);
+		drawPorts(g2);
 		drawNumbers(g2);
 		drawRobber(g2);
 		drawRoads(g2);
@@ -746,20 +746,20 @@ public class MapComponent extends JComponent
 	
 	private void drawPorts(Graphics2D g2)
 	{
-		for (Map.Entry<EdgeLocation, PortType> entry : ports.entrySet())
+		Iterator<Entry<Edge, Hex>> ports = model.GetAllPorts();
+		while (ports.hasNext())
 		{
-			EdgeLocation edgeLoc = entry.getKey();
-			PortType portType = entry.getValue();
-			drawPort(g2, edgeLoc, portType);
+			Entry<Edge, Hex> port = ports.next();
+			Edge edge = port.getKey();
+			Hex hex = port.getValue();
+			
+			Point2D hexCenter = getHexCenterPoint(hex);
+			Point2D edgeCenter = getEdgeCenterPoint(edge);
+			
+			double angle = getPortRotation(edgeCenter, hexCenter);
+			BufferedImage portImage = getPortImage(hex.getPort());
+			drawRotatedImage(g2, portImage, hexCenter, angle);
 		}
-	}
-	
-	private void
-			drawPort(Graphics2D g2, EdgeLocation edgeLoc, PortType portType)
-	{
-//		Point2D imageLoc = getHexPoint(edgeLoc.getHexLoc());
-//		drawRotatedImage(g2, getPortImage(portType), imageLoc,
-//						 getPortRotation(edgeLoc));
 	}
 	
 	private void drawDisallowImage(Graphics2D g2, Point2D location)
@@ -872,10 +872,26 @@ public class MapComponent extends JComponent
 					 (int)location.getY() - centerY, null);
 	}
 	
-	private double getPortRotation(EdgeLocation edgeLoc)
+	private double getPortRotation(Point2D edge, Point2D hex)
 	{
-		
-		return PORT_ROTATIONS.get(edgeLoc.getDir());
+		if (Math.abs(edge.getX() - hex.getX()) < 0.1)
+		{
+			if (edge.getY() > hex.getY())
+				return 0;
+			else
+				return Math.PI;
+		}
+		else
+		{
+			double slope = (edge.getY() - hex.getY()) /
+					(edge.getX() - hex.getX());
+			
+			//This ensures things are flipped the right way.
+			if (edge.getX() > hex.getX())
+				return Math.atan(slope) + Math.PI * 3.0 / 2.0;
+			else
+				return Math.atan(slope) + Math.PI / 2.0;
+		}
 	}
 	
 	private static Point2D getHexCenterPoint(Hex hex)
