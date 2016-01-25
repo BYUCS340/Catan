@@ -299,7 +299,7 @@ public class Bank
 	 * Removes resource cards, if allowed, needed to buy a development card (one wheat, one sheep, one ore)
 	 * @throws if there don't have the resource
 	 */
-	public boolean buyDevCard() throws ModelException
+	public void buyDevCard() throws ModelException
 	{
 		if (canBuyDevCard())
 		{
@@ -310,11 +310,10 @@ public class Bank
 			this.resources[wheatIndex]--;
 			this.resources[sheepIndex]--;
 			this.resources[oreIndex]--;
-			return true;
 		}
 		else
 		{
-			return false;
+			throw new ModelException();
 		}
 	}
 	
