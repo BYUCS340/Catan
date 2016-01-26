@@ -18,4 +18,20 @@ public class NetLog
 	public void addLine(String line){
 		lines.add(line);
 	}
+
+	/**
+	 * @return the log
+	 */
+	public List<String> getLines()
+	{
+		return lines;
+	}
+
+	/**
+	 * @param the log to set
+	 */
+	public void setLines(List<String> lines)
+	{
+		this.lines = lines;
+	}
 }
