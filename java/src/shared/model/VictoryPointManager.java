@@ -30,7 +30,8 @@ public class VictoryPointManager
 		return 0;
 	}
 	
-	private void adjustPlayersPoints(int playerID, int points){
+	private void adjustPlayersPoints(int playerID, int points)
+	{
 		
 	}
 	
@@ -85,7 +86,8 @@ public class VictoryPointManager
 	 * The player built a road, so give them the points
 	 * @param playerIndex
 	 */
-	public void playerBuiltRoad(int playerIndex){
+	public void playerBuiltRoad(int playerIndex)
+	{
 		
 	}
 	
@@ -93,7 +95,8 @@ public class VictoryPointManager
 	 * The player built a settlement, so points to them
 	 * @param playerIndex
 	 */
-	public void playerBuiltSettlement(int playerIndex){
+	public void playerBuiltSettlement(int playerIndex)
+	{
 		
 	}
 	
@@ -101,17 +104,19 @@ public class VictoryPointManager
 	 * The player built a city, so points to them
 	 * @param playerIndex
 	 */
-	public void playerBuiltCity(int playerIndex){
-		//take away the city points
+	public void playerBuiltCity(int playerIndex)
+	{
+		//take away the settlement points
 		
-		//add the settlement points
+		//add the city points
 	}
 	
 	/**
 	 * The player bought a dev card to give them the parts
 	 * @param playerIndex
 	 */
-	public void playerGotDevCard(int playerIndex){
+	public void playerGotDevCard(int playerIndex)
+	{
 		
 	}
 	
