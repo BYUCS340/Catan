@@ -3,6 +3,11 @@
  */
 package shared.networking;
 
+import shared.networking.transport.NetAI;
+import shared.networking.transport.NetGame;
+import shared.networking.transport.NetGameModel;
+import shared.networking.transport.NetPlayer;
+
 /**
  * @author pbridd
  *

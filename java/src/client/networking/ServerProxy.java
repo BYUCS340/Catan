@@ -1,6 +1,9 @@
 package client.networking;
 
 import shared.networking.*;
+import shared.networking.transport.NetAI;
+import shared.networking.transport.NetGame;
+import shared.networking.transport.NetGameModel;
 import shared.definitions.*;
 import shared.locations.*;
 import shared.model.*;

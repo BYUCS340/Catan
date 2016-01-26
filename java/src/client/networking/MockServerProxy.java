@@ -8,9 +8,9 @@ import java.util.List;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import shared.networking.NetAI;
-import shared.networking.NetGame;
-import shared.networking.NetGameModel;
+import shared.networking.transport.NetAI;
+import shared.networking.transport.NetGame;
+import shared.networking.transport.NetGameModel;
 
 /**
  * @author pbridd
