@@ -80,7 +80,6 @@ public class GameManager
 		//Check the Map to see if they're connected to a port
 		//Otherwise return the default trade in value
 		return 4;
-
 	}
 	
 	/**
@@ -98,7 +97,6 @@ public class GameManager
 	public void startGame()
 	{
 		gameState.startGame();
-		
 	}
 	
 	/**
@@ -116,7 +114,8 @@ public class GameManager
 	 * Gets the player index of the current player
 	 * @return 0 to 3 or -1 if no player is playing
 	 */
-	public int currentPlayersTurn(){
+	public int currentPlayersTurn()
+	{
 		if (gameState.gameState == GameStatus.START)
 		{
 			return -1;
@@ -128,7 +127,8 @@ public class GameManager
 	 * Returns the current State of the game
 	 * @return
 	 */
-	public GameStatus currentState(){
+	public GameStatus currentState()
+	{
 		return gameState.gameState;
 	}
 }

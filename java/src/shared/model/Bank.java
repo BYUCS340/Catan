@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import shared.definitions.*;
 
 /**
- * The bank class the holds cards, pieces, and dev cards
+ * The bank class holds resource cards, game pieces, and dev cards
  * @author matthewcarlson, garrettegan
  *
  */
@@ -25,7 +25,8 @@ public class Bank
 	/**
 	 * Creates a bank
 	 */
-	public Bank() {
+	public Bank()
+	{
 		super();
 		this.resources = new int[numberResourceTypes];
 		this.devCards = new int[numberDevCardTypes];
@@ -35,7 +36,8 @@ public class Bank
 	/**
 	 * Resets the bank to the defaults of a player
 	 */
-	public void resetToPlayerDefaults(){
+	public void resetToPlayerDefaults()
+	{
 		try
 		{
 			this.givePiece(PieceType.SETTLEMENT, 5);
@@ -44,7 +46,7 @@ public class Bank
 		}
 		catch (Exception e)
 		{
-			System.err.println("An Error has occured in the bank that should have not occurred");
+			System.err.println("An Error has occured in the bank that should not have occurred");
 		}
 	}
 	
@@ -78,6 +80,7 @@ public class Bank
 			throw new ModelException ();
 		}
 	}
+	
 	/**
 	 * Attempts to get a piece (road, settlement, city). Local since it you can only get pieces out of bank by buying them
 	 * @param type it can be anything but the robber
@@ -189,7 +192,7 @@ public class Bank
 	 */
 	public void giveDevCard(DevCardType type)
 	{
-		
+		this.devCards[type.ordinal()]++;
 	}
 	
 	/**
@@ -199,7 +202,7 @@ public class Bank
 	public int getResourceCount()
 	{
 		int total = 0;
-		for (int i= 0; i<this.numberResourceTypes;i++)
+		for (int i = 0; i < this.numberResourceTypes; i++)
 		{
 			total += this.resources[i];
 		}
@@ -221,8 +224,9 @@ public class Bank
 	 * @param type
 	 * @return
 	 */
-	public int getPiecesCount(PieceType type)
+	public int getPieceCount(PieceType type) throws ModelException
 	{
+		if (type == PieceType.ROBBER) throw new ModelException();
 		return this.resources[type.ordinal()];
 	}
 	
@@ -237,7 +241,7 @@ public class Bank
 	}
 	
 	/**
-	 * 
+	 * Gets the total number of dev cards held
 	 * @return
 	 */
 	private int getDevCardCount()
@@ -256,7 +260,6 @@ public class Bank
 	/**
 	 * Checks if has enough cards to build a road (one wood, one brick, one road)
 	 * @return true if allowed, false otherwise
-	 * @throws if there don't have the resource
 	 */
 	public boolean canBuildRoad()
 	{
@@ -277,7 +280,7 @@ public class Bank
 	
 	/**
 	 * Removes resource cards, if allowed, needed to build a road (one wood, one brick, one road)
-	 * @throws if there don't have the resource
+	 * @throws if they don't have the resource
 	 */
 	public boolean buildRoad() throws ModelException
 	{
@@ -294,7 +297,7 @@ public class Bank
 		}
 		else
 		{
-			return false;
+			throw new ModelException();
 		}
 	}
 	
@@ -325,7 +328,7 @@ public class Bank
 	/**
 	 * Removes resource cards, if allowed, needed to build a settlement (one wood, one brick, one sheep, one wheat, one settlement)
 	 * @return true if successful, false otherwise
-	 * @throws if there don't have the resource
+	 * @throws if they don't have the resource
 	 */
 	public boolean buildSettlement() throws ModelException
 	{
@@ -346,7 +349,7 @@ public class Bank
 		}
 		else
 		{
-			return false;
+			throw new ModelException();
 		}
 	}
 	
@@ -373,7 +376,7 @@ public class Bank
 	
 	/**
 	 * Removes resource cards, if allowed, needed to build a city (two wheat, three ore, one city)
-	 * @throws if there don't have the resource
+	 * @throws if they don't have the resource
 	 */
 	public boolean buildCity() throws ModelException
 	{
@@ -394,7 +397,7 @@ public class Bank
 		}
 		else
 		{
-			return false;
+			throw new ModelException();
 		}
 	}
 	
@@ -421,7 +424,7 @@ public class Bank
 	
 	/**
 	 * Removes resource cards, if allowed, needed to buy a development card (one wheat, one sheep, one ore)
-	 * @throws if there don't have the resource
+	 * @throws if they don't have the resource
 	 */
 	public void buyDevCard() throws ModelException
 	{
@@ -447,7 +450,8 @@ public class Bank
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(devCards);
@@ -459,7 +463,8 @@ public class Bank
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)

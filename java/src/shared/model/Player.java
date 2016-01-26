@@ -14,6 +14,13 @@ public class Player
 	private int playerIndex;
 	private boolean isRobot = false;
 	
+	/**
+	 * Creates a Player
+	 * @param name the name of the player
+	 * @param index the player's index
+	 * @param playerColor the color of the player's game pieces
+	 * @param isHuman whether the player is a human or computer player
+	 */
 	public Player(String name, int index, CatanColor playerColor, boolean isHuman)
 	{
 		this.isRobot = !isHuman;
