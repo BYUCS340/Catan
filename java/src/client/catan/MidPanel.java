@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import client.map.*;
+import client.map.view.MapView;
 
 @SuppressWarnings("serial")
 public class MidPanel extends JPanel

@@ -1,4 +1,4 @@
-package client.map;
+package client.map.view;
 
 import java.util.*;
 import java.util.List;
@@ -10,12 +10,12 @@ import java.awt.image.*;
 import javax.swing.*;
 
 import client.base.*;
-import client.map.model.Coordinate;
-import client.map.model.MapModel;
+import client.map.IMapController;
+import client.map.MapException;
+import client.map.model.*;
 import client.map.model.objects.*;
-import client.utils.*;
+import client.map.view.helpers.ImageHandler;
 import shared.definitions.*;
-import shared.locations.*;
 
 // Wood, Brick, Sheep, Wheat, Ore, Desert, Water
 
@@ -44,67 +44,17 @@ public class MapComponent extends JComponent
 	private static final int CITY_WALL_HEIGHT = (int)(CITY_WIDTH * 0.7);
 	private static final int CITY_ROOF_HEIGHT = (int)(CITY_WIDTH * 1.0);
 	
-	private static Map<HexType, BufferedImage> HEX_IMAGES;
-	private static Map<PortType, BufferedImage> PORT_IMAGES;
-	private static Map<Integer, BufferedImage> NUMBER_IMAGES;
-	private static BufferedImage ROBBER_IMAGE;
-	private static BufferedImage DISALLOW_IMAGE;
-	private static Map<EdgeDirection, List<Point2D>> ROADS;
 	private static List<Point2D> SETTLEMENT;
 	private static List<Point2D> CITY;
 	private static List<Point2D> ROAD;
-	private static Map<VertexDirection, Point2D> VERTEX_POINTS;
-	private static Map<EdgeDirection, Point2D> EDGE_POINTS;
-	private static Map<EdgeDirection, java.lang.Double> PORT_ROTATIONS;
 	
 	static
 	{
-		HEX_IMAGES = new HashMap<HexType, BufferedImage>();
-		
-		for (HexType hexType : HexType.values())
-		{
-			HEX_IMAGES.put(hexType, loadHexImage(hexType));
-		}
-		
-		PORT_IMAGES = new HashMap<PortType, BufferedImage>();
-		
-		for (PortType portType : PortType.values())
-		{
-			if (portType != PortType.NONE)
-				PORT_IMAGES.put(portType, loadPortImage(portType));
-		}
-		
-		NUMBER_IMAGES = new HashMap<Integer, BufferedImage>();
-		
-		for (int i = 2; i <= 12; ++i)
-		{
-			if(i != 7)
-			{
-				NUMBER_IMAGES.put(i, loadNumberImage(i));
-			}
-		}
-		
-		ROBBER_IMAGE = loadRobberImage();
-		DISALLOW_IMAGE = loadDisallowImage();
-		
-		List<Point2D> ROAD_0 = new ArrayList<Point2D>();
-		ROAD_0.add(new Point2D.Double(-ROAD_WIDTH / 2, -ROAD_HEIGHT / 2));
-		ROAD_0.add(new Point2D.Double(ROAD_WIDTH / 2, -ROAD_HEIGHT / 2));
-		ROAD_0.add(new Point2D.Double(ROAD_WIDTH / 2, ROAD_HEIGHT / 2));
-		ROAD_0.add(new Point2D.Double(-ROAD_WIDTH / 2, ROAD_HEIGHT / 2));
-		
-		ROAD = ROAD_0;
-		
-		List<Point2D> ROAD_60 = rotateShape(ROAD_0, -(Math.PI / 3));
-		List<Point2D> ROAD_120 = rotateShape(ROAD_0, -(2 * Math.PI / 3));
-		
-		ROADS = new HashMap<EdgeDirection, List<Point2D>>();
-		ROADS.put(EdgeDirection.NorthWest, ROAD_60);
-		ROADS.put(EdgeDirection.North, ROAD_0);
-		ROADS.put(EdgeDirection.NorthEast, ROAD_120);
-		ROADS.put(EdgeDirection.SouthEast, ROAD_60);
-		ROADS.put(EdgeDirection.South, ROAD_0);
-		ROADS.put(EdgeDirection.SouthWest, ROAD_120);
+		List<Point2D> ROAD = new ArrayList<Point2D>();
+		ROAD.add(new Point2D.Double(-ROAD_WIDTH / 2, -ROAD_HEIGHT / 2));
+		ROAD.add(new Point2D.Double(ROAD_WIDTH / 2, -ROAD_HEIGHT / 2));
+		ROAD.add(new Point2D.Double(ROAD_WIDTH / 2, ROAD_HEIGHT / 2));
+		ROAD.add(new Point2D.Double(-ROAD_WIDTH / 2, ROAD_HEIGHT / 2));
 		
 		SETTLEMENT = new ArrayList<Point2D>();
 		SETTLEMENT.add(new Point2D.Double(SETTLEMENT_WIDTH / 2,
@@ -135,77 +85,19 @@ public class MapComponent extends JComponent
 												cThreeQuarterBase.getY()
 														- CITY_ROOF_HEIGHT);
 		CITY.add(cHighPoint);
-		
-		VERTEX_POINTS = new HashMap<VertexDirection, Point2D>();
-		VERTEX_POINTS.put(VertexDirection.West,
-						  new Point2D.Double(-HEX_IMAGE_WIDTH / 2, 0));
-		VERTEX_POINTS.put(VertexDirection.NorthWest,
-						  new Point2D.Double(-HEX_IMAGE_WIDTH / 4,
-											 -HEX_IMAGE_HEIGHT / 2));
-		VERTEX_POINTS.put(VertexDirection.NorthEast,
-						  new Point2D.Double(HEX_IMAGE_WIDTH / 4,
-											 -HEX_IMAGE_HEIGHT / 2));
-		VERTEX_POINTS.put(VertexDirection.East,
-						  new Point2D.Double(HEX_IMAGE_WIDTH / 2, 0));
-		VERTEX_POINTS.put(VertexDirection.SouthEast,
-						  new Point2D.Double(HEX_IMAGE_WIDTH / 4,
-											 HEX_IMAGE_HEIGHT / 2));
-		VERTEX_POINTS.put(VertexDirection.SouthWest,
-						  new Point2D.Double(-HEX_IMAGE_WIDTH / 4,
-											 HEX_IMAGE_HEIGHT / 2));
-		
-		EDGE_POINTS = new HashMap<EdgeDirection, Point2D>();
-		EDGE_POINTS.put(EdgeDirection.NorthWest,
-						average(VERTEX_POINTS.get(VertexDirection.West),
-								VERTEX_POINTS.get(VertexDirection.NorthWest)));
-		EDGE_POINTS.put(EdgeDirection.North,
-						average(VERTEX_POINTS.get(VertexDirection.NorthWest),
-								VERTEX_POINTS.get(VertexDirection.NorthEast)));
-		EDGE_POINTS.put(EdgeDirection.NorthEast,
-						average(VERTEX_POINTS.get(VertexDirection.NorthEast),
-								VERTEX_POINTS.get(VertexDirection.East)));
-		EDGE_POINTS.put(EdgeDirection.SouthEast,
-						average(VERTEX_POINTS.get(VertexDirection.East),
-								VERTEX_POINTS.get(VertexDirection.SouthEast)));
-		EDGE_POINTS.put(EdgeDirection.South,
-						average(VERTEX_POINTS.get(VertexDirection.SouthEast),
-								VERTEX_POINTS.get(VertexDirection.SouthWest)));
-		EDGE_POINTS.put(EdgeDirection.SouthWest,
-						average(VERTEX_POINTS.get(VertexDirection.SouthWest),
-								VERTEX_POINTS.get(VertexDirection.West)));
-		
-		PORT_ROTATIONS = new HashMap<EdgeDirection, java.lang.Double>();
-		PORT_ROTATIONS.put(EdgeDirection.NorthWest,
-						   new java.lang.Double(Math.toRadians(120)));
-		PORT_ROTATIONS.put(EdgeDirection.North,
-						   new java.lang.Double(Math.toRadians(180)));
-		PORT_ROTATIONS.put(EdgeDirection.NorthEast,
-						   new java.lang.Double(Math.toRadians(240)));
-		PORT_ROTATIONS.put(EdgeDirection.SouthEast,
-						   new java.lang.Double(Math.toRadians(300)));
-		PORT_ROTATIONS.put(EdgeDirection.South,
-						   new java.lang.Double(Math.toRadians(0)));
-		PORT_ROTATIONS.put(EdgeDirection.SouthWest,
-						   new java.lang.Double(Math.toRadians(60)));
 	}
 	
 	private IMapController controller;
-	//private Map<HexLocation, HexType> hexes;
-	private Map<EdgeLocation, CatanColor> roads;
-	private Map<VertexLocation, CatanColor> settlements;
-	private Map<VertexLocation, CatanColor> cities;
-	private Map<EdgeLocation, PortType> ports;
-	private Map<HexLocation, Integer> numbers;
-	private HexLocation robber;
-	private Map<HexLocation, Point2D> allHexPoints;
-	private Map<VertexLocation, Point2D> allVertexPoints;
-	private Map<EdgeLocation, Point2D> allEdgePoints;
+	
+	//Drag drop details
 	private PieceType dropType;
 	private CatanColor dropColor;
 	private boolean dropAllowed;
 	private Hex dropHexLoc;
 	private Edge dropEdgeLoc;
 	private Vertex dropVertLoc;
+	
+	//View details
 	private double scale;
 	private AffineTransform transform;
 	
@@ -213,7 +105,6 @@ public class MapComponent extends JComponent
 	
 	public MapComponent()
 	{
-		
 		setBackground(Color.white);
 		setOpaque(true);
 		
@@ -222,17 +113,6 @@ public class MapComponent extends JComponent
 		setPreferredSize(new Dimension(prefWidth, prefHeight));
 		
 		setController(controller);
-		
-//		hexes = new HashMap<HexLocation, HexType>();
-		roads = new HashMap<EdgeLocation, CatanColor>();
-		settlements = new HashMap<VertexLocation, CatanColor>();
-		cities = new HashMap<VertexLocation, CatanColor>();
-		ports = new HashMap<EdgeLocation, PortType>();
-		numbers = new HashMap<HexLocation, Integer>();
-		robber = null;
-		allHexPoints = new HashMap<HexLocation, Point2D>();
-		allVertexPoints = new HashMap<VertexLocation, Point2D>();
-		allEdgePoints = new HashMap<EdgeLocation, Point2D>();
 		
 		initDrop();
 		
@@ -263,37 +143,22 @@ public class MapComponent extends JComponent
 		
 		MapComponent copy = new MapComponent();
 		
-		// copy.controller = this.controller;
-//		copy.hexes = this.hexes;
-		copy.roads = this.roads;
-		copy.settlements = this.settlements;
-		copy.cities = this.cities;
-		copy.ports = this.ports;
-		copy.numbers = this.numbers;
-		copy.robber = this.robber;
-		copy.allHexPoints = this.allHexPoints;
-		copy.allVertexPoints = this.allVertexPoints;
-		copy.allEdgePoints = this.allEdgePoints;
 		copy.dropType = this.dropType;
 		copy.dropColor = this.dropColor;
 		copy.dropAllowed = this.dropAllowed;
 		copy.dropHexLoc = this.dropHexLoc;
 		copy.dropEdgeLoc = this.dropEdgeLoc;
 		copy.dropVertLoc = this.dropVertLoc;
-		// copy.scale = this.scale;
-		// copy.transform = this.transform;
 		
 		return copy;
 	}
 	
 	private void updateScale()
 	{
-		
 		this.scale = 1.0;
 		
 		if(this.getWidth() != 0 && this.getHeight() != 0)
 		{
-			
 			double scaleX = (double)this.getWidth() / (double)WORLD_WIDTH;
 			double scaleY = (double)this.getHeight() / (double)WORLD_HEIGHT;
 			
@@ -322,8 +187,7 @@ public class MapComponent extends JComponent
 	}
 	
 	public double getScale()
-	{
-		
+	{	
 		return scale;
 	}
 	
@@ -544,7 +408,7 @@ public class MapComponent extends JComponent
 		{
 			Hex hex = hexes.next();
 			
-			BufferedImage hexImage = getHexImage(hex.getType());
+			BufferedImage hexImage = ImageHandler.getHexImage(hex.getType());
 			
 			Point2D hexCenter = getHexCenterPoint(hex);
 			Point2D hexCorner = new Point2D.Double(
@@ -566,7 +430,7 @@ public class MapComponent extends JComponent
 		{
 			Entry<Integer, List<Hex>> entry = pips.next();
 			
-			BufferedImage numImage = getNumberImage(entry.getKey());
+			BufferedImage numImage = ImageHandler.getNumberImage(entry.getKey());
 			
 			for (Hex hex : entry.getValue())
 			{
@@ -586,7 +450,7 @@ public class MapComponent extends JComponent
 		//the robber exists when the model exists. Verify this assumption.
 		
 		Point2D hexPoint = getHexCenterPoint(model.GetRobberPlacement());
-		BufferedImage robberImage = getRobberImage();
+		BufferedImage robberImage = ImageHandler.getRobberImage();
 		drawImage(g2, robberImage, hexPoint);
 	}
 	
@@ -664,14 +528,14 @@ public class MapComponent extends JComponent
 			Point2D edgeCenter = getEdgeCenterPoint(edge);
 			
 			double angle = getPortRotation(edgeCenter, hexCenter);
-			BufferedImage portImage = getPortImage(hex.getPort());
+			BufferedImage portImage = ImageHandler.getPortImage(hex.getPort());
 			drawRotatedImage(g2, portImage, hexCenter, angle);
 		}
 	}
 	
 	private void drawDisallowImage(Graphics2D g2, Point2D location)
 	{
-		drawImage(g2, getDisallowImage(), location);
+		drawImage(g2, ImageHandler.getDisallowImage(), location);
 	}
 	
 	private void drawDropShape(Graphics2D g2)
@@ -750,7 +614,7 @@ public class MapComponent extends JComponent
 					if(dropAllowed)
 					{
 						Point2D hexPoint = getHexCenterPoint(dropHexLoc);
-						BufferedImage robberImage = getRobberImage();
+						BufferedImage robberImage = ImageHandler.getRobberImage();
 						drawImage(g2, robberImage, hexPoint);
 					}
 					else
@@ -865,18 +729,6 @@ public class MapComponent extends JComponent
 		return result;
 	}
 	
-	private static Polygon toPolygon(List<Point2D> points)
-	{
-		Polygon result = new Polygon();
-		
-		for (Point2D pt : points)
-		{
-			result.addPoint((int)pt.getX(), (int)pt.getY());
-		}
-		
-		return result;
-	}
-	
 	private static Point2D getEdgeCenterPoint(Edge edge)
 	{
 		Coordinate start = edge.getStart();
@@ -917,6 +769,18 @@ public class MapComponent extends JComponent
 		return new Point2D.Double(x, y);
 	}
 	
+	private static Polygon toPolygon(List<Point2D> points)
+	{
+		Polygon result = new Polygon();
+		
+		for (Point2D pt : points)
+		{
+			result.addPoint((int)pt.getX(), (int)pt.getY());
+		}
+		
+		return result;
+	}
+	
 	private static List<Point2D> rotateShape(List<Point2D> points, double radians)
 	{
 		AffineTransform affine = new AffineTransform();
@@ -947,146 +811,6 @@ public class MapComponent extends JComponent
 		return result;
 	}
 	
-	private static BufferedImage getHexImage(HexType hexType)
-	{
-		return HEX_IMAGES.get(hexType);
-	}
-	
-	private static BufferedImage loadHexImage(HexType hexType)
-	{
-		
-		String imageFile = getHexImageFile(hexType);
-		
-		return ImageUtils.loadImage(imageFile);
-	}
-	
-	private static BufferedImage getPortImage(PortType portType)
-	{
-		
-		return PORT_IMAGES.get(portType);
-	}
-	
-	private static BufferedImage loadPortImage(PortType portType)
-	{
-		
-		String imageFile = getPortImageFile(portType);
-		
-		return ImageUtils.loadImage(imageFile);
-	}
-	
-	private static BufferedImage getNumberImage(int num)
-	{
-		
-		return NUMBER_IMAGES.get(num);
-	}
-	
-	private static BufferedImage loadNumberImage(int num)
-	{
-		
-		String imageFile = getNumberImageFile(num);
-		
-		return ImageUtils.loadImage(imageFile);
-	}
-	
-	private static BufferedImage getRobberImage()
-	{
-		return ROBBER_IMAGE;
-	}
-	
-	private static BufferedImage loadRobberImage()
-	{
-		
-		String imageFile = getRobberImageFile();
-		
-		return ImageUtils.loadImage(imageFile);
-	}
-	
-	private static BufferedImage getDisallowImage()
-	{
-		
-		return DISALLOW_IMAGE;
-	}
-	
-	private static BufferedImage loadDisallowImage()
-	{
-		
-		String imageFile = getDisallowImageFile();
-		
-		return ImageUtils.loadImage(imageFile);
-	}
-	
-	private static String getHexImageFile(HexType hexType)
-	{
-		
-		switch (hexType)
-		{
-			case WOOD:
-				return "images/land/forest.gif";
-			case BRICK:
-				return "images/land/brick.gif";
-			case SHEEP:
-				return "images/land/pasture.gif";
-			case WHEAT:
-				return "images/land/wheat.gif";
-			case ORE:
-				return "images/land/ore.gif";
-			case DESERT:
-				return "images/land/desert.gif";
-			case WATER:
-				return "images/land/water.gif";
-			default:
-				assert false;
-				return null;
-		}
-	}
-	
-	private static String getPortImageFile(PortType portType)
-	{
-		
-		switch (portType)
-		{
-			case WOOD:
-				return "images/ports/port_wood.png";
-			case BRICK:
-				return "images/ports/port_brick.png";
-			case SHEEP:
-				return "images/ports/port_sheep.png";
-			case WHEAT:
-				return "images/ports/port_wheat.png";
-			case ORE:
-				return "images/ports/port_ore.png";
-			case THREE:
-				return "images/ports/port_three.png";
-			default:
-				assert false;
-				return null;
-		}
-	}
-	
-	private static String getNumberImageFile(int num)
-	{
-		
-		if((2 <= num && num <= 6) || (8 <= num && num <= 12))
-		{
-			return "images/numbers/small_prob/" + num + ".png";
-		}
-		else
-		{
-			assert false;
-			return null;
-		}
-	}
-	
-	private static String getRobberImageFile()
-	{
-		return "images/misc/robber.gif";
-	}
-	
-	private static String getDisallowImageFile()
-	{
-		return "images/misc/noIcon.png";
-	}
-	
 	private static Point2D average(Point2D pt1, Point2D pt2)
 	{
 		
@@ -1100,6 +824,5 @@ public class MapComponent extends JComponent
 		return new Point2D.Double((int)(pt1.getX() + pt2.getX()),
 								  (int)(pt1.getY() + pt2.getY()));
 	}
-	
 }
 

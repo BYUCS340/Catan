@@ -5,6 +5,7 @@ import client.base.*;
 import client.data.*;
 import client.map.model.*;
 import client.map.model.objects.*;
+import client.map.view.IMapView;
 
 
 /**

@@ -1,4 +1,4 @@
-package client.map;
+package client.map.view;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import client.base.*;
 import client.data.*;
+import client.map.IMapController;
 import client.map.model.Coordinate;
 import client.map.model.MapModel;
 import shared.definitions.*;

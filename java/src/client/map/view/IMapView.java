@@ -1,4 +1,4 @@
-package client.map;
+package client.map.view;
 
 import shared.definitions.*;
 import client.base.*;
