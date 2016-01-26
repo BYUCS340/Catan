@@ -7,9 +7,9 @@ import javax.swing.*;
 import client.base.*;
 import client.data.*;
 import client.map.IMapController;
-import client.map.model.Coordinate;
-import client.map.model.MapModel;
 import shared.definitions.*;
+import shared.model.map.Coordinate;
+import shared.model.map.MapModel;
 
 /**
  * Implementation for the map view

@@ -1,7 +1,7 @@
-package client.map.model.objects;
+package shared.model.map.objects;
 
-import client.map.model.Coordinate;
 import shared.definitions.CatanColor;
+import shared.model.map.Coordinate;
 
 /**
  * Used to store information about an edge.

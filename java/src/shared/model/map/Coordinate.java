@@ -1,4 +1,4 @@
-package client.map.model;
+package shared.model.map;
 
 /**
  * Stores a X, Y coordinate pair.

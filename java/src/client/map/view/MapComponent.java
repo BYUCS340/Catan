@@ -10,12 +10,11 @@ import java.awt.image.*;
 import javax.swing.*;
 
 import client.base.*;
-import client.map.IMapController;
-import client.map.MapException;
-import client.map.model.*;
-import client.map.model.objects.*;
+import client.map.*;
 import client.map.view.helpers.ImageHandler;
 import shared.definitions.*;
+import shared.model.map.*;
+import shared.model.map.objects.*;
 
 // Wood, Brick, Sheep, Wheat, Ore, Desert, Water
 

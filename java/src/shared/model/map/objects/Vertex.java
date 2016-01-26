@@ -1,7 +1,7 @@
-package client.map.model.objects;
+package shared.model.map.objects;
 
-import client.map.model.Coordinate;
 import shared.definitions.*;
+import shared.model.map.Coordinate;
 
 /**
  * Use to store information about a vertex.

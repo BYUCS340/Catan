@@ -2,8 +2,8 @@ package client.map;
 
 import client.base.*;
 import client.data.*;
-import client.map.model.Coordinate;
 import shared.definitions.*;
+import shared.model.map.Coordinate;
 
 /**
  * Interface for the map controller

@@ -1,12 +1,12 @@
-package client.map.model.handlers;
+package shared.model.map.handlers;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import client.map.MapException;
-import client.map.model.Coordinate;
-import client.map.model.objects.Hex;
+import shared.model.map.Coordinate;
+import shared.model.map.objects.Hex;
 
 /**
  * Stores and manages the hexes contained in a map.

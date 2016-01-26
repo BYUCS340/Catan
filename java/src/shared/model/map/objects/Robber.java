@@ -1,4 +1,4 @@
-package client.map.model.objects;
+package shared.model.map.objects;
 
 /**
  * Used to store information about the robber.

@@ -1,4 +1,4 @@
-package client.map.model;
+package shared.model.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import client.map.MapException;
-import client.map.model.handlers.*;
-import client.map.model.objects.*;
 import shared.definitions.*;
+import shared.model.map.handlers.*;
+import shared.model.map.objects.*;
 
 /**
  * The Map Model stores all information about the map. This data includes information

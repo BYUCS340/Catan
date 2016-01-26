@@ -1,8 +1,8 @@
 package client.map.view;
 
 import shared.definitions.*;
+import shared.model.map.MapModel;
 import client.base.*;
-import client.map.model.MapModel;
 
 /**
  * Interface for the map view

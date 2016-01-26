@@ -1,14 +1,14 @@
-package client.map.model.handlers;
+package shared.model.map.handlers;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import client.map.MapException;
-import client.map.model.Coordinate;
-import client.map.model.objects.Vertex;
 import shared.definitions.CatanColor;
 import shared.definitions.PieceType;
+import shared.model.map.Coordinate;
+import shared.model.map.objects.Vertex;
 
 /**
  * Stores and manages the vertices found in a map.

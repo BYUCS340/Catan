@@ -1,13 +1,13 @@
-package client.map.model.handlers;
+package shared.model.map.handlers;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import client.map.MapException;
-import client.map.model.Coordinate;
-import client.map.model.objects.Edge;
 import shared.definitions.CatanColor;
+import shared.model.map.Coordinate;
+import shared.model.map.objects.Edge;
 
 /**
  * Stores and manages the edges contained in a map.

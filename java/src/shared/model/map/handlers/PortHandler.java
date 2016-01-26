@@ -1,4 +1,4 @@
-package client.map.model.handlers;
+package shared.model.map.handlers;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import client.map.MapException;
-import client.map.model.objects.*;
 import shared.definitions.PortType;
+import shared.model.map.objects.*;
 
 /**
  * Handles information regarding ports.
