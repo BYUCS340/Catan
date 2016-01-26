@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import client.map.MapException;
 import client.map.model.handlers.*;
@@ -30,7 +29,7 @@ public class MapModel {
 	private PortHandler ports;
 	
 	private int longestRoadLength;
-	private Vertex longestRoad;
+	private CatanColor longestRoadColor;
 	private Map<CatanColor, List<PortType>> availablePorts;
 	
 	private Robber robber;
@@ -172,6 +171,32 @@ public class MapModel {
 		return verticies.GetVertex(point);
 	}
 	
+	public Iterator<Vertex> GetVerticies(Hex hex)
+	{
+		List<Vertex> verticiesAlongHex = new ArrayList<Vertex>(6);
+		
+		try
+		{
+			verticiesAlongHex.add(verticies.GetVertex(hex.getTopLeftCoordinate()));
+			verticiesAlongHex.add(verticies.GetVertex(hex.getLeftCoordinate()));
+			verticiesAlongHex.add(verticies.GetVertex(hex.getBottomLeftCoordinate()));
+			verticiesAlongHex.add(verticies.GetVertex(hex.getTopRightCoordinate()));
+			verticiesAlongHex.add(verticies.GetVertex(hex.getRightCoordinate()));
+			verticiesAlongHex.add(verticies.GetVertex(hex.getBottomRightCoordinate()));
+		}
+		catch (MapException e) {
+			//This would only trigger if we pass in a piece that is water.
+			//Otherwise, it implies the map hasn't been initialized.
+			e.printStackTrace();
+		}
+		
+		return java.util.Collections.unmodifiableList(verticiesAlongHex).iterator();
+	}
+	
+	/**
+	 * Gets all the verticies on the map.
+	 * @return A iterator to all the verticies.
+	 */
 	public Iterator<Vertex> GetAllVerticies()
 	{
 		return verticies.GetVerticies();
@@ -198,14 +223,34 @@ public class MapModel {
 		return java.util.Collections.unmodifiableList(verticies);
 	}
 	
+	/**
+	 * Returns all the ports.
+	 * @return An iterator to all the ports.
+	 */
 	public Iterator<Entry<Edge, Hex>> GetAllPorts()
 	{
 		return ports.GetAllPorts();
 	}
 	
+	/**
+	 * Gets the hex the robber is placed on.
+	 * @return The robber's hex.
+	 */
 	public Hex GetRobberPlacement()
 	{
 		return robber.GetHex();
+	}
+	
+	/**
+	 * Adds a road to the map.
+	 * @param p1 The start of the road.
+	 * @param p2 The end of the road.
+	 * @param color The color of the road.
+	 * @throws MapException What made you think you could add a road?
+	 */
+	public void SetRoad(Coordinate p1, Coordinate p2, CatanColor color) throws MapException
+	{
+		edges.AddRoad(p1, p2, color);
 	}
 	
 	/**
@@ -217,6 +262,29 @@ public class MapModel {
 	public void SetHex(HexType type, Coordinate point) throws MapException
 	{
 		hexes.AddHex(new Hex(type, point));
+	}
+	
+	/**
+	 * Adds a settlement to the map.
+	 * @param point The coordinate of the settlement.
+	 * @param color The color of the settlement.
+	 * @throws MapException The government vetod your settlement.
+	 */
+	public void SetSettlement(Coordinate point, CatanColor color) throws MapException
+	{
+		verticies.SetSettlement(point, color);
+	}
+	
+	/**
+	 * Adds a city to the board.
+	 * @param point The coordinate of the city.
+	 * @param color The color of the city.
+	 * @throws MapException If you pay 15% tithing, this won't happen (just kidding, your
+	 * 						city couldn't be added).
+	 */
+	public void SetCity(Coordinate point, CatanColor color) throws MapException
+	{
+		verticies.SetCity(point, color);
 	}
 	
 	/**
@@ -233,6 +301,15 @@ public class MapModel {
 		catch (MapException e) {
 			throw new MapException("Attempt to add port to non-existent vertex", e);
 		}
+	}
+	
+	/**
+	 * Sets which hex the robber is on.
+	 * @param hex The hex to place the robber on.
+	 */
+	public void SetRobber(Hex hex)
+	{
+		robber.setRobber(hex);
 	}
 	
 	private void RandomSetup()

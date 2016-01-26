@@ -1,12 +1,10 @@
 package client.map;
 
-import java.util.*;
-
 import shared.definitions.*;
-import shared.locations.*;
 import client.base.*;
 import client.data.*;
-import client.map.model.MapModel;
+import client.map.model.*;
+import client.map.model.objects.*;
 
 
 /**
@@ -32,13 +30,8 @@ public class MapController extends Controller implements IMapController {
 		view.SetModel(model);
 		
 		setRobView(robView);
-		
-		initFromModel();
 	}
 	
-	/**
-	 * Gets the MapView object associated with the controller.
-	 */
 	public IMapView getView() {
 		
 		return (IMapView)super.getView();
@@ -50,115 +43,124 @@ public class MapController extends Controller implements IMapController {
 	private void setRobView(IRobView robView) {
 		this.robView = robView;
 	}
-	
-	protected void initFromModel() {
-		
-		//<temp>
-		
-		Random rand = new Random();
 
-		for (int x = 0; x <= 3; ++x) {
+	public boolean canPlaceRoad(Coordinate p1, Coordinate p2) {
+		
+		if (!model.ContainsEdge(p1, p2))
+			return false;
+		
+		try {
+			Edge edge = model.GetEdge(p1, p2);
 			
-			int maxY = 3 - x;			
-			for (int y = -3; y <= maxY; ++y) {				
-				int r = rand.nextInt(HexType.values().length);
-				HexType hexType = HexType.values()[r];
-				HexLocation hexLoc = new HexLocation(x, y);
-//				getView().addHex(hexLoc, hexType);
-				getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.NorthWest),
-						CatanColor.RED);
-				getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.SouthWest),
-						CatanColor.BLUE);
-				getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.South),
-						CatanColor.ORANGE);
-				getView().placeSettlement(new VertexLocation(hexLoc,  VertexDirection.NorthWest), CatanColor.GREEN);
-				getView().placeCity(new VertexLocation(hexLoc,  VertexDirection.NorthEast), CatanColor.PURPLE);
-			}
-			
-			if (x != 0) {
-				int minY = x - 3;
-				for (int y = minY; y <= 3; ++y) {
-					int r = rand.nextInt(HexType.values().length);
-					HexType hexType = HexType.values()[r];
-					HexLocation hexLoc = new HexLocation(-x, y);
-//					getView().addHex(hexLoc, hexType);
-					getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.NorthWest),
-							CatanColor.RED);
-					getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.SouthWest),
-							CatanColor.BLUE);
-					getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.South),
-							CatanColor.ORANGE);
-					getView().placeSettlement(new VertexLocation(hexLoc,  VertexDirection.NorthWest), CatanColor.GREEN);
-					getView().placeCity(new VertexLocation(hexLoc,  VertexDirection.NorthEast), CatanColor.PURPLE);
-				}
-			}
+			return !edge.doesRoadExists();
+		} 
+		catch (MapException e) {
+			e.printStackTrace();
+			return false;
 		}
+	}
+	
+	public boolean canPlaceSettlement(Coordinate point)
+	{
+		//TODO Needs to be like the lawyer and figure out who its neighbors are.
 		
-		PortType portType = PortType.BRICK;
-		getView().addPort(new EdgeLocation(new HexLocation(0, 3), EdgeDirection.North), portType);
-		getView().addPort(new EdgeLocation(new HexLocation(0, -3), EdgeDirection.South), portType);
-		getView().addPort(new EdgeLocation(new HexLocation(-3, 3), EdgeDirection.NorthEast), portType);
-		getView().addPort(new EdgeLocation(new HexLocation(-3, 0), EdgeDirection.SouthEast), portType);
-		getView().addPort(new EdgeLocation(new HexLocation(3, -3), EdgeDirection.SouthWest), portType);
-		getView().addPort(new EdgeLocation(new HexLocation(3, 0), EdgeDirection.NorthWest), portType);
+		if (!model.ContainsVertex(point))
+			return false;
 		
-		getView().placeRobber(new HexLocation(0, 0));
-		
-		getView().addNumber(new HexLocation(-2, 0), 2);
-		getView().addNumber(new HexLocation(-2, 1), 3);
-		getView().addNumber(new HexLocation(-2, 2), 4);
-		getView().addNumber(new HexLocation(-1, 0), 5);
-		getView().addNumber(new HexLocation(-1, 1), 6);
-		getView().addNumber(new HexLocation(1, -1), 8);
-		getView().addNumber(new HexLocation(1, 0), 9);
-		getView().addNumber(new HexLocation(2, -2), 10);
-		getView().addNumber(new HexLocation(2, -1), 11);
-		getView().addNumber(new HexLocation(2, 0), 12);
-		
-		//</temp>
+		try {
+			Vertex vertex = model.GetVertex(point);
+			
+			return vertex.getType() == PieceType.NONE;
+		} 
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-	public boolean canPlaceRoad(EdgeLocation edgeLoc) {
+	public boolean canPlaceCity(Coordinate point, CatanColor color) {
 		
+		if (!model.ContainsVertex(point))
+			return false;
 		
-		return true;
+		try {
+			Vertex vertex = model.GetVertex(point);
+			
+			return vertex.getType() == PieceType.SETTLEMENT && 
+					vertex.getColor() == color;
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-	public boolean canPlaceSettlement(VertexLocation vertLoc) {
+	public boolean canPlaceRobber(Coordinate point) {
 		
-		return true;
+		if (!model.ContainsHex(point))
+			return false;
+		
+		try {
+			Hex hex = model.GetHex(point);
+			
+			return hex.getType() != HexType.WATER;
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-	public boolean canPlaceCity(VertexLocation vertLoc) {
-		
-		return true;
+	public void placeRoad(Coordinate p1, Coordinate p2, CatanColor color)
+	{	
+		try {
+			model.SetRoad(p1, p2, color);
+			getView().RefreshView();
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
-	public boolean canPlaceRobber(HexLocation hexLoc) {
-		
-		return true;
+	public void placeSettlement(Coordinate point, CatanColor color)
+	{
+		try {
+			model.SetSettlement(point, color);
+			getView().RefreshView();
+		} 
+		catch (MapException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 
-	public void placeRoad(EdgeLocation edgeLoc) {
-		
-		getView().placeRoad(edgeLoc, CatanColor.ORANGE);
+	public void placeCity(Coordinate point, CatanColor color)
+	{
+		try {
+			model.SetCity(point, color);
+			getView().RefreshView();
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
-	public void placeSettlement(VertexLocation vertLoc) {
-		
-		getView().placeSettlement(vertLoc, CatanColor.ORANGE);
-	}
-
-	public void placeCity(VertexLocation vertLoc) {
-		
-		getView().placeCity(vertLoc, CatanColor.ORANGE);
-	}
-
-	public void placeRobber(HexLocation hexLoc) {
-		
-		getView().placeRobber(hexLoc);
-		
-		getRobView().showModal();
+	public void placeRobber(Coordinate point)
+	{
+		try 
+		{
+			Hex hex = model.GetHex(point);
+			model.SetRobber(hex);
+		} 
+		catch (MapException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {	

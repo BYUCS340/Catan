@@ -95,8 +95,6 @@ public class MapComponent extends JComponent
 		
 		ROAD = ROAD_0;
 		
-		Rectangle rect = new Rectangle();
-		
 		List<Point2D> ROAD_60 = rotateShape(ROAD_0, -(Math.PI / 3));
 		List<Point2D> ROAD_120 = rotateShape(ROAD_0, -(2 * Math.PI / 3));
 		
@@ -205,9 +203,9 @@ public class MapComponent extends JComponent
 	private PieceType dropType;
 	private CatanColor dropColor;
 	private boolean dropAllowed;
-	private HexLocation dropHexLoc;
-	private EdgeLocation dropEdgeLoc;
-	private VertexLocation dropVertLoc;
+	private Hex dropHexLoc;
+	private Edge dropEdgeLoc;
+	private Vertex dropVertLoc;
 	private double scale;
 	private AffineTransform transform;
 	
@@ -252,7 +250,6 @@ public class MapComponent extends JComponent
 	
 	private void initDrop()
 	{
-		
 		dropType = null;
 		dropColor = null;
 		dropAllowed = false;
@@ -330,89 +327,8 @@ public class MapComponent extends JComponent
 		return scale;
 	}
 	
-	public void addHex(HexLocation hexLoc, HexType hexType)
-	{
-		
-		// Add hex to hex map
-//		hexes.put(hexLoc, hexType);
-		
-		// Compute hex point for the new hex
-		//allHexPoints.put(hexLoc, getHexPoint(hexLoc));
-		
-		// Compute edge points for the new hex
-//		for (EdgeDirection edgeDir : EdgeDirection.values())
-//		{
-//			EdgeLocation edgeLoc = new EdgeLocation(hexLoc, edgeDir).getNormalizedLocation();
-//			allEdgePoints.put(edgeLoc, getEdgePoint(edgeLoc));
-//		}
-		
-		// Compute vertex points for the new hex
-//		for (VertexDirection vertDir : VertexDirection.values())
-//		{
-//			VertexLocation vertLoc = new VertexLocation(hexLoc, vertDir).getNormalizedLocation();
-//			allVertexPoints.put(vertLoc, getVertexPoint(vertLoc));
-//		}
-		
-		// Repaint
-		this.repaint();
-	}
-	
-	public void addNumber(HexLocation hexLoc, int num)
-	{
-		
-		numbers.put(hexLoc, num);
-		
-		this.repaint();
-	}
-	
-	public void placeRoad(EdgeLocation edgeLoc, CatanColor color)
-	{
-		
-		roads.put(edgeLoc.getNormalizedLocation(), color);
-		
-		this.repaint();
-	}
-	
-	public void placeSettlement(VertexLocation vertLoc, CatanColor color)
-	{
-		
-		VertexLocation normVertLoc = vertLoc.getNormalizedLocation();
-		
-		if(cities.containsKey(normVertLoc))
-		{
-			cities.remove(normVertLoc);
-		}
-		
-		settlements.put(normVertLoc, color);
-	}
-	
-	public void placeCity(VertexLocation vertLoc, CatanColor color)
-	{
-		
-		VertexLocation normVertLoc = vertLoc.getNormalizedLocation();
-		
-		if(settlements.containsKey(normVertLoc))
-		{
-			settlements.remove(normVertLoc);
-		}
-		
-		cities.put(normVertLoc, color);
-	}
-	
-	public void placePort(EdgeLocation edgeLoc, PortType portType)
-	{
-		ports.put(edgeLoc, portType);
-	}
-	
-	public void placeRobber(HexLocation hexLoc)
-	{
-		
-		robber = hexLoc;
-	}
-	
 	public void startDrop(PieceType pieceType, CatanColor pieceColor)
 	{
-		
 		dropType = pieceType;
 		dropColor = pieceColor;
 		
@@ -421,32 +337,28 @@ public class MapComponent extends JComponent
 	
 	public void cancelDrop()
 	{
-		
 		initDrop();
 		
 		this.repaint();
 	}
 	
-	private ComponentAdapter componentAdapter = new ComponentAdapter() {
-		
+	private ComponentAdapter componentAdapter = new ComponentAdapter()
+	{	
 		@Override
 		public void componentResized(ComponentEvent e)
 		{
-			
 			super.componentResized(e);
 			
 			updateScale();
 			repaint();
 		}
-		
 	};
 	
-	private MouseAdapter mouseAdapter = new MouseAdapter() {
-		
+	private MouseAdapter mouseAdapter = new MouseAdapter() 
+	{	
 		@Override
 		public void mouseMoved(MouseEvent e)
 		{
-			
 			if(dropType == null)
 			{
 				return;
@@ -473,103 +385,95 @@ public class MapComponent extends JComponent
 				return;
 			}
 			
-			if(dropType == PieceType.ROAD)
+			Coordinate closestHexCoordinate = getClosestHexCoordinate(mousePoint);
+			if (!model.ContainsHex(closestHexCoordinate))
+				return;
+			
+			Hex closestHex;
+			try 
 			{
+				closestHex = model.GetHex(closestHexCoordinate);
 				
-				EdgeLocation closestEdgeLoc = null;
-				double closestDistance = 0;
-				
-				for (Map.Entry<EdgeLocation, Point2D> entry : allEdgePoints.entrySet())
+				if(dropType == PieceType.ROAD)
 				{
+					Map<Double, Vertex> possibleEnds = getSortedVerticies(mousePoint, closestHex);
 					
-					EdgeLocation edgeLoc = entry.getKey();
-					Point2D edgePoint = entry.getValue();
+					Iterator<Vertex> sortedVerticies = possibleEnds.values().iterator();
+					Vertex v1 = sortedVerticies.next();
+					Vertex v2 = sortedVerticies.next();
+					Coordinate p1 = v1.getPoint();
+					Coordinate p2 = v2.getPoint();
 					
-					double distance = mousePoint.distance(edgePoint);
+					dropAllowed = getController().canPlaceRoad(p1, p2);
 					
-					if(closestEdgeLoc == null || (distance < closestDistance))
+					if (dropAllowed)
 					{
-						closestEdgeLoc = edgeLoc;
-						closestDistance = distance;
+						try
+						{
+							dropEdgeLoc = model.GetEdge(p1, p2);
+						} 
+						catch (MapException e1) {
+							e1.printStackTrace();
+							dropAllowed = false;
+						}
 					}
 				}
-				
-				dropEdgeLoc = closestEdgeLoc;
-				dropAllowed = getController().canPlaceRoad(dropEdgeLoc);
-			}
-			else if(dropType == PieceType.CITY
-					|| dropType == PieceType.SETTLEMENT)
-			{
-				
-				VertexLocation closestVertLoc = null;
-				double closestDistance = 0;
-				
-				for (Map.Entry<VertexLocation, Point2D> entry : allVertexPoints.entrySet())
+				else if (dropType == PieceType.CITY || dropType == PieceType.SETTLEMENT)
 				{
+					Map<Double, Vertex> possibleEnds = getSortedVerticies(mousePoint, closestHex);
 					
-					VertexLocation vertLoc = entry.getKey();
-					Point2D vertPoint = entry.getValue();
+					Iterator<Vertex> sortedVerticies = possibleEnds.values().iterator();
+					Vertex v1 = sortedVerticies.next();
+					Coordinate p1 = v1.getPoint();
 					
-					double distance = mousePoint.distance(vertPoint);
+					if (dropType == PieceType.CITY)
+						dropAllowed = getController().canPlaceCity(p1, dropColor);
+					else
+						dropAllowed = getController().canPlaceSettlement(p1);
 					
-					if(closestVertLoc == null || (distance < closestDistance))
+					if (dropAllowed)
 					{
-						closestVertLoc = vertLoc;
-						closestDistance = distance;
+						try
+						{
+							dropVertLoc = model.GetVertex(p1);
+						} 
+						catch (MapException e1) {
+							e1.printStackTrace();
+							dropAllowed = false;
+						}
 					}
 				}
-				
-				dropVertLoc = closestVertLoc;
-				
-				if(dropType == PieceType.CITY)
+				else if(dropType == PieceType.ROBBER)
 				{
-					dropAllowed = getController().canPlaceCity(dropVertLoc);
-				}
-				else if(dropType == PieceType.SETTLEMENT)
-				{
-					dropAllowed = getController().canPlaceSettlement(dropVertLoc);
+					dropAllowed = getController().canPlaceRobber(closestHexCoordinate);
+					
+					if (dropAllowed)
+					{
+						try
+						{
+							dropHexLoc = model.GetHex(closestHexCoordinate);
+						} 
+						catch (MapException e1) {
+							e1.printStackTrace();
+							dropAllowed = false;
+						}
+					}
 				}
 				else
 				{
 					assert false;
 				}
-			}
-			else if(dropType == PieceType.ROBBER)
-			{
 				
-				HexLocation closestHexLoc = null;
-				double closestDistance = 0;
-				
-				for (Map.Entry<HexLocation, Point2D> entry : allHexPoints.entrySet())
-				{
-					
-					HexLocation hexLoc = entry.getKey();
-					Point2D hexPoint = entry.getValue();
-					
-					double distance = mousePoint.distance(hexPoint);
-					
-					if(closestHexLoc == null || (distance < closestDistance))
-					{
-						closestHexLoc = hexLoc;
-						closestDistance = distance;
-					}
-				}
-				
-				dropHexLoc = closestHexLoc;
-				dropAllowed = getController().canPlaceRobber(dropHexLoc);
-			}
-			else
-			{
-				assert false;
-			}
-			
-			repaint();
+				repaint();
+			} 
+			catch (MapException e2) {
+				e2.printStackTrace();
+			}	
 		}
 		
 		@Override
 		public void mouseClicked(MouseEvent e)
 		{
-			
 			if(dropType != null)
 			{
 				
@@ -578,16 +482,16 @@ public class MapComponent extends JComponent
 					switch (dropType)
 					{
 						case ROAD:
-							getController().placeRoad(dropEdgeLoc);
+							getController().placeRoad(dropEdgeLoc.getStart(), dropEdgeLoc.getEnd(), dropColor);
 							break;
 						case SETTLEMENT:
-							getController().placeSettlement(dropVertLoc);
+							getController().placeSettlement(dropVertLoc.getPoint(), dropColor);
 							break;
 						case CITY:
-							getController().placeCity(dropVertLoc);
+							getController().placeCity(dropVertLoc.getPoint(), dropColor);
 							break;
 						case ROBBER:
-							getController().placeRobber(dropHexLoc);
+							getController().placeRobber(dropHexLoc.getPoint());
 							break;
 						default:
 							assert false;
@@ -606,11 +510,8 @@ public class MapComponent extends JComponent
 	@Override
 	protected void paintComponent(Graphics g)
 	{
-		
 		if(Double.isNaN(scale))
-		{
 			return;
-		}
 		
 		super.paintComponent(g);
 		
@@ -618,11 +519,11 @@ public class MapComponent extends JComponent
 		
 		g2.setColor(this.getBackground());
 		g2.fillRect(0, 0, this.getWidth(), this.getHeight());		
-		g2.translate(this.getWidth() / 2, this.getHeight() / 2);
 
 		if (model == null)
 			return;
 
+		g2.translate(this.getWidth() / 2, this.getHeight() / 2);
 		g2.scale(scale, scale);
 		g2.translate(-WORLD_WIDTH / 2, -WORLD_HEIGHT / 2);
 		
@@ -632,7 +533,7 @@ public class MapComponent extends JComponent
 		drawRobber(g2);
 		drawRoads(g2);
 		drawVerticies(g2);
-//		drawDropShape(g2);
+		drawDropShape(g2);
 	}
 	
 	private void drawHexes(Graphics2D g2)
@@ -677,6 +578,10 @@ public class MapComponent extends JComponent
 	
 	private void drawRobber(Graphics2D g2)
 	{
+		//I added this so it doesn't look as if there are multiple robbers.
+		if (dropHexLoc != null)
+			return;
+		
 		//TODO Originally, the robber was checked to be non-null. I'm assuming
 		//the robber exists when the model exists. Verify this assumption.
 		
@@ -693,22 +598,24 @@ public class MapComponent extends JComponent
 			Edge edge = edges.next();
 			
 			if (edge.doesRoadExists())
-			{
-				Point2D edgeCenter = getEdgeCenterPoint(edge);
-				Double angle = getEdgeAngle(edge);
-				
-				List<Point2D> rotatedRoad = rotateShape(ROAD, angle);
-				List<Point2D> completedRoad = translateShape(rotatedRoad, edgeCenter);
-				
-				Polygon road = toPolygon(completedRoad);
-				drawGamePiece(g2, road, edge.getColor());
-			}
+				drawRoads(g2, edge, edge.getColor());
 		}
+	}
+	
+	private void drawRoads(Graphics2D g2, Edge edge, CatanColor color)
+	{
+		Point2D edgeCenter = getEdgeCenterPoint(edge);
+		Double angle = getEdgeAngle(edge);
+		
+		List<Point2D> rotatedRoad = rotateShape(ROAD, angle);
+		List<Point2D> completedRoad = translateShape(rotatedRoad, edgeCenter);
+		
+		Polygon road = toPolygon(completedRoad);
+		drawGamePiece(g2, road, edge.getColor());
 	}
 	
 	private void drawVerticies(Graphics2D g2)
 	{
-		
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 							RenderingHints.VALUE_ANTIALIAS_ON);
 		
@@ -770,79 +677,95 @@ public class MapComponent extends JComponent
 	private void drawDropShape(Graphics2D g2)
 	{
 		
-//		if(dropType == null)
-//		{
-//			return;
-//		}
-//		
-//		switch (dropType)
-//		{
-//			case ROAD:
-//			{
-//				if(dropEdgeLoc != null)
-//				{
-//					if(dropAllowed)
-//					{
-//						drawRoad(g2, dropEdgeLoc, dropColor);
-//					}
-//					else
-//					{
-//						drawDisallowImage(g2, getEdgePoint(dropEdgeLoc));
-//					}
-//				}
-//			}
-//				break;
-//			case CITY:
-//			{
-//				if(dropVertLoc != null)
-//				{
-//					if(dropAllowed)
-//					{
-//						drawCity(g2, dropVertLoc, dropColor);
-//					}
-//					else
-//					{
-//						drawDisallowImage(g2, getVertexPoint(dropVertLoc));
-//					}
-//				}
-//			}
-//				break;
-//			case SETTLEMENT:
-//			{
-//				if(dropVertLoc != null)
-//				{
-//					if(dropAllowed)
-//					{
-//						drawSettlement(g2, dropVertLoc, dropColor);
-//					}
-//					else
-//					{
-//						drawDisallowImage(g2, getVertexPoint(dropVertLoc));
-//					}
-//				}
-//			}
-//				break;
-//			case ROBBER:
-//			{
-//				if(dropHexLoc != null)
-//				{
-//					if(dropAllowed)
-//					{
-//						drawRobber(g2, dropHexLoc);
-//					}
-//					else
-//					{
-//						drawDisallowImage(g2, getHexPoint(dropHexLoc));
-//					}
-//				}
-//			}
-//				break;
-//			default:
-//			{
-//				assert false;
-//			}
-//				break;
-//		}
+		if(dropType == null)
+		{
+			return;
+		}
+		
+		switch (dropType)
+		{
+			case ROAD:
+			{
+				if(dropEdgeLoc != null)
+				{
+					if(dropAllowed)
+					{
+						drawRoads(g2, dropEdgeLoc, dropColor);
+					}
+					else
+					{
+						drawDisallowImage(g2, getEdgeCenterPoint(dropEdgeLoc));
+					}
+				}
+			}
+				break;
+			case CITY:
+			{
+				if(dropVertLoc != null)
+				{
+					Point2D vertPoint = getVertexPoint(dropVertLoc.getPoint());
+					
+					if(dropAllowed)
+					{
+						List<Point2D> settlementShape = translateShape(CITY, vertPoint);
+						
+						Polygon polygon = toPolygon(settlementShape);
+						drawGamePiece(g2, polygon, dropColor);
+						
+						drawGamePiece(g2, polygon, dropColor);
+					}
+					else
+					{
+						drawDisallowImage(g2, vertPoint);
+					}
+				}
+			}
+				break;
+			case SETTLEMENT:
+			{
+				if(dropVertLoc != null)
+				{
+					Point2D vertPoint = getVertexPoint(dropVertLoc.getPoint());
+					
+					if(dropAllowed)
+					{
+						List<Point2D> settlementShape = translateShape(SETTLEMENT, vertPoint);
+						
+						Polygon polygon = toPolygon(settlementShape);
+						drawGamePiece(g2, polygon, dropColor);
+						
+						drawGamePiece(g2, polygon, dropColor);
+					}
+					else
+					{
+						drawDisallowImage(g2, vertPoint);
+					}
+				}
+			}
+				break;
+			case ROBBER:
+			{
+				if(dropHexLoc != null)
+				{
+					if(dropAllowed)
+					{
+						Point2D hexPoint = getHexCenterPoint(dropHexLoc);
+						BufferedImage robberImage = getRobberImage();
+						drawImage(g2, robberImage, hexPoint);
+					}
+					else
+					{
+						drawDisallowImage(g2, getHexCenterPoint(dropHexLoc));
+					}
+				}
+			}
+				break;
+			default:
+			{
+				assert false;
+			}
+				break;
+		}
 	}
 	
 	private void drawRotatedImage(Graphics2D g2, BufferedImage image,
@@ -898,18 +821,52 @@ public class MapComponent extends JComponent
 	{	
 		int wCenterY = WORLD_HEIGHT / 2;
 		
-		double doubleX = hex.getPoint().getX();
-		double doubleY = hex.getPoint().getY();
+		double hX = hex.getPoint().getX();
+		double hY = hex.getPoint().getY();
 		
-		int wX = (int)(((3 * doubleX + 2) * HEX_IMAGE_WIDTH) / 4.0);
-		int wY = wCenterY + (int)(doubleY * HEX_IMAGE_HEIGHT / 2.0);
+		int wX = (int)(((3 * hX + 2) * HEX_IMAGE_WIDTH) / 4.0);
+		int wY = wCenterY + (int)(hY * HEX_IMAGE_HEIGHT / 2.0);
 		
 		return new Point2D.Double(wX, wY);
 	}
 	
+	private Coordinate getClosestHexCoordinate(Point2D point)
+	{
+		int wCenterY = WORLD_HEIGHT / 2;
+		
+		double wX = point.getX();
+		double wY = point.getY();
+		
+		double hX = ((4.0 * wX / HEX_IMAGE_WIDTH) - 2) / 3.0;
+		double hY = (2 * (wY - wCenterY)) / HEX_IMAGE_HEIGHT;
+		
+		int iX = (int)Math.round(hX);
+		int iY = (int)Math.round(hY);
+		
+		return new Coordinate (iX, iY);
+	}
+	
+	private Map<Double, Vertex> getSortedVerticies(Point2D point, Hex hex)
+	{
+		Map<Double, Vertex> result = new TreeMap<Double, Vertex>();
+		
+		Iterator<Vertex> verticies = model.GetVerticies(hex);
+		while (verticies.hasNext())
+		{
+			Vertex vertex = verticies.next();
+			Point2D vertexPoint = getVertexPoint(vertex.getPoint());
+			
+			double distance = vertexPoint.distance(point);
+			//TODO Figure out a way to handle if there are multiple distances that
+			//are the same.
+			result.put(distance, vertex);
+		}
+		
+		return result;
+	}
+	
 	private static Polygon toPolygon(List<Point2D> points)
 	{
-		
 		Polygon result = new Polygon();
 		
 		for (Point2D pt : points)
@@ -960,10 +917,8 @@ public class MapComponent extends JComponent
 		return new Point2D.Double(x, y);
 	}
 	
-	private static List<Point2D> rotateShape(List<Point2D> points,
-											 double radians)
+	private static List<Point2D> rotateShape(List<Point2D> points, double radians)
 	{
-		
 		AffineTransform affine = new AffineTransform();
 		affine.rotate(radians);
 		
@@ -979,8 +934,7 @@ public class MapComponent extends JComponent
 		return result;
 	}
 	
-	private static List<Point2D> translateShape(List<Point2D> points,
-												Point2D delta)
+	private static List<Point2D> translateShape(List<Point2D> points, Point2D delta)
 	{
 		
 		List<Point2D> result = new ArrayList<Point2D>();
@@ -1036,7 +990,6 @@ public class MapComponent extends JComponent
 	
 	private static BufferedImage getRobberImage()
 	{
-		
 		return ROBBER_IMAGE;
 	}
 	

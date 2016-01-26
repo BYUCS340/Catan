@@ -41,6 +41,60 @@ public class Hex {
 	public Coordinate getPoint() {
 		return point;
 	}
+	
+	/**
+	 * Gets the coordinate of the top left point.
+	 * @return The point.
+	 */
+	public Coordinate getTopLeftCoordinate()
+	{
+		return point.GetNorth();
+	}
+	
+	/**
+	 * Gets the coordinate of the left point.
+	 * @return The point.
+	 */
+	public Coordinate getLeftCoordinate()
+	{
+		return point;
+	}
+	
+	/**
+	 * Gets the coordinate of the bottom left point.
+	 * @return The point.
+	 */
+	public Coordinate getBottomLeftCoordinate()
+	{
+		return point.GetSouth();
+	}
+	
+	/**
+	 * Gets the coordinate of the top right point.
+	 * @return The point.
+	 */
+	public Coordinate getTopRightCoordinate()
+	{
+		return point.GetNorthEast();
+	}
+	
+	/**
+	 * Gets the coordinate of the right point (opposed to the wrong one?...)
+	 * @return The point.
+	 */
+	public Coordinate getRightCoordinate()
+	{
+		return point.GetEast();
+	}
+	
+	/**
+	 * Gets the coordinate of the bottom right point.
+	 * @return The point.
+	 */
+	public Coordinate getBottomRightCoordinate()
+	{
+		return point.GetSouthEast();
+	}
 
 	/**
 	 * @return the port
