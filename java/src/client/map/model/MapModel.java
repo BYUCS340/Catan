@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import client.map.MapException;
 import client.map.model.handlers.*;
@@ -25,9 +26,10 @@ public class MapModel {
 	private HexHandler hexes;
 	private EdgeHandler edges;
 	private VertexHandler verticies;	
+	private PortHandler ports;
 	
 	private int longestRoadLength;
-	private Vertex longestRoad;
+	private CatanColor longestRoadColor;
 	private Map<CatanColor, List<PortType>> availablePorts;
 	
 	private Robber robber;
@@ -52,10 +54,9 @@ public class MapModel {
 		hexes = new HexHandler();
 		edges = new EdgeHandler();
 		verticies = new VertexHandler();
+		ports = new PortHandler();
 		
 		longestRoadLength = 2;
-		longestRoad = null;
-		availablePorts = new HashMap<CatanColor, List<PortType>>();
 		
 		if (method == Method.random)
 			RandomSetup();
@@ -63,7 +64,19 @@ public class MapModel {
 			BeginnerSetup();
 		
 		PlaceWater();
+		PlacePorts();
 		PlacePips();
+	}
+	
+	/**
+	 * Returns if an edge is on the board.
+	 * @param p1 The first end point.
+	 * @param p2 The second end point.
+	 * @return True if the edge exists, else false.
+	 */
+	public boolean ContainsEdge(Coordinate p1, Coordinate p2)
+	{
+		return edges.ContainsEdge(p1, p2);
 	}
 	
 	/**
@@ -74,6 +87,38 @@ public class MapModel {
 	public boolean ContainsHex(Coordinate point)
 	{
 		return hexes.ContainsHex(point);
+	}
+	
+	/**
+	 * Returns if a vertex is on the board.
+	 * @param point The coordinate.
+	 * @return True if the vertex is on the board, else false.
+	 */
+	public boolean ContainsVertex(Coordinate point)
+	{
+		return verticies.ContainsVertex(point);
+	}
+	
+	/**
+	 * Gets the edge associated with the two end points. The order of the points
+	 * does not matter.
+	 * @param p1 The coordinate of the first point.
+	 * @param p2 The coordinate of the second point.
+	 * @return The associated edge.
+	 * @throws MapException Thrown if the edge doesn't exist
+	 */
+	public Edge GetEdge(Coordinate p1, Coordinate p2) throws MapException
+	{
+		return edges.GetEdge(p1, p2);
+	}
+	
+	/**
+	 * Gets all the edges.
+	 * @return An iterator of edges.
+	 */
+	public Iterator<Edge> GetAllEdges()
+	{
+		return edges.GetAllEdges();
 	}
 	
 	/**
@@ -98,48 +143,21 @@ public class MapModel {
 	}
 	
 	/**
-	 * Creates a hex at the specified location.
-	 * @param type The resource type associated with the hex.
-	 * @param point The coordinate of the hex.
-	 * @throws MapException Thrown if there is an issue adding the hex.
+	 * Gets all the hexes in the map.
+	 * @return A iterator to all the hexes.
 	 */
-	public void SetHex(HexType type, Coordinate point) throws MapException
+	public Iterator<Hex> GetAllHexes()
 	{
-		hexes.AddHex(new Hex(type, point));
+		return hexes.GetAllHexes();
 	}
 	
 	/**
-	 * Returns if an edge is on the board.
-	 * @param p1 The first end point.
-	 * @param p2 The second end point.
-	 * @return True if the edge exists, else false.
+	 * Gets the list of all the pips on the playing board.
+	 * @return The pip list.
 	 */
-	public boolean ContainsEdge(Coordinate p1, Coordinate p2)
+	public Iterator<Map.Entry<Integer, List<Hex>>> GetPips()
 	{
-		return edges.ContainsEdge(p1, p2);
-	}
-	
-	/**
-	 * Gets the edge associated with the two end points. The order of the points
-	 * does not matter.
-	 * @param p1 The coordinate of the first point.
-	 * @param p2 The coordinate of the second point.
-	 * @return The associated edge.
-	 * @throws MapException Thrown if the edge doesn't exist
-	 */
-	public Edge GetEdge(Coordinate p1, Coordinate p2) throws MapException
-	{
-		return edges.GetEdge(p1, p2);
-	}
-	
-	/**
-	 * Returns if a vertex is on the board.
-	 * @param point The coordinate.
-	 * @return True if the vertex is on the board, else false.
-	 */
-	public boolean ContainsVertex(Coordinate point)
-	{
-		return verticies.ContainsVertex(point);
+		return java.util.Collections.unmodifiableSet(values.entrySet()).iterator();
 	}
 	
 	/**
@@ -151,6 +169,37 @@ public class MapModel {
 	public Vertex GetVertex(Coordinate point) throws MapException
 	{
 		return verticies.GetVertex(point);
+	}
+	
+	public Iterator<Vertex> GetVerticies(Hex hex)
+	{
+		List<Vertex> verticiesAlongHex = new ArrayList<Vertex>(6);
+		
+		try
+		{
+			verticiesAlongHex.add(verticies.GetVertex(hex.getTopLeftCoordinate()));
+			verticiesAlongHex.add(verticies.GetVertex(hex.getLeftCoordinate()));
+			verticiesAlongHex.add(verticies.GetVertex(hex.getBottomLeftCoordinate()));
+			verticiesAlongHex.add(verticies.GetVertex(hex.getTopRightCoordinate()));
+			verticiesAlongHex.add(verticies.GetVertex(hex.getRightCoordinate()));
+			verticiesAlongHex.add(verticies.GetVertex(hex.getBottomRightCoordinate()));
+		}
+		catch (MapException e) {
+			//This would only trigger if we pass in a piece that is water.
+			//Otherwise, it implies the map hasn't been initialized.
+			e.printStackTrace();
+		}
+		
+		return java.util.Collections.unmodifiableList(verticiesAlongHex).iterator();
+	}
+	
+	/**
+	 * Gets all the verticies on the map.
+	 * @return A iterator to all the verticies.
+	 */
+	public Iterator<Vertex> GetAllVerticies()
+	{
+		return verticies.GetVerticies();
 	}
 	
 	/**
@@ -175,6 +224,70 @@ public class MapModel {
 	}
 	
 	/**
+	 * Returns all the ports.
+	 * @return An iterator to all the ports.
+	 */
+	public Iterator<Entry<Edge, Hex>> GetAllPorts()
+	{
+		return ports.GetAllPorts();
+	}
+	
+	/**
+	 * Gets the hex the robber is placed on.
+	 * @return The robber's hex.
+	 */
+	public Hex GetRobberPlacement()
+	{
+		return robber.GetHex();
+	}
+	
+	/**
+	 * Adds a road to the map.
+	 * @param p1 The start of the road.
+	 * @param p2 The end of the road.
+	 * @param color The color of the road.
+	 * @throws MapException What made you think you could add a road?
+	 */
+	public void SetRoad(Coordinate p1, Coordinate p2, CatanColor color) throws MapException
+	{
+		edges.AddRoad(p1, p2, color);
+	}
+	
+	/**
+	 * Creates a hex at the specified location.
+	 * @param type The resource type associated with the hex.
+	 * @param point The coordinate of the hex.
+	 * @throws MapException Thrown if there is an issue adding the hex.
+	 */
+	public void SetHex(HexType type, Coordinate point) throws MapException
+	{
+		hexes.AddHex(new Hex(type, point));
+	}
+	
+	/**
+	 * Adds a settlement to the map.
+	 * @param point The coordinate of the settlement.
+	 * @param color The color of the settlement.
+	 * @throws MapException The government vetod your settlement.
+	 */
+	public void SetSettlement(Coordinate point, CatanColor color) throws MapException
+	{
+		verticies.SetSettlement(point, color);
+	}
+	
+	/**
+	 * Adds a city to the board.
+	 * @param point The coordinate of the city.
+	 * @param color The color of the city.
+	 * @throws MapException If you pay 15% tithing, this won't happen (just kidding, your
+	 * 						city couldn't be added).
+	 */
+	public void SetCity(Coordinate point, CatanColor color) throws MapException
+	{
+		verticies.SetCity(point, color);
+	}
+	
+	/**
 	 * Sets a vertex as a port
 	 * @param type The type of port to set.
 	 * @param point The coordinate of the port.
@@ -188,6 +301,15 @@ public class MapModel {
 		catch (MapException e) {
 			throw new MapException("Attempt to add port to non-existent vertex", e);
 		}
+	}
+	
+	/**
+	 * Sets which hex the robber is on.
+	 * @param hex The hex to place the robber on.
+	 */
+	public void SetRobber(Hex hex)
+	{
+		robber.setRobber(hex);
 	}
 	
 	private void RandomSetup()
@@ -266,6 +388,56 @@ public class MapModel {
 			e.printStackTrace();
 			//This shouldn't happen. If it does, then you suck.
 		}
+	}
+	
+	private void PlacePorts()
+	{
+		Hex hex;
+		Edge edge;
+		
+		try
+		{
+			hex = hexes.GetHex(new Coordinate(0,3));
+			edge = edges.GetEdge(hex.getPoint().GetEast(), hex.getPoint().GetSouthEast());
+			ports.AddPort(PortType.THREE, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(2,5));
+			edge = edges.GetEdge(hex.getPoint().GetSouth(), hex.getPoint().GetSouthEast());
+			ports.AddPort(PortType.WHEAT, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(4,5));
+			edge = edges.GetEdge(hex.getPoint().GetSouth(), hex.getPoint().GetSouthEast());
+			ports.AddPort(PortType.ORE, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(6,3));
+			edge = edges.GetEdge(hex.getPoint().GetSouth(), hex.getPoint());
+			ports.AddPort(PortType.THREE, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(6,-1));
+			edge = edges.GetEdge(hex.getPoint().GetNorth(), hex.getPoint());
+			ports.AddPort(PortType.SHEEP, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(5,-4));
+			edge = edges.GetEdge(hex.getPoint().GetNorth(), hex.getPoint());
+			ports.AddPort(PortType.THREE, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(3,-6));
+			edge = edges.GetEdge(hex.getPoint().GetNorth(), hex.getPoint().GetNorthEast());
+			ports.AddPort(PortType.THREE, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(1,-4));
+			edge = edges.GetEdge(hex.getPoint().GetEast(), hex.getPoint().GetNorthEast());
+			ports.AddPort(PortType.BRICK, edge, hex);
+			
+			hex = hexes.GetHex(new Coordinate(0,-1));
+			edge = edges.GetEdge(hex.getPoint().GetEast(), hex.getPoint().GetNorthEast());
+			ports.AddPort(PortType.WOOD, edge, hex);
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void PlacePips()

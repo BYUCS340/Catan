@@ -2,8 +2,8 @@ package client.map;
 
 import client.base.*;
 import client.data.*;
+import client.map.model.Coordinate;
 import shared.definitions.*;
-import shared.locations.*;
 
 /**
  * Interface for the map controller
@@ -17,11 +17,11 @@ public interface IMapController extends IController
 	 * value tells the view whether or not to allow the road to be placed at the
 	 * specified location.
 	 * 
-	 * @param edgeLoc
-	 *            The proposed road location
+	 * @param p1 The beginning of the road piece
+	 * @param p2 The end of the road piece (it's the end of the road, get it? Never mind...)
 	 * @return true if the road can be placed at edgeLoc, false otherwise
 	 */
-	boolean canPlaceRoad(EdgeLocation edgeLoc);
+	boolean canPlaceRoad(Coordinate p1, Coordinate p2);
 	
 	/**
 	 * This method is called whenever the user is trying to place a settlement
@@ -29,11 +29,10 @@ public interface IMapController extends IController
 	 * returned value tells the view whether or not to allow the settlement to
 	 * be placed at the specified location.
 	 * 
-	 * @param vertLoc
-	 *            The proposed settlement location
+	 * @param point the location of the vertex
 	 * @return true if the settlement can be placed at vertLoc, false otherwise
 	 */
-	boolean canPlaceSettlement(VertexLocation vertLoc);
+	boolean canPlaceSettlement(Coordinate point);
 	
 	/**
 	 * This method is called whenever the user is trying to place a city on the
@@ -41,11 +40,11 @@ public interface IMapController extends IController
 	 * value tells the view whether or not to allow the city to be placed at the
 	 * specified location.
 	 * 
-	 * @param vertLoc
-	 *            The proposed city location
+	 * @param point the location of the vertex
+	 * @param color the color of the piece being placed
 	 * @return true if the city can be placed at vertLoc, false otherwise
 	 */
-	boolean canPlaceCity(VertexLocation vertLoc);
+	boolean canPlaceCity(Coordinate point, CatanColor color);
 	
 	/**
 	 * This method is called whenever the user is trying to place the robber on
@@ -53,44 +52,43 @@ public interface IMapController extends IController
 	 * returned value tells the view whether or not to allow the robber to be
 	 * placed at the specified location.
 	 * 
-	 * @param hexLoc
-	 *            The proposed robber location
+	 * @param point the coordinate of the hex
 	 * @return true if the robber can be placed at hexLoc, false otherwise
 	 */
-	boolean canPlaceRobber(HexLocation hexLoc);
+	boolean canPlaceRobber(Coordinate point);
 	
 	/**
 	 * This method is called when the user clicks the mouse to place a road.
 	 * 
-	 * @param edgeLoc
-	 *            The road location
+	 * @param p1 the coordinate of the start of the road
+	 * @param p2 the coordinate of the end of the road
+	 * @param color the color of the road being placed
 	 */
-	void placeRoad(EdgeLocation edgeLoc);
+	void placeRoad(Coordinate p1, Coordinate p2, CatanColor color);
 	
 	/**
 	 * This method is called when the user clicks the mouse to place a
 	 * settlement.
 	 * 
-	 * @param vertLoc
-	 *            The settlement location
+	 * @param point the coordinate of the vertex
+	 * @param the color of the settlement being placed
 	 */
-	void placeSettlement(VertexLocation vertLoc);
+	void placeSettlement(Coordinate point, CatanColor color);
 	
 	/**
 	 * This method is called when the user clicks the mouse to place a city.
 	 * 
-	 * @param vertLoc
-	 *            The city location
+	 * @param point the coordinate of the vertex
+	 * @param color the color of the city being placed
 	 */
-	void placeCity(VertexLocation vertLoc);
+	void placeCity(Coordinate point, CatanColor color);
 	
 	/**
 	 * This method is called when the user clicks the mouse to place the robber.
 	 * 
-	 * @param hexLoc
-	 *            The robber location
+	 * @param point the coordinate of the hex
 	 */
-	void placeRobber(HexLocation hexLoc);
+	void placeRobber(Coordinate point);
 	
 	/**
 	 * This method is called when the user requests to place a piece on the map

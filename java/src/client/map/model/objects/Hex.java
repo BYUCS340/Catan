@@ -1,7 +1,9 @@
 package client.map.model.objects;
 
+import client.map.MapException;
 import client.map.model.Coordinate;
 import shared.definitions.HexType;
+import shared.definitions.PortType;
 
 /**
  * Used to store information about a Hex.
@@ -12,6 +14,7 @@ public class Hex {
 
 	private HexType type;
 	private Coordinate point;
+	private PortType port;
 	
 	/**
 	 * Creates a hex object.
@@ -22,6 +25,7 @@ public class Hex {
 	{
 		this.type = type;
 		this.point = point;
+		this.port = PortType.NONE;
 	}
 
 	/**
@@ -36,6 +40,78 @@ public class Hex {
 	 */
 	public Coordinate getPoint() {
 		return point;
+	}
+	
+	/**
+	 * Gets the coordinate of the top left point.
+	 * @return The point.
+	 */
+	public Coordinate getTopLeftCoordinate()
+	{
+		return point.GetNorth();
+	}
+	
+	/**
+	 * Gets the coordinate of the left point.
+	 * @return The point.
+	 */
+	public Coordinate getLeftCoordinate()
+	{
+		return point;
+	}
+	
+	/**
+	 * Gets the coordinate of the bottom left point.
+	 * @return The point.
+	 */
+	public Coordinate getBottomLeftCoordinate()
+	{
+		return point.GetSouth();
+	}
+	
+	/**
+	 * Gets the coordinate of the top right point.
+	 * @return The point.
+	 */
+	public Coordinate getTopRightCoordinate()
+	{
+		return point.GetNorthEast();
+	}
+	
+	/**
+	 * Gets the coordinate of the right point (opposed to the wrong one?...)
+	 * @return The point.
+	 */
+	public Coordinate getRightCoordinate()
+	{
+		return point.GetEast();
+	}
+	
+	/**
+	 * Gets the coordinate of the bottom right point.
+	 * @return The point.
+	 */
+	public Coordinate getBottomRightCoordinate()
+	{
+		return point.GetSouthEast();
+	}
+
+	/**
+	 * @return the port
+	 */
+	public PortType getPort() {
+		return port;
+	}
+
+	/**
+	 * @param port the port to set
+	 * @throws MapException Thrown when a port can't be added to the hex.
+	 */
+	public void setPort(PortType port) throws MapException {
+		if (this.type != HexType.WATER)
+			throw new MapException("Whoa there. You can't add a port to dry land. Who do you think you are? Noah?");
+		
+		this.port = port;
 	}
 
 	@Override

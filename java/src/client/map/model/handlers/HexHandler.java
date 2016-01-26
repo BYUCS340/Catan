@@ -1,6 +1,7 @@
 package client.map.model.handlers;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import client.map.MapException;
@@ -69,6 +70,15 @@ public class HexHandler {
 		else
 			throw new MapException("Like Genosis, the requested hex could not be found. "
 					+ "It must not exist.");
+	}
+	
+	/**
+	 * Gets all the hexes in the map.
+	 * @return A iterator to all the hexes.
+	 */
+	public Iterator<Hex> GetAllHexes()
+	{
+		return java.util.Collections.unmodifiableCollection(hexes.values()).iterator();
 	}
 	
 	private int GetKey(Hex hex)

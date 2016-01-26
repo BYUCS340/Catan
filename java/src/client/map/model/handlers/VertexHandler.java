@@ -1,11 +1,14 @@
 package client.map.model.handlers;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import client.map.MapException;
 import client.map.model.Coordinate;
 import client.map.model.objects.Vertex;
+import shared.definitions.CatanColor;
+import shared.definitions.PieceType;
 
 /**
  * Stores and manages the vertices found in a map.
@@ -37,9 +40,23 @@ public class VertexHandler {
 		}
 	}
 	
+	/**
+	 * Determines if there is a vertex associated with the coordinate.
+	 * @param point The coordinate to check.
+	 * @return True if one exists, else false.
+	 */
 	public boolean ContainsVertex(Coordinate point)
 	{
 		return verticies.containsKey(GetKey(point));
+	}
+	
+	/**
+	 * Gets all the registered verticies.
+	 * @return The vertex list.
+	 */
+	public Iterator<Vertex> GetVerticies()
+	{
+		return java.util.Collections.unmodifiableCollection(verticies.values()).iterator();
 	}
 	
 	/**
@@ -54,6 +71,39 @@ public class VertexHandler {
 			return verticies.get(GetKey(point));
 		else
 			throw new MapException("The requested vertex doesn't exist.");
+	}
+	
+	/**
+	 * Removes a city or settlement from the map.
+	 * @param point The coordinate to remove it from.
+	 * @throws MapException Why the village couldn't be removed.
+	 */
+	public void ClearVillage(Coordinate point) throws MapException
+	{
+		GetVertex(point).ClearType();
+	}
+	
+	/**
+	 * Adds a settlement to the map.
+	 * @param point The point to add the settlement to.
+	 * @param color The color of the settlement (this sounds a little racist ... don't take it
+	 * 				out of context).
+	 * @throws MapException Why the settlement couldn't be added.
+	 */
+	public void SetSettlement(Coordinate point, CatanColor color) throws MapException
+	{
+		GetVertex(point).SetType(PieceType.SETTLEMENT, color);
+	}
+	
+	/**
+	 * Adds a city to the map.
+	 * @param point The point to add the city to.
+	 * @param color The color of the city.
+	 * @throws MapException Why the city couldn't be added.
+	 */
+	public void SetCity(Coordinate point, CatanColor color) throws MapException
+	{
+		GetVertex(point).SetType(PieceType.CITY, color);
 	}
 	
 	private int GetKey(Coordinate point)

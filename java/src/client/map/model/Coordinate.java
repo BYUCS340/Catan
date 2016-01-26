@@ -106,6 +106,24 @@ public class Coordinate {
 	public int getY() {
 		return y;
 	}
+	
+	/**
+	 * Determines if the coordinate is left handed.
+	 * @return True if yes, else false.
+	 */
+	public boolean isLeftHandCoordinate()
+	{
+		return (x + y) % 2 == 1;
+	}
+	
+	/**
+	 * Determines if the coordinate is right handed.
+	 * @return True is yes, else false.
+	 */
+	public boolean isRightHandCoordinate()
+	{
+		return (x + y) % 2 == 0;
+	}
 
 	@Override
 	public int hashCode() {

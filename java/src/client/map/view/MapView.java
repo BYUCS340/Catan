@@ -1,4 +1,4 @@
-package client.map;
+package client.map.view;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -6,8 +6,10 @@ import javax.swing.*;
 
 import client.base.*;
 import client.data.*;
+import client.map.IMapController;
+import client.map.model.Coordinate;
+import client.map.model.MapModel;
 import shared.definitions.*;
-import shared.locations.*;
 
 /**
  * Implementation for the map view
@@ -42,47 +44,11 @@ public class MapView extends PanelView implements IMapView
 		
 		map.setController(controller);
 	}
-	
+
 	@Override
-	public void addHex(HexLocation hexLoc, HexType hexType)
+	public void SetModel(MapModel model)
 	{
-		map.addHex(hexLoc, hexType);
-	}
-	
-	@Override
-	public void addNumber(HexLocation hexLoc, int num)
-	{
-		map.addNumber(hexLoc, num);
-	}
-	
-	@Override
-	public void addPort(EdgeLocation edgeLoc, PortType portType)
-	{
-		map.placePort(edgeLoc, portType);
-	}
-	
-	@Override
-	public void placeRoad(EdgeLocation edgeLoc, CatanColor color)
-	{
-		map.placeRoad(edgeLoc, color);
-	}
-	
-	@Override
-	public void placeSettlement(VertexLocation vertLoc, CatanColor color)
-	{
-		map.placeSettlement(vertLoc, color);
-	}
-	
-	@Override
-	public void placeCity(VertexLocation vertLoc, CatanColor color)
-	{
-		map.placeCity(vertLoc, color);
-	}
-	
-	@Override
-	public void placeRobber(HexLocation hexLoc)
-	{
-		map.placeRobber(hexLoc);
+		map.SetMapModel(model);
 	}
 	
 	@Override
@@ -96,6 +62,11 @@ public class MapView extends PanelView implements IMapView
 		overlay.showModal();
 	}
 	
+	@Override
+	public void RefreshView() {
+		map.repaint();
+	}
+	
 	private IMapController overlayController = new IMapController() {
 		
 		@Override
@@ -106,72 +77,60 @@ public class MapView extends PanelView implements IMapView
 		}
 		
 		@Override
-		public boolean canPlaceRoad(EdgeLocation edgeLoc)
+		public boolean canPlaceRoad(Coordinate p1, Coordinate p2)
 		{
-			return getController().canPlaceRoad(edgeLoc);
+			return getController().canPlaceRoad(p1, p2);
 		}
 		
 		@Override
-		public boolean canPlaceSettlement(VertexLocation vertLoc)
+		public boolean canPlaceSettlement(Coordinate point)
 		{
-			return getController().canPlaceSettlement(vertLoc);
+			return getController().canPlaceSettlement(point);
 		}
 		
 		@Override
-		public boolean canPlaceCity(VertexLocation vertLoc)
+		public boolean canPlaceCity(Coordinate point, CatanColor color)
 		{
-			return getController().canPlaceCity(vertLoc);
+			return getController().canPlaceCity(point, color);
 		}
 		
 		@Override
-		public boolean canPlaceRobber(HexLocation hexLoc)
+		public boolean canPlaceRobber(Coordinate point)
 		{
-			return getController().canPlaceRobber(hexLoc);
+			return getController().canPlaceRobber(point);
 		}
 		
 		@Override
-		public void placeRoad(EdgeLocation edgeLoc)
+		public void placeRoad(Coordinate p1, Coordinate p2, CatanColor color)
 		{
-			
 			closeModal();
-			getController().placeRoad(edgeLoc);
+			getController().placeRoad(p1, p2, color);
 		}
 		
 		@Override
-		public void placeSettlement(VertexLocation vertLoc)
+		public void placeSettlement(Coordinate point, CatanColor color)
 		{
-			
 			closeModal();
-			getController().placeSettlement(vertLoc);
+			getController().placeSettlement(point, color);
 		}
 		
 		@Override
-		public void placeCity(VertexLocation vertLoc)
+		public void placeCity(Coordinate point, CatanColor color)
 		{
-			
 			closeModal();
-			getController().placeCity(vertLoc);
+			getController().placeCity(point, color);
 		}
 		
 		@Override
-		public void placeRobber(HexLocation hexLoc)
+		public void placeRobber(Coordinate point)
 		{
-			
 			closeModal();
-			getController().placeRobber(hexLoc);
-		}
-		
-		@Override
-		public void startMove(PieceType pieceType, boolean isFree,
-							  boolean allowDisconnected)
-		{
-			assert false;
+			getController().placeRobber(point);
 		}
 		
 		@Override
 		public void cancelMove()
 		{
-			
 			closeModal();
 			getController().cancelMove();
 		}
@@ -198,6 +157,11 @@ public class MapView extends PanelView implements IMapView
 		{
 			overlay.cancelDrop();
 			overlay.closeModal();
+		}
+
+		@Override
+		public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {
+			assert false;
 		}
 	};
 	
@@ -306,6 +270,5 @@ public class MapView extends PanelView implements IMapView
 			}
 		}
 	}
-	
 }
 
