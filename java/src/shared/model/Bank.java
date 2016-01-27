@@ -241,6 +241,15 @@ public class Bank
 	}
 	
 	/**
+	 * A little bit of a simple method but eh.
+	 * @return the number of armys in the bank
+	 */
+	public int getArmyCount()
+	{
+		return this.getDevCardCount(DevCardType.SOLDIER);
+	}
+	
+	/**
 	 * Gets the total number of dev cards held
 	 * @return
 	 */

@@ -5,6 +5,7 @@ import java.util.List;
 import client.map.MapController;
 import shared.definitions.ResourceType;
 import shared.model.chat.ChatBox;
+import shared.networking.transport.NetGameModel;
 
 /**
  * The game manager class acts as a facade between the player/game objects and the ServerProxy/UI
@@ -29,6 +30,34 @@ public class GameManager
 		return 4; // chosen by fair dice roll
 				  // guaranteed to be random
 	}
+	
+	
+	//--------------------------------------------------------------------------
+	//Networking methods
+	
+	/**
+	 * Loads in a game 
+	 * @param model the model to be loaded in
+	 * @throws ModelException if model is incorrect
+	 */
+	public void loadGame(NetGameModel model) throws ModelException
+	{
+		throw new ModelException();
+	}
+	
+	/**
+	 * What the poller pokes to refresh the game model from teh server
+	 * @see client.networking.Poller
+	 */
+	public void refreshFromServer() throws ModelException
+	{
+		NetGameModel model = null;
+		this.loadGame(model);
+	}
+	
+	
+	//--------------------------------------------------------------------------
+	//Player Turn Game methods
 	
 	/**
 	 * Attempts to build a road
@@ -82,14 +111,30 @@ public class GameManager
 		return 4;
 	}
 	
+	
+	//--------------------------------------------------------------------------
+	//Chat methods
 	/**
-	 * When the player chats
+	 * When the player chats currently playing 
 	 * @param message
 	 */
 	public void currentPlayerChat(String message)
 	{
-		waterCooler.put(message, gameState.activePlayerIndex);
+		this.playerChat(gameState.activePlayerIndex, message);
 	}
+	
+	/**
+	 * Chats for the specified player
+	 * @param playerId 0-3
+	 * @param message
+	 */
+	public void playerChat(int playerId, String message)
+	{
+		waterCooler.put(message, playerId);
+	}
+	
+	//--------------------------------------------------------------------------
+	//Game methods
 	
 	/**
 	 * Starts the game
