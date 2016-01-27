@@ -5,6 +5,7 @@ import java.util.List;
 import client.map.MapController;
 import shared.definitions.ResourceType;
 import shared.model.chat.ChatBox;
+import shared.networking.NetGameModel;
 
 /**
  * The game manager class acts as a facade between the player/game objects and the ServerProxy/UI
@@ -28,6 +29,20 @@ public class GameManager
 	{
 		return 4; // chosen by fair dice roll
 				  // guaranteed to be random
+	}
+	
+	
+	//--------------------------------------------------------------------------
+	//Networking methods
+	
+	/**
+	 * Loads in a game 
+	 * @param model the model to be loaded in
+	 * @throws ModelException if model is incorrect
+	 */
+	public void loadGame(NetGameModel model) throws ModelException
+	{
+		throw new ModelException();
 	}
 	
 	/**
