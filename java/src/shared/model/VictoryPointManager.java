@@ -10,6 +10,7 @@ public class VictoryPointManager
 	private int currentLongestRoadPlayer = -1;
 	private int currentLargestArmyPlayer = -1;
 	private int[] victoryPoints = new int[4];
+	private int currentLargestArmySize = 0;
 	
 	private final int LongestRoadValue = 2;
 	private final int LargestArmyValue = 2;
@@ -80,6 +81,20 @@ public class VictoryPointManager
 		adjustPlayersPoints(currentLargestArmyPlayer, LargestArmyValue);
 		
 		return true;
+	}
+	
+	/**
+	 * Checks to see a player's army size, if so update their points accordingly
+	 * @param playerIndex 0-3
+	 * @param armySize 0-10?
+	 */
+	public void checkPlayerArmySize(int playerIndex, int armySize)
+	{
+		if (this.currentLargestArmySize < armySize)
+		{
+			this.currentLargestArmyPlayer = armySize;
+			this.setPlayerToHaveLargestArmy(playerIndex);
+		}
 	}
 	
 	/**
