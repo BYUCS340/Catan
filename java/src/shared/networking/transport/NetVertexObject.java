@@ -11,7 +11,8 @@ public abstract class NetVertexObject
 	 */
 	public NetVertexObject()
 	{
-		
+		owner = -1;
+		netEdgeLocation = new NetEdgeLocation();
 	}
 	
 	/**

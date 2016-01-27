@@ -1,5 +1,7 @@
 package shared.networking.transport;
 
+import java.util.List;
+
 public class NetGameModel
 {
 	NetLog netGameLog;
@@ -9,6 +11,9 @@ public class NetGameModel
 	NetChat netChat;
 	NetTradeOffer netTradeOffer;
 	NetTurnTracker netTurnTracker;
+	List<NetRoad> netRoads;
+	List<NetVertexObject> netCities;
+	List<NetVertexObject> netSettlements;
 	int winner;
 	int version;
 	
