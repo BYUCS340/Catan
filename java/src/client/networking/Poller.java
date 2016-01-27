@@ -1,5 +1,9 @@
 package client.networking;
-
+/**
+ * The poller
+ * @author matthewcarlson
+ *
+ */
 public class Poller 
 {
 
