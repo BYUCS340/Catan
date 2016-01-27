@@ -7,6 +7,10 @@ public class NetLog
 {
 	List<String> lines;
 	
+	/**
+	 * Default constructor, instantiates new arraylist of
+	 * Strings
+	 */
 	public NetLog(){
 		lines = new ArrayList<String>();
 	}
