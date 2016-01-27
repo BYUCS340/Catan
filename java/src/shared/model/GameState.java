@@ -3,7 +3,7 @@ package shared.model;
 /**
  * An object that keeps track of whose turn it is.
  * @author matthewcarlson, garrettegan
- *
+ * @todo 
  */
 public class GameState
 {
