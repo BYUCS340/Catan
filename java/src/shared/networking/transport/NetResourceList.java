@@ -1,26 +1,27 @@
 package shared.networking.transport;
 
-public class NetBank
+public class NetResourceList
 {
 	int numBrick;
-	int numWood;
+	int numOre;
 	int numSheep;
 	int numWheat;
-	int numOre;
+	int numWood;
 	
 	/**
-	 * Default constructor, sets all values to 0
+	 * Default Constructor. Initializes all resources to 0.
 	 */
-	public NetBank(){
-		numBrick = 0;
-		numWood = 0;
-		numSheep = 0;
-		numWheat = 0;
-		numOre = 0;
+	public NetResourceList()
+	{
+		numBrick=0;
+		numOre=0;
+		numSheep=0;
+		numWheat=0;
+		numWood=0;
 	}
 
 	/**
-	 * @return the numBrick
+	 * @return numBrick
 	 */
 	public int getNumBrick()
 	{
@@ -36,19 +37,19 @@ public class NetBank
 	}
 
 	/**
-	 * @return numWood
+	 * @return numOre
 	 */
-	public int getNumWood()
+	public int getNumOre()
 	{
-		return numWood;
+		return numOre;
 	}
 
 	/**
-	 * @param numWood the numWood to set
+	 * @param numOre the numOre to set
 	 */
-	public void setNumWood(int numWood)
+	public void setNumOre(int numOre)
 	{
-		this.numWood = numWood;
+		this.numOre = numOre;
 	}
 
 	/**
@@ -84,20 +85,21 @@ public class NetBank
 	}
 
 	/**
-	 * @return numOre
+	 * @return numWood
 	 */
-	public int getNumOre()
+	public int getNumWood()
 	{
-		return numOre;
+		return numWood;
 	}
 
 	/**
-	 * @param numOre the numOre to set
+	 * @param numWood the numWood to set
 	 */
-	public void setNumOre(int numOre)
+	public void setNumWood(int numWood)
 	{
-		this.numOre = numOre;
+		this.numWood = numWood;
 	}
+	
 	
 	
 }
