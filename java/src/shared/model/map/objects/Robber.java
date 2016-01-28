@@ -1,4 +1,4 @@
-package client.map.model.objects;
+package shared.model.map.objects;
 
 /**
  * Used to store information about the robber.
@@ -35,5 +35,14 @@ public class Robber {
 	public boolean isOnHex(Hex hex)
 	{
 		return hex.equals(placedOn);
+	}
+	
+	/**
+	 * Gets the hex that the robber is on.
+	 * @return The hex.
+	 */
+	public Hex GetHex()
+	{
+		return placedOn;
 	}
 }
