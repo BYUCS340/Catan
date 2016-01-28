@@ -20,12 +20,34 @@ import shared.networking.transport.NetGameModel;
 public class RealServerProxy implements ServerProxy
 {
 	Cookie userCookie;
+	private String SERVER_HOST;
+	private int SERVER_PORT;
+	private String URL_PREFIX;
+	private final String HTTP_GET = "GET";
+	private final String HTTP_POST = "POST";
 	
 	/**
-	 * Default constructor. Sets up connection with the server.
+	 * Default constructor. Sets up connection with the server with default
+	 * parameters.
 	 */
-	public RealServerProxy(){
-		// TODO implement
+	public RealServerProxy()
+	{
+		//TODO implement
+		SERVER_HOST = "localhost";
+		SERVER_PORT = 8081;
+		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
+	}
+	
+	/**
+	 * Sets up connection with the server with specified parameters
+	 * @param server_host this string represents the hostname of the server
+	 * @param server_port this int is the port to send requests to on the server
+	 */
+	public RealServerProxy(String server_host, int server_port)
+	{
+		SERVER_HOST = server_host;
+		SERVER_PORT = server_port;
+		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
 	}
 
 	/* (non-Javadoc)
