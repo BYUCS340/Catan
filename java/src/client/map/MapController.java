@@ -6,6 +6,9 @@ import shared.model.map.MapModel;
 import shared.model.map.objects.Edge;
 import shared.model.map.objects.Hex;
 import shared.model.map.objects.Vertex;
+
+import java.util.Iterator;
+
 import client.base.*;
 import client.data.*;
 import client.map.view.IMapView;
@@ -116,6 +119,16 @@ public class MapController extends Controller implements IMapController {
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	/**
+	 * Gets the settlements or villages that are associated with a role.
+	 * @param role The role of the dice.
+	 * @return The associated villages.
+	 */
+	public Iterator<Transaction> GetVillages(int role)
+	{
+		return null;
 	}
 
 	public void placeRoad(Coordinate p1, Coordinate p2, CatanColor color)
