@@ -44,6 +44,16 @@ public class GameActionLog
 		playerNames.set(playerID, name);
 	}
 	
+	/**
+	 * Logs an action the game Action log
+	 * @param playerID
+	 * @param action
+	 */
+	public void logAction(int playerID, String action)
+	{
+		
+	}
+	
 	
 
 }

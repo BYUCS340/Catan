@@ -76,6 +76,7 @@ public class GameManager
 	 */
 	public int RollDice() throws ModelException
 	{
+		log.logAction(this.CurrentPlayersTurn(), "rolled a 4");
 		gameState.startBuildPhase();
 		//Call map to update the get the transacations
 		return 4; // chosen by fair dice roll
