@@ -3,12 +3,26 @@
  */
 package client.networking;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.List;
+
+import org.json.JSONObject;
 
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.networking.Cookie;
+import shared.networking.JSONSerializer;
+import shared.networking.Serializer;
+import shared.networking.UserCookie;
 import shared.networking.transport.NetAI;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
@@ -20,11 +34,13 @@ import shared.networking.transport.NetGameModel;
 public class RealServerProxy implements ServerProxy
 {
 	Cookie userCookie;
+	int gameID;
 	private String SERVER_HOST;
 	private int SERVER_PORT;
 	private String URL_PREFIX;
 	private final String HTTP_GET = "GET";
 	private final String HTTP_POST = "POST";
+	private Serializer serializer;
 	
 	/**
 	 * Default constructor. Sets up connection with the server with default
@@ -33,9 +49,12 @@ public class RealServerProxy implements ServerProxy
 	public RealServerProxy()
 	{
 		//TODO implement
+		serializer = new JSONSerializer();
 		SERVER_HOST = "localhost";
 		SERVER_PORT = 8081;
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
+		userCookie = null;
+		gameID = -1;
 	}
 	
 	/**
@@ -45,9 +64,12 @@ public class RealServerProxy implements ServerProxy
 	 */
 	public RealServerProxy(String server_host, int server_port)
 	{
+		serializer = new JSONSerializer();
 		SERVER_HOST = server_host;
 		SERVER_PORT = server_port;
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
+		userCookie = null;
+		gameID = -1;
 	}
 
 	/* (non-Javadoc)
@@ -64,10 +86,22 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#registerUser(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean registerUser(String username, String password)
+	public boolean registerUser(String username, String password) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return false;
+		String postData = serializer.sCredentials(username, password);
+		String urlPath = "/user/register";
+		try{
+			String response = doJSONPost(urlPath, postData, false, false);
+		}
+		catch(ServerProxyException e){
+			if(e.getMessage().contains("Failed to register")){
+				return false;
+			}
+			else
+				throw e;
+		}
+		
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -299,5 +333,85 @@ public class RealServerProxy implements ServerProxy
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	private String doJSONPost(String urlPath, String postData, boolean getUserCookie, 
+			boolean getGameCookie) throws ServerProxyException
+	{
+		String result = null;
+		try
+		{
+			//Set up connection and connect to the specified path
+			URL url = new URL(URL_PREFIX + urlPath);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod(HTTP_POST);
+			connection.setDoOutput(true);
+			connection.connect();
+			
+			//send JSON data
+			OutputStream os = connection.getOutputStream();
+			OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
+			osw.write(postData);
+			osw.flush();
+			osw.close();
+			
+			//get the server's response
+			if(connection.getResponseCode() == HttpURLConnection.HTTP_OK){
+				BufferedReader br = new BufferedReader(new InputStreamReader( connection.getInputStream(),"utf-8"));
+				String line = null;
+				StringBuilder sb = new StringBuilder();
+				while ((line = br.readLine()) != null) {
+				    sb.append(line + "\n");
+				}
+				br.close();	
+				result = sb.toString();
+				
+				//parse the header, if requested
+				if(getUserCookie){
+					String uCookie = connection.getHeaderField("Set-cookie");
+					uCookie = processUserCookie(uCookie);
+					JSONObject obj = new JSONObject(URLDecoder.decode(uCookie));
+					String tempUsername = obj.getString("name");
+					String tempPassword = obj.getString("password");
+					int tempPlayerID = obj.getInt("playerID");
+					
+					userCookie = new UserCookie(uCookie, tempUsername, tempPassword, tempPlayerID);					
+				}
+				else if(getGameCookie){
+					String gCookie = connection.getHeaderField("Set-cookie");
+					gameID = processGameCookie(gCookie);
+					
+				}
+				
+			}
+			else{
+				throw new ServerProxyException("Server returned response code that was not OK in "
+						+"client.networking.RealServerProxy.doJSONPost");	
+			}
+		} catch (MalformedURLException e)
+		{
+			throw new ServerProxyException("MalformedURLException thrown in client.networking.RealServerProxy.doJSONPost\n"
+					+e.getStackTrace());	
+		} catch (IOException e)
+		{
+			throw new ServerProxyException("IOException thrown in client.networking.RealServerProxy.doJSONPost\n"
+					+e.getStackTrace());
+		}
+		
+		return result;
+	}
+	
+	private String processUserCookie(String uCookie){
+		String tempStr = uCookie.substring(11);
+		tempStr = tempStr.substring(0, tempStr.indexOf(";Path"));
+		return tempStr;
+	}
+	
+	private int processGameCookie(String gCookie){
+		String tempStr = gCookie.substring(11, gCookie.indexOf(';'));
+		return Integer.parseInt(tempStr);
+	}
+	
+	
+	
 
 }

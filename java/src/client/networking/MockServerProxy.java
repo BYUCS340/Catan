@@ -41,7 +41,7 @@ public class MockServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#registerUser(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean registerUser(String username, String password)
+	public boolean registerUser(String username, String password) 
 	{
 		// TODO Auto-generated method stub
 		return false;
