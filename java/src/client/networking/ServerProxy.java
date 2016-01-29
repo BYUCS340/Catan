@@ -17,14 +17,16 @@ public interface ServerProxy
 	 * @param username The username of the user to log in
 	 * @param password The password of the user to log in
 	 * @throws ServerProxyException if the user could not be logged in
+	 * @return boolean true when the user could be logged in, false when he couldn't
 	 */
-	public void loginUser(String username, String password) throws ServerProxyException;
+	public boolean loginUser(String username, String password) throws ServerProxyException;
 	
 	/**
 	 * Registers a user with the specified username and password
 	 * @param username The username of the user to be registered
 	 * @param password The password of the user to be registered
 	 * @throws ServerProxyException if this user could not be registered
+	 * @return boolean true when the user could be registered, false when he couldn't
 	 */
 	public boolean registerUser(String username, String password) throws ServerProxyException;
 	

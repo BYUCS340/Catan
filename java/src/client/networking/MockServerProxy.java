@@ -31,9 +31,10 @@ public class MockServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#loginUser(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void loginUser(String username, String password)
+	public boolean loginUser(String username, String password)
 	{
 		// TODO Auto-generated method stub
+		return false;
 
 	}
 

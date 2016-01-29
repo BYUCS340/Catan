@@ -5,6 +5,7 @@ package client.networking;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -13,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
+import java.util.Scanner;
 
 import org.json.JSONObject;
 
@@ -33,7 +35,7 @@ import shared.networking.transport.NetGameModel;
  */
 public class RealServerProxy implements ServerProxy
 {
-	Cookie userCookie;
+	UserCookie userCookie;
 	int gameID;
 	private String SERVER_HOST;
 	private int SERVER_PORT;
@@ -76,9 +78,23 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#loginUser(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void loginUser(String username, String password)
+	public boolean loginUser(String username, String password) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
+		String postData = serializer.sCredentials(username, password);
+		String urlPath = "/user/login";
+		
+		try{
+			String response = doJSONPost(urlPath, postData, true, false);
+		}
+		catch(ServerProxyException e){
+			if(e.getMessage().toLowerCase().contains("failed to login")){
+				return false;
+			}
+			else
+				throw e;
+		}
+		
+		return true;
 
 	}
 
@@ -94,7 +110,7 @@ public class RealServerProxy implements ServerProxy
 			String response = doJSONPost(urlPath, postData, false, false);
 		}
 		catch(ServerProxyException e){
-			if(e.getMessage().contains("Failed to register")){
+			if(e.getMessage().toLowerCase().contains("failed to register")){
 				return false;
 			}
 			else
@@ -384,12 +400,18 @@ public class RealServerProxy implements ServerProxy
 				
 			}
 			else{
-				throw new ServerProxyException("Server returned response code that was not OK in "
-						+"client.networking.RealServerProxy.doJSONPost");	
+				InputStream is = connection.getErrorStream();
+				Scanner scan = new Scanner(is);
+				StringBuilder sb = new StringBuilder();
+				while(scan.hasNextLine()){
+					sb.append(scan.nextLine());
+				}
+				scan.close();
+				throw new ServerProxyException(sb.toString());	
 			}
 		} catch (MalformedURLException e)
 		{
-			throw new ServerProxyException("MalformedURLException thrown in client.networking.RealServerProxy.doJSONPost\n"
+			throw new ServerProxyException("MalformedURLException thrown in client.networking.RealServerProxy.doJSONPost + " + urlPath + "\n"
 					+e.getStackTrace());	
 		} catch (IOException e)
 		{
@@ -398,6 +420,15 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Gets the user cookie
+	 * @return the user cookie
+	 */
+	public UserCookie getUserCookie()
+	{
+		return userCookie;
 	}
 	
 	private String processUserCookie(String uCookie){
