@@ -16,22 +16,25 @@ public interface ServerProxy
 	 * successfully logged in. If not, a null user is returned
 	 * @param username The username of the user to log in
 	 * @param password The password of the user to log in
+	 * @throws ServerProxyException if the user could not be logged in
+	 * @return boolean true when the user could be logged in, false when he couldn't
 	 */
-	public void loginUser(String username, String password);
+	public boolean loginUser(String username, String password) throws ServerProxyException;
 	
 	/**
 	 * Registers a user with the specified username and password
 	 * @param username The username of the user to be registered
 	 * @param password The password of the user to be registered
-	 * @return true if the user could be registered, false if not
+	 * @throws ServerProxyException if this user could not be registered
+	 * @return boolean true when the user could be registered, false when he couldn't
 	 */
-	public boolean registerUser(String username, String password);
+	public boolean registerUser(String username, String password) throws ServerProxyException;
 	
 	/**
 	 * Fetches a list of ongoing games
 	 * @return a list of all ongoing games on the server
 	 */
-	public List<NetGame> listGames();
+	public List<NetGame> listGames() throws ServerProxyException;
 	
 	/**
 	 * Creates a game on the server
@@ -40,35 +43,38 @@ public interface ServerProxy
 	 * @param randomPorts Whether the server should place random ports
 	 * @param name The name of the game to be created
 	 * @return a ProxyGame object that represents the game that was created
+	 * @throws ServerProxyException if something goes wrong
 	 */
-	public NetGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name);
+	public NetGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name) throws ServerProxyException;
 	
 	/**
 	 * 
 	 * @param color the color the user wishes to represent him
 	 * @return a ProxyGame object that represents the game the user joined
+	 * @throws ServerProxyException if something goes wrong
 	 */
-	public NetGame joinGame(String color); 
+	public NetGame joinGame(String color) throws ServerProxyException; 
 
 	/**
 	 * Retrieves the game model from the server
 	 * @return a NetGameModel object
+	 * @throws ServerProxyException if something goes wrong
 	 */
-	public NetGameModel getGameModel();
+	public NetGameModel getGameModel() throws ServerProxyException;
 	
 	/**
 	 * Adds an AI to the game
 	 * @param aiType the type of AI the user wishes to add
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public void addAI(String aiType);
+	public void addAI(String aiType) throws ServerProxyException;
 	
 	/**
 	 * 
 	 * @return a list of supported AI player types
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public List<NetAI> listAI();
+	public List<NetAI> listAI() throws ServerProxyException;
 	
 	
 	/**
@@ -77,7 +83,7 @@ public interface ServerProxy
 	 * @return A NetGameModel object
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel sendChat(String content);
+	public NetGameModel sendChat(String content) throws ServerProxyException;
 	
 	/**
 	 * Reports the result of a dice roll to the server
@@ -85,7 +91,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel rollNumber(int roll);
+	public NetGameModel rollNumber(int roll) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has decided to rob another player
@@ -94,7 +100,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel robPlayer(int victimIndex, HexLocation location);
+	public NetGameModel robPlayer(int victimIndex, HexLocation location) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has finished his turn
@@ -102,14 +108,14 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel finishTurn();
+	public NetGameModel finishTurn() throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has bought a development card
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel buyDevCard();
+	public NetGameModel buyDevCard() throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has played a year of plenty card
@@ -118,7 +124,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel yearOfPlentyCard(String resource1, String resource2);
+	public NetGameModel yearOfPlentyCard(String resource1, String resource2) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has played a road building card
@@ -127,7 +133,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel roadBuildingCard(EdgeLocation location1, EdgeLocation location2);
+	public NetGameModel roadBuildingCard(EdgeLocation location1, EdgeLocation location2) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has played a soldier card
@@ -136,7 +142,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel soldierCard(int victimIndex, HexLocation hexLocation);
+	public NetGameModel soldierCard(int victimIndex, HexLocation hexLocation) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has played a monopoly card
@@ -144,14 +150,14 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel monopolyCard(String resource);
+	public NetGameModel monopolyCard(String resource) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has played a monument card
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel monumentCard();
+	public NetGameModel monumentCard() throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has decided to build a road
@@ -160,7 +166,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel buildRoad(EdgeLocation edgeLocation, boolean free);
+	public NetGameModel buildRoad(EdgeLocation edgeLocation, boolean free) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has decided to build a settlement
@@ -169,7 +175,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel buildSettlement(VertexLocation vertexLocation, boolean free);
+	public NetGameModel buildSettlement(VertexLocation vertexLocation, boolean free) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has decided to build a city
@@ -177,7 +183,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel buildCity(VertexLocation vertexLocation);
+	public NetGameModel buildCity(VertexLocation vertexLocation) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has decided to offer a trade to another player
@@ -188,7 +194,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel offerTrade(List<Integer> resourceList, int receiver);
+	public NetGameModel offerTrade(List<Integer> resourceList, int receiver) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server whether this player has decided to accept or reject a trade
@@ -196,7 +202,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel acceptTrade(boolean willAccept);
+	public NetGameModel acceptTrade(boolean willAccept) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has decided to initiate a maritime trade
@@ -206,7 +212,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel maritimeTrade(int ratio, String inputResource, String outputResource);
+	public NetGameModel maritimeTrade(int ratio, String inputResource, String outputResource) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has discarded cards
@@ -215,6 +221,6 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel discardCards(List<Integer> resourceList);
+	public NetGameModel discardCards(List<Integer> resourceList) throws ServerProxyException;
 	
 }
