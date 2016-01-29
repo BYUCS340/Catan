@@ -1,5 +1,7 @@
 package shared.model;
 
+import shared.definitions.GameStatus;
+
 /**
  * An object that keeps track of whose turn it is.
  * @author matthewcarlson, garrettegan

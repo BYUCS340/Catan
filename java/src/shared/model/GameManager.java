@@ -6,6 +6,7 @@ import java.util.List;
 import client.map.MapController;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
+import shared.definitions.GameStatus;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
@@ -76,6 +77,7 @@ public class GameManager
 	public int RollDice() throws ModelException
 	{
 		gameState.startBuildPhase();
+		//Call map to update the get the transacations
 		return 4; // chosen by fair dice roll
 				  // guaranteed to be random
 	}
@@ -234,6 +236,18 @@ public class GameManager
 	 */
 	public boolean CanBuildSettlement(int playerID, VertexLocation location)
 	{
+		if (!CanPlayerPlay(playerID))
+			return false;
+		try 
+		{
+			return GetPlayer(playerID).playerBank.canBuildRoad();
+		}
+		catch (ModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 		return false;
 	}
 	
