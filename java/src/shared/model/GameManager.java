@@ -6,6 +6,7 @@ import java.util.List;
 import client.map.MapController;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
+import shared.definitions.GameRound;
 import shared.definitions.GameStatus;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -478,5 +479,14 @@ public class GameManager
 	public GameStatus CurrentState()
 	{
 		return gameState.gameState;
+	}
+	
+	/**
+	 * Returns the current round of the game
+	 * @return
+	 */
+	public GameRound CurrentRound()
+	{
+		return gameState.gameRound;
 	}
 }
