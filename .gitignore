@@ -133,3 +133,5 @@ java/dist/catan-client.jar
 java/dist/catan-client.jar
 
 java/dist/catan-server.jar
+
+*.log

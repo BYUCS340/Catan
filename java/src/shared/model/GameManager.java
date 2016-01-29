@@ -1,8 +1,10 @@
 package shared.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import client.map.MapController;
+import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -17,13 +19,55 @@ import shared.networking.transport.NetGameModel;
  */
 public class GameManager
 {
+	public  MapController mapController; //this is exposed for easier access
+	
 	private GameState gameState;
 	private Bank gameBank;
 	private List<Player> players;
 	private VictoryPointManager victoryPointManager;
-	private MapController mapController;
 	private ChatBox waterCooler;
+	private GameActionLog log;
 	
+	/**
+	 * Constructor for the game manager
+	 * @post all players
+	 */
+	public GameManager(){
+		waterCooler = new ChatBox();
+		log = new GameActionLog();
+		players = new ArrayList<>();
+		gameBank = new Bank();
+		gameState = new GameState();
+		//mapController = new MapController();
+		victoryPointManager = new VictoryPointManager();
+	}
+	
+	/**
+	 * Adds a player to the game
+	 * @param name
+	 * @return the player index number 
+	 * @throws ModelException if there are too many players already in the game
+	 */
+	public int AddPlayer(String name, CatanColor color, boolean isHuman) throws ModelException
+	{
+		int newIndex = players.size();
+		if (newIndex > 3)
+		{
+			throw new ModelException();
+		}
+		Player newPlayer = new Player(name, newIndex, color, isHuman);
+		players.add(newPlayer);
+		return newIndex;
+	}
+	
+	/**
+	 * The number of players in a game
+	 * @return
+	 */
+	public int NumberActivePlayers()
+	{
+		return players.size();
+	}
 	/**
 	 * @see <a href="https://imgs.xkcd.com/comics/random_number.png">Sauce</a>
 	 * @post all player's banks will be added resources
@@ -57,7 +101,7 @@ public class GameManager
 	public void RefreshFromServer() throws ModelException
 	{
 		NetGameModel model = null;
-		this.loadGame(model);
+		this.LoadGame(model);
 	}
 	
 	
@@ -127,7 +171,7 @@ public class GameManager
 	public boolean CanPlayerPlay(int playerID)
 	{
 		//If we aren't in the building phase and this player isn't their turn
-		if (this.gameState.gameState != GameStatus.BUILDING || this.gameState.activePlayerIndex == playerID)
+		if (CurrentState() != GameStatus.BUILDING || this.gameState.activePlayerIndex == playerID)
 			return false;
 		else
 			return false;
@@ -154,7 +198,7 @@ public class GameManager
 	{
 		if (!CanPlayerPlay(playerID))
 			return false;
-		if (gameState.gameState == GameStatus.ROLLING)
+		if (CurrentState() == GameStatus.ROLLING)
 			return true;
 		else
 			return false;
@@ -168,7 +212,18 @@ public class GameManager
 	 */
 	public boolean CanBuildRoad(int playerID,EdgeLocation location)
 	{
-		return false;
+		if (!CanPlayerPlay(playerID))
+			return false;
+		try 
+		{
+			return GetPlayer(playerID).playerBank.canBuildRoad();
+		}
+		catch (ModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	/**
@@ -325,9 +380,9 @@ public class GameManager
 	 * When the player chats currently playing 
 	 * @param message
 	 */
-	public void currentPlayerChat(String message)
+	public void CurrentPlayerChat(String message)
 	{
-		this.playerChat(gameState.activePlayerIndex, message);
+		this.PlayerChat(gameState.activePlayerIndex, message);
 	}
 	
 	/**
@@ -335,7 +390,7 @@ public class GameManager
 	 * @param playerId 0-3
 	 * @param message
 	 */
-	public void playerChat(int playerId, String message)
+	public void PlayerChat(int playerId, String message)
 	{
 		waterCooler.put(message, playerId);
 	}
@@ -346,7 +401,7 @@ public class GameManager
 	/**
 	 * Starts the game
 	 */
-	public void startGame()
+	public void StartGame()
 	{
 		gameState.startGame();
 	}
@@ -354,7 +409,7 @@ public class GameManager
 	/**
 	 * Ends the current player's turn
 	 */
-	public void finishTurn()
+	public void FinishTurn()
 	{
 		gameState.activePlayerIndex++;
 		if (gameState.activePlayerIndex > 3)
@@ -366,7 +421,7 @@ public class GameManager
 	 * Gets the player index of the current player
 	 * @return 0 to 3 or -1 if no player is playing
 	 */
-	public int currentPlayersTurn()
+	public int CurrentPlayersTurn()
 	{
 		if (gameState.gameState == GameStatus.START)
 		{
@@ -405,7 +460,7 @@ public class GameManager
 	 * Returns the current State of the game
 	 * @return
 	 */
-	public GameStatus currentState()
+	public GameStatus CurrentState()
 	{
 		return gameState.gameState;
 	}
