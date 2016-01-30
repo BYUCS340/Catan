@@ -112,7 +112,7 @@ public class RealServerProxy implements ServerProxy
 		String postData = serializer.sCredentials(username, password);
 		String urlPath = "/user/register";
 		try{
-			String response = doJSONPost(urlPath, postData, false, false);
+			doJSONPost(urlPath, postData, false, false);
 		}
 		catch(ServerProxyException e){
 			if(e.getMessage().toLowerCase().contains("failed to register")){

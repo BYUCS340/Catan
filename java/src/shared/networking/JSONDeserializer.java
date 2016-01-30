@@ -11,9 +11,11 @@ import org.json.JSONObject;
 
 import shared.definitions.CatanColor;
 import shared.networking.transport.NetAI;
+import shared.networking.transport.NetBank;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 import shared.networking.transport.NetPlayer;
+import shared.networking.transport.NetResourceList;
 
 /**
  * @author pbridd
@@ -73,7 +75,6 @@ public class JSONDeserializer implements Deserializer
 	public NetPlayer parseNetPlayer(String rawData)
 	{
 		NetPlayer netPlayer = new NetPlayer();
-		
 		JSONObject obj = new JSONObject(rawData);
 		
 		CatanColor color = CatanColor.fromString(obj.getString("color"));
@@ -96,8 +97,44 @@ public class JSONDeserializer implements Deserializer
 	public NetGameModel parseNetGameModel(String rawData)
 	{
 		// TODO Auto-generated method stub
+		//setup needed objects
+		NetGameModel result = new NetGameModel();
+		JSONObject obj = new JSONObject(rawData);
+		
+		//extract simple information from the JSON
+		int winner = obj.getInt("winner");
+		int version = obj.getInt("version");
+		
+		//extract objects from JSON
+		result.setNetBank((NetBank)parseNetResourceList(obj.getJSONObject("bank").toString()));
+		
+		
 		return null;
 	}
+	
+	public NetResourceList parseNetResourceList(String rawData)
+	{
+		//set up needed objects
+		NetResourceList result = new NetResourceList();
+		JSONObject obj = new JSONObject(rawData);
+		
+		//get data from object
+		int brick = obj.getInt("brick");
+		int ore = obj.getInt("ore");
+		int sheep = obj.getInt("sheep");
+		int wheat = obj.getInt("wheat");
+		int wood = obj.getInt("wood");
+		
+		//add data to new object
+		result.setNumBrick(brick);
+		result.setNumOre(ore);
+		result.setNumSheep(sheep);
+		result.setNumWheat(wheat);
+		result.setNumWood(wood);
+		
+		return result;
+	}
+	
 
 	@Override
 	public List<NetGame> parseNetGameList(String rawData)
