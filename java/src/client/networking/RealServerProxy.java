@@ -353,15 +353,25 @@ public class RealServerProxy implements ServerProxy
 	private String doJSONPost(String urlPath, String postData, boolean getUserCookie, 
 			boolean getGameCookie) throws ServerProxyException
 	{
+		HttpURLConnection connection = null;
 		String result = null;
 		try
 		{
 			//Set up connection and connect to the specified path
 			URL url = new URL(URL_PREFIX + urlPath);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod(HTTP_POST);
+			
+			//add cookie to headers if there is a logged-in user
+			if(userCookie != null){
+				String cookieString = getCookieString();
+				connection.setRequestProperty("Cookie", cookieString);	
+			}
+			
 			connection.setDoOutput(true);
 			connection.connect();
+			
+			
 			
 			//send JSON data
 			OutputStream os = connection.getOutputStream();
@@ -395,9 +405,8 @@ public class RealServerProxy implements ServerProxy
 				else if(getGameCookie){
 					String gCookie = connection.getHeaderField("Set-cookie");
 					gameID = processGameCookie(gCookie);
-					
 				}
-				
+				connection.disconnect();
 			}
 			else{
 				InputStream is = connection.getErrorStream();
@@ -407,16 +416,25 @@ public class RealServerProxy implements ServerProxy
 					sb.append(scan.nextLine());
 				}
 				scan.close();
+				connection.disconnect();
 				throw new ServerProxyException(sb.toString());	
 			}
 		} catch (MalformedURLException e)
 		{
 			throw new ServerProxyException("MalformedURLException thrown in client.networking.RealServerProxy.doJSONPost + " + urlPath + "\n"
-					+e.getStackTrace());	
+					+e.getStackTrace());
+			
 		} catch (IOException e)
 		{
 			throw new ServerProxyException("IOException thrown in client.networking.RealServerProxy.doJSONPost\n"
 					+e.getStackTrace());
+		}
+		finally
+		{
+			if(connection != null)
+			{
+				connection.disconnect();
+			}
 		}
 		
 		return result;
@@ -431,6 +449,18 @@ public class RealServerProxy implements ServerProxy
 		return userCookie;
 	}
 	
+	
+	/**
+	 * FOR DEBUGGING ONLY
+	 * TODO make private for distro
+	 * Clears all cookies
+	 */
+	public void clearCookies(){
+		userCookie = null;
+		gameID = -1;
+	}
+	
+	
 	private String processUserCookie(String uCookie){
 		String tempStr = uCookie.substring(11);
 		tempStr = tempStr.substring(0, tempStr.indexOf(";Path"));
@@ -440,6 +470,20 @@ public class RealServerProxy implements ServerProxy
 	private int processGameCookie(String gCookie){
 		String tempStr = gCookie.substring(11, gCookie.indexOf(';'));
 		return Integer.parseInt(tempStr);
+	}
+	
+	private String getCookieString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("catan.user=");
+		sb.append(userCookie.getCookieText());
+		
+		//add the game cookie information if it exists
+		if(gameID >= 0){
+			sb.append("; ");
+			sb.append("catan.game="+gameID);
+		}
+		
+		return sb.toString();
 	}
 	
 	

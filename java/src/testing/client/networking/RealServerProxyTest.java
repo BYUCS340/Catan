@@ -70,6 +70,8 @@ public class RealServerProxyTest
 		String password = uCookie.getPassword();
 		assertTrue(password.equalsIgnoreCase("rewq"));
 		
+		testProxy.clearCookies();
+		
 		//make sure bad login attempts are rejected without an exception
 		couldLogin = testProxy.loginUser("randomness", "MoreRand");
 		assertTrue(!couldLogin);
