@@ -2,6 +2,7 @@ package shared.networking;
 
 import java.util.List;
 
+import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -34,7 +35,7 @@ public interface Serializer
 	 * @param color The color the user requests
 	 * @return Serialized data
 	 */
-	public String sJoinGameReq(int id, String color);
+	public String sJoinGameReq(int id, CatanColor color);
 	
 	/**
 	 * Serializes a request to add AI to a game

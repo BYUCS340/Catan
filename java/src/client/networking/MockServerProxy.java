@@ -5,6 +5,7 @@ package client.networking;
 
 import java.util.List;
 
+import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -73,7 +74,7 @@ public class MockServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#joinGame(java.lang.String)
 	 */
 	@Override
-	public NetGame joinGame(String color)
+	public NetGame joinGame(int id, CatanColor color)
 	{
 		// TODO Auto-generated method stub
 		return null;

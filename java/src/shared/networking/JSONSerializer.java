@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -40,18 +41,28 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sCreateGameReq(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("randomTiles", randomTiles);
+		obj.put("randomNumbers", randomNumbers);
+		obj.put("randomPorts", randomPorts);
+		obj.put("name", name);
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)
 	 * @see shared.networking.Serializer#sJoinGameReq(int, java.lang.String)
 	 */
 	@Override
-	public String sJoinGameReq(int id, String color)
+	public String sJoinGameReq(int id, CatanColor color)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("id", id);
+		obj.put("color", CatanColor.toString(color));
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)

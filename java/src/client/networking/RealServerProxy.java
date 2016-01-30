@@ -18,6 +18,7 @@ import java.util.Scanner;
 
 import org.json.JSONObject;
 
+import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -145,19 +146,44 @@ public class RealServerProxy implements ServerProxy
 	 */
 	@Override
 	public NetGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
+		throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before creating a game!\n"
+					+ "Details: User cookie not found");
+		}
+		
+		String urlPath = "/games/create";
+		String postData = serializer.sCreateGameReq(randomTiles, randomNumbers, randomPorts, name);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGame createdGame = deserializer.parseNetGame(result);
+		
+		return createdGame;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#joinGame(java.lang.String)
 	 */
 	@Override
-	public NetGame joinGame(String color)
+	public NetGame joinGame(int id, CatanColor color) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before joining a game!\n"
+					+ "Details: User cookie not found");
+		}
+		
+		//send the request to the server
+		String urlPath = "/games/join";
+		String postData = serializer.sJoinGameReq(id, color);
+		String result = doJSONPost(urlPath, postData, false, true);
+		
+		//parse the result into a NetGame
+		NetGame joinedGame = deserializer.parseNetGame(result);
+		
+		return joinedGame;
 	}
 
 	/* (non-Javadoc)
@@ -360,6 +386,7 @@ public class RealServerProxy implements ServerProxy
 		return null;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private String doJSONPost(String urlPath, String postData, boolean getUserCookie, 
 			boolean getGameCookie) throws ServerProxyException
 	{
