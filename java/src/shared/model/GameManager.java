@@ -9,8 +9,7 @@ import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
 import shared.definitions.GameStatus;
 import shared.definitions.ResourceType;
-import shared.locations.EdgeLocation;
-import shared.locations.VertexLocation;
+import shared.model.map.Coordinate;
 import shared.model.chat.ChatBox;
 import shared.networking.transport.NetGameModel;
 
@@ -218,13 +217,14 @@ public class GameManager
 	 * @param location the edge's location
 	 * @return true if possible
 	 */
-	public boolean CanBuildRoad(int playerID,EdgeLocation location)
+	public boolean CanBuildRoad(int playerID,Coordinate location)
 	{
 		if (!CanPlayerPlay(playerID))
 			return false;
 		try 
 		{
-			return GetPlayer(playerID).playerBank.canBuildRoad();
+			if (!GetPlayer(playerID).playerBank.canBuildRoad())
+				return false;
 		}
 		catch (ModelException e)
 		{
@@ -232,6 +232,7 @@ public class GameManager
 			e.printStackTrace();
 			return false;
 		}
+		return true;
 	}
 	
 	/**
@@ -240,7 +241,7 @@ public class GameManager
 	 * @param location the vertex
 	 * @return
 	 */
-	public boolean CanBuildSettlement(int playerID, VertexLocation location)
+	public boolean CanBuildSettlement(int playerID, Coordinate location)
 	{
 		if (!CanPlayerPlay(playerID))
 			return false;
@@ -263,7 +264,7 @@ public class GameManager
 	 * @param location the vertex
 	 * @return
 	 */
-	public boolean CanBuildCity (int playerID, VertexLocation location)
+	public boolean CanBuildCity (int playerID, Coordinate location)
 	{
 		return false;
 	}
