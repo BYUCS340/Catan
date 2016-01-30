@@ -39,7 +39,6 @@ public class MapView extends PanelView implements IMapView
 	@Override
 	public void setController(IController controller)
 	{
-		
 		super.setController(controller);
 		
 		map.setController(controller);
@@ -194,7 +193,6 @@ public class MapView extends PanelView implements IMapView
 		public void startDrop(PieceType pieceType, CatanColor pieceColor,
 							  boolean isCancelAllowed)
 		{
-			
 			this.setOpaque(false);
 			this.setLayout(new BorderLayout());
 			this.setBorder(BorderFactory.createLineBorder(Color.black,
@@ -247,13 +245,11 @@ public class MapView extends PanelView implements IMapView
 		
 		public void cancelDrop()
 		{
-			
 			map.cancelDrop();
 		}
 		
 		private String getLabelText(PieceType pieceType)
 		{
-			
 			switch (pieceType)
 			{
 				case ROAD:

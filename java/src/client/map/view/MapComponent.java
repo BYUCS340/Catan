@@ -139,7 +139,6 @@ public class MapComponent extends JComponent
 	
 	public MapComponent copy()
 	{
-		
 		MapComponent copy = new MapComponent();
 		
 		copy.dropType = this.dropType;
