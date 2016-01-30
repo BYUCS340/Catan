@@ -12,8 +12,11 @@ import org.json.JSONObject;
 import shared.definitions.CatanColor;
 import shared.networking.transport.NetAI;
 import shared.networking.transport.NetBank;
+import shared.networking.transport.NetChat;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
+import shared.networking.transport.NetLine;
+import shared.networking.transport.NetLog;
 import shared.networking.transport.NetPlayer;
 import shared.networking.transport.NetResourceList;
 
@@ -105,8 +108,13 @@ public class JSONDeserializer implements Deserializer
 		int winner = obj.getInt("winner");
 		int version = obj.getInt("version");
 		
+		result.setWinner(winner);
+		result.setVersion(version);
+		
 		//extract objects from JSON
 		result.setNetBank((NetBank)parseNetResourceList(obj.getJSONObject("bank").toString()));
+		result.setNetGameLog(parseNetLog(obj.getJSONObject("log").toString()));
+		result.setNetChat((NetChat)parseNetLog(obj.getJSONObject("chat").toString()));
 		
 		
 		return null;
@@ -131,6 +139,44 @@ public class JSONDeserializer implements Deserializer
 		result.setNumSheep(sheep);
 		result.setNumWheat(wheat);
 		result.setNumWood(wood);
+		
+		return result;
+	}
+	
+	public NetLog parseNetLog(String rawData)
+	{
+		//set up needed objects
+		NetLog result = new NetLog();
+		JSONObject obj = new JSONObject(rawData);
+		
+		//extract data from JSON
+		JSONArray logLines = obj.getJSONArray("lines");
+		List<NetLine> lines = new ArrayList<NetLine>();
+		
+		for(int i = 0; i < logLines.length(); i++){
+			NetLine tempLine = parseNetLine(logLines.get(i).toString());
+			lines.add(tempLine);
+		}
+		
+		//add data to new object
+		result.setLines(lines);
+		
+		return result;
+	}
+	
+	public NetLine parseNetLine(String rawData)
+	{
+		//set up needed objects
+		NetLine result = new NetLine();
+		JSONObject obj = new JSONObject(rawData);
+		
+		//extract data from JSON
+		String message = obj.getString("message");
+		String source = obj.getString("source");
+		
+		//add data to new object
+		result.setMessage(message);
+		result.setSource(source);
 		
 		return result;
 	}

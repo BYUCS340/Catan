@@ -5,28 +5,29 @@ import java.util.List;
 
 public class NetLog
 {
-	List<String> lines;
+	List<NetLine> lines;
+	
 	
 	/**
-	 * Default constructor, instantiates new arraylist of
-	 * Strings
+	 * Default constructor, instantiates a new ArrayList
+	 * of Strings
 	 */
 	public NetLog(){
-		lines = new ArrayList<String>();
+		lines = new ArrayList<NetLine>();
 	}
 	
 	/**
 	 * Adds a line to the net log entry list
 	 * @param line The line to add to the log
 	 */
-	public void addLine(String line){
+	public void addLine(NetLine line){
 		lines.add(line);
 	}
 
 	/**
 	 * @return the log
 	 */
-	public List<String> getLines()
+	public List<NetLine> getLines()
 	{
 		return lines;
 	}
@@ -34,8 +35,9 @@ public class NetLog
 	/**
 	 * @param the log to set
 	 */
-	public void setLines(List<String> lines)
+	public void setLines(List<NetLine> lines)
 	{
 		this.lines = lines;
 	}
+
 }
