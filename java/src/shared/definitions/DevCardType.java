@@ -17,5 +17,31 @@ public enum DevCardType
 		}
 		return DevCardType.MONOPOLY;
 	}
+	
+	public static String toString(DevCardType type)
+	{
+		switch(type)
+		{
+			case SOLDIER: return "Solider";
+			case YEAR_OF_PLENTY: return "Year of Plenty";
+			case MONOPOLY: return "Monopoly";
+			case ROAD_BUILD: return "Road Builder";
+			case MONUMENT: return "Monument";
+		}
+		return "Unknown";
+	}
+	
+	public static DevCardType fromString(String s)
+	{
+		switch(s)
+		{
+			case "Solider": return DevCardType.SOLDIER;
+			case "Year of Plenty": return DevCardType.YEAR_OF_PLENTY;
+			case "Monopoly": return DevCardType.MONOPOLY;
+			case "Road Builder": return DevCardType.ROAD_BUILD;
+			case "Monument": return DevCardType.MONUMENT;
+		}
+		return DevCardType.MONOPOLY;
+	}
 }
 

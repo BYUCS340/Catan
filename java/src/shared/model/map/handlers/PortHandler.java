@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import client.map.MapException;
 import shared.definitions.PortType;
+import shared.model.map.MapException;
 import shared.model.map.objects.*;
 
 /**

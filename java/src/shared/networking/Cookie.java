@@ -1,7 +1,13 @@
 package shared.networking;
 
-public class Cookie 
+public interface Cookie 
 {
-	String cookieText;
+	
+	/**
+	 * Gets the original cookie text needed to communicate to 
+	 * the server
+	 * @return The cookie text
+	 */
+	public String getCookieText();
 
 }

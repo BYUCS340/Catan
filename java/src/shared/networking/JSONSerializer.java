@@ -5,10 +5,13 @@ package shared.networking;
 
 import java.util.List;
 
+import org.json.JSONObject;
+
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+
 
 /**
  * @author pbridd
@@ -16,15 +19,19 @@ import shared.locations.VertexLocation;
  */
 public class JSONSerializer implements Serializer
 {
-
+	
 	/* (non-Javadoc)
 	 * @see shared.networking.Serializer#sCredentials(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public String sCredentials(String username, String password)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		
+		JSONObject obj = new JSONObject();
+		obj.put("username", username);
+		obj.put("password", password);
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)

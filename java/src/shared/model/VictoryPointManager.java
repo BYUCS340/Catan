@@ -1,4 +1,7 @@
 package shared.model;
+
+import shared.definitions.DevCardType;
+
 /**
  * An object that keeps track of how many victory points each player has. 
  * This way we keep points centralized and they're easier to track/change (especially longest road & largest army).
@@ -10,6 +13,7 @@ public class VictoryPointManager
 	private int currentLongestRoadPlayer = -1;
 	private int currentLargestArmyPlayer = -1;
 	private int[] victoryPoints = new int[4];
+	private int currentLargestArmySize = 0;
 	
 	private final int LongestRoadValue = 2;
 	private final int LargestArmyValue = 2;
@@ -83,12 +87,26 @@ public class VictoryPointManager
 	}
 	
 	/**
+	 * Checks to see a player's army size, if so update their points accordingly
+	 * @param playerIndex 0-3
+	 * @param armySize 0-10?
+	 */
+	public void checkPlayerArmySize(int playerIndex, int armySize)
+	{
+		if (this.currentLargestArmySize < armySize)
+		{
+			this.currentLargestArmyPlayer = armySize;
+			this.setPlayerToHaveLargestArmy(playerIndex);
+		}
+	}
+	
+	/**
 	 * The player built a road, so give them the points
 	 * @param playerIndex
 	 */
 	public void playerBuiltRoad(int playerIndex)
 	{
-		
+		adjustPlayersPoints(playerIndex, this.RoadValue);
 	}
 	
 	/**
@@ -97,7 +115,7 @@ public class VictoryPointManager
 	 */
 	public void playerBuiltSettlement(int playerIndex)
 	{
-		
+		adjustPlayersPoints(playerIndex, this.SettlementValue);
 	}
 	
 	/**
@@ -107,17 +125,20 @@ public class VictoryPointManager
 	public void playerBuiltCity(int playerIndex)
 	{
 		//take away the settlement points
-		
+		adjustPlayersPoints(playerIndex, -1 * this.SettlementValue);
 		//add the city points
+		adjustPlayersPoints(playerIndex, this.CityValue);
 	}
 	
 	/**
 	 * The player bought a dev card to give them the parts
 	 * @param playerIndex
+	 * @param card the card they received (for determining worth)
 	 */
-	public void playerGotDevCard(int playerIndex)
+	public void playerGotDevCard(int playerIndex,DevCardType card)
 	{
-		
+		//Soliders won't be worried about here since that's handled in game manager
+		//We don't have a current count of the player's army
 	}
 	
 	/**

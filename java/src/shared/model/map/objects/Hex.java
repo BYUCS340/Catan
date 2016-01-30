@@ -1,9 +1,8 @@
 package shared.model.map.objects;
 
-import client.map.MapException;
 import shared.definitions.HexType;
 import shared.definitions.PortType;
-import shared.model.map.Coordinate;
+import shared.model.map.*;
 
 /**
  * Used to store information about a Hex.

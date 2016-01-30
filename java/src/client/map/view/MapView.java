@@ -6,8 +6,8 @@ import javax.swing.*;
 
 import client.base.*;
 import client.data.*;
-import client.map.IMapController;
 import shared.definitions.*;
+import shared.model.IMapController;
 import shared.model.map.Coordinate;
 import shared.model.map.MapModel;
 
