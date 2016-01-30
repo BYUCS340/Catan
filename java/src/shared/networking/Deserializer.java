@@ -1,5 +1,7 @@
 package shared.networking;
 
+import java.util.List;
+
 import shared.networking.transport.NetAI;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
@@ -20,6 +22,13 @@ public interface Deserializer
 	 * @return a NetGame object
 	 */
 	public NetGame parseNetGame(String rawData);
+	
+	/**
+	 * Parses a List of NetGame objects from serialized data
+	 * @param rawData The serialized data
+	 * @return a List of NetGame objects
+	 */
+	public List<NetGame> parseNetGameList(String rawData);
 	
 	/**
 	 * Parses a NetPlayer from serialized data

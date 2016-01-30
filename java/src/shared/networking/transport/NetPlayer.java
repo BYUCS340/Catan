@@ -36,12 +36,11 @@ public class NetPlayer
 		oldNetDevCardList = new NetDevCardList();
 		newNetDevCardList = new NetDevCardList();
 		playerIndex = -1;
-		playerID = -1;
+		playerID = 0;
 		netResourceList = new NetResourceList();
 		numRoads = 0;
 		numSoldiers = 0;
 		numVictoryPoints = 0;
-		//TODO finish
 	}
 
 

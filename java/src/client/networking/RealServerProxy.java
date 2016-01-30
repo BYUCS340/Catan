@@ -18,10 +18,12 @@ import java.util.Scanner;
 
 import org.json.JSONObject;
 
+import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import shared.networking.Cookie;
+import shared.networking.Deserializer;
+import shared.networking.JSONDeserializer;
 import shared.networking.JSONSerializer;
 import shared.networking.Serializer;
 import shared.networking.UserCookie;
@@ -43,6 +45,7 @@ public class RealServerProxy implements ServerProxy
 	private final String HTTP_GET = "GET";
 	private final String HTTP_POST = "POST";
 	private Serializer serializer;
+	private Deserializer deserializer;
 	
 	/**
 	 * Default constructor. Sets up connection with the server with default
@@ -50,8 +53,8 @@ public class RealServerProxy implements ServerProxy
 	 */
 	public RealServerProxy()
 	{
-		//TODO implement
 		serializer = new JSONSerializer();
+		deserializer = new JSONDeserializer();
 		SERVER_HOST = "localhost";
 		SERVER_PORT = 8081;
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
@@ -67,6 +70,7 @@ public class RealServerProxy implements ServerProxy
 	public RealServerProxy(String server_host, int server_port)
 	{
 		serializer = new JSONSerializer();
+		deserializer = new JSONDeserializer();
 		SERVER_HOST = server_host;
 		SERVER_PORT = server_port;
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
@@ -124,9 +128,15 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#listGames()
 	 */
 	@Override
-	public List<NetGame> listGames()
+	public List<NetGame> listGames() throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
+		String urlPath = "/games/list";
+		String resultStr = null;
+
+		resultStr = doJSONGet(urlPath);
+		
+		
+		
 		return null;
 	}
 
@@ -234,7 +244,7 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#yearOfPlentyCard(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public NetGameModel yearOfPlentyCard(String resource1, String resource2)
+	public NetGameModel yearOfPlentyCard(ResourceType resource1, ResourceType resource2)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -427,6 +437,72 @@ public class RealServerProxy implements ServerProxy
 		} catch (IOException e)
 		{
 			throw new ServerProxyException("IOException thrown in client.networking.RealServerProxy.doJSONPost\n"
+					+e.getStackTrace());
+		}
+		finally
+		{
+			if(connection != null)
+			{
+				connection.disconnect();
+			}
+		}
+		
+		return result;
+	}
+	
+	private String doJSONGet(String urlPath) throws ServerProxyException
+	{
+		HttpURLConnection connection = null;
+		String result = null;
+		try
+		{
+			//Set up connection and connect to the specified path
+			URL url = new URL(URL_PREFIX + urlPath);
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod(HTTP_GET);
+			
+			//add cookie to headers if there is a logged-in user
+			if(userCookie != null){
+				String cookieString = getCookieString();
+				connection.setRequestProperty("Cookie", cookieString);	
+			}
+			
+			connection.setDoOutput(true);
+			connection.connect();
+			
+			//get the server's response
+			if(connection.getResponseCode() == HttpURLConnection.HTTP_OK)
+			{
+				BufferedReader br = new BufferedReader(new InputStreamReader( connection.getInputStream(),"utf-8"));
+				String line = null;
+				StringBuilder sb = new StringBuilder();
+				while ((line = br.readLine()) != null) {
+				    sb.append(line + "\n");
+				}
+				br.close();	
+				result = sb.toString();
+				
+				connection.disconnect();
+			}
+			else{
+				InputStream is = connection.getErrorStream();
+				Scanner scan = new Scanner(is);
+				StringBuilder sb = new StringBuilder();
+				while(scan.hasNextLine()){
+					sb.append(scan.nextLine());
+				}
+				scan.close();
+				connection.disconnect();
+				throw new ServerProxyException(sb.toString());	
+			}
+		} catch (MalformedURLException e)
+		{
+			throw new ServerProxyException("MalformedURLException thrown in client.networking.RealServerProxy.doJSONGet + " + urlPath + "\n"
+					+e.getStackTrace());
+			
+		} catch (IOException e)
+		{
+			throw new ServerProxyException("IOException thrown in client.networking.RealServerProxy.doJSONGet\n"
 					+e.getStackTrace());
 		}
 		finally

@@ -124,7 +124,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel yearOfPlentyCard(String resource1, String resource2) throws ServerProxyException;
+	public NetGameModel yearOfPlentyCard(ResourceType resource1, ResourceType resource2) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has played a road building card
