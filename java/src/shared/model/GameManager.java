@@ -6,6 +6,8 @@ import java.util.List;
 import client.map.MapController;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
+import shared.definitions.GameRound;
+import shared.definitions.GameStatus;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
@@ -27,12 +29,14 @@ public class GameManager
 	private VictoryPointManager victoryPointManager;
 	private ChatBox waterCooler;
 	private GameActionLog log;
+	private int version;
 	
 	/**
 	 * Constructor for the game manager
 	 * @post all players
 	 */
 	public GameManager(){
+		version = 0;
 		waterCooler = new ChatBox();
 		log = new GameActionLog();
 		players = new ArrayList<>();
@@ -75,7 +79,9 @@ public class GameManager
 	 */
 	public int RollDice() throws ModelException
 	{
+		log.logAction(this.CurrentPlayersTurn(), "rolled a 4");
 		gameState.startBuildPhase();
+		//Call map to update the get the transacations
 		return 4; // chosen by fair dice roll
 				  // guaranteed to be random
 	}
@@ -91,6 +97,8 @@ public class GameManager
 	 */
 	public void LoadGame(NetGameModel model) throws ModelException
 	{
+		if (model.getVersion() == this.version)
+			return;
 		throw new ModelException();
 	}
 	
@@ -234,6 +242,18 @@ public class GameManager
 	 */
 	public boolean CanBuildSettlement(int playerID, VertexLocation location)
 	{
+		if (!CanPlayerPlay(playerID))
+			return false;
+		try 
+		{
+			return GetPlayer(playerID).playerBank.canBuildRoad();
+		}
+		catch (ModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 		return false;
 	}
 	
@@ -463,5 +483,14 @@ public class GameManager
 	public GameStatus CurrentState()
 	{
 		return gameState.gameState;
+	}
+	
+	/**
+	 * Returns the current round of the game
+	 * @return
+	 */
+	public GameRound CurrentRound()
+	{
+		return gameState.gameRound;
 	}
 }

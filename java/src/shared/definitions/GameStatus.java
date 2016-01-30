@@ -1,4 +1,4 @@
-package shared.model;
+package shared.definitions;
 
 public enum GameStatus
 {
