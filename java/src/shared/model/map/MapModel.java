@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import client.map.MapException;
 import shared.definitions.*;
 import shared.model.map.handlers.*;
 import shared.model.map.objects.*;

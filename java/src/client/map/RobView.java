@@ -9,6 +9,7 @@ import javax.swing.border.Border;
 import java.util.*;
 
 import shared.definitions.PieceType;
+import shared.model.IMapController;
 import client.base.*;
 import client.data.*;
 

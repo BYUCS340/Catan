@@ -1,11 +1,9 @@
 package client.map;
 
 import shared.definitions.*;
-import shared.model.map.Coordinate;
-import shared.model.map.MapModel;
-import shared.model.map.objects.Edge;
-import shared.model.map.objects.Hex;
-import shared.model.map.objects.Vertex;
+import shared.model.IMapController;
+import shared.model.map.*;
+import shared.model.map.objects.*;
 
 import java.util.Iterator;
 
