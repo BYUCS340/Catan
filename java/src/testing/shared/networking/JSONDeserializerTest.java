@@ -115,9 +115,6 @@ public class JSONDeserializerTest
 		assertTrue(testGameRes.getNetPlayers().get(3).getColor() == CatanColor.GREEN);
 		assertTrue(testGameRes.getNetPlayers().get(3).getPlayerID() == 11);
 		
-		
-		
-		
 	}
 
 }

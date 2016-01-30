@@ -135,9 +135,9 @@ public class RealServerProxy implements ServerProxy
 
 		resultStr = doJSONGet(urlPath);
 		
+		List<NetGame> result = deserializer.parseNetGameList(resultStr.toString());
 		
-		
-		return null;
+		return result;
 	}
 
 	/* (non-Javadoc)
