@@ -225,6 +225,7 @@ public class GameManager
 		{
 			if (!GetPlayer(playerID).playerBank.canBuildRoad())
 				return false;
+			//check map
 		}
 		catch (ModelException e)
 		{
@@ -247,7 +248,8 @@ public class GameManager
 			return false;
 		try 
 		{
-			return GetPlayer(playerID).playerBank.canBuildRoad();
+			if (!GetPlayer(playerID).playerBank.canBuildRoad())
+				return false;
 		}
 		catch (ModelException e)
 		{
@@ -255,7 +257,7 @@ public class GameManager
 			e.printStackTrace();
 			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	/**
@@ -266,19 +268,58 @@ public class GameManager
 	 */
 	public boolean CanBuildCity (int playerID, Coordinate location)
 	{
-		return false;
+		if (!CanPlayerPlay(playerID))
+			return false;
+		try 
+		{
+			if (!GetPlayer(playerID).playerBank.canBuildCity())
+				return false;
+		}
+		catch (ModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 	public boolean CanOfferTrade (int playerID)
 	{
-		return false;
+		if (!CanPlayerPlay(playerID))
+			return false;
+		try 
+		{
+			GetPlayer(playerID).playerBank.canBuildCity();
+		}
+		catch (ModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	public boolean CanMaritimeTrade (int playerID)
 	{
-		return false;
+		if (!CanPlayerPlay(playerID))
+			return false;
+		try 
+		{
+			GetPlayer(playerID).playerBank.canBuildCity();
+		}
+		catch (ModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	public boolean CanFinishTurn (int playerID)
 	{
+		if (this.CurrentPlayersTurn() != playerID) return false;
+		if (this.CurrentState() == GameStatus.BUILDING) return true;
 		return false;
 	}
 	
