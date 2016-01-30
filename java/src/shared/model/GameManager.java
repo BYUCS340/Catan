@@ -316,6 +316,12 @@ public class GameManager
 		}
 		return true;
 	}
+	
+	/**
+	 * 
+	 * @param playerID
+	 * @return
+	 */
 	public boolean CanFinishTurn (int playerID)
 	{
 		if (this.CurrentPlayersTurn() != playerID) return false;
@@ -344,6 +350,12 @@ public class GameManager
 		}
 	}
 	
+	/**
+	 * Checks if a player has at least one dev card of the type
+	 * @param playerID
+	 * @param type
+	 * @return
+	 */
 	private boolean PlayerHasADevCard(int playerID, DevCardType type)
 	{
 		//This is a total message chain but eh
@@ -412,7 +424,7 @@ public class GameManager
 	}
 	
 	/**
-	 * 
+	 * Check to see if they have the momument card
 	 * @param playerID
 	 * @return
 	 */
