@@ -5,7 +5,9 @@ import shared.model.IMapController;
 import shared.model.map.*;
 import shared.model.map.objects.*;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import client.base.*;
 import client.data.*;
@@ -75,7 +77,20 @@ public class MapController extends Controller implements IMapController {
 		try {
 			Vertex vertex = model.GetVertex(point);
 			
-			return vertex.getType() == PieceType.NONE;
+			if (vertex.getType() != PieceType.NONE)
+				return false;
+			
+			Iterator<Vertex> neighbors = model.GetVerticies(vertex);
+			
+			while(neighbors.hasNext())
+			{
+				Vertex neighbor = neighbors.next();
+				
+				if (neighbor.getType() != PieceType.NONE)
+					return false;
+			}
+			
+			return true;
 		} 
 		catch (MapException e)
 		{
@@ -126,7 +141,31 @@ public class MapController extends Controller implements IMapController {
 	 */
 	public Iterator<Transaction> GetVillages(int role)
 	{
-		return null;
+		List<Transaction> transactions = new ArrayList<Transaction>();
+		
+		Iterator<Hex> hexes = model.GetHex(role);
+		while (hexes.hasNext())
+		{
+			Hex hex = hexes.next();
+			
+			Iterator<Vertex> vertices = model.GetVerticies(hex);
+			while (vertices.hasNext())
+			{
+				Vertex vertex = vertices.next();
+				
+				if (vertex.getType() == PieceType.NONE)
+					continue;
+				
+				HexType hexType = hex.getType();
+				PieceType pieceType = vertex.getType();
+				CatanColor color = vertex.getColor();
+				Transaction transaction = new Transaction(hexType, pieceType, color);
+				
+				transactions.add(transaction);
+			}
+		}
+		
+		return java.util.Collections.unmodifiableList(transactions).iterator();
 	}
 
 	public void placeRoad(Coordinate p1, Coordinate p2, CatanColor color)
@@ -184,19 +223,19 @@ public class MapController extends Controller implements IMapController {
 	}
 	
 	public void cancelMove() {
-		
+		//TODO Implement
 	}
 	
 	public void playSoldierCard() {	
-		
+		//TODO Implement		
 	}
 	
 	public void playRoadBuildingCard() {	
-		
+		//TODO Implement		
 	}
 	
 	public void robPlayer(RobPlayerInfo victim) {	
-		
+		//TODO Implement		
 	}
 	
 }

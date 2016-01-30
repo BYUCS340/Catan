@@ -136,9 +136,9 @@ public class MapModel {
 	 * @param role The combined value of the dice
 	 * @return The associated hex
 	 */
-	public List<Hex> GetHex(int role)
+	public Iterator<Hex> GetHex(int role)
 	{
-		return java.util.Collections.unmodifiableList(values.get(role));
+		return java.util.Collections.unmodifiableList(values.get(role)).iterator();
 	}
 	
 	/**
@@ -170,6 +170,45 @@ public class MapModel {
 		return verticies.GetVertex(point);
 	}
 	
+	/**
+	 * Gets the neighbors (surrounding) vertices of a vertex.
+	 * @param vertex The vertex which the neighbors are being requested.
+	 * @return An iterator the the neighbors.
+	 */
+	public Iterator<Vertex> GetVerticies(Vertex vertex)
+	{
+		List<Vertex> neighbors = new ArrayList<Vertex>(3);
+		
+		try
+		{
+			if (verticies.ContainsVertex(vertex.getPoint().GetNorth()))
+				neighbors.add(verticies.GetVertex(vertex.getPoint().GetNorth()));
+			if (verticies.ContainsVertex(vertex.getPoint().GetSouth()))
+				neighbors.add(verticies.GetVertex(vertex.getPoint().GetSouth()));
+			
+			Coordinate sideNeighbor;
+			if (vertex.getPoint().isRightHandCoordinate())
+				sideNeighbor = vertex.getPoint().GetEast();
+			else
+				sideNeighbor = vertex.getPoint().GetWest();
+			
+			if (verticies.ContainsVertex(sideNeighbor))
+				neighbors.add(verticies.GetVertex(sideNeighbor));
+		}
+		catch (MapException e)
+		{
+			//This shouldn't occur since we are checking.
+			e.printStackTrace();
+		}
+		
+		return java.util.Collections.unmodifiableList(neighbors).iterator();
+	}
+	
+	/**
+	 * Gets the verticies that are associated with a hex.
+	 * @param hex The hex.
+	 * @return The associated verticies.
+	 */
 	public Iterator<Vertex> GetVerticies(Hex hex)
 	{
 		List<Vertex> verticiesAlongHex = new ArrayList<Vertex>(6);
