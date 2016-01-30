@@ -38,16 +38,6 @@ public class MapModel {
 	 */
 	public MapModel()
 	{
-		this(Method.beginner);
-	}
-	
-	/**
-	 * This creates a new Map Model object. The method parameter allows a particular
-	 * map style to be set up. This will eventually be located on the server.
-	 * @param method The map style to set up.
-	 */
-	public MapModel(Method method)
-	{
 		values = new HashMap<Integer, List<Hex>>();
 		
 		hexes = new HexHandler();
@@ -57,14 +47,8 @@ public class MapModel {
 		
 		longestRoadLength = 2;
 		
-		if (method == Method.random)
-			RandomSetup();
-		else
-			BeginnerSetup();
-		
-		PlaceWater();
-		PlacePorts();
-		PlacePips();
+		//TODO Move this to the server eventually. This shouldn't be shared.
+		MapGenerator.BeginnerMap(this);
 	}
 	
 	/**
@@ -303,6 +287,26 @@ public class MapModel {
 	}
 	
 	/**
+	 * Adds a pip to a hex
+	 * @param value The value of the pip
+	 * @param hex The hex to which it is added.
+	 */
+	public void SetPip(int value, Hex hex)
+	{
+		//TODO Data validation needed to ensure a hex doesn't have multiple pips
+		if (values.containsKey(value))
+		{
+			values.get(value).add(hex);
+		}
+		else
+		{
+			List<Hex> tempList = new ArrayList<Hex>();
+			tempList.add(hex);
+			values.put(value, tempList);
+		}
+	}
+	
+	/**
 	 * Adds a settlement to the map.
 	 * @param point The coordinate of the settlement.
 	 * @param color The color of the settlement.
@@ -331,10 +335,10 @@ public class MapModel {
 	 * @param point The coordinate of the port.
 	 * @throws MapException Thrown if the port is added to a vertex that doesn't exist.
 	 */
-	public void SetPort(PortType type, Coordinate point) throws MapException
+	public void SetPort(PortType type, Edge edge, Hex hex) throws MapException
 	{
 		try {
-			verticies.GetVertex(point).setPortType(type);
+			ports.AddPort(type, edge, hex);
 		} 
 		catch (MapException e) {
 			throw new MapException("Attempt to add port to non-existent vertex", e);
@@ -347,231 +351,10 @@ public class MapModel {
 	 */
 	public void SetRobber(Hex hex)
 	{
-		robber.setRobber(hex);
-	}
-	
-	private void RandomSetup()
-	{
-		//Todo Setup
-	}
-	
-	private void BeginnerSetup()
-	{
-		try
-		{
-			hexes.AddHex(new Hex(HexType.ORE, new Coordinate(1, -2)));
-			hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(1, 0)));
-			hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(1, 2)));
-			
-			hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(2, -3)));
-			hexes.AddHex(new Hex(HexType.BRICK, new Coordinate(2, -1)));
-			hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(2, 1)));
-			hexes.AddHex(new Hex(HexType.BRICK, new Coordinate(2, 3)));
-			
-			hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(3, -4)));
-			hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(3, -2)));
-			hexes.AddHex(new Hex(HexType.DESERT, new Coordinate(3, 0)));
-			hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(3, 2)));
-			hexes.AddHex(new Hex(HexType.ORE, new Coordinate(3, 4)));
-			
-			hexes.AddHex(new Hex(HexType.WOOD, new Coordinate(4, -3)));
-			hexes.AddHex(new Hex(HexType.ORE, new Coordinate(4, -1)));
-			hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(4, 1)));
-			hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(4, 3)));
-			
-			hexes.AddHex(new Hex(HexType.BRICK, new Coordinate(5, -2)));
-			hexes.AddHex(new Hex(HexType.WHEAT, new Coordinate(5, 0)));
-			hexes.AddHex(new Hex(HexType.SHEEP, new Coordinate(5, 2)));
-		}
-		catch (MapException e)
-		{
-			e.printStackTrace();
-			//This shouldn't happen. Otherwise, we just suck.
-		}
-		
-		try {
-			robber = new Robber(hexes.GetHex(new Coordinate(3, 0)));
-		}
-		catch (MapException e) {
-			e.printStackTrace();
-			//This shouldn't happen either.
-		}
-	}
-	
-	private void PlaceWater()
-	{
-		try
-		{
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, -1)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, -3)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(1, -4)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(2, -5)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(3, -6)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(4, -5)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(5, -4)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, -3)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, -1)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, 1)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(6, 3)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(5, 4)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(4, 5)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(3, 6)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(2, 5)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(1, 4)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, 3)));
-			hexes.AddHex(new Hex(HexType.WATER, new Coordinate(0, 1)));
-		}
-		catch (MapException e)
-		{
-			e.printStackTrace();
-			//This shouldn't happen. If it does, then you suck.
-		}
-	}
-	
-	private void PlacePorts()
-	{
-		Hex hex;
-		Edge edge;
-		
-		try
-		{
-			hex = hexes.GetHex(new Coordinate(0,3));
-			edge = edges.GetEdge(hex.getPoint().GetEast(), hex.getPoint().GetSouthEast());
-			ports.AddPort(PortType.THREE, edge, hex);
-			
-			hex = hexes.GetHex(new Coordinate(2,5));
-			edge = edges.GetEdge(hex.getPoint().GetSouth(), hex.getPoint().GetSouthEast());
-			ports.AddPort(PortType.WHEAT, edge, hex);
-			
-			hex = hexes.GetHex(new Coordinate(4,5));
-			edge = edges.GetEdge(hex.getPoint().GetSouth(), hex.getPoint().GetSouthEast());
-			ports.AddPort(PortType.ORE, edge, hex);
-			
-			hex = hexes.GetHex(new Coordinate(6,3));
-			edge = edges.GetEdge(hex.getPoint().GetSouth(), hex.getPoint());
-			ports.AddPort(PortType.THREE, edge, hex);
-			
-			hex = hexes.GetHex(new Coordinate(6,-1));
-			edge = edges.GetEdge(hex.getPoint().GetNorth(), hex.getPoint());
-			ports.AddPort(PortType.SHEEP, edge, hex);
-			
-			hex = hexes.GetHex(new Coordinate(5,-4));
-			edge = edges.GetEdge(hex.getPoint().GetNorth(), hex.getPoint());
-			ports.AddPort(PortType.THREE, edge, hex);
-			
-			hex = hexes.GetHex(new Coordinate(3,-6));
-			edge = edges.GetEdge(hex.getPoint().GetNorth(), hex.getPoint().GetNorthEast());
-			ports.AddPort(PortType.THREE, edge, hex);
-			
-			hex = hexes.GetHex(new Coordinate(1,-4));
-			edge = edges.GetEdge(hex.getPoint().GetEast(), hex.getPoint().GetNorthEast());
-			ports.AddPort(PortType.BRICK, edge, hex);
-			
-			hex = hexes.GetHex(new Coordinate(0,-1));
-			edge = edges.GetEdge(hex.getPoint().GetEast(), hex.getPoint().GetNorthEast());
-			ports.AddPort(PortType.WOOD, edge, hex);
-		}
-		catch (MapException e)
-		{
-			e.printStackTrace();
-		}
-		
-	}
-
-	private void PlacePips()
-	{
-		List<Integer> pipList = GetPipList();
-		List<Hex> hexList = GetHexList();
-		
-		Iterator<Integer> pipIterator = pipList.iterator();
-		Iterator<Hex> hexIterator = hexList.iterator();
-		
-		while (pipIterator.hasNext())
-		{
-			int pip = pipIterator.next();
-			
-			Hex hex = hexIterator.next();
-			if (hex.getType() == HexType.DESERT)
-				hex = hexIterator.next();
-			
-			AddPip(pip, hex);
-		}
-	}
-	
-	private List<Integer> GetPipList()
-	{
-		List<Integer> pipList = new ArrayList<Integer>(18);
-		
-		pipList.add(5);
-		pipList.add(2);
-		pipList.add(6);
-		pipList.add(3);
-		pipList.add(8);
-		pipList.add(10);
-		pipList.add(9);
-		pipList.add(12);
-		pipList.add(11);
-		pipList.add(4);
-		pipList.add(8);
-		pipList.add(10);
-		pipList.add(9);
-		pipList.add(4);
-		pipList.add(5);
-		pipList.add(6);
-		pipList.add(3);
-		pipList.add(11);
-		
-		return pipList;
-	}
-
-	private List<Hex> GetHexList()
-	{
-		List<Hex> hexList = new ArrayList<Hex>(19);
-		
-		try
-		{
-			hexList.add(hexes.GetHex(new Coordinate(1, -2)));
-			hexList.add(hexes.GetHex(new Coordinate(2, -3)));
-			hexList.add(hexes.GetHex(new Coordinate(3, -4)));
-			hexList.add(hexes.GetHex(new Coordinate(4, -3)));
-			hexList.add(hexes.GetHex(new Coordinate(5, -2)));
-			hexList.add(hexes.GetHex(new Coordinate(5, 0)));
-			hexList.add(hexes.GetHex(new Coordinate(5, 2)));
-			hexList.add(hexes.GetHex(new Coordinate(4, 3)));
-			hexList.add(hexes.GetHex(new Coordinate(3, 4)));
-			hexList.add(hexes.GetHex(new Coordinate(2, 3)));
-			hexList.add(hexes.GetHex(new Coordinate(1, 2)));
-			hexList.add(hexes.GetHex(new Coordinate(1, 0)));
-			hexList.add(hexes.GetHex(new Coordinate(2, -1)));
-			hexList.add(hexes.GetHex(new Coordinate(3, -2)));
-			hexList.add(hexes.GetHex(new Coordinate(4, -1)));
-			hexList.add(hexes.GetHex(new Coordinate(4, 1)));
-			hexList.add(hexes.GetHex(new Coordinate(3, 2)));
-			hexList.add(hexes.GetHex(new Coordinate(2, 1)));
-			hexList.add(hexes.GetHex(new Coordinate(3, 0)));
-		}
-		catch (MapException e)
-		{
-			e.printStackTrace();
-			//These are all standard coordinates. The only reason these wouldn't
-			//exist is if you haven't created the map yet.
-		}
-		
-		return hexList;
-	}
-	
-	private void AddPip(int value, Hex hex)
-	{
-		if (values.containsKey(value))
-		{
-			values.get(value).add(hex);
-		}
+		if (robber == null)
+			robber = new Robber(hex);
 		else
-		{
-			List<Hex> tempList = new ArrayList<Hex>();
-			tempList.add(hex);
-			values.put(value, tempList);
-		}
+			robber.setRobber(hex);
 	}
 	
 	private void HandleAddingOccupiedVertex(Coordinate point, List<Vertex> vertexList)
@@ -593,10 +376,5 @@ public class MapModel {
 	{
 		if (vertex.getType() != PieceType.NONE)
 			vertexList.add(vertex);
-	}
-	
-	public enum Method
-	{
-		beginner, random
 	}
 }
