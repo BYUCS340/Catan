@@ -48,6 +48,7 @@ public enum CatanColor
 		switch(s.toLowerCase())
 		{
 			case "red": return CatanColor.RED;
+			case "orange" : return CatanColor.ORANGE;
 			case "yellow": return CatanColor.YELLOW;
 			case "blue": return CatanColor.BLUE;
 			case "green": return CatanColor.GREEN;
