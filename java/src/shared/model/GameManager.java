@@ -29,12 +29,14 @@ public class GameManager
 	private VictoryPointManager victoryPointManager;
 	private ChatBox waterCooler;
 	private GameActionLog log;
+	private int version;
 	
 	/**
 	 * Constructor for the game manager
 	 * @post all players
 	 */
 	public GameManager(){
+		version = 0;
 		waterCooler = new ChatBox();
 		log = new GameActionLog();
 		players = new ArrayList<>();
@@ -95,6 +97,8 @@ public class GameManager
 	 */
 	public void LoadGame(NetGameModel model) throws ModelException
 	{
+		if (model.getVersion() == this.version)
+			return;
 		throw new ModelException();
 	}
 	
