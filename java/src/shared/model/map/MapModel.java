@@ -2,10 +2,12 @@ package shared.model.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import shared.definitions.*;
 import shared.model.map.handlers.*;
@@ -19,6 +21,8 @@ import shared.model.map.objects.*;
  *
  */
 public class MapModel {
+	
+	private static final int LONGEST_ROAD_INITIAL_VALUE = 2;
 	
 	private Map<Integer, List<Hex>> values;
 	
@@ -45,7 +49,7 @@ public class MapModel {
 		verticies = new VertexHandler();
 		ports = new PortHandler();
 		
-		longestRoadLength = 2;
+		longestRoadLength = LONGEST_ROAD_INITIAL_VALUE;
 		
 		//TODO Move this to the server eventually. This shouldn't be shared.
 		MapGenerator.BeginnerMap(this);
@@ -263,6 +267,19 @@ public class MapModel {
 		return robber.GetHex();
 	}
 	
+	public boolean LongestRoadExists()
+	{
+		return longestRoadLength > LONGEST_ROAD_INITIAL_VALUE;
+	}
+	
+	public CatanColor GetLongestRoadColor() throws MapException
+	{
+		if (LongestRoadExists())
+			return longestRoadColor;
+		else
+			throw new MapException("Longest road doesn't exist.");
+	}
+	
 	/**
 	 * Adds a road to the map.
 	 * @param p1 The start of the road.
@@ -273,6 +290,35 @@ public class MapModel {
 	public void SetRoad(Coordinate p1, Coordinate p2, CatanColor color) throws MapException
 	{
 		edges.AddRoad(p1, p2, color);
+		
+		Set<Edge> handledEdges = new HashSet<Edge>();
+		Set<Edge> allHandledEdges = new HashSet<Edge>();
+		
+		try
+		{
+			handledEdges.add(edges.GetEdge(p1, p2));
+			
+			Vertex v1 = verticies.GetVertex(p1);
+			Vertex v2 = verticies.GetVertex(p2);
+			
+			//All handled edges accounts for loops. That is why it can be passed in
+			//for the right. If the road connects a loop, then the left alread counted
+			//it.
+			int left = GetRoadCount(v1, color, handledEdges, allHandledEdges);
+			int right = GetRoadCount(v2, color, allHandledEdges, allHandledEdges);
+			
+			int roadLength = left + right + 1;
+			if (roadLength > longestRoadLength)
+			{
+				longestRoadLength = roadLength;
+				longestRoadColor = color;
+			}
+		}
+		catch (MapException e)
+		{
+			//This shouldn't occur, else the edge couldn't exist
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -376,5 +422,72 @@ public class MapModel {
 	{
 		if (vertex.getType() != PieceType.NONE)
 			vertexList.add(vertex);
+	}
+	
+	private int GetRoadCount(Vertex vertex, CatanColor color, 
+			Set<Edge> handledEdges, Set<Edge> allHandledEdges)
+	{
+		int totalCount = 0;
+		
+		Iterator<Edge> associatedEdges = GetAssociatedEdges(vertex);
+		while(associatedEdges.hasNext())
+		{
+			Edge edge = associatedEdges.next();
+			
+			if (edge.getColor() == color && !handledEdges.contains(edge))
+			{
+				try
+				{
+					handledEdges.add(edge);
+					allHandledEdges.add(edge);
+					
+					Vertex newVertex = null;
+					if (edge.getStart() == vertex.getPoint())
+						newVertex = verticies.GetVertex(edge.getEnd());
+					else
+						newVertex = verticies.GetVertex(edge.getStart());
+					
+					int branchCount = 1 + GetRoadCount(newVertex, color, handledEdges, allHandledEdges);
+					
+					handledEdges.remove(edge);
+					
+					if (branchCount > totalCount)
+						totalCount = branchCount;
+				}
+				catch (MapException e)
+				{
+					//This shouldn't occur as the edge can't exist without the vertices.
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return totalCount;
+	}
+	
+	private Iterator<Edge> GetAssociatedEdges(Vertex vertex)
+	{
+		List<Edge> associatedEdges = new ArrayList<Edge>(3);
+		
+		Iterator<Vertex> vertices = GetVerticies(vertex);
+		while(vertices.hasNext())
+		{
+			Vertex neighbor = vertices.next();
+			
+			Coordinate mainPoint = vertex.getPoint();
+			Coordinate neighborPoint = neighbor.getPoint();
+			try
+			{
+				if (edges.ContainsEdge(mainPoint, neighborPoint))
+					associatedEdges.add(edges.GetEdge(mainPoint, neighborPoint));
+			}
+			catch (MapException e)
+			{
+				//Shouldn't happen
+				e.printStackTrace();
+			}
+		}
+		
+		return java.util.Collections.unmodifiableList(associatedEdges).iterator();
 	}
 }
