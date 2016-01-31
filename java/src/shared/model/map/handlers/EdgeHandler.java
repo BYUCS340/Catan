@@ -4,9 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import client.map.MapException;
 import shared.definitions.CatanColor;
-import shared.model.map.Coordinate;
+import shared.model.map.*;
 import shared.model.map.objects.Edge;
 
 /**

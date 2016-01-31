@@ -1,12 +1,10 @@
 package client.networking;
 
-import shared.networking.*;
 import shared.networking.transport.NetAI;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 import shared.definitions.*;
 import shared.locations.*;
-import shared.model.*;
 import java.util.List;
 
 public interface ServerProxy 
@@ -53,7 +51,7 @@ public interface ServerProxy
 	 * @return a ProxyGame object that represents the game the user joined
 	 * @throws ServerProxyException if something goes wrong
 	 */
-	public NetGame joinGame(String color) throws ServerProxyException; 
+	public NetGame joinGame(int id, CatanColor color) throws ServerProxyException; 
 
 	/**
 	 * Retrieves the game model from the server
@@ -124,7 +122,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel yearOfPlentyCard(String resource1, String resource2) throws ServerProxyException;
+	public NetGameModel yearOfPlentyCard(ResourceType resource1, ResourceType resource2) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has played a road building card

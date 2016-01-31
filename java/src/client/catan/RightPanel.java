@@ -3,6 +3,7 @@ package client.catan;
 import javax.swing.*;
 
 import shared.definitions.PieceType;
+import shared.model.IMapController;
 import client.points.*;
 import client.resources.*;
 import client.base.*;

@@ -1,4 +1,4 @@
-package client.map;
+package shared.model;
 
 import client.base.*;
 import client.data.*;
