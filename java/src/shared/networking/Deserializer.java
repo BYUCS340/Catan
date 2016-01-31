@@ -35,6 +35,13 @@ public interface Deserializer
 	 * @param rawData The serialized data
 	 * @return a NetPlayer object
 	 */
+	public NetPlayer parsePartialNetPlayer(String rawData);
+	
+	/**
+	 * Parses a NetPlayer from serialized data
+	 * @param rawData The serialized data
+	 * @return a NetPlayer object
+	 */
 	public NetPlayer parseNetPlayer(String rawData);
 	
 	/**

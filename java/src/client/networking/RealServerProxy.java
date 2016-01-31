@@ -190,10 +190,26 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#getGameModel()
 	 */
 	@Override
-	public NetGameModel getGameModel()
+	public NetGameModel getGameModel() throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before retrieving a game model!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before retrieving a game model!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		//send the request to the server
+		String urlPath = "/game/model";
+		String result = doJSONGet(urlPath);
+		
+		//parse the result into a NetGameModel
+		NetGameModel netGameModel = deserializer.parseNetGameModel(result);	
+		return netGameModel;
 	}
 
 	/* (non-Javadoc)

@@ -12,10 +12,11 @@ public class NetPlayer
 	NetDevCardList oldNetDevCardList;
 	NetDevCardList newNetDevCardList;
 	int playerIndex;
-	int playedDevCard;
+	boolean playedDevCard;
 	int playerID;
 	NetResourceList netResourceList;
 	int numRoads;
+	int numSettlements;
 	int numSoldiers;
 	int numVictoryPoints;
 	
@@ -39,8 +40,10 @@ public class NetPlayer
 		playerID = 0;
 		netResourceList = new NetResourceList();
 		numRoads = 0;
+		numSettlements = 0;
 		numSoldiers = 0;
 		numVictoryPoints = 0;
+		
 	}
 
 
@@ -191,18 +194,18 @@ public class NetPlayer
 	/**
 	 * @return the playedDevCard
 	 */
-	public int getPlayedDevCard()
+	public boolean hasPlayedDevCard()
 	{
 		return playedDevCard;
 	}
 
 
 	/**
-	 * @param playedDevCard the playedDevCard to set
+	 * @param playedDevCard2 the playedDevCard to set
 	 */
-	public void setPlayedDevCard(int playedDevCard)
+	public void setPlayedDevCard(boolean playedDevCard2)
 	{
-		this.playedDevCard = playedDevCard;
+		this.playedDevCard = playedDevCard2;
 	}
 
 
@@ -293,5 +296,23 @@ public class NetPlayer
 	public void setNumVictoryPoints(int numVictoryPoints)
 	{
 		this.numVictoryPoints = numVictoryPoints;
+	}
+
+
+	/**
+	 * @return the numSettlements
+	 */
+	public int getNumSettlements()
+	{
+		return numSettlements;
+	}
+
+
+	/**
+	 * @param numSettlements the numSettlements to set
+	 */
+	public void setNumSettlements(int numSettlements)
+	{
+		this.numSettlements = numSettlements;
 	}
 }

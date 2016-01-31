@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import shared.definitions.CatanColor;
 import shared.definitions.Direction;
+import shared.definitions.GameRound;
 import shared.definitions.ResourceType;
 import shared.networking.transport.NetAI;
 import shared.networking.transport.NetBank;
@@ -74,7 +76,7 @@ public class JSONDeserializer implements Deserializer
 		List<NetPlayer> netPlayers = new ArrayList<NetPlayer>();
 		for(int i = 0; i < playerArr.length(); i++)
 		{
-			NetPlayer tempNetPlayer = parseNetPlayer(playerArr.getJSONObject(i).toString());
+			NetPlayer tempNetPlayer = parsePartialNetPlayer(playerArr.getJSONObject(i).toString());
 			netPlayers.add(tempNetPlayer);
 		}
 		
@@ -85,10 +87,10 @@ public class JSONDeserializer implements Deserializer
 	}
 
 	/* (non-Javadoc)
-	 * @see shared.networking.Deserializer#parseNetPlayer(java.lang.String)
+	 * @see shared.networking.Deserializer#parsePartialNetPlayer(java.lang.String)
 	 */
 	@Override
-	public NetPlayer parseNetPlayer(String rawData)
+	public NetPlayer parsePartialNetPlayer(String rawData)
 	{
 		NetPlayer netPlayer = new NetPlayer();
 		JSONObject obj = new JSONObject(rawData);
@@ -101,7 +103,51 @@ public class JSONDeserializer implements Deserializer
 		netPlayer.setName(name);
 		netPlayer.setPlayerID(id);
 		
-		//TODO implement the rest of the information for NetGameModel
+		return netPlayer;
+	}
+	
+	/* (non-Javadoc)
+	 * @see shared.networking.Deserializer#parseNetPlayer(java.lang.String)
+	 */
+	@Override
+	public NetPlayer parseNetPlayer(String rawData)
+	{
+		NetPlayer netPlayer = new NetPlayer();
+		JSONObject obj = new JSONObject(rawData);
+		
+		//get data
+		CatanColor color = CatanColor.fromString(obj.getString("color"));
+		String name = obj.getString("name");
+		int id = obj.getInt("id");
+		int numCities = obj.getInt("cities");
+		boolean discarded = obj.getBoolean("discarded");
+		int numMonuments = obj.getInt("monuments");
+		NetDevCardList newDevCards = parseNetDevCardList(obj.getJSONObject("newDevCards").toString());
+		NetDevCardList oldDevCards = parseNetDevCardList(obj.getJSONObject("oldDevCards").toString());
+		int playerIndex = obj.getInt("playerIndex");
+		boolean playedDevCard = obj.getBoolean("playedDevCard");
+		NetResourceList resources = parseNetResourceList(obj.getJSONObject("resources").toString());
+		int roads = obj.getInt("roads");
+		int settlements = obj.getInt("settlements");
+		int soldiers = obj.getInt("soldiers");
+		int victoryPoints = obj.getInt("victoryPoints");
+		
+		netPlayer.setColor(color);
+		netPlayer.setName(name);
+		netPlayer.setPlayerID(id);
+		netPlayer.setNumCities(numCities);
+		netPlayer.setHasDiscarded(discarded);
+		netPlayer.setNumMonuments(numMonuments);
+		netPlayer.setNewNetDevCardList(newDevCards);
+		netPlayer.setOldNetDevCardList(oldDevCards);
+		netPlayer.setPlayerIndex(playerIndex);
+		netPlayer.setPlayedDevCard(playedDevCard);
+		netPlayer.setNetResourceList(resources);
+		netPlayer.setNumRoads(roads);
+		netPlayer.setNumSettlements(settlements);
+		netPlayer.setNumSoldiers(soldiers);
+		netPlayer.setNumVictoryPoints(victoryPoints);
+		
 		
 		return netPlayer;
 	}
@@ -124,6 +170,15 @@ public class JSONDeserializer implements Deserializer
 		result.setWinner(winner);
 		result.setVersion(version);
 		
+		//extract player array from JSON
+		JSONArray playerArr = obj.getJSONArray("players");
+		List<NetPlayer> playerList = new ArrayList<NetPlayer>();
+		for(int i = 0; i < playerList.size(); i++)
+		{
+			NetPlayer tempPlayer = parseNetPlayer(playerArr.getJSONObject(i).toString());
+			playerList.add(tempPlayer);
+		}
+		
 		//extract objects from JSON
 		result.setNetBank((NetBank)parseNetResourceList(obj.getJSONObject("bank").toString()));
 		result.setNetGameLog(parseNetLog(obj.getJSONObject("log").toString()));
@@ -131,11 +186,18 @@ public class JSONDeserializer implements Deserializer
 		result.setNetTurnTracker(parseNetTurnTracker(obj.getJSONObject("turnTracker").toString()));
 		result.setNetMap(parseNetMap(obj.getJSONObject("map").toString()));
 		result.setNetDeck(parseNetDevCardList(obj.getJSONObject("deck").toString()));
-		result.setNetTradeOffer(parseNetTradeOffer(obj.getJSONObject("tradeOffer").toString()));
 		
+		try
+		{
+			result.setNetTradeOffer(parseNetTradeOffer(obj.getJSONObject("tradeOffer").toString()));
+		}
+		catch(JSONException e)
+		{
+			//do nothing, because this field was optional anyway
+		}
 		
-		//TODO  players, tradeoffer
-			
+		result.setNetPlayers(playerList);
+				
 		return result;
 	}
 	
@@ -398,6 +460,7 @@ public class JSONDeserializer implements Deserializer
 		
 		//put data into new object
 		result.setCurrentTurn(currentTurn);
+		result.setRound(GameRound.fromString(status));
 		//TODO add logic for setting the status
 		result.setLongestRoad(longestRoad);
 		result.setLargestArmy(largestArmy);
