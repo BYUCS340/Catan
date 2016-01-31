@@ -30,6 +30,7 @@ import shared.networking.transport.NetPort;
 import shared.networking.transport.NetResourceList;
 import shared.networking.transport.NetRoad;
 import shared.networking.transport.NetSettlement;
+import shared.networking.transport.NetTradeOffer;
 import shared.networking.transport.NetTurnTracker;
 
 /**
@@ -130,9 +131,30 @@ public class JSONDeserializer implements Deserializer
 		result.setNetTurnTracker(parseNetTurnTracker(obj.getJSONObject("turnTracker").toString()));
 		result.setNetMap(parseNetMap(obj.getJSONObject("map").toString()));
 		result.setNetDeck(parseNetDevCardList(obj.getJSONObject("deck").toString()));
+		result.setNetTradeOffer(parseNetTradeOffer(obj.getJSONObject("tradeOffer").toString()));
 		
-		//TODO deck, players, tradeoffer
+		
+		//TODO  players, tradeoffer
 			
+		return result;
+	}
+	
+	public NetTradeOffer parseNetTradeOffer(String rawData)
+	{
+		//set up needed objects
+		JSONObject obj = new JSONObject(rawData);
+		NetTradeOffer result = new NetTradeOffer();
+		
+		//get data from JSON
+		int sender = obj.getInt("sender");
+		int receiver = obj.getInt("receiver");
+		NetResourceList offer = parseNetResourceList(obj.getJSONObject("offer").toString());
+		
+		//put data in new object
+		result.setSender(sender);
+		result.setReceiver(receiver);
+		result.setNetResourceList(offer);
+		
 		return result;
 	}
 	
