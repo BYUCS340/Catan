@@ -16,6 +16,7 @@ import shared.networking.transport.NetAI;
 import shared.networking.transport.NetBank;
 import shared.networking.transport.NetChat;
 import shared.networking.transport.NetCity;
+import shared.networking.transport.NetEdgeLocation;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 import shared.networking.transport.NetHex;
@@ -162,9 +163,15 @@ public class JSONDeserializer implements Deserializer
 		}
 		
 		//parse roads
-		
 		JSONArray jsonNetRoadArr = obj.getJSONArray("roads");
 		List<NetRoad> roadArray = new ArrayList<NetRoad>();
+		
+		for(int i = 0; i < jsonNetRoadArr.length(); i++)
+		{
+			NetRoad tempNetRoad = parseNetRoad(jsonNetRoadArr.getJSONObject(i).toString());
+			roadArray.add(tempNetRoad);
+		}
+	
 		
 		//parse settlements
 		JSONArray jsonNetSettlementArr = obj.getJSONArray("settlements");
@@ -180,7 +187,7 @@ public class JSONDeserializer implements Deserializer
 		//parse radius
 		int radius = obj.getInt("radius");
 		
-		
+		//put data in new netmap object
 		result.setNetHexes(hexArray);
 		result.setNetPorts(portArray);
 		result.setNetRoads(roadArray);
@@ -188,6 +195,42 @@ public class JSONDeserializer implements Deserializer
 		result.setNetCities(cityArr);
 		result.setRobberLocation(robberLocation);
 		result.setRadius(radius);
+		
+		return result;
+	}
+	
+	public NetRoad parseNetRoad(String rawData)
+	{
+		//set up needed Objects
+		JSONObject obj = new JSONObject(rawData);
+		NetRoad result = new NetRoad();
+		
+		//get data from road
+		int owner = obj.getInt("owner");
+		NetEdgeLocation location = parseNetEdgeLocation(obj.getJSONObject("location").toString());
+		
+		//put data into new object
+		result.setNetEdgeLocation(location);
+		result.setOwnerID(owner);
+		
+		return result;
+	}
+	
+	public NetEdgeLocation parseNetEdgeLocation(String rawData)
+	{
+		//set up needed Objects
+		JSONObject obj = new JSONObject(rawData);
+		NetEdgeLocation result = new NetEdgeLocation();
+		
+		//get data from json object
+		int x = obj.getInt("x");
+		int y = obj.getInt("y");
+		Direction direction = Direction.fromString(obj.getString("direction"));
+		
+		//put the data into the new object
+		result.setX(x);
+		result.setY(y);
+		result.setDirection(direction);
 		
 		return result;
 	}
