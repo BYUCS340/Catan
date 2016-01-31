@@ -30,6 +30,7 @@ import shared.networking.transport.NetResourceList;
 import shared.networking.transport.NetRoad;
 import shared.networking.transport.NetSettlement;
 import shared.networking.transport.NetTurnTracker;
+import shared.networking.transport.NetVertexObject;
 
 /**
  * @author pbridd
@@ -128,11 +129,7 @@ public class JSONDeserializer implements Deserializer
 		result.setNetChat((NetChat)parseNetLog(obj.getJSONObject("chat").toString()));
 		result.setNetTurnTracker(parseNetTurnTracker(obj.getJSONObject("turnTracker").toString()));
 		result.setNetMap(parseNetMap(obj.getJSONObject("map").toString()));
-		
-		//process map
-		
-		
-		
+			
 		return result;
 	}
 	
@@ -177,9 +174,21 @@ public class JSONDeserializer implements Deserializer
 		JSONArray jsonNetSettlementArr = obj.getJSONArray("settlements");
 		List<NetSettlement> settlementArr = new ArrayList<NetSettlement>();
 		
+		for(int i = 0; i < jsonNetSettlementArr.length(); i++)
+		{
+			NetSettlement tempNetSettlement = parseNetSettlement(jsonNetSettlementArr.getJSONObject(i).toString());
+			settlementArr.add(tempNetSettlement);
+		}
+		
 		//parse cities
 		JSONArray jsonNetCityArr = obj.getJSONArray("cities");
 		List<NetCity> cityArr = new ArrayList<NetCity>();
+		
+		for(int i = 0; i < jsonNetCityArr.length(); i++)
+		{
+			NetCity tempNetCity = parseNetCity(jsonNetCityArr.getJSONObject(i).toString());
+			cityArr.add(tempNetCity);
+		}
 		
 		//parse robber location
 		NetHexLocation robberLocation = parseNetHexLocation(obj.getJSONObject("robber").toString());
@@ -195,6 +204,40 @@ public class JSONDeserializer implements Deserializer
 		result.setNetCities(cityArr);
 		result.setRobberLocation(robberLocation);
 		result.setRadius(radius);
+		
+		return result;
+	}
+	
+	public NetSettlement parseNetSettlement(String rawData)
+	{
+		//set up needed Objects
+		JSONObject obj = new JSONObject(rawData);
+		NetSettlement result = new NetSettlement();
+		
+		//get data from JSON
+		int owner = obj.getInt("owner");
+		NetEdgeLocation location = parseNetEdgeLocation(obj.getJSONObject("location").toString());
+		
+		//put data into new object
+		result.setNetEdgeLocation(location);
+		result.setOwner(owner);
+		
+		return result;
+	}
+	
+	public NetCity parseNetCity(String rawData)
+	{
+		//set up needed Objects
+		JSONObject obj = new JSONObject(rawData);
+		NetCity result = new NetCity();
+		
+		//get data from JSON
+		int owner = obj.getInt("owner");
+		NetEdgeLocation location = parseNetEdgeLocation(obj.getJSONObject("location").toString());
+		
+		//put data into new object
+		result.setNetEdgeLocation(location);
+		result.setOwner(owner);
 		
 		return result;
 	}
