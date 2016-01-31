@@ -15,6 +15,7 @@ import shared.definitions.ResourceType;
 import shared.networking.transport.NetAI;
 import shared.networking.transport.NetBank;
 import shared.networking.transport.NetChat;
+import shared.networking.transport.NetCity;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 import shared.networking.transport.NetHex;
@@ -25,6 +26,8 @@ import shared.networking.transport.NetMap;
 import shared.networking.transport.NetPlayer;
 import shared.networking.transport.NetPort;
 import shared.networking.transport.NetResourceList;
+import shared.networking.transport.NetRoad;
+import shared.networking.transport.NetSettlement;
 import shared.networking.transport.NetTurnTracker;
 
 /**
@@ -158,8 +161,33 @@ public class JSONDeserializer implements Deserializer
 			portArray.add(tempNetPort);
 		}
 		
+		//parse roads
+		
+		JSONArray jsonNetRoadArr = obj.getJSONArray("roads");
+		List<NetRoad> roadArray = new ArrayList<NetRoad>();
+		
+		//parse settlements
+		JSONArray jsonNetSettlementArr = obj.getJSONArray("settlements");
+		List<NetSettlement> settlementArr = new ArrayList<NetSettlement>();
+		
+		//parse cities
+		JSONArray jsonNetCityArr = obj.getJSONArray("cities");
+		List<NetCity> cityArr = new ArrayList<NetCity>();
+		
+		//parse robber location
+		NetHexLocation robberLocation = parseNetHexLocation(obj.getJSONObject("robber").toString());
+		
+		//parse radius
+		int radius = obj.getInt("radius");
+		
+		
 		result.setNetHexes(hexArray);
 		result.setNetPorts(portArray);
+		result.setNetRoads(roadArray);
+		result.setNetSettlements(settlementArr);
+		result.setNetCities(cityArr);
+		result.setRobberLocation(robberLocation);
+		result.setRadius(radius);
 		
 		return result;
 	}
