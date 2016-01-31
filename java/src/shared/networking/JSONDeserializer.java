@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import shared.definitions.CatanColor;
+import shared.definitions.Direction;
 import shared.definitions.ResourceType;
 import shared.networking.transport.NetAI;
 import shared.networking.transport.NetBank;
@@ -22,6 +23,7 @@ import shared.networking.transport.NetLine;
 import shared.networking.transport.NetLog;
 import shared.networking.transport.NetMap;
 import shared.networking.transport.NetPlayer;
+import shared.networking.transport.NetPort;
 import shared.networking.transport.NetResourceList;
 import shared.networking.transport.NetTurnTracker;
 
@@ -108,7 +110,6 @@ public class JSONDeserializer implements Deserializer
 		//setup needed objects
 		NetGameModel result = new NetGameModel();
 		JSONObject obj = new JSONObject(rawData);
-		NetMap netMap = new NetMap();
 		
 		//extract simple information from the JSON
 		int winner = obj.getInt("winner");
@@ -122,8 +123,22 @@ public class JSONDeserializer implements Deserializer
 		result.setNetGameLog(parseNetLog(obj.getJSONObject("log").toString()));
 		result.setNetChat((NetChat)parseNetLog(obj.getJSONObject("chat").toString()));
 		result.setNetTurnTracker(parseNetTurnTracker(obj.getJSONObject("turnTracker").toString()));
+		result.setNetMap(parseNetMap(obj.getJSONObject("map").toString()));
 		
 		//process map
+		
+		
+		
+		return result;
+	}
+	
+	public NetMap parseNetMap(String rawData)
+	{
+		//set up needed objects
+		JSONObject obj = new JSONObject(rawData);
+		NetMap result = new NetMap();
+		
+		//parse hex tiles
 		JSONArray jsonNetHexArr = obj.getJSONArray("hexes");
 		List<NetHex> hexArray = new ArrayList<NetHex>();
 		
@@ -133,16 +148,41 @@ public class JSONDeserializer implements Deserializer
 			hexArray.add(tempNetHex);
 		}
 		
-		netMap.setNetHexes(hexArray);
+		//parse trading ports
+		JSONArray jsonNetPortArr = obj.getJSONArray("ports");
+		List<NetPort> portArray = new ArrayList<NetPort>();
 		
+		for(int i = 0; i < jsonNetPortArr.length(); i++)
+		{
+			NetPort tempNetPort = parseNetPort(jsonNetPortArr.getJSONObject(i).toString());
+			portArray.add(tempNetPort);
+		}
+		
+		result.setNetHexes(hexArray);
+		result.setNetPorts(portArray);
 		
 		return result;
 	}
 	
-	public NetMap parseNetMap(String rawData)
+	public NetPort parseNetPort(String rawData)
 	{
+		//set up needed objects
+		JSONObject obj = new JSONObject(rawData);
+		NetPort result = new NetPort();
 		
-		return null;
+		//extract simple data
+		ResourceType resource = ResourceType.fromString(obj.getString("resource"));
+		Direction direction = Direction.fromString(obj.getString("direction"));
+		int ratio = obj.getInt("ratio");
+		NetHexLocation location = parseNetHexLocation(obj.getString("location"));
+		
+		//put the data into the new object
+		result.setResource(resource);
+		result.setDirection(direction);
+		result.setRatio(ratio);
+		result.setNetHexLocation(location);
+		
+		return result;
 	}
 	
 	public NetHex parseNetHex(String rawData)

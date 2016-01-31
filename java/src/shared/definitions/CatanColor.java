@@ -56,7 +56,6 @@ public enum CatanColor
 			case "puce" : return CatanColor.PUCE;
 			case "white": return CatanColor.WHITE;
 			case "brown": return CatanColor.BROWN;
-			
 		}
 		return null;
 	}
