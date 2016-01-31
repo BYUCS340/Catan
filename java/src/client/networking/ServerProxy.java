@@ -1,11 +1,15 @@
 package client.networking;
 
-import shared.networking.transport.NetAI;
+import java.util.List;
+
+import shared.definitions.AIType;
+import shared.definitions.CatanColor;
+import shared.definitions.ResourceType;
+import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
+import shared.locations.VertexLocation;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
-import shared.definitions.*;
-import shared.locations.*;
-import java.util.List;
 
 public interface ServerProxy 
 {
@@ -65,14 +69,14 @@ public interface ServerProxy
 	 * @param aiType the type of AI the user wishes to add
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public void addAI(String aiType) throws ServerProxyException;
+	public void addAI(AIType aiType) throws ServerProxyException;
 	
 	/**
 	 * 
 	 * @return a list of supported AI player types
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public List<NetAI> listAI() throws ServerProxyException;
+	public List<AIType> listAI() throws ServerProxyException;
 	
 	
 	/**

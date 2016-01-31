@@ -2,7 +2,7 @@ package shared.networking;
 
 import java.util.List;
 
-import shared.networking.transport.NetAI;
+import shared.definitions.AIType;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 import shared.networking.transport.NetPlayer;
@@ -10,11 +10,11 @@ import shared.networking.transport.NetPlayer;
 public interface Deserializer
 {
 	/**
-	 * Parses a NetAI from serialized data
+	 * Parses JSON data into an AI Type
 	 * @param rawData The serialized data
-	 * @return a NetAI Object
+	 * @return an AIType based on the data
 	 */
-	public NetAI parseNetAI(String rawData);
+	public List<AIType> parseAIList(String rawData);
 	
 	/**
 	 * Parses a NetGame from serialized data

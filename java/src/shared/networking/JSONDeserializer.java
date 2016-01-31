@@ -10,11 +10,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.definitions.Direction;
 import shared.definitions.GameRound;
 import shared.definitions.ResourceType;
-import shared.networking.transport.NetAI;
 import shared.networking.transport.NetBank;
 import shared.networking.transport.NetChat;
 import shared.networking.transport.NetCity;
@@ -46,10 +46,18 @@ public class JSONDeserializer implements Deserializer
 	 * @see shared.networking.Deserializer#parseNetAI(java.lang.String)
 	 */
 	@Override
-	public NetAI parseNetAI(String rawData)
+	public List<AIType> parseAIList(String rawData)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray obj = new JSONArray(rawData);
+		
+		List<AIType> aiList = new ArrayList<AIType>();
+		for(int i = 0; i < obj.length(); i++)
+		{
+			AIType tempAI = AIType.fromString(obj.getString(i));
+			aiList.add(tempAI);
+		}
+		
+		return aiList;
 	}
 
 	/* (non-Javadoc)

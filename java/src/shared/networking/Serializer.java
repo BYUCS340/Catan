@@ -2,6 +2,7 @@ package shared.networking;
 
 import java.util.List;
 
+import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -42,7 +43,7 @@ public interface Serializer
 	 * @param AIType The type of AI to add to the game
 	 * @return Serialized data
 	 */
-	public String sAddAIReq(String AIType);
+	public String sAddAIReq(AIType aitype);
 	
 	/**
 	 * Serializes a request to send a chat message

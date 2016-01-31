@@ -18,6 +18,7 @@ import java.util.Scanner;
 
 import org.json.JSONObject;
 
+import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -28,7 +29,6 @@ import shared.networking.JSONDeserializer;
 import shared.networking.JSONSerializer;
 import shared.networking.Serializer;
 import shared.networking.UserCookie;
-import shared.networking.transport.NetAI;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 
@@ -216,20 +216,40 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#addAI(java.lang.String)
 	 */
 	@Override
-	public void addAI(String aiType)
+	public void addAI(AIType aiType) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before adding an AIl!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before retrieving an AI!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		//send the request to the server
+		String urlPath = "/games/addAI";
+		String postData = serializer.sAddAIReq(aiType);
+		doJSONPost(urlPath, postData, false, false);
+		
+		//if there is no exception, this operation succeeded
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#listAI()
 	 */
 	@Override
-	public List<NetAI> listAI()
+	public List<AIType> listAI() throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		//get data from server
+		String urlPath = "/games/listAI";
+		String result = doJSONGet(urlPath);
+		
+		//deserialize
+		List<AIType> supportedAI = deserializer.parseAIList(result);
+		return supportedAI;
 	}
 
 	/* (non-Javadoc)

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -69,10 +70,13 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sAddAIReq(java.lang.String)
 	 */
 	@Override
-	public String sAddAIReq(String AIType)
+	public String sAddAIReq(AIType aitype)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+	
+		obj.put("AIType", AIType.toString(aitype));
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)

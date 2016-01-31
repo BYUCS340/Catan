@@ -5,12 +5,12 @@ package client.networking;
 
 import java.util.List;
 
+import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import shared.networking.transport.NetAI;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 
@@ -94,7 +94,7 @@ public class MockServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#addAI(java.lang.String)
 	 */
 	@Override
-	public void addAI(String aiType)
+	public void addAI(AIType aiType)
 	{
 		// TODO Auto-generated method stub
 
@@ -104,7 +104,7 @@ public class MockServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#listAI()
 	 */
 	@Override
-	public List<NetAI> listAI()
+	public List<AIType> listAI()
 	{
 		// TODO Auto-generated method stub
 		return null;
