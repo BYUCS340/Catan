@@ -16,6 +16,7 @@ import shared.networking.transport.NetAI;
 import shared.networking.transport.NetBank;
 import shared.networking.transport.NetChat;
 import shared.networking.transport.NetCity;
+import shared.networking.transport.NetDevCardList;
 import shared.networking.transport.NetEdgeLocation;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
@@ -30,7 +31,6 @@ import shared.networking.transport.NetResourceList;
 import shared.networking.transport.NetRoad;
 import shared.networking.transport.NetSettlement;
 import shared.networking.transport.NetTurnTracker;
-import shared.networking.transport.NetVertexObject;
 
 /**
  * @author pbridd
@@ -129,8 +129,35 @@ public class JSONDeserializer implements Deserializer
 		result.setNetChat((NetChat)parseNetLog(obj.getJSONObject("chat").toString()));
 		result.setNetTurnTracker(parseNetTurnTracker(obj.getJSONObject("turnTracker").toString()));
 		result.setNetMap(parseNetMap(obj.getJSONObject("map").toString()));
+		result.setNetDeck(parseNetDevCardList(obj.getJSONObject("deck").toString()));
+		
+		//TODO deck, players, tradeoffer
 			
 		return result;
+	}
+	
+	public NetDevCardList parseNetDevCardList(String rawData)
+	{
+		//set up needed objects
+		JSONObject obj = new JSONObject(rawData);
+		NetDevCardList result = new NetDevCardList();
+		
+		//get data from JSON
+		int monopoly = obj.getInt("monopoly");
+		int monument = obj.getInt("monument");
+		int roadBuilding = obj.getInt("roadBuilding");
+		int soldier = obj.getInt("soldier");
+		int yearOfPlenty = obj.getInt("yearOfPlenty");
+		
+		//put data into new object
+		result.setNumMonopoly(monopoly);
+		result.setNumMonument(monument);
+		result.setNumRoadBuilding(roadBuilding);
+		result.setNumSoldier(soldier);
+		result.setNumYearOfPlenty(yearOfPlenty);
+		
+		return result;
+		
 	}
 	
 	public NetMap parseNetMap(String rawData)
