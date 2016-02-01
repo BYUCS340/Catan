@@ -256,150 +256,394 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#sendChat(java.lang.String)
 	 */
 	@Override
-	public NetGameModel sendChat(String content)
+	public NetGameModel sendChat(String content) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before sending a chat message!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before sending a chat message!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/sendChat";
+		String postData = serializer.sSendChatReq(userCookie.getPlayerID(), content);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#rollNumber(int)
 	 */
 	@Override
-	public NetGameModel rollNumber(int roll)
+	public NetGameModel rollNumber(int roll) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before rolling a number!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before rolling a number!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/rollNumber";
+		String postData = serializer.sRollNumberReq(userCookie.getPlayerID(), roll);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#robPlayer(int, shared.locations.HexLocation)
 	 */
 	@Override
-	public NetGameModel robPlayer(int victimIndex, HexLocation location)
+	public NetGameModel robPlayer(int victimIndex, HexLocation location) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before robbing a player!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before robbing a player!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/robPlayer";
+		String postData = serializer.sRobPlayerReq(userCookie.getPlayerID(), victimIndex, location);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#finishTurn()
 	 */
 	@Override
-	public NetGameModel finishTurn()
+	public NetGameModel finishTurn() throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before finishing your turn!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before finishing your turn!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/finishTurn";
+		String postData = serializer.sFinishTurnReq(userCookie.getPlayerID());
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#buyDevCard()
 	 */
 	@Override
-	public NetGameModel buyDevCard()
+	public NetGameModel buyDevCard() throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before buying a development card!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before buying a development card!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/buyDevCard";
+		String postData = serializer.sBuyDevCardReq(userCookie.getPlayerID());
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#yearOfPlentyCard(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public NetGameModel yearOfPlentyCard(ResourceType resource1, ResourceType resource2)
+	public NetGameModel yearOfPlentyCard(ResourceType resource1, ResourceType resource2) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before playing a year of plenty card!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before playing a year of plenty card!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/Year_of_Plenty";
+		String postData = serializer.sYearOfPlentyCardReq(userCookie.getPlayerID(), resource1, resource2);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#roadBuildingCard(shared.locations.EdgeLocation, shared.locations.EdgeLocation)
 	 */
 	@Override
-	public NetGameModel roadBuildingCard(EdgeLocation location1, EdgeLocation location2)
+	public NetGameModel roadBuildingCard(EdgeLocation location1, EdgeLocation location2) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before playing a road building card!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before playing a road building card!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/Road_Building";
+		String postData = serializer.sRoadBuildingCardReq(userCookie.getPlayerID(), location1, location2);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#soldierCard(int, shared.locations.HexLocation)
 	 */
 	@Override
-	public NetGameModel soldierCard(int victimIndex, HexLocation hexLocation)
+	public NetGameModel soldierCard(int victimIndex, HexLocation hexLocation) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before playing a soldier card!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before playing a soldier card!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/Soldier";
+		String postData = serializer.sSoldierCardReq(userCookie.getPlayerID(), victimIndex, hexLocation);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#monopolyCard(java.lang.String)
 	 */
 	@Override
-	public NetGameModel monopolyCard(String resource)
+	public NetGameModel monopolyCard(String resource) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		//TODO make this a ResourceType method instead of a resource method
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before playing a monopoly card!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before playing a monopoly card!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/Monopoly";
+		//TODO fix this hacky way of getting ResourceType param to work
+		String postData = serializer.sMonopolyCardReq(userCookie.getPlayerID(), ResourceType.fromString(resource));
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#monumentCard()
 	 */
 	@Override
-	public NetGameModel monumentCard()
+	public NetGameModel monumentCard() throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		//TODO make this a ResourceType method instead of a resource method
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before playing a monument card!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before playing a monument card!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/Monument";
+		//TODO fix this hacky way of getting ResourceType param to work
+		String postData = serializer.sMonumentCardReq(userCookie.getPlayerID());
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#buildRoad(shared.locations.EdgeLocation, boolean)
 	 */
 	@Override
-	public NetGameModel buildRoad(EdgeLocation edgeLocation, boolean free)
+	public NetGameModel buildRoad(EdgeLocation edgeLocation, boolean free) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before building a road!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before building a road!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/buildRoad";
+		String postData = serializer.sBuildRoadReq(userCookie.getPlayerID(), edgeLocation, free);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#buildSettlement(shared.locations.VertexLocation, boolean)
 	 */
 	@Override
-	public NetGameModel buildSettlement(VertexLocation vertexLocation, boolean free)
+	public NetGameModel buildSettlement(VertexLocation vertexLocation, boolean free) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before building a settlement!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before building a road!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/buildSettlement";
+		String postData = serializer.sBuildSettlementReq(userCookie.getPlayerID(), vertexLocation, free);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#buildCity(shared.locations.VertexLocation)
 	 */
 	@Override
-	public NetGameModel buildCity(VertexLocation vertexLocation)
+	public NetGameModel buildCity(VertexLocation vertexLocation) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before building a city!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before building a city!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/buildCity";
+		String postData = serializer.sBuildCityReq(userCookie.getPlayerID(), vertexLocation);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#offerTrade(java.util.List, int)
 	 */
 	@Override
-	public NetGameModel offerTrade(List<Integer> resourceList, int receiver)
+	public NetGameModel offerTrade(List<Integer> resourceList, int receiver) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before offering a trade!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before offering a trade!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/offerTrade";
+		String postData = serializer.sOfferTradeReq(userCookie.getPlayerID(), resourceList, receiver);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#acceptTrade(boolean)
 	 */
 	@Override
-	public NetGameModel acceptTrade(boolean willAccept)
+	public NetGameModel acceptTrade(boolean willAccept) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before accepting a trade!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before accepting a trade!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/acceptTrade";
+		String postData = serializer.sAcceptTradeReq(userCookie.getPlayerID(), willAccept);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
@@ -407,19 +651,54 @@ public class RealServerProxy implements ServerProxy
 	 */
 	@Override
 	public NetGameModel maritimeTrade(int ratio, String inputResource, String outputResource)
+		throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		//TODO fix the interface to accept a ResourceType instead of a string
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before maritime trading!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before maritime trading!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/maritimeTrade";
+		String postData = serializer.sMaritimeTradeReq(userCookie.getPlayerID(), ratio,
+				ResourceType.fromString(inputResource), ResourceType.fromString(outputResource));
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#discardCards(java.util.List)
 	 */
 	@Override
-	public NetGameModel discardCards(List<Integer> resourceList)
+	public NetGameModel discardCards(List<Integer> resourceList) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before discarding cards!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before discarding cards!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/discardCards";
+		String postData = serializer.sDiscardCardsReq(userCookie.getPlayerID(), resourceList);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -588,7 +867,6 @@ public class RealServerProxy implements ServerProxy
 		return userCookie;
 	}
 	
-	
 	/**
 	 * FOR DEBUGGING ONLY
 	 * TODO make private for distro
@@ -598,7 +876,6 @@ public class RealServerProxy implements ServerProxy
 		userCookie = null;
 		gameID = -1;
 	}
-	
 	
 	private String processUserCookie(String uCookie){
 		String tempStr = uCookie.substring(11);
