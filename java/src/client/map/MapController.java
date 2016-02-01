@@ -4,7 +4,7 @@ import shared.definitions.*;
 import shared.model.IMapController;
 import shared.model.map.*;
 import shared.model.map.objects.*;
-
+import shared.model.map.MapException;
 import java.util.Iterator;
 
 import client.base.*;
@@ -60,6 +60,7 @@ public class MapController extends Controller implements IMapController {
 			return !edge.doesRoadExists();
 		} 
 		catch (MapException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
