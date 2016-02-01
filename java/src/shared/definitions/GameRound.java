@@ -2,7 +2,7 @@ package shared.definitions;
 
 public enum GameRound
 {
-	ROLLING, ROBBING, PLAYING, DISCARDING, FIRSTROUND, SECONDROUND, MAINROUND, GAMEOVER();
+	ROLLING, ROBBING, PLAYING, DISCARDING, FIRSTROUND, SECONDROUND, MAINROUND, GAMEOVER;
 	
 	public static String toString(GameRound type)
 	{
