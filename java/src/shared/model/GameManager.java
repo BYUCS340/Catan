@@ -317,10 +317,7 @@ public class GameManager
 			e.printStackTrace();
 			return false;
 		}
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 		return true;
 	}
 	
