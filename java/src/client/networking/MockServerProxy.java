@@ -636,7 +636,7 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public boolean registerUser(String username, String password) 
 	{
-		if(usernameIsValid(username) && passwordIsValid(password){
+		if(usernameIsValid(username) && passwordIsValid(password)){
 			String[] userCredentials = {username, password};
 			loginCredentials.add(userCredentials);
 			return true;
