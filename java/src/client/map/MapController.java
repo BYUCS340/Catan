@@ -51,7 +51,7 @@ public class MapController extends Controller implements IMapController {
 		this.robView = robView;
 	}
 
-	public boolean canPlaceRoad(Coordinate p1, Coordinate p2) {
+	public boolean canPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color) {
 		
 		if (!model.ContainsEdge(p1, p2))
 			return false;
@@ -59,7 +59,13 @@ public class MapController extends Controller implements IMapController {
 		try {
 			Edge edge = model.GetEdge(p1, p2);
 			
-			return !edge.doesRoadExists();
+			if (edge.doesRoadExists())
+				return false;
+			
+			if (VillagesSatisfyRoadPlacement(edge, color))
+				return true;
+			
+			return RoadsSatisfyRoadPlacement(edge, color);
 		} 
 		catch (MapException e) {
 			e.printStackTrace();
@@ -69,8 +75,6 @@ public class MapController extends Controller implements IMapController {
 	
 	public boolean canPlaceSettlement(Coordinate point)
 	{
-		//TODO Needs to be like the lawyer and figure out who its neighbors are.
-		
 		if (!model.ContainsVertex(point))
 			return false;
 		
@@ -122,7 +126,8 @@ public class MapController extends Controller implements IMapController {
 		if (!model.ContainsHex(point))
 			return false;
 		
-		try {
+		try
+		{
 			Hex hex = model.GetHex(point);
 			
 			return hex.getType() != HexType.WATER;
@@ -238,5 +243,40 @@ public class MapController extends Controller implements IMapController {
 		//TODO Implement		
 	}
 	
+	private boolean VillagesSatisfyRoadPlacement(Edge edge, CatanColor color) throws MapException
+	{
+		Vertex vStart = model.GetVertex(edge.getStart());
+		if (vStart.getType() != PieceType.NONE && vStart.getColor() == color)
+			return true;
+		
+		Vertex vEnd = model.GetVertex(edge.getEnd());
+		if (vEnd.getType() != PieceType.NONE && vEnd.getColor() == color)
+			return true;
+		
+		return false;
+	}
+	
+	private boolean RoadsSatisfyRoadPlacement(Edge edge, CatanColor color) throws MapException
+	{
+		Vertex vStart = model.GetVertex(edge.getStart());
+		Iterator<Edge> startEdges = model.GetEdges(vStart);
+		while(startEdges.hasNext())
+		{
+			Edge edgeToCheck = startEdges.next();
+			if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
+				return true;
+		}
+		
+		Vertex vEnd = model.GetVertex(edge.getEnd());
+		Iterator<Edge> endEdges = model.GetEdges(vEnd);
+		while(endEdges.hasNext())
+		{
+			Edge edgeToCheck = endEdges.next();
+			if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
+				return true;
+		}
+		
+		return false;
+	}
 }
 

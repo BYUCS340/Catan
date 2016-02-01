@@ -50,9 +50,6 @@ public class MapModel {
 		ports = new PortHandler();
 		
 		longestRoadLength = LONGEST_ROAD_INITIAL_VALUE;
-		
-		//TODO Move this to the server eventually. This shouldn't be shared.
-		MapGenerator.BeginnerMap(this);
 	}
 	
 	/**
@@ -97,6 +94,37 @@ public class MapModel {
 	public Edge GetEdge(Coordinate p1, Coordinate p2) throws MapException
 	{
 		return edges.GetEdge(p1, p2);
+	}
+	
+	/**
+	 * Gets the edges surrounding a vertex.
+	 * @param vertex The vertex.
+	 * @return The surrounding edges.
+	 */
+	public Iterator<Edge> GetEdges(Vertex vertex)
+	{
+		List<Edge> associatedEdges = new ArrayList<Edge>(3);
+		
+		Iterator<Vertex> vertices = GetVerticies(vertex);
+		while(vertices.hasNext())
+		{
+			Vertex neighbor = vertices.next();
+			
+			Coordinate mainPoint = vertex.getPoint();
+			Coordinate neighborPoint = neighbor.getPoint();
+			try
+			{
+				if (edges.ContainsEdge(mainPoint, neighborPoint))
+					associatedEdges.add(edges.GetEdge(mainPoint, neighborPoint));
+			}
+			catch (MapException e)
+			{
+				//Shouldn't happen
+				e.printStackTrace();
+			}
+		}
+		
+		return java.util.Collections.unmodifiableList(associatedEdges).iterator();
 	}
 	
 	/**
@@ -429,7 +457,7 @@ public class MapModel {
 	{
 		int totalCount = 0;
 		
-		Iterator<Edge> associatedEdges = GetAssociatedEdges(vertex);
+		Iterator<Edge> associatedEdges = GetEdges(vertex);
 		while(associatedEdges.hasNext())
 		{
 			Edge edge = associatedEdges.next();
@@ -463,31 +491,5 @@ public class MapModel {
 		}
 		
 		return totalCount;
-	}
-	
-	private Iterator<Edge> GetAssociatedEdges(Vertex vertex)
-	{
-		List<Edge> associatedEdges = new ArrayList<Edge>(3);
-		
-		Iterator<Vertex> vertices = GetVerticies(vertex);
-		while(vertices.hasNext())
-		{
-			Vertex neighbor = vertices.next();
-			
-			Coordinate mainPoint = vertex.getPoint();
-			Coordinate neighborPoint = neighbor.getPoint();
-			try
-			{
-				if (edges.ContainsEdge(mainPoint, neighborPoint))
-					associatedEdges.add(edges.GetEdge(mainPoint, neighborPoint));
-			}
-			catch (MapException e)
-			{
-				//Shouldn't happen
-				e.printStackTrace();
-			}
-		}
-		
-		return java.util.Collections.unmodifiableList(associatedEdges).iterator();
 	}
 }

@@ -76,9 +76,9 @@ public class MapView extends PanelView implements IMapView
 		}
 		
 		@Override
-		public boolean canPlaceRoad(Coordinate p1, Coordinate p2)
+		public boolean canPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
 		{
-			return getController().canPlaceRoad(p1, p2);
+			return getController().canPlaceRoad(p1, p2, color);
 		}
 		
 		@Override

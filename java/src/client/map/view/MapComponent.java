@@ -266,7 +266,7 @@ public class MapComponent extends JComponent
 					Coordinate p1 = v1.getPoint();
 					Coordinate p2 = v2.getPoint();
 					
-					dropAllowed = getController().canPlaceRoad(p1, p2);
+					dropAllowed = getController().canPlaceRoad(p1, p2, dropColor);
 					
 					if (dropAllowed)
 					{
