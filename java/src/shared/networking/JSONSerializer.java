@@ -314,8 +314,27 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sOfferTradeReq(int playerIndex, List<Integer> resourceList, int receiver)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "offerTrade");
+		obj.put("playerIndex", playerIndex);
+		obj.put("offer", oResourceList(resourceList));
+		obj.put("receiver", receiver);
+		
+		return obj.toString();
+	}
+	
+	private JSONObject oResourceList(List<Integer> resourceList)
+	{
+		JSONObject obj = new JSONObject();
+		
+		obj.put("brick", resourceList.get(0));
+		obj.put("ore", resourceList.get(1));
+		obj.put("sheep", resourceList.get(2));
+		obj.put("wheat", resourceList.get(3));
+		obj.put("wood", resourceList.get(4));
+		
+		return obj;
 	}
 
 	/* (non-Javadoc)
@@ -324,18 +343,43 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sAcceptTradeReq(int playerIndex, boolean willAccept)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "acceptTrade");
+		obj.put("playerIndex", playerIndex);
+		obj.put("willAccept", willAccept);
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)
+	 * TODO change method name to be consistent
 	 * @see shared.networking.Serializer#sMaritimeTrade(int, int, shared.definitions.ResourceType, shared.definitions.ResourceType)
 	 */
 	@Override
 	public String sMaritimeTrade(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "maritimeTrade");
+		obj.put("playerIndex", playerIndex);
+		
+		if(ratio > 0)
+		{
+			obj.put("ratio", ratio);
+		}
+		
+		if(inputResource != null)
+		{
+			obj.put("inputResource", ResourceType.toString(inputResource));
+		}
+		
+		if(outputResource != null)
+		{
+			obj.put("outputResource", ResourceType.toString(outputResource));
+		}
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)

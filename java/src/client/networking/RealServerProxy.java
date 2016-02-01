@@ -598,20 +598,52 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#offerTrade(java.util.List, int)
 	 */
 	@Override
-	public NetGameModel offerTrade(List<Integer> resourceList, int receiver)
+	public NetGameModel offerTrade(List<Integer> resourceList, int receiver) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before offering a trade!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before offering a trade!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/offerTrade";
+		String postData = serializer.sOfferTradeReq(userCookie.getPlayerID(), resourceList, receiver);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#acceptTrade(boolean)
 	 */
 	@Override
-	public NetGameModel acceptTrade(boolean willAccept)
+	public NetGameModel acceptTrade(boolean willAccept) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before accepting a trade!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before accepting a trade!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/acceptTrade";
+		String postData = serializer.sAcceptTradeReq(userCookie.getPlayerID(), willAccept);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
@@ -619,9 +651,28 @@ public class RealServerProxy implements ServerProxy
 	 */
 	@Override
 	public NetGameModel maritimeTrade(int ratio, String inputResource, String outputResource)
+		throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		//TODO fix the interface to accept a ResourceType instead of a string
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before maritime trading!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before maritime trading!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/maritimeTrade";
+		String postData = serializer.sMaritimeTrade(userCookie.getPlayerID(), ratio,
+				ResourceType.fromString(inputResource), ResourceType.fromString(outputResource));
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
