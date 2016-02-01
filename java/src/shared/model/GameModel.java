@@ -2,6 +2,7 @@ package shared.model;
 
 import java.util.List;
 
+import client.map.MapController;
 import shared.model.chat.ChatBox;
 
 /**
@@ -11,10 +12,12 @@ import shared.model.chat.ChatBox;
  */
 public class GameModel
 {
-	public GameActionLog gameActionLog;
+	public MapController mapController;
+	public GameState gameState;
+	public Bank gameBank;
 	public List<Player> players;
-	public ChatBox chatBox;
-	
-	public int winner;
+	public VictoryPointManager victoryPointManager;
+	public ChatBox waterCooler;
+	public GameActionLog log;
 	public int version;
 }

@@ -34,7 +34,8 @@ public class GameManager
 	 * Constructor for the game manager
 	 * @post all players
 	 */
-	public GameManager(){
+	public GameManager()
+	{
 		version = 0;
 		waterCooler = new ChatBox();
 		log = new GameActionLog();
