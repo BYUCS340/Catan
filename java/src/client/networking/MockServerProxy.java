@@ -14,8 +14,23 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import shared.networking.UserCookie;
-import shared.networking.transport.*;
+import shared.networking.transport.NetBank;
+import shared.networking.transport.NetChat;
+import shared.networking.transport.NetCity;
+import shared.networking.transport.NetDevCardList;
+import shared.networking.transport.NetGame;
+import shared.networking.transport.NetGameModel;
+import shared.networking.transport.NetHex;
+import shared.networking.transport.NetHexLocation;
+import shared.networking.transport.NetLine;
+import shared.networking.transport.NetLog;
+import shared.networking.transport.NetMap;
+import shared.networking.transport.NetPlayer;
+import shared.networking.transport.NetPort;
+import shared.networking.transport.NetResourceList;
+import shared.networking.transport.NetRoad;
+import shared.networking.transport.NetSettlement;
+import shared.networking.transport.NetTurnTracker;
 
 /**
  * @author cFortuna
@@ -880,7 +895,7 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel monopolyCard(String resource) throws ServerProxyException
+	public NetGameModel monopolyCard(ResourceType resource) throws ServerProxyException
 	{
         if(!userLoggedIn || !userJoinedGame){
             throw new ServerProxyException("monopolyCard invalid when user not logged in");
@@ -991,7 +1006,7 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel maritimeTrade(int ratio, String inputResource, String outputResource) throws ServerProxyException
+	public NetGameModel maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) throws ServerProxyException
 	{
         if(!userLoggedIn || !userJoinedGame){
             throw new ServerProxyException("maritimeTrade invalid when user not logged in");

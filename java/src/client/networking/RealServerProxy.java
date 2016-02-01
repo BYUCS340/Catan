@@ -464,7 +464,7 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#monopolyCard(java.lang.String)
 	 */
 	@Override
-	public NetGameModel monopolyCard(String resource) throws ServerProxyException
+	public NetGameModel monopolyCard(ResourceType resource) throws ServerProxyException
 	{
 		//TODO make this a ResourceType method instead of a resource method
 		if(userCookie == null)
@@ -480,7 +480,7 @@ public class RealServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/Monopoly";
 		//TODO fix this hacky way of getting ResourceType param to work
-		String postData = serializer.sMonopolyCardReq(userCookie.getPlayerID(), ResourceType.fromString(resource));
+		String postData = serializer.sMonopolyCardReq(userCookie.getPlayerID(), resource);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -494,7 +494,6 @@ public class RealServerProxy implements ServerProxy
 	@Override
 	public NetGameModel monumentCard() throws ServerProxyException
 	{
-		//TODO make this a ResourceType method instead of a resource method
 		if(userCookie == null)
 		{
 			throw new ServerProxyException("A user must be logged in before playing a monument card!\n"
@@ -507,7 +506,6 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/Monument";
-		//TODO fix this hacky way of getting ResourceType param to work
 		String postData = serializer.sMonumentCardReq(userCookie.getPlayerID());
 		String result = doJSONPost(urlPath, postData, false, false);
 		
@@ -650,7 +648,7 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#maritimeTrade(int, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public NetGameModel maritimeTrade(int ratio, String inputResource, String outputResource)
+	public NetGameModel maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource)
 		throws ServerProxyException
 	{
 		//TODO fix the interface to accept a ResourceType instead of a string
@@ -667,7 +665,7 @@ public class RealServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/maritimeTrade";
 		String postData = serializer.sMaritimeTradeReq(userCookie.getPlayerID(), ratio,
-				ResourceType.fromString(inputResource), ResourceType.fromString(outputResource));
+				inputResource, outputResource);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
