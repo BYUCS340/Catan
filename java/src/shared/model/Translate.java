@@ -16,43 +16,28 @@ public class Translate
 {
 	public GameModel fromNetGameModel(NetGameModel netGameModel)
 	{
-		Log gameLog = fromNetLog(netGameModel.getNetGameLog());
+		GameActionLog gameActionLog = fromNetLog(netGameModel.getNetGameLog());  //I think this works -- but only logs as player 0
 		Map map = fromNetMap(netGameModel.getNetMap());
 		List<Player> players = fromNetPlayers(netGameModel.getNetPlayers());  //I think this works
-		DevCardList devCardList = fromNetDevCardList(netGameModel.getNetDeck());
-		ChatBox chat = fromNetChat(netGameModel.getNetChat());
+		ChatBox chat = fromNetChat(netGameModel.getNetChat());  //I think this works -- but only posts as player 0
 		TradeOffer tradeOffer = fromNetTradeOffer(netGameModel.getNetTradeOffer());
 		TurnTracker turnTracker = fromNetTurnTracker(netGameModel.getNetTurnTracker());
 		int winner = netGameModel.getWinner();
 		int version = netGameModel.getVersion();
 	}
 	
-	public AI fromNetAI(NetAI ai)
-	{
-		return null;
-	}
-	
-	public Bank fromNetBank(NetBank netBank)
-	{
-		return null;
-	}
-	
 	public ChatBox fromNetChat(NetChat netChat)
 	{
-		return null;
-	}
-	
-	public DevCardList fromNetDevCardList(NetDevCardList netDevCardList)
-	{
-		return null;
+		ChatBox chatBox = new ChatBox();
+		for (int i = 0; i < netChat.getLines().size(); i++)
+		{
+			//always posts as player 0 (because I don't have a good way of determining playerID from message source yet)
+			chatBox.put(netChat.getLines().get(i).getMessage(), 0);
+		}
+		return chatBox;
 	}
 	
 	public EdgeLocation fromNetEdgeLocation(NetEdgeLocation netEdgeLocation)
-	{
-		return null;
-	}
-	
-	public Game fromNetGame(NetGame netGame)
 	{
 		return null;
 	}
@@ -67,9 +52,15 @@ public class Translate
 		return null;
 	}
 	
-	public Log fromNetLog(NetLog netLog)
+	public GameActionLog fromNetLog(NetLog netLog)
 	{
-		return null;
+		GameActionLog gameActionLog = new GameActionLog();
+		for (int i = 0; i < netLog.getLines().size(); i++)
+		{
+			//always logs as player 0 (because I don't have a good way of determining playerID from message source yet)
+			gameActionLog.logAction(0, netLog.getLines().get(i).getMessage());
+		}
+		return gameActionLog;
 	}
 	
 	public Map fromNetMap(NetMap netMap)
