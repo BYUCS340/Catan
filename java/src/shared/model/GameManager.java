@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import client.map.MapController;
+import client.networking.ServerProxy;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
@@ -33,6 +34,7 @@ public class GameManager
 	private int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;
+	private ServerProxy proxy;
 	
 	/**
 	 * Constructor for the game manager
@@ -51,6 +53,14 @@ public class GameManager
 		//fill the array with -1 by default
 		Arrays.fill(playerColors,-1);
 		playerCanMoveRobber = -1;
+		proxy = null;
+	}
+	
+	public GameManager(ServerProxy clientProxy)
+	{
+		this();
+		this.proxy = clientProxy;
+		
 	}
 	
 	/**
@@ -119,6 +129,10 @@ public class GameManager
 		//Call map to update the get the transacations
 		return diceRoll; // chosen by fair dice roll
 				  // guaranteed to be random
+		if (proxy != null)
+		{
+			proxy.rollNumber(diceRoll);
+		}
 	}
 	
 	
