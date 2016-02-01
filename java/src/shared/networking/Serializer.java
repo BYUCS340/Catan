@@ -177,7 +177,7 @@ public interface Serializer
 	 * @param outputResource The resource being traded for
 	 * @return Serialized data
 	 */
-	public String sMaritimeTrade(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource);
+	public String sMaritimeTradeReq(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource);
 	
 	/**
 	 * Serializes a request to discard cards
@@ -185,7 +185,7 @@ public interface Serializer
 	 * @param resourceList A resource list with the cards being discarded
 	 * @return Serialized data
 	 */
-	public String sDiscardCards(int playerIndex, List<Integer> resourceList);
+	public String sDiscardCardsReq(int playerIndex, List<Integer> resourceList);
 	
 	
 }

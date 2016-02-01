@@ -353,11 +353,10 @@ public class JSONSerializer implements Serializer
 	}
 
 	/* (non-Javadoc)
-	 * TODO change method name to be consistent
 	 * @see shared.networking.Serializer#sMaritimeTrade(int, int, shared.definitions.ResourceType, shared.definitions.ResourceType)
 	 */
 	@Override
-	public String sMaritimeTrade(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource)
+	public String sMaritimeTradeReq(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource)
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -386,10 +385,15 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sDiscardCards(int, java.util.List)
 	 */
 	@Override
-	public String sDiscardCards(int playerIndex, List<Integer> resourceList)
+	public String sDiscardCardsReq(int playerIndex, List<Integer> resourceList)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "discardCards");
+		obj.put("playerIndex", playerIndex);
+		obj.put("discardedCards", oResourceList(resourceList));
+		
+		return obj.toString();
 	}
 
 }

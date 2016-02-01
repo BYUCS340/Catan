@@ -666,7 +666,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/maritimeTrade";
-		String postData = serializer.sMaritimeTrade(userCookie.getPlayerID(), ratio,
+		String postData = serializer.sMaritimeTradeReq(userCookie.getPlayerID(), ratio,
 				ResourceType.fromString(inputResource), ResourceType.fromString(outputResource));
 		String result = doJSONPost(urlPath, postData, false, false);
 		
@@ -679,10 +679,26 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#discardCards(java.util.List)
 	 */
 	@Override
-	public NetGameModel discardCards(List<Integer> resourceList)
+	public NetGameModel discardCards(List<Integer> resourceList) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before discarding cards!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before discarding cards!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/discardCards";
+		String postData = serializer.sDiscardCardsReq(userCookie.getPlayerID(), resourceList);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -851,7 +867,6 @@ public class RealServerProxy implements ServerProxy
 		return userCookie;
 	}
 	
-	
 	/**
 	 * FOR DEBUGGING ONLY
 	 * TODO make private for distro
@@ -861,7 +876,6 @@ public class RealServerProxy implements ServerProxy
 		userCookie = null;
 		gameID = -1;
 	}
-	
 	
 	private String processUserCookie(String uCookie){
 		String tempStr = uCookie.substring(11);
