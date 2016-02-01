@@ -1,6 +1,7 @@
 package shared.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import client.map.MapController;
@@ -46,6 +47,8 @@ public class GameManager
 		//mapController = new MapController();
 		victoryPointManager = new VictoryPointManager();
 		playerColors = new int[10];
+		//fill the array with -1 by default
+		Arrays.fill(playerColors,-1);
 		
 	}
 	
@@ -58,7 +61,7 @@ public class GameManager
 	public int AddPlayer(String name, CatanColor color, boolean isHuman) throws ModelException
 	{
 		//check if that color has already been used
-		if (playerColors[color.ordinal()] != 0)
+		if (playerColors[color.ordinal()] != -1)
 			throw new ModelException();
 		
 		int newIndex = players.size();
@@ -73,6 +76,11 @@ public class GameManager
 		return newIndex;
 	}
 	
+	/**
+	 * Gets the player index by color
+	 * @param color
+	 * @return -1 if not found
+	 */
 	public int getPlayerIndexByColor(CatanColor color)
 	{
 		return playerColors[color.ordinal()];
@@ -96,12 +104,14 @@ public class GameManager
 	 * @post all player's banks will be added resources
 	 * @return the number rolled
 	 */
-	public int RollDice() throws ModelException
+	public int RollDice()
 	{
-		log.logAction(this.CurrentPlayersTurn(), "rolled a 4");
+		
 		gameState.startBuildPhase();
+		int diceRoll = 4;
+		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
 		//Call map to update the get the transacations
-		return 4; // chosen by fair dice roll
+		return diceRoll; // chosen by fair dice roll
 				  // guaranteed to be random
 	}
 	
@@ -140,9 +150,14 @@ public class GameManager
 	 * @param playerID
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuildRoad(int playerID) throws ModelException
+	public void BuildRoad(int playerID,Coordinate start, Coordinate end) throws ModelException
 	{
 		//check to see if player has resources
+		if (!this.CanBuildRoad(playerID, start,end))
+			throw new ModelException();
+		GetPlayer(playerID).playerBank.buildRoad();
+		CatanColor color = this.getPlayerColorByIndex(playerID);
+		map.placeRoad(start,end, color);
 	}
 	
 	/**
@@ -150,9 +165,15 @@ public class GameManager
 	 * @param playerID
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuildSettlement(int playerID) throws ModelException
+	public void BuildSettlement(int playerID,Coordinate location) throws ModelException
 	{
 		//check to see if player has resources
+		if (!this.CanBuildSettlement(playerID, location))
+			throw new ModelException();
+		GetPlayer(playerID).playerBank.buildSettlement();
+		CatanColor color = this.getPlayerColorByIndex(playerID);
+		map.placeSettlement(location, color);
+		
 	}
 	
 	/**
@@ -160,9 +181,14 @@ public class GameManager
 	 * @param playerID
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuildCity(int playerID) throws ModelException
+	public void BuildCity(int playerID,Coordinate location) throws ModelException
 	{
 		//check to see if player has resources
+		if (!this.CanBuildSettlement(playerID, location))
+			throw new ModelException();
+		GetPlayer(playerID).playerBank.buildRoad();
+		CatanColor color = this.getPlayerColorByIndex(playerID);
+		map.placeCity(location,color);
 	}
 	
 	/**
@@ -170,9 +196,14 @@ public class GameManager
 	 * @param playerID 0 to 3
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuyDevCard(int playerID) throws ModelException
+	public DevCardType BuyDevCard(int playerID) throws ModelException
 	{
 		if (!this.CanBuyDevCard(playerID)) throw new ModelException();
+		Bank playerBank = GetPlayer(playerID).playerBank;
+		playerBank.buyDevCard();
+		DevCardType devcard = gameBank.getDevCard();
+		playerBank.giveDevCard(devcard);
+		return devcard;
 	}
 	
 	/**
@@ -183,6 +214,7 @@ public class GameManager
 	public int getTradeRatio(int playerID, ResourceType type)
 	{
 		//Check the Map to see if they're connected to a port
+		//map.getTradeRatio?
 		//Otherwise return the default trade in value
 		return 4;
 	}
@@ -198,7 +230,7 @@ public class GameManager
 	public boolean CanPlayerPlay(int playerID)
 	{
 		//If we aren't in the building phase and this player isn't their turn
-		if (CurrentState() != GameStatus.BUILDING || this.gameState.activePlayerIndex == playerID)
+		if (CurrentState() != GameStatus.BUILDING || this.gameState.activePlayerIndex != playerID)
 			return false;
 		else
 			return false;
@@ -208,6 +240,7 @@ public class GameManager
 	 * @param playerID 0 to 3
 	 * @param type the type of the resource
 	 * @param amount number to discard
+	 * @todo: how do we implement this?
 	 * @return
 	 */
 	public boolean CanDiscardCards(int playerID,ResourceType type, int amount)
@@ -235,9 +268,10 @@ public class GameManager
 	 * Checks to see if a player can build a road at a location
 	 * @param playerID 0-3
 	 * @param location the edge's location
+	 * @param end 
 	 * @return true if possible
 	 */
-	public boolean CanBuildRoad(int playerID,Coordinate location)
+	public boolean CanBuildRoad(int playerID,Coordinate start, Coordinate end)
 	{
 		if (!CanPlayerPlay(playerID))
 			return false;
@@ -246,6 +280,8 @@ public class GameManager
 			if (!GetPlayer(playerID).playerBank.canBuildRoad())
 				return false;
 			//check map
+			if (!map.canPlaceRoad(start, end))
+				return false;
 		}
 		catch (ModelException e)
 		{
@@ -268,7 +304,11 @@ public class GameManager
 			return false;
 		try 
 		{
+			//check if they have the resources needed
 			if (!GetPlayer(playerID).playerBank.canBuildRoad())
+				return false;
+			//ask the map
+			if (!map.canPlaceSettlement(location))
 				return false;
 		}
 		catch (ModelException e)
@@ -277,10 +317,7 @@ public class GameManager
 			e.printStackTrace();
 			return false;
 		}
-<<<<<<< HEAD
 		return true;
-=======
->>>>>>> master
 	}
 	
 	/**
@@ -296,6 +333,9 @@ public class GameManager
 		try 
 		{
 			if (!GetPlayer(playerID).playerBank.canBuildCity())
+				return false;
+			//ask the map
+			if (!map.canPlaceCity(location,this.getPlayerColorByIndex(playerID)))
 				return false;
 		}
 		catch (ModelException e)
