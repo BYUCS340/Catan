@@ -7,14 +7,17 @@ import java.util.List;
  * @author matthewcarlson
  *
  */
-public class ChatBox {
+public class ChatBox
+{
 	List <ChatMessage> messages;
 	
-	public void put(String message, int playerID){
+	public void put(String message, int playerID)
+	{
 		ChatMessage mess = new ChatMessage(playerID,message);
 		messages.add(mess);
 	}
-	public ChatMessage get(int i){
+	public ChatMessage get(int i)
+	{
 		return null;
 	}
 }

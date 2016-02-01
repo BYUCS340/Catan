@@ -12,7 +12,8 @@ public class NetLog
 	 * Default constructor, instantiates a new ArrayList
 	 * of Strings
 	 */
-	public NetLog(){
+	public NetLog()
+	{
 		lines = new ArrayList<NetLine>();
 	}
 	
@@ -20,7 +21,8 @@ public class NetLog
 	 * Adds a line to the net log entry list
 	 * @param line The line to add to the log
 	 */
-	public void addLine(NetLine line){
+	public void addLine(NetLine line)
+	{
 		lines.add(line);
 	}
 

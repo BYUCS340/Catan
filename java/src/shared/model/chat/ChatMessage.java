@@ -4,7 +4,8 @@ package shared.model.chat;
  * @author matthewcarlson
  *
  */
-public class ChatMessage {
+public class ChatMessage
+{
 	
 	public int playerId;   //the player's id 0-3
 	public String message; //the message itself
@@ -15,14 +16,16 @@ public class ChatMessage {
 	 * @param playerID
 	 * @param message
 	 */
-	public ChatMessage(int playerID, String message) {
-		if (playerID < 0 || playerID >3) playerID = -1;
+	public ChatMessage(int playerID, String message)
+	{
+		if (playerID < 0 || playerID > 3) playerID = -1;
 		this.playerId = playerID;
 		this.message = message;
 		timestamp = System.currentTimeMillis();
 	}
-	public ChatMessage(int playerID, String message,long timestamp) {
-		this(playerID,message);
+	public ChatMessage(int playerID, String message, long timestamp)
+	{
+		this(playerID, message);
 		this.timestamp = timestamp;
 	}
 	
