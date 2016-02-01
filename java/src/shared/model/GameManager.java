@@ -32,6 +32,7 @@ public class GameManager
 	private IMapController map;
 	private int version;
 	private int[] playerColors;
+	private int playerCanMoveRobber;
 	
 	/**
 	 * Constructor for the game manager
@@ -49,7 +50,7 @@ public class GameManager
 		playerColors = new int[10];
 		//fill the array with -1 by default
 		Arrays.fill(playerColors,-1);
-		
+		playerCanMoveRobber = -1;
 	}
 	
 	/**
@@ -109,6 +110,11 @@ public class GameManager
 		
 		gameState.startBuildPhase();
 		int diceRoll = 4;
+		//check if we can move the robber
+		if (diceRoll == 7 )
+		{
+			
+		}
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
 		//Call map to update the get the transacations
 		return diceRoll; // chosen by fair dice roll
@@ -158,6 +164,7 @@ public class GameManager
 		GetPlayer(playerID).playerBank.buildRoad();
 		CatanColor color = this.getPlayerColorByIndex(playerID);
 		map.placeRoad(start,end, color);
+		victoryPointManager.playerBuiltRoad(playerID);
 	}
 	
 	/**
@@ -173,6 +180,7 @@ public class GameManager
 		GetPlayer(playerID).playerBank.buildSettlement();
 		CatanColor color = this.getPlayerColorByIndex(playerID);
 		map.placeSettlement(location, color);
+		victoryPointManager.playerBuiltSettlement(playerID);
 		
 	}
 	
@@ -189,6 +197,7 @@ public class GameManager
 		GetPlayer(playerID).playerBank.buildRoad();
 		CatanColor color = this.getPlayerColorByIndex(playerID);
 		map.placeCity(location,color);
+		victoryPointManager.playerBuiltCity(playerID);
 	}
 	
 	/**
@@ -203,6 +212,7 @@ public class GameManager
 		playerBank.buyDevCard();
 		DevCardType devcard = gameBank.getDevCard();
 		playerBank.giveDevCard(devcard);
+		victoryPointManager.playerGotDevCard(playerID, devcard);
 		return devcard;
 	}
 	
