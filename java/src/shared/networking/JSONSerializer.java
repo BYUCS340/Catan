@@ -13,6 +13,7 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
+import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 
 
@@ -256,8 +257,14 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sBuildRoadReq(int playerIndex, EdgeLocation roadLocation, boolean free)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "buildRoad");
+		obj.put("playerIndex", playerIndex);
+		obj.put("roadLocation", oEdgeLocation(roadLocation));
+		obj.put("free", free);
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)
@@ -266,8 +273,24 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sBuildSettlementReq(int playerIndex, VertexLocation vertexLocation, boolean free)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "buildSettlement");
+		obj.put("playerIndex", playerIndex);
+		obj.put("vertexLocation", oVertexLocation(vertexLocation));
+		obj.put("free", free);
+		
+		return obj.toString();
+	}
+	
+	private JSONObject oVertexLocation(VertexLocation vertexLocation)
+	{
+		JSONObject obj = new JSONObject();
+		obj.put("x", vertexLocation.getHexLoc().getX());
+		obj.put("y", vertexLocation.getHexLoc().getY());
+		obj.put("direction", VertexDirection.toString(vertexLocation.getDir()).toUpperCase());
+		
+		return obj;
 	}
 
 	/* (non-Javadoc)
@@ -276,8 +299,13 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sBuildCityReq(int playerIndex, VertexLocation vertexLocation)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "buildCity");
+		obj.put("playerIndex", playerIndex);
+		obj.put("vertexLocation", oVertexLocation(vertexLocation));
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)

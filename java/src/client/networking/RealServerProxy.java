@@ -520,30 +520,78 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#buildRoad(shared.locations.EdgeLocation, boolean)
 	 */
 	@Override
-	public NetGameModel buildRoad(EdgeLocation edgeLocation, boolean free)
+	public NetGameModel buildRoad(EdgeLocation edgeLocation, boolean free) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before building a road!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before building a road!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/buildRoad";
+		String postData = serializer.sBuildRoadReq(userCookie.getPlayerID(), edgeLocation, free);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#buildSettlement(shared.locations.VertexLocation, boolean)
 	 */
 	@Override
-	public NetGameModel buildSettlement(VertexLocation vertexLocation, boolean free)
+	public NetGameModel buildSettlement(VertexLocation vertexLocation, boolean free) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before building a settlement!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before building a road!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/buildSettlement";
+		String postData = serializer.sBuildSettlementReq(userCookie.getPlayerID(), vertexLocation, free);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#buildCity(shared.locations.VertexLocation)
 	 */
 	@Override
-	public NetGameModel buildCity(VertexLocation vertexLocation)
+	public NetGameModel buildCity(VertexLocation vertexLocation) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before building a city!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before building a city!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/buildCity";
+		String postData = serializer.sBuildCityReq(userCookie.getPlayerID(), vertexLocation);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
