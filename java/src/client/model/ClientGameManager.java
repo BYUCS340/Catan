@@ -3,6 +3,8 @@ package client.model;
 import client.networking.ServerProxy;
 import client.networking.ServerProxyException;
 import shared.model.GameManager;
+import shared.model.ModelException;
+import shared.model.map.Coordinate;
 
 public class ClientGameManager extends GameManager
 {
@@ -32,5 +34,13 @@ public class ClientGameManager extends GameManager
 			e.printStackTrace();
 		}
 		return roll;
+	}
+	
+	@Override
+	public void BuildRoad(int playerID,Coordinate start, Coordinate end) throws ModelException
+	{
+		super.BuildRoad(playerID, start, end);
+		
+		//proxy.buildRoad(edgeLocation, false);
 	}
 }
