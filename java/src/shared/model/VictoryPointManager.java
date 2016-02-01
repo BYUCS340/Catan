@@ -25,6 +25,27 @@ public class VictoryPointManager
 	//This class keeps track of each players' victory points.
 	
 	/**
+	 * 
+	 * @param p1Score
+	 * @param p2Score
+	 * @param p3Score
+	 * @param p4Score
+	 * @param currRoadOwner
+	 * @param currArmyOWner
+	 * @param armySize
+	 */
+	public VictoryPointManager(int p1Score, int p2Score, int p3Score, int p4Score, int currRoadOwner, int currArmyOwner, int armySize)
+	{
+		victoryPoints[0] = p1Score;
+		victoryPoints[1] = p2Score;
+		victoryPoints[2] = p3Score;
+		victoryPoints[3] = p4Score;
+		
+		this.currentLargestArmyPlayer = currArmyOwner;
+		this.currentLargestArmySize = armySize;
+		this.currentLongestRoadPlayer = currRoadOwner;
+	}
+	/**
 	 * Gets the current number of victory points the current player has
 	 * @param playerIndex 0 to 3
 	 * @return 0-10
