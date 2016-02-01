@@ -45,6 +45,13 @@ public class VictoryPointManager
 		this.currentLargestArmySize = armySize;
 		this.currentLongestRoadPlayer = currRoadOwner;
 	}
+	
+	/**
+	 * Generic default contructor
+	 */
+	public VictoryPointManager() {
+		// TODO Auto-generated constructor stub
+	}
 	/**
 	 * Gets the current number of victory points the current player has
 	 * @param playerIndex 0 to 3

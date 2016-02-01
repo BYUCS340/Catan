@@ -41,7 +41,7 @@ public class TestGameManager {
 			
 		} catch (ModelException e) {
 			// TODO Auto-generated catch block
-			assert(true);
+			fail("Player wasn't able to add");
 			e.printStackTrace();
 		}
 	}
