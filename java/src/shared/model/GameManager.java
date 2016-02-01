@@ -9,8 +9,7 @@ import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
 import shared.definitions.GameStatus;
 import shared.definitions.ResourceType;
-import shared.locations.EdgeLocation;
-import shared.locations.VertexLocation;
+import shared.model.map.Coordinate;
 import shared.model.chat.ChatBox;
 import shared.networking.transport.NetGameModel;
 
@@ -218,13 +217,15 @@ public class GameManager
 	 * @param location the edge's location
 	 * @return true if possible
 	 */
-	public boolean CanBuildRoad(int playerID,EdgeLocation location)
+	public boolean CanBuildRoad(int playerID,Coordinate location)
 	{
 		if (!CanPlayerPlay(playerID))
 			return false;
 		try 
 		{
-			return GetPlayer(playerID).playerBank.canBuildRoad();
+			if (!GetPlayer(playerID).playerBank.canBuildRoad())
+				return false;
+			//check map
 		}
 		catch (ModelException e)
 		{
@@ -232,6 +233,7 @@ public class GameManager
 			e.printStackTrace();
 			return false;
 		}
+		return true;
 	}
 	
 	/**
@@ -240,13 +242,14 @@ public class GameManager
 	 * @param location the vertex
 	 * @return
 	 */
-	public boolean CanBuildSettlement(int playerID, VertexLocation location)
+	public boolean CanBuildSettlement(int playerID, Coordinate location)
 	{
 		if (!CanPlayerPlay(playerID))
 			return false;
 		try 
 		{
-			return GetPlayer(playerID).playerBank.canBuildRoad();
+			if (!GetPlayer(playerID).playerBank.canBuildRoad())
+				return false;
 		}
 		catch (ModelException e)
 		{
@@ -254,6 +257,10 @@ public class GameManager
 			e.printStackTrace();
 			return false;
 		}
+<<<<<<< HEAD
+		return true;
+=======
+>>>>>>> master
 	}
 	
 	/**
@@ -262,21 +269,66 @@ public class GameManager
 	 * @param location the vertex
 	 * @return
 	 */
-	public boolean CanBuildCity (int playerID, VertexLocation location)
+	public boolean CanBuildCity (int playerID, Coordinate location)
 	{
-		return false;
+		if (!CanPlayerPlay(playerID))
+			return false;
+		try 
+		{
+			if (!GetPlayer(playerID).playerBank.canBuildCity())
+				return false;
+		}
+		catch (ModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 	public boolean CanOfferTrade (int playerID)
 	{
-		return false;
+		if (!CanPlayerPlay(playerID))
+			return false;
+		try 
+		{
+			GetPlayer(playerID).playerBank.canBuildCity();
+		}
+		catch (ModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	public boolean CanMaritimeTrade (int playerID)
 	{
-		return false;
+		if (!CanPlayerPlay(playerID))
+			return false;
+		try 
+		{
+			GetPlayer(playerID).playerBank.canBuildCity();
+		}
+		catch (ModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
+	
+	/**
+	 * 
+	 * @param playerID
+	 * @return
+	 */
 	public boolean CanFinishTurn (int playerID)
 	{
+		if (this.CurrentPlayersTurn() != playerID) return false;
+		if (this.CurrentState() == GameStatus.BUILDING) return true;
 		return false;
 	}
 	
@@ -301,6 +353,12 @@ public class GameManager
 		}
 	}
 	
+	/**
+	 * Checks if a player has at least one dev card of the type
+	 * @param playerID
+	 * @param type
+	 * @return
+	 */
 	private boolean PlayerHasADevCard(int playerID, DevCardType type)
 	{
 		//This is a total message chain but eh
@@ -369,7 +427,7 @@ public class GameManager
 	}
 	
 	/**
-	 * 
+	 * Check to see if they have the momument card
 	 * @param playerID
 	 * @return
 	 */

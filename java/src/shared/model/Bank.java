@@ -130,7 +130,8 @@ public class Bank
 		{
 			throw new ModelException();
 		}
-		else{
+		else
+		{
 			//take one from the array
 			this.devCards[isThisYourCard.ordinal()] --;
 			return isThisYourCard;
