@@ -3,6 +3,7 @@ package shared.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import client.map.*;
 import shared.definitions.*;
 import shared.model.chat.*;
 import shared.networking.transport.*;
@@ -17,38 +18,50 @@ public class Translate
 	public GameModel fromNetGameModel(NetGameModel netGameModel)
 	{
 		GameModel gameModel = new GameModel();
-		gameModel.gameActionLog = fromNetLog(netGameModel.getNetGameLog());  //I think this works -- but only logs as player 0
-		gameModel.players = fromNetPlayers(netGameModel.getNetPlayers());  //I think this works
-		gameModel.chatBox = fromNetChat(netGameModel.getNetChat());  //I think this works -- but only posts as player 0
-		//Map map = fromNetMap(netGameModel.getNetMap());
-		//TradeOffer tradeOffer = fromNetTradeOffer(netGameModel.getNetTradeOffer());
-		//TurnTracker turnTracker = fromNetTurnTracker(netGameModel.getNetTurnTracker());
-		gameModel.winner = netGameModel.getWinner();
-		gameModel.version = netGameModel.getVersion();
+		
+		gameModel.mapController = fromNetMap(netGameModel.getNetMap());  //UNSTARTED -- this is tricky cause I don't know our Map very well
+		gameModel.gameState = fromNetTurnTracker(netGameModel.getNetTurnTracker());  //FINISHED? -- but NetGameModel doesn't return a GameStatus
+		gameModel.gameBank = fromNetBank(netGameModel.getNetBank());  //FINISHED? -- but only has resource cards (no dev cards)
+		gameModel.players = fromNetPlayers(netGameModel.getNetPlayers());  //FINISHED?
+		gameModel.victoryPointManager = fromNetVPManager(netGameModel.getNetTurnTracker(), netGameModel.getNetPlayers());  //UNFINISHED
+		gameModel.waterCooler = fromNetChat(netGameModel.getNetChat());  //FINISHED? -- but only posts as player 0
+		gameModel.log = fromNetLog(netGameModel.getNetGameLog());  //FINISHED? -- but only logs as player 0
+		gameModel.version = netGameModel.getVersion();  //FINISHED
 		
 		return gameModel;
 	}
 	
-	public ChatBox fromNetChat(NetChat netChat)
+	public MapController fromNetMap(NetMap netMap)
 	{
-		ChatBox chatBox = new ChatBox();
-		for (int i = 0; i < netChat.getLines().size(); i++)
-		{
-			//always posts as player 0 (because I don't have a good way of determining playerID from message source yet)
-			chatBox.put(netChat.getLines().get(i).getMessage(), 0);
-		}
-		return chatBox;
+		return null;
 	}
 	
-	public GameActionLog fromNetLog(NetLog netLog)
+	public GameState fromNetTurnTracker(NetTurnTracker netTurnTracker)
 	{
-		GameActionLog gameActionLog = new GameActionLog();
-		for (int i = 0; i < netLog.getLines().size(); i++)
+		GameState gameState = new GameState();
+		gameState.gameRound = netTurnTracker.getRound();
+		gameState.activePlayerIndex = netTurnTracker.getCurrentTurn();
+		return null;
+	}
+	
+	public Bank fromNetBank(NetBank netBank)
+	{
+		Bank gameBank = new Bank();
+		
+		try
 		{
-			//always logs as player 0 (because I don't have a good way of determining playerID from message source yet)
-			gameActionLog.logAction(0, netLog.getLines().get(i).getMessage());
+			gameBank.giveResource(ResourceType.BRICK, netBank.getNumBrick());
+			gameBank.giveResource(ResourceType.ORE, netBank.getNumOre());
+			gameBank.giveResource(ResourceType.SHEEP, netBank.getNumSheep());
+			gameBank.giveResource(ResourceType.WHEAT, netBank.getNumWheat());
+			gameBank.giveResource(ResourceType.WOOD, netBank.getNumWood());
 		}
-		return gameActionLog;
+		catch (ModelException e)
+		{
+			System.err.println("An Error has occured while populating the game bank in the Translate class");
+		}
+		
+		return gameBank;
 	}
 	
 	public List<Player> fromNetPlayers(List<NetPlayer> netPlayers)
@@ -104,9 +117,44 @@ public class Translate
 		} 
 		catch (ModelException e)
 		{
-			System.err.println("An Error has occured while populating the bank in the Translate class");
+			System.err.println("An Error has occured while populating the player bank in the Translate class");
 		}
 		
 		return null;
+	}
+	
+	public VictoryPointManager fromNetVPManager(NetTurnTracker netTurnTracker, List<NetPlayer> netPlayers)
+	{
+		VictoryPointManager victoryPointManager = new VictoryPointManager();
+		
+		victoryPointManager.setPlayerToHaveLongestRoad(netTurnTracker.getLongestRoad());
+		victoryPointManager.setPlayerToHaveLargestArmy(netTurnTracker.getLargestArmy());
+		
+		//Currently can't change player victory points from outside VPManager, so I'm not sure what to do about that here...
+		//Also can't change size of current largest army
+		
+		return victoryPointManager;
+	}
+	
+	public ChatBox fromNetChat(NetChat netChat)
+	{
+		ChatBox chatBox = new ChatBox();
+		for (int i = 0; i < netChat.getLines().size(); i++)
+		{
+			//always posts as player 0 (because I don't have a good way of determining playerID from message source yet)
+			chatBox.put(netChat.getLines().get(i).getMessage(), 0);
+		}
+		return chatBox;
+	}
+	
+	public GameActionLog fromNetLog(NetLog netLog)
+	{
+		GameActionLog gameActionLog = new GameActionLog();
+		for (int i = 0; i < netLog.getLines().size(); i++)
+		{
+			//always logs as player 0 (because I don't have a good way of determining playerID from message source yet)
+			gameActionLog.logAction(0, netLog.getLines().get(i).getMessage());
+		}
+		return gameActionLog;
 	}
 }
