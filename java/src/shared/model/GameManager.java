@@ -113,7 +113,7 @@ public class GameManager
 		//check if we can move the robber
 		if (diceRoll == 7 )
 		{
-			
+			this.playerCanMoveRobber = this.CurrentPlayersTurn();
 		}
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
 		//Call map to update the get the transacations
@@ -227,6 +227,20 @@ public class GameManager
 		//map.getTradeRatio?
 		//Otherwise return the default trade in value
 		return 4;
+	}
+	
+	/**
+	 * Places the robber
+	 * @param playerID
+	 * @param location
+	 * @throws ModelException 
+	 */
+	public void placeRobber(int playerID, Coordinate location) throws ModelException
+	{
+		if (!this.CanPlaceRobber(playerID)) throw new ModelException();
+		map.placeRobber(location);
+		//mark that the robber has been moved
+		this.playerCanMoveRobber = -1;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -468,7 +482,9 @@ public class GameManager
 	 */
 	public boolean CanUseRoadBuilder (int playerID)
 	{
-		return false;
+		if (!this.CanPlayerPlay(playerID)) 
+			return false;
+		return this.PlayerHasADevCard(playerID, DevCardType.ROAD_BUILD);
 	}
 	
 	/**
@@ -513,12 +529,11 @@ public class GameManager
 	/**
 	 * Checks to see if a player can place the robber
 	 * @param playerID
-	 * @todo figure out this function
 	 * @return
 	 */
 	public boolean CanPlaceRobber (int playerID)
 	{
-		return false;
+		return this.playerCanMoveRobber == playerID;
 	}
 	
 	
