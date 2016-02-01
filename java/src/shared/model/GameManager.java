@@ -6,6 +6,7 @@ import java.util.List;
 
 import client.map.MapController;
 import client.networking.ServerProxy;
+import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
@@ -127,12 +128,20 @@ public class GameManager
 		}
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
 		//Call map to update the get the transacations
-		return diceRoll; // chosen by fair dice roll
-				  // guaranteed to be random
+		
+				  
 		if (proxy != null)
 		{
-			proxy.rollNumber(diceRoll);
+			try {
+				proxy.rollNumber(diceRoll);
+			} catch (ServerProxyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		
+		return diceRoll; // chosen by fair dice roll
+						// guaranteed to be random
 	}
 	
 	
