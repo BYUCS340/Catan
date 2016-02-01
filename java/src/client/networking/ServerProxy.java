@@ -152,7 +152,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel monopolyCard(String resource) throws ServerProxyException;
+	public NetGameModel monopolyCard(ResourceType resource) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has played a monument card
@@ -214,7 +214,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel maritimeTrade(int ratio, String inputResource, String outputResource) throws ServerProxyException;
+	public NetGameModel maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has discarded cards
