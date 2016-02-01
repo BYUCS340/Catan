@@ -3,7 +3,7 @@ package shared.definitions;
 public enum DevCardType
 {
 	
-	SOLDIER, YEAR_OF_PLENTY, MONOPOLY, ROAD_BUILD, MONUMENT();
+	SOLDIER, YEAR_OF_PLENTY, MONOPOLY, ROAD_BUILD, MONUMENT;
 	
 	public static DevCardType fromInt(int i)
 	{
@@ -35,7 +35,7 @@ public enum DevCardType
 	{
 		switch(s)
 		{
-			case "Solider": return DevCardType.SOLDIER;
+			case "Soldier": return DevCardType.SOLDIER;
 			case "Year of Plenty": return DevCardType.YEAR_OF_PLENTY;
 			case "Monopoly": return DevCardType.MONOPOLY;
 			case "Road Builder": return DevCardType.ROAD_BUILD;

@@ -48,7 +48,7 @@ public class JSONDeserializerTest
 		testObj.put("name", "Brooke");
 		testObj.put("id", "1");
 		
-		NetPlayer resPlayer = testDS.parseNetPlayer(testObj.toString());
+		NetPlayer resPlayer = testDS.parsePartialNetPlayer(testObj.toString());
 		
 		//make sure all the information that was put in is present
 		assertTrue(resPlayer.getColor() == CatanColor.BLUE);

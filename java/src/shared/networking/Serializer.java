@@ -2,6 +2,7 @@ package shared.networking;
 
 import java.util.List;
 
+import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -42,7 +43,7 @@ public interface Serializer
 	 * @param AIType The type of AI to add to the game
 	 * @return Serialized data
 	 */
-	public String sAddAIReq(String AIType);
+	public String sAddAIReq(AIType aitype);
 	
 	/**
 	 * Serializes a request to send a chat message
@@ -176,7 +177,7 @@ public interface Serializer
 	 * @param outputResource The resource being traded for
 	 * @return Serialized data
 	 */
-	public String sMaritimeTrade(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource);
+	public String sMaritimeTradeReq(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource);
 	
 	/**
 	 * Serializes a request to discard cards
@@ -184,7 +185,7 @@ public interface Serializer
 	 * @param resourceList A resource list with the cards being discarded
 	 * @return Serialized data
 	 */
-	public String sDiscardCards(int playerIndex, List<Integer> resourceList);
+	public String sDiscardCardsReq(int playerIndex, List<Integer> resourceList);
 	
 	
 }
