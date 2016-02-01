@@ -85,8 +85,13 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sSendChatReq(int playerIndex, String content)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "sendChat");
+		obj.put("playerIndex", playerIndex);
+		obj.put("content", content);
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)
@@ -95,8 +100,13 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sRollNumberReq(int playerIndex, int number)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "rollNumber");
+		obj.put("playerIndex", playerIndex);
+		obj.put("number", number);
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)
@@ -105,8 +115,23 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sRobPlayerReq(int playerIndex, int victimIndex, HexLocation location)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "robPlayer");
+		obj.put("playerIndex", playerIndex);
+		obj.put("victimIndex", victimIndex);
+		obj.put("location", oHexLocation(location));
+		
+		return obj.toString();
+	}
+	
+	private JSONObject oHexLocation(HexLocation location){
+		JSONObject obj = new JSONObject();
+		
+		obj.put("x", location.getX());
+		obj.put("y", location.getY());
+		
+		return obj;
 	}
 
 	/* (non-Javadoc)
@@ -115,8 +140,12 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sFinishTurnReq(int playerIndex)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "finishTurn");
+		obj.put("playerIndex", playerIndex);
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)

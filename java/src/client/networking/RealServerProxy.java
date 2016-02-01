@@ -256,40 +256,104 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#sendChat(java.lang.String)
 	 */
 	@Override
-	public NetGameModel sendChat(String content)
+	public NetGameModel sendChat(String content) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before sending a chat message!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before sending a chat message!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/sendChat";
+		String postData = serializer.sSendChatReq(userCookie.getPlayerID(), content);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#rollNumber(int)
 	 */
 	@Override
-	public NetGameModel rollNumber(int roll)
+	public NetGameModel rollNumber(int roll) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before rolling a number!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before rolling a number!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/rollNumber";
+		String postData = serializer.sRollNumberReq(userCookie.getPlayerID(), roll);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#robPlayer(int, shared.locations.HexLocation)
 	 */
 	@Override
-	public NetGameModel robPlayer(int victimIndex, HexLocation location)
+	public NetGameModel robPlayer(int victimIndex, HexLocation location) throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before robbing a player!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before robbing a player!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/robPlayer";
+		String postData = serializer.sRobPlayerReq(userCookie.getPlayerID(), victimIndex, location);
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#finishTurn()
 	 */
 	@Override
-	public NetGameModel finishTurn()
+	public NetGameModel finishTurn() throws ServerProxyException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userCookie == null)
+		{
+			throw new ServerProxyException("A user must be logged in before finishing your turn!\n"
+					+ "Details: User cookie not found");
+		}
+		if(gameID < 0)
+		{
+			throw new ServerProxyException("You must be a part of a game before finishing your turn!\n"
+					+ "Details: Game ID not valid");
+		}
+		
+		String urlPath = "/moves/finishTurn";
+		String postData = serializer.sFinishTurnReq(userCookie.getPlayerID());
+		String result = doJSONPost(urlPath, postData, false, false);
+		
+		NetGameModel ret = deserializer.parseNetGameModel(result);
+		
+		return ret;
 	}
 
 	/* (non-Javadoc)
