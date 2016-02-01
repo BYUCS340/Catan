@@ -4,6 +4,7 @@ public enum GameRound
 {
 	ROLLING, ROBBING, PLAYING, DISCARDING, FIRSTROUND, SECONDROUND, MAINROUND, GAMEOVER();
 	
+	//NOTE: MAINROUND and GAMEOVER are are not valid server states and need to be removed.
 	public static String toString(GameRound type)
 	{
 		switch(type)
