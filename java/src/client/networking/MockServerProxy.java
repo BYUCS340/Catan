@@ -39,6 +39,7 @@ public class MockServerProxy implements ServerProxy
 		
 		loginCredentials = new ArrayList<String[]>();
 		userLoggedIn = false;
+		userJoinedGame = false;
 		
 		initializeStaticStateOfGame();
 		initializeStaticListOfGames();
@@ -683,8 +684,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if something goes wrong
 	 */
 	@Override
-	public NetGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
+	public NetGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name) throws ServerProxyException
 	{
+        if(name == null || name.equals("")){
+            throw new ServerProxyException("Invalid name for creat game");
+        }
 		return gameList.get(0);
 	}
 
@@ -695,8 +699,13 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if something goes wrong
 	 */
 	@Override
-	public NetGame joinGame(int id, CatanColor color)
+	public NetGame joinGame(int id, CatanColor color) throws ServerProxyException
 	{
+        if(!userLoggedIn){
+            throw new ServerProxyException("JoinGame invalid when user not logged in");
+        }
+        
+        userJoinedGame = true;
 		return gameList.get(0);
 	}
 
@@ -706,8 +715,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if something goes wrong
 	 */
 	@Override
-	public NetGameModel getGameModel()
+	public NetGameModel getGameModel() throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("GetGameModel invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -717,8 +729,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public void addAI(AIType aiType)
+	public void addAI(AIType aiType) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("AddAI invalid when user not logged in");
+        }
 		//  mock does nothing/returns nothing :)
 	}
 
@@ -742,8 +757,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel sendChat(String content)
+	public NetGameModel sendChat(String content) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("sednChat invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -754,8 +772,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel rollNumber(int roll)
+	public NetGameModel rollNumber(int roll) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("RollNumber invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -767,8 +788,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel robPlayer(int victimIndex, HexLocation location)
+	public NetGameModel robPlayer(int victimIndex, HexLocation location) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("RobPlayer invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -779,8 +803,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel finishTurn()
+	public NetGameModel finishTurn() throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("FinishTurn invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -790,8 +817,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel buyDevCard()
+	public NetGameModel buyDevCard() throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("BuyDevCard invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -803,8 +833,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel yearOfPlentyCard(ResourceType resource1, ResourceType resource2)
+	public NetGameModel yearOfPlentyCard(ResourceType resource1, ResourceType resource2) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("YearOfPlentyCard invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -816,8 +849,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel roadBuildingCard(EdgeLocation location1, EdgeLocation location2)
+	public NetGameModel roadBuildingCard(EdgeLocation location1, EdgeLocation location2) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("RoadBuildingCard invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -829,8 +865,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel soldierCard(int victimIndex, HexLocation hexLocation)
+	public NetGameModel soldierCard(int victimIndex, HexLocation hexLocation) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("soldierCard invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -841,8 +880,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel monopolyCard(String resource)
+	public NetGameModel monopolyCard(String resource) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("monopolyCard invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -852,8 +894,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel monumentCard()
+	public NetGameModel monumentCard() throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("monumentCard invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -865,8 +910,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel buildRoad(EdgeLocation edgeLocation, boolean free)
+	public NetGameModel buildRoad(EdgeLocation edgeLocation, boolean free) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("buildRoad invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -878,8 +926,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel buildSettlement(VertexLocation vertexLocation, boolean free)
+	public NetGameModel buildSettlement(VertexLocation vertexLocation, boolean free) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("buildSettlement invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -890,8 +941,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel buildCity(VertexLocation vertexLocation)
+	public NetGameModel buildCity(VertexLocation vertexLocation) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("buildCity invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -905,8 +959,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel offerTrade(List<Integer> resourceList, int receiver)
+	public NetGameModel offerTrade(List<Integer> resourceList, int receiver) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("offerTrade invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -917,8 +974,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel acceptTrade(boolean willAccept)
+	public NetGameModel acceptTrade(boolean willAccept) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("acceptTrade invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -931,8 +991,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel maritimeTrade(int ratio, String inputResource, String outputResource)
+	public NetGameModel maritimeTrade(int ratio, String inputResource, String outputResource) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("maritimeTrade invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 
@@ -944,8 +1007,11 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if there is no logged in user
 	 */
 	@Override
-	public NetGameModel discardCards(List<Integer> resourceList)
+	public NetGameModel discardCards(List<Integer> resourceList) throws ServerProxyException
 	{
+        if(!userLoggedIn || !userJoinedGame){
+            throw new ServerProxyException("Discard Cards invalid when user not logged in");
+        }
 		return currentStateOfGame;
 	}
 	
@@ -955,4 +1021,5 @@ public class MockServerProxy implements ServerProxy
 	private ArrayList<NetGame> gameList;
 	private ArrayList<String[]> loginCredentials;
 	private boolean userLoggedIn;
+	private boolean userJoinedGame;
 }
