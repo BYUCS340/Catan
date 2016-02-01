@@ -292,7 +292,7 @@ public class Bank
 	 * Removes resource cards, if allowed, needed to build a road (one wood, one brick, one road)
 	 * @throws if they don't have the resource
 	 */
-	public boolean buildRoad() throws ModelException
+	public void buildRoad() throws ModelException
 	{
 		if (canBuildRoad())
 		{
@@ -303,7 +303,6 @@ public class Bank
 			this.resources[woodIndex]--;
 			this.resources[brickIndex]--;
 			this.pieces[roadIndex]--;
-			return true;
 		}
 		else
 		{
@@ -340,7 +339,7 @@ public class Bank
 	 * @return true if successful, false otherwise
 	 * @throws if they don't have the resource
 	 */
-	public boolean buildSettlement() throws ModelException
+	public void buildSettlement() throws ModelException
 	{
 		if (canBuildSettlement())
 		{
@@ -355,7 +354,6 @@ public class Bank
 			this.resources[sheepIndex]--;
 			this.resources[wheatIndex]--;
 			this.pieces[settlementIndex]--;
-			return true;
 		}
 		else
 		{
