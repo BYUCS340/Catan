@@ -37,6 +37,9 @@ public class MockServerProxy implements ServerProxy
 //		String HTTP_GET = "GET";
 //		String HTTP_POST = "POST";
 		
+		loginCredentials = new ArrayList<String[]>();
+		userLoggedIn = false;
+		
 		initializeStaticStateOfGame();
 		initializeStaticListOfGames();
 	}
@@ -608,7 +611,18 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public boolean loginUser(String username, String password)
 	{
-		return true;
+		// if the username is in use then check the password, if both are the same true, false otherwise
+		for(String[] credPair : loginCredentials){
+			if(username.equals(credPair[0])){
+				if(password.equals(credPair[1])){
+					userLoggedIn = true;
+					return true;
+				}else{
+					return false;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -621,7 +635,32 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public boolean registerUser(String username, String password) 
 	{
-		return true;
+		if(usernameIsValid(username) && passwordIsValid(password){
+			String[] userCredentials = {username, password};
+			loginCredentials.add(userCredentials);
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean usernameIsValid(String username){
+		if (username != null && username.length() > 0){
+			// if the username isn't in use then allow it, otherwise return false
+			for(String[] credPair : loginCredentials){
+				if(username.equals(credPair[0])){
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean passwordIsValid(String password){
+		if(password != null && password.length() > 0){
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -914,4 +953,6 @@ public class MockServerProxy implements ServerProxy
 	
 	private NetGameModel currentStateOfGame;
 	private ArrayList<NetGame> gameList;
+	private ArrayList<String[]> loginCredentials;
+	private boolean userLoggedIn;
 }
