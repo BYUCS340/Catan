@@ -28,7 +28,9 @@ public class GameManager
 	private VictoryPointManager victoryPointManager;
 	private ChatBox waterCooler;
 	private GameActionLog log;
+	private IMapController map;
 	private int version;
+	private int[] playerColors;
 	
 	/**
 	 * Constructor for the game manager
@@ -43,16 +45,22 @@ public class GameManager
 		gameState = new GameState();
 		//mapController = new MapController();
 		victoryPointManager = new VictoryPointManager();
+		playerColors = new int[10];
+		
 	}
 	
 	/**
 	 * Adds a player to the game
 	 * @param name
 	 * @return the player index number 
-	 * @throws ModelException if there are too many players already in the game
+	 * @throws ModelException if there are too many players already in the game or if that color has been used
 	 */
 	public int AddPlayer(String name, CatanColor color, boolean isHuman) throws ModelException
 	{
+		//check if that color has already been used
+		if (playerColors[color.ordinal()] != 0)
+			throw new ModelException();
+		
 		int newIndex = players.size();
 		if (newIndex > 3)
 		{
@@ -60,7 +68,19 @@ public class GameManager
 		}
 		Player newPlayer = new Player(name, newIndex, color, isHuman);
 		players.add(newPlayer);
+		
+		playerColors[color.ordinal()] = newIndex;
 		return newIndex;
+	}
+	
+	public int getPlayerIndexByColor(CatanColor color)
+	{
+		return playerColors[color.ordinal()];
+	}
+	
+	public CatanColor getPlayerColorByIndex(int playerID)
+	{
+		return players.get(playerID).color;
 	}
 	
 	/**
