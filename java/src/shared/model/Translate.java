@@ -16,14 +16,17 @@ public class Translate
 {
 	public GameModel fromNetGameModel(NetGameModel netGameModel)
 	{
-		GameActionLog gameActionLog = fromNetLog(netGameModel.getNetGameLog());  //I think this works -- but only logs as player 0
-		Map map = fromNetMap(netGameModel.getNetMap());
-		List<Player> players = fromNetPlayers(netGameModel.getNetPlayers());  //I think this works
-		ChatBox chat = fromNetChat(netGameModel.getNetChat());  //I think this works -- but only posts as player 0
-		TradeOffer tradeOffer = fromNetTradeOffer(netGameModel.getNetTradeOffer());
-		TurnTracker turnTracker = fromNetTurnTracker(netGameModel.getNetTurnTracker());
-		int winner = netGameModel.getWinner();
-		int version = netGameModel.getVersion();
+		GameModel gameModel = new GameModel();
+		gameModel.gameActionLog = fromNetLog(netGameModel.getNetGameLog());  //I think this works -- but only logs as player 0
+		gameModel.players = fromNetPlayers(netGameModel.getNetPlayers());  //I think this works
+		gameModel.chatBox = fromNetChat(netGameModel.getNetChat());  //I think this works -- but only posts as player 0
+		//Map map = fromNetMap(netGameModel.getNetMap());
+		//TradeOffer tradeOffer = fromNetTradeOffer(netGameModel.getNetTradeOffer());
+		//TurnTracker turnTracker = fromNetTurnTracker(netGameModel.getNetTurnTracker());
+		gameModel.winner = netGameModel.getWinner();
+		gameModel.version = netGameModel.getVersion();
+		
+		return gameModel;
 	}
 	
 	public ChatBox fromNetChat(NetChat netChat)
@@ -37,21 +40,6 @@ public class Translate
 		return chatBox;
 	}
 	
-	public EdgeLocation fromNetEdgeLocation(NetEdgeLocation netEdgeLocation)
-	{
-		return null;
-	}
-	
-	public Hex fromNetHex(NetHex netHex)
-	{
-		return null;
-	}
-	
-	public HexLocation fromNetHexLocation(NetHexLocation netHexLocation)
-	{
-		return null;
-	}
-	
 	public GameActionLog fromNetLog(NetLog netLog)
 	{
 		GameActionLog gameActionLog = new GameActionLog();
@@ -61,11 +49,6 @@ public class Translate
 			gameActionLog.logAction(0, netLog.getLines().get(i).getMessage());
 		}
 		return gameActionLog;
-	}
-	
-	public Map fromNetMap(NetMap netMap)
-	{
-		return null;
 	}
 	
 	public List<Player> fromNetPlayers(List<NetPlayer> netPlayers)
@@ -124,26 +107,6 @@ public class Translate
 			System.err.println("An Error has occured while populating the bank in the Translate class");
 		}
 		
-		return null;
-	}
-	
-	public Port fromNetPort(NetPort netPort)
-	{
-		return null;
-	}
-	
-	public TradeOffer fromNetTradeOffer(NetTradeOffer netTradeOffer)
-	{
-		return null;
-	}
-	
-	public TurnTracker fromNetTurnTracker(NetTurnTracker netTurnTracker)
-	{
-		return null;
-	}
-	
-	public VertexObject fromNetVertexObject(NetVertexObject netVertexObject)
-	{
 		return null;
 	}
 }
