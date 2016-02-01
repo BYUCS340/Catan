@@ -7,7 +7,8 @@ import java.util.List;
  * @author matthewcarlson
  *
  */
-public class OfferedTrade {
+public class OfferedTrade
+{
 	private int numberOffered;
 	private int numberWanted;
 	private int fromPlayerID;
