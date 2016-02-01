@@ -35,7 +35,7 @@ public class GameManager
 	private int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;
-	private ServerProxy proxy;
+	
 	
 	/**
 	 * Constructor for the game manager
@@ -55,15 +55,9 @@ public class GameManager
 		//fill the array with -1 by default
 		Arrays.fill(playerColors,-1);
 		playerCanMoveRobber = -1;
-		proxy = null;
 	}
 	
-	public GameManager(ServerProxy clientProxy)
-	{
-		this();
-		this.proxy = clientProxy;
-		
-	}
+	
 	
 	/**
 	 * Adds a player to the game
@@ -129,17 +123,6 @@ public class GameManager
 		}
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
 		//Call map to update the get the transacations
-		
-				  
-		if (proxy != null)
-		{
-			try {
-				proxy.rollNumber(diceRoll);
-			} catch (ServerProxyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 		
 		return diceRoll; // chosen by fair dice roll
 						// guaranteed to be random
