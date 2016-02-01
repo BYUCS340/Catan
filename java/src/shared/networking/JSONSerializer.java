@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
+import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
@@ -154,8 +155,12 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sBuyDevCardReq(int playerIndex)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "buyDevCard");
+		obj.put("playerIndex", playerIndex);
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)
@@ -164,8 +169,14 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sYearOfPlentyCardReq(int playerIndex, ResourceType resource1, ResourceType resource2)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "Year_of_Plenty");
+		obj.put("playerIndex", playerIndex);
+		obj.put("resource1", ResourceType.toString(resource1));
+		obj.put("resource2", ResourceType.toString(resource2));
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)
@@ -174,8 +185,24 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sRoadBuildingCardReq(int playerIndex, EdgeLocation edgeLoc1, EdgeLocation edgeLoc2)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "Road_Building");
+		obj.put("playerIndex", playerIndex);
+		obj.put("spot1", oEdgeLocation(edgeLoc1));
+		obj.put("spot2", oEdgeLocation(edgeLoc2));
+		
+		return obj.toString();
+	}
+	
+	private JSONObject oEdgeLocation(EdgeLocation edgeLocation)
+	{
+		JSONObject obj = new JSONObject();
+		obj.put("x", edgeLocation.getHexLoc().getX());
+		obj.put("y", edgeLocation.getHexLoc().getY());
+		obj.put("direction", EdgeDirection.toString(edgeLocation.getDir()).toUpperCase());
+		
+		return obj;
 	}
 
 	/* (non-Javadoc)
@@ -184,8 +211,14 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sSoldierCardReq(int playerIndex, int victimIndex, HexLocation location)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "Soldier");
+		obj.put("playerIndex", playerIndex);
+		obj.put("victimIndex", victimIndex);
+		obj.put("location", oHexLocation(location));
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)
@@ -194,8 +227,13 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sMonopolyCardReq(int playerIndex, ResourceType resource)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "Monopoly");
+		obj.put("playerIndex", playerIndex);
+		obj.put("resource", ResourceType.toString(resource));
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)
@@ -204,8 +242,12 @@ public class JSONSerializer implements Serializer
 	@Override
 	public String sMonumentCardReq(int playerIndex)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		
+		obj.put("type", "Monument");
+		obj.put("playerIndex", playerIndex);
+		
+		return obj.toString();
 	}
 
 	/* (non-Javadoc)
