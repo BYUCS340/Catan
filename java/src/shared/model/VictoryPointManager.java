@@ -57,14 +57,16 @@ public class VictoryPointManager
 	 * @param playerIndex 0 to 3
 	 * @return 0-10
 	 */
-	public int getVictoryPoints(int playerIndex)
+	public int getVictoryPoints(int playerID)
 	{
-		return 0;
+		if (playerID < 0 || playerID > 3) return 0;
+		return victoryPoints[playerID];
 	}
 	
 	private void adjustPlayersPoints(int playerID, int points)
 	{
-		
+		if (playerID < 0 || playerID > 3) return;
+		victoryPoints[playerID] += points;
 	}
 	
 	/**
@@ -167,19 +169,6 @@ public class VictoryPointManager
 	{
 		//Soliders won't be worried about here since that's handled in game manager
 		//We don't have a current count of the player's army
-	}
-	
-	/**
-	 * Gets the specified player's current number of victory points
-	 * @param playerIndex
-	 * @see Map
-	 * @return an int between 0 and 10, -1 if invalid index
-	 */
-	public int currentPlayerScore(int playerIndex)
-	{
-		if (playerIndex < 0 || playerIndex > 3) 
-			return -1;
-		return victoryPoints[playerIndex];
 	}
 	
 	/**
