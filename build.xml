@@ -151,8 +151,26 @@
 		</java>
 	</target>
 	
+	<path id="lib-classpath">
+		<fileset dir="${java.lib}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	
+	<path id="all-classpath">
+		<path refid="lib-classpath"/>
+		<pathelement location="${java.build}"/>
+	</path>
+	
 	<target name="test" depends="compile" description="compiles and runs the JUNIT tests">
-			
+		<java classname="testing.UnitTests" fork="yes">
+			<classpath>
+				<path refid="all-classpath" />
+			</classpath>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
 	</target>
     
     <target name="make-tester-zip" depends="package" description="makes a zip file for your testing team">
