@@ -66,7 +66,7 @@ public class ChatView extends PanelView implements IChatView {
         add(chatScrollPane, BorderLayout.CENTER);
         add(inputPanel, BorderLayout.PAGE_END);
         
-	setBackground(Color.white);
+        setBackground(Color.white);
     }
 
     @Override

@@ -27,6 +27,10 @@ public class TestClientPoller {
 		for (int i=0;i<1000;i++){
 			this.wait(1);
 		}
+		if (ClientGame.getGame().GetVersion() == -1)
+		{
+			fail("Refresh did not happen");
+		}
 	}
 
 }

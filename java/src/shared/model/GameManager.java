@@ -43,7 +43,8 @@ public class GameManager
 	 */
 	public GameManager()
 	{
-		version = 0;
+		//version is by default -1 before it is connected to a server
+		version = -1;
 		waterCooler = new ChatBox();
 		log = new GameActionLog();
 		players = new ArrayList<>();
@@ -105,6 +106,15 @@ public class GameManager
 	public int NumberActivePlayers()
 	{
 		return players.size();
+	}
+	
+	/**
+	 * Returns the current version
+	 * @return
+	 */
+	public int GetVersion()
+	{
+		return this.version;
 	}
 	/**
 	 * @see <a href="https://imgs.xkcd.com/comics/random_number.png">Sauce</a>

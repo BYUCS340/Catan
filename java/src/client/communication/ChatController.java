@@ -1,6 +1,7 @@
 package client.communication;
 
 import client.base.*;
+import client.model.ClientGame;
 
 
 /**
@@ -20,7 +21,7 @@ public class ChatController extends Controller implements IChatController {
 
 	@Override
 	public void sendMessage(String message) {
-		
+		ClientGame.getGame().SendChat(message);
 	}
 
 }

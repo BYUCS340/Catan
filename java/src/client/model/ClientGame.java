@@ -10,12 +10,11 @@ public class ClientGame {
 	/**
 	 * Gets the current game manager
 	 * @return
-	 * @throws ModelException 
 	 */
-	static public GameManager getGame() throws ModelException
+	static public ClientGameManager getGame()
 	{
 		if (game == null)
-			throw new ModelException();
+			ClientGame.startGameWithProxy(null);
 		return ClientGame.game;
 	}
 	
