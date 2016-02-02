@@ -25,13 +25,13 @@ public class GameManager
 {
 	public  MapController mapController; //this is exposed for easier access
 	
-	private GameState gameState;
-	private Bank gameBank;
-	private List<Player> players;
-	private VictoryPointManager victoryPointManager;
-	private ChatBox waterCooler;
-	private GameActionLog log;
-	private IMapController map;
+	protected GameState gameState;
+	protected Bank gameBank;
+	protected List<Player> players;
+	protected VictoryPointManager victoryPointManager;
+	protected ChatBox waterCooler;
+	protected GameActionLog log;
+	public IMapController map;
 	private int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;

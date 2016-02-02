@@ -98,4 +98,9 @@ public class ClientGameManager extends GameManager
 			e.printStackTrace();
 		}
 	}
+	
+	public int PlayerPoints()
+	{
+		return this.victoryPointManager.getVictoryPoints(this.myPlayerID);
+	}
 }

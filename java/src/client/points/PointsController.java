@@ -1,6 +1,7 @@
 package client.points;
 
 import client.base.*;
+import client.model.ClientGame;
 
 
 /**
@@ -39,7 +40,8 @@ public class PointsController extends Controller implements IPointsController {
 
 	private void initFromModel() {
 		//<temp>		
-		getPointsView().setPoints(5);
+		int points = ClientGame.getGame().PlayerPoints();
+		getPointsView().setPoints(points);
 		//</temp>
 	}
 	

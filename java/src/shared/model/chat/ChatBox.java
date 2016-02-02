@@ -1,5 +1,6 @@
 package shared.model.chat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,6 +11,11 @@ import java.util.List;
 public class ChatBox
 {
 	List <ChatMessage> messages;
+	
+	public ChatBox()
+	{
+		messages = new ArrayList<>();
+	}
 	
 	public void put(String message, int playerID)
 	{
