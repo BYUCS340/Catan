@@ -128,7 +128,7 @@ public class Translate
 		VictoryPointManager victoryPointManager = new VictoryPointManager();
 		
 		victoryPointManager.setPlayerToHaveLongestRoad(netTurnTracker.getLongestRoad());
-		victoryPointManager.setPlayerToHaveLargestArmy(netTurnTracker.getLargestArmy());
+		victoryPointManager.checkPlayerArmySize(netTurnTracker.getLargestArmy(), armySize);
 		
 		//Currently can't change player victory points from outside VPManager, so I'm not sure what to do about that here...
 		//Also can't change size of current largest army
