@@ -10,9 +10,9 @@ import shared.definitions.GameStatus;
  */
 public class GameState
 {
-	public GameStatus gameState;  //This shows which part of a player's turn it is
-	public GameRound gameRound;
-	public int activePlayerIndex;  //This keeps track of which player's turn it is
+	public GameStatus gameState = GameStatus.START;;  //This shows which part of a player's turn it is
+	public GameRound gameRound = GameRound.FIRSTROUND;
+	public int activePlayerIndex = 0;  //This keeps track of which player's turn it is
 	
 	/**
 	 * Sets the game state to the first player's turn (roll phase)
@@ -60,7 +60,7 @@ public class GameState
 	public boolean IsEndGame()
 	{
 		//check if someone has 10 points or not
-		return true;
+		return gameRound == GameRound.GAMEOVER;
 	}
 	
 	public void endGame()
