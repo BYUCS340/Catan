@@ -17,7 +17,7 @@ public class VictoryPointManager
 	
 	private final int LongestRoadValue = 2;
 	private final int LargestArmyValue = 2;
-	private final int RoadValue = 1;
+	private final int RoadValue = 0;
 	private final int SettlementValue = 1;
 	private final int CityValue = 2;
 	
@@ -98,14 +98,14 @@ public class VictoryPointManager
 	 * @see Map
 	 * @return successful or not (almost always is true)
 	 */
-	public boolean setPlayerToHaveLargestArmy(int playerIndex)
+	private boolean setPlayerToHaveLargestArmy(int playerIndex)
 	{
 		if (playerIndex < 0 || playerIndex > 3) return false;
 		
 		if (currentLargestArmyPlayer != -1)
 		{
 			//A player has the card already so deduct points from them
-			adjustPlayersPoints(currentLargestArmyPlayer, -1 * LargestArmyValue);
+			adjustPlayersPoints(currentLargestArmyPlayer, -1*LargestArmyValue);
 		}
 		
 		currentLargestArmyPlayer = playerIndex;
@@ -125,7 +125,7 @@ public class VictoryPointManager
 	{
 		if (this.currentLargestArmySize < armySize)
 		{
-			this.currentLargestArmyPlayer = armySize;
+			this.currentLargestArmySize = armySize;
 			this.setPlayerToHaveLargestArmy(playerIndex);
 		}
 	}
@@ -177,6 +177,19 @@ public class VictoryPointManager
 	 */
 	public boolean anyWinner()
 	{
+		for (int i=0;i<=3; i++)
+		{
+			if (victoryPoints[i] >= 10) return true;
+		}
 		return false;
+	}
+	
+	public int winner()
+	{
+		for (int i=0;i<=3; i++)
+		{
+			if (victoryPoints[i] >= 10) return i;
+		}
+		return -1;
 	}
 }
