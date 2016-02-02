@@ -15,6 +15,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Scanner;
+import static org.junit.Assert.*;
 
 import org.json.JSONObject;
 
@@ -31,6 +32,7 @@ import shared.networking.Serializer;
 import shared.networking.UserCookie;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
+import shared.networking.transport.NetPlayer;
 
 /**
  * @author pbridd
@@ -38,8 +40,8 @@ import shared.networking.transport.NetGameModel;
  */
 public class RealServerProxy implements ServerProxy
 {
-	UserCookie userCookie;
-	int gameID;
+	private UserCookie userCookie;
+	private int gameID;
 	private String SERVER_HOST;
 	private int SERVER_PORT;
 	private String URL_PREFIX;
@@ -47,6 +49,7 @@ public class RealServerProxy implements ServerProxy
 	private final String HTTP_POST = "POST";
 	private Serializer serializer;
 	private Deserializer deserializer;
+	private int userIndex;
 	
 	/**
 	 * Default constructor. Sets up connection with the server with default
@@ -61,6 +64,7 @@ public class RealServerProxy implements ServerProxy
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
 		userCookie = null;
 		gameID = -1;
+		userIndex = -1;
 	}
 	
 	/**
@@ -77,6 +81,7 @@ public class RealServerProxy implements ServerProxy
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
 		userCookie = null;
 		gameID = -1;
+		userIndex = -1;
 	}
 
 	/* (non-Javadoc)
@@ -89,7 +94,7 @@ public class RealServerProxy implements ServerProxy
 		String urlPath = "/user/login";
 		
 		try{
-			String response = doJSONPost(urlPath, postData, true, false);
+			doJSONPost(urlPath, postData, true, false);
 		}
 		catch(ServerProxyException e){
 			if(e.getMessage().toLowerCase().contains("failed to login")){
@@ -183,6 +188,23 @@ public class RealServerProxy implements ServerProxy
 		//parse the result into a NetGame
 		NetGame joinedGame = deserializer.parseNetGame(result);
 		
+		//get the userIndex
+		String name = userCookie.getUsername();
+		List<NetPlayer> playerList = joinedGame.getNetPlayers();
+		
+		for(NetPlayer p : playerList)
+		{
+			if(p.getName().equals(name))
+			{
+				userIndex = p.getPlayerIndex();
+			}
+		}
+		
+		//the user's name should have been found and the index should have been set.
+		//if this is not true, then there is something very wrong
+		assertTrue(userIndex >= 0 && userIndex <= 3);
+		
+		
 		return joinedGame;
 	}
 
@@ -270,7 +292,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/sendChat";
-		String postData = serializer.sSendChatReq(userCookie.getPlayerID(), content);
+		String postData = serializer.sSendChatReq(userIndex, content);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -296,7 +318,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/rollNumber";
-		String postData = serializer.sRollNumberReq(userCookie.getPlayerID(), roll);
+		String postData = serializer.sRollNumberReq(userIndex, roll);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -322,7 +344,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/robPlayer";
-		String postData = serializer.sRobPlayerReq(userCookie.getPlayerID(), victimIndex, location);
+		String postData = serializer.sRobPlayerReq(userIndex, victimIndex, location);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -348,7 +370,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/finishTurn";
-		String postData = serializer.sFinishTurnReq(userCookie.getPlayerID());
+		String postData = serializer.sFinishTurnReq(userIndex);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -374,7 +396,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/buyDevCard";
-		String postData = serializer.sBuyDevCardReq(userCookie.getPlayerID());
+		String postData = serializer.sBuyDevCardReq(userIndex);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -400,7 +422,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/Year_of_Plenty";
-		String postData = serializer.sYearOfPlentyCardReq(userCookie.getPlayerID(), resource1, resource2);
+		String postData = serializer.sYearOfPlentyCardReq(userIndex, resource1, resource2);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -426,7 +448,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/Road_Building";
-		String postData = serializer.sRoadBuildingCardReq(userCookie.getPlayerID(), location1, location2);
+		String postData = serializer.sRoadBuildingCardReq(userIndex, location1, location2);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -452,7 +474,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/Soldier";
-		String postData = serializer.sSoldierCardReq(userCookie.getPlayerID(), victimIndex, hexLocation);
+		String postData = serializer.sSoldierCardReq(userIndex, victimIndex, hexLocation);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -480,7 +502,7 @@ public class RealServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/Monopoly";
 		//TODO fix this hacky way of getting ResourceType param to work
-		String postData = serializer.sMonopolyCardReq(userCookie.getPlayerID(), resource);
+		String postData = serializer.sMonopolyCardReq(userIndex, resource);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -506,7 +528,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/Monument";
-		String postData = serializer.sMonumentCardReq(userCookie.getPlayerID());
+		String postData = serializer.sMonumentCardReq(userIndex);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -532,7 +554,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/buildRoad";
-		String postData = serializer.sBuildRoadReq(userCookie.getPlayerID(), edgeLocation, free);
+		String postData = serializer.sBuildRoadReq(userIndex, edgeLocation, free);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -558,7 +580,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/buildSettlement";
-		String postData = serializer.sBuildSettlementReq(userCookie.getPlayerID(), vertexLocation, free);
+		String postData = serializer.sBuildSettlementReq(userIndex, vertexLocation, free);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -584,7 +606,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/buildCity";
-		String postData = serializer.sBuildCityReq(userCookie.getPlayerID(), vertexLocation);
+		String postData = serializer.sBuildCityReq(userIndex, vertexLocation);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -610,7 +632,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/offerTrade";
-		String postData = serializer.sOfferTradeReq(userCookie.getPlayerID(), resourceList, receiver);
+		String postData = serializer.sOfferTradeReq(userIndex, resourceList, receiver);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -636,7 +658,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/acceptTrade";
-		String postData = serializer.sAcceptTradeReq(userCookie.getPlayerID(), willAccept);
+		String postData = serializer.sAcceptTradeReq(userIndex, willAccept);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
@@ -664,7 +686,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/maritimeTrade";
-		String postData = serializer.sMaritimeTradeReq(userCookie.getPlayerID(), ratio,
+		String postData = serializer.sMaritimeTradeReq(userIndex, ratio,
 				inputResource, outputResource);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
@@ -691,7 +713,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/discardCards";
-		String postData = serializer.sDiscardCardsReq(userCookie.getPlayerID(), resourceList);
+		String postData = serializer.sDiscardCardsReq(userIndex, resourceList);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret = deserializer.parseNetGameModel(result);
