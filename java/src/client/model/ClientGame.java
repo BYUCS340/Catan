@@ -12,7 +12,7 @@ public class ClientGame {
 	 * @return
 	 * @throws ModelException 
 	 */
-	static GameManager getGame() throws ModelException
+	static public GameManager getGame() throws ModelException
 	{
 		if (game == null)
 			throw new ModelException();
@@ -23,7 +23,7 @@ public class ClientGame {
 	 * This must be called before getting a game
 	 * @param proxy
 	 */
-	static void startGameWithProxy(ServerProxy proxy)
+	static public void startGameWithProxy(ServerProxy proxy)
 	{
 		ClientGame.game = new ClientGameManager(proxy);
 	}
