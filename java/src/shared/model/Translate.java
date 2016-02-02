@@ -135,6 +135,8 @@ public class Translate
 		
 		int armySize = 0;
 		int soliders = 0;
+		
+		//Figure out the largest army
 		for (int i=0; i< netPlayers.size(); i++)
 		{
 			soliders = netPlayers.get(i).getNumSoldiers();
