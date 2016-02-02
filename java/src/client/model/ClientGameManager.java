@@ -5,6 +5,7 @@ import client.networking.ServerProxyException;
 import shared.model.GameManager;
 import shared.model.ModelException;
 import shared.model.map.Coordinate;
+import shared.networking.transport.NetGameModel;
 
 public class ClientGameManager extends GameManager
 {
@@ -102,5 +103,37 @@ public class ClientGameManager extends GameManager
 	public int PlayerPoints()
 	{
 		return this.victoryPointManager.getVictoryPoints(this.myPlayerID);
+	}
+	
+	//--------------------------------------------------------------------------
+	//Networking methods
+	
+	/**
+	 * Loads in a game 
+	 * @param model the model to be loaded in
+	 * @throws ModelException if model is incorrect
+	 */
+	public void LoadGame(NetGameModel model) throws ModelException
+	{
+		if (model.getVersion() == this.version)
+			return;
+		throw new ModelException();
+	}
+	
+	/**
+	 * What the poller pokes to refresh the game model from teh server
+	 * @see client.networking.Poller
+	 */
+	public void RefreshFromServer() throws ModelException
+	{
+		NetGameModel model;
+		try {
+			model = proxy.getGameModel();
+		} catch (ServerProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new ModelException();
+		}
+		this.LoadGame(model);
 	}
 }

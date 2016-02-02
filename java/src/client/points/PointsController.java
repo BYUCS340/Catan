@@ -39,10 +39,8 @@ public class PointsController extends Controller implements IPointsController {
 	}
 
 	private void initFromModel() {
-		//<temp>		
 		int points = ClientGame.getGame().PlayerPoints();
 		getPointsView().setPoints(points);
-		//</temp>
 	}
 	
 }

@@ -32,7 +32,7 @@ public class GameManager
 	protected ChatBox waterCooler;
 	protected GameActionLog log;
 	public IMapController map;
-	private int version;
+	protected int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;
 	
@@ -136,32 +136,6 @@ public class GameManager
 		
 		return diceRoll; // chosen by fair dice roll
 						// guaranteed to be random
-	}
-	
-	
-	//--------------------------------------------------------------------------
-	//Networking methods
-	
-	/**
-	 * Loads in a game 
-	 * @param model the model to be loaded in
-	 * @throws ModelException if model is incorrect
-	 */
-	public void LoadGame(NetGameModel model) throws ModelException
-	{
-		if (model.getVersion() == this.version)
-			return;
-		throw new ModelException();
-	}
-	
-	/**
-	 * What the poller pokes to refresh the game model from teh server
-	 * @see client.networking.Poller
-	 */
-	public void RefreshFromServer() throws ModelException
-	{
-		NetGameModel model = null;
-		this.LoadGame(model);
 	}
 	
 	
