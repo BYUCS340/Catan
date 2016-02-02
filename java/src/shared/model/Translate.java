@@ -125,13 +125,24 @@ public class Translate
 	
 	public VictoryPointManager fromNetVPManager(NetTurnTracker netTurnTracker, List<NetPlayer> netPlayers)
 	{
-		VictoryPointManager victoryPointManager = new VictoryPointManager();
+		int p1Points = netPlayers.get(0).getNumVictoryPoints();
+		int p2Points = netPlayers.get(1).getNumVictoryPoints();
+		int p3Points = netPlayers.get(2).getNumVictoryPoints();
+		int p4Points = netPlayers.get(3).getNumVictoryPoints();
 		
-		victoryPointManager.setPlayerToHaveLongestRoad(netTurnTracker.getLongestRoad());
-		victoryPointManager.checkPlayerArmySize(netTurnTracker.getLargestArmy(), armySize);
+		int longRoad = netTurnTracker.getLongestRoad();
+		int largeArmy = netTurnTracker.getLargestArmy();
 		
-		//Currently can't change player victory points from outside VPManager, so I'm not sure what to do about that here...
-		//Also can't change size of current largest army
+		int armySize = 0;
+		int soliders = 0;
+		for (int i=0; i< netPlayers.size(); i++)
+		{
+			soliders = netPlayers.get(i).getNumSoldiers();
+			if (soliders > armySize)
+				armySize = soliders;
+		}
+		
+		VictoryPointManager victoryPointManager = new VictoryPointManager(p1Points, p2Points, p3Points, p4Points, longRoad, largeArmy,armySize);
 		
 		return victoryPointManager;
 	}
