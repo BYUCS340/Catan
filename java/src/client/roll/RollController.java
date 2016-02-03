@@ -36,7 +36,7 @@ public class RollController extends Controller implements IRollController {
 	
 	@Override
 	public void rollDice() {
-
+		
 		getResultView().showModal();
 	}
 

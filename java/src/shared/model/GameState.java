@@ -1,7 +1,6 @@
 package shared.model;
 
 import shared.definitions.GameRound;
-import shared.definitions.GameStatus;
 
 /**
  * An object that keeps track of whose turn it is.
@@ -10,9 +9,8 @@ import shared.definitions.GameStatus;
  */
 public class GameState
 {
-	public GameStatus gameState;  //This shows which part of a player's turn it is
-	public GameRound gameRound;
-	public int activePlayerIndex;  //This keeps track of which player's turn it is
+	public GameRound state = GameRound.FIRSTROUND;
+	public int activePlayerIndex = 0;  //This keeps track of which player's turn it is
 	
 	/**
 	 * Sets the game state to the first player's turn (roll phase)
@@ -20,8 +18,7 @@ public class GameState
 	 */
 	public boolean startGame()
 	{
-		if (gameState != GameStatus.START) return false;
-		gameRound = GameRound.FIRSTROUND;
+		state = GameRound.FIRSTROUND;
 		activePlayerIndex = 0;
 		
 		return true;
@@ -32,13 +29,13 @@ public class GameState
 	 */
 	public boolean nextTurn()
 	{
-		if (gameState != GameStatus.BUILDING) return false;
+		if (state == GameRound.ROLLING || state == GameRound.ROBBING) return false;
 		activePlayerIndex ++;
 		if (activePlayerIndex > 3)
 		{
 			activePlayerIndex = 0;
-			if (gameRound == GameRound.FIRSTROUND) gameRound = GameRound.SECONDROUND;
-			else if (gameRound == GameRound.SECONDROUND) gameRound = GameRound.MAINROUND;
+			if (state == GameRound.FIRSTROUND) state = GameRound.SECONDROUND;
+			else if (state == GameRound.SECONDROUND) state = GameRound.MAINROUND;
 		}
 		
 		return true;
@@ -49,7 +46,7 @@ public class GameState
 	 */
 	public boolean startBuildPhase()
 	{
-		if (gameState != GameStatus.ROLLING) return false;
+		if (state != GameRound.ROLLING) return false;
 
 		return true;
 	}
@@ -60,11 +57,11 @@ public class GameState
 	public boolean IsEndGame()
 	{
 		//check if someone has 10 points or not
-		return true;
+		return state == GameRound.GAMEOVER;
 	}
 	
 	public void endGame()
 	{
-		gameRound = GameRound.GAMEOVER;
+		state = GameRound.GAMEOVER;
 	}
 }

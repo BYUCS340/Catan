@@ -10,7 +10,6 @@ import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
-import shared.definitions.GameStatus;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
 import shared.model.chat.ChatBox;
@@ -25,14 +24,14 @@ public class GameManager
 {
 	public  MapController mapController; //this is exposed for easier access
 	
-	private GameState gameState;
-	private Bank gameBank;
-	private List<Player> players;
-	private VictoryPointManager victoryPointManager;
-	private ChatBox waterCooler;
-	private GameActionLog log;
-	private IMapController map;
-	private int version;
+	protected GameState gameState;
+	protected Bank gameBank;
+	protected List<Player> players;
+	protected VictoryPointManager victoryPointManager;
+	protected ChatBox waterCooler;
+	protected GameActionLog log;
+	public IMapController map;
+	protected int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;
 	
@@ -136,32 +135,6 @@ public class GameManager
 		
 		return diceRoll; // chosen by fair dice roll
 						// guaranteed to be random
-	}
-	
-	
-	//--------------------------------------------------------------------------
-	//Networking methods
-	
-	/**
-	 * Loads in a game 
-	 * @param model the model to be loaded in
-	 * @throws ModelException if model is incorrect
-	 */
-	public void LoadGame(NetGameModel model) throws ModelException
-	{
-		if (model.getVersion() == this.version)
-			return;
-		throw new ModelException();
-	}
-	
-	/**
-	 * What the poller pokes to refresh the game model from teh server
-	 * @see client.networking.Poller
-	 */
-	public void RefreshFromServer() throws ModelException
-	{
-		NetGameModel model = null;
-		this.LoadGame(model);
 	}
 	
 	
@@ -271,7 +244,7 @@ public class GameManager
 	public boolean CanPlayerPlay(int playerID)
 	{
 		//If we aren't in the building phase and this player isn't their turn
-		if (CurrentState() != GameStatus.BUILDING || this.gameState.activePlayerIndex != playerID)
+		if (CurrentState() != GameRound.PLAYING || this.gameState.activePlayerIndex != playerID)
 			return false;
 		else
 			return false;
@@ -297,9 +270,9 @@ public class GameManager
 	 */
 	public boolean CanRollNumber(int playerID)
 	{
-		if (!CanPlayerPlay(playerID))
+		if (this.CurrentPlayersTurn() != playerID)
 			return false;
-		if (CurrentState() == GameStatus.ROLLING)
+		if (CurrentState() == GameRound.ROLLING)
 			return true;
 		else
 			return false;
@@ -430,7 +403,7 @@ public class GameManager
 	public boolean CanFinishTurn (int playerID)
 	{
 		if (this.CurrentPlayersTurn() != playerID) return false;
-		if (this.CurrentState() == GameStatus.BUILDING) return true;
+		if (this.CurrentState() == GameRound.PLAYING) return true;
 		return false;
 	}
 	
@@ -594,19 +567,15 @@ public class GameManager
 		gameState.activePlayerIndex++;
 		if (gameState.activePlayerIndex > 3)
 			gameState.activePlayerIndex = 0;
-		gameState.gameState = GameStatus.ROLLING;
+		gameState.state = GameRound.ROLLING;
 	}
 	
 	/**
 	 * Gets the player index of the current player
-	 * @return 0 to 3 or -1 if no player is playing
+	 * @return 0 to 3
 	 */
 	public int CurrentPlayersTurn()
 	{
-		if (gameState.gameState == GameStatus.START)
-		{
-			return -1;
-		}
 		return gameState.activePlayerIndex;
 	}
 	
@@ -637,20 +606,11 @@ public class GameManager
 	}
 	
 	/**
-	 * Returns the current State of the game
-	 * @return
-	 */
-	public GameStatus CurrentState()
-	{
-		return gameState.gameState;
-	}
-	
-	/**
 	 * Returns the current round of the game
 	 * @return
 	 */
-	public GameRound CurrentRound()
+	public GameRound CurrentState()
 	{
-		return gameState.gameRound;
+		return gameState.state;
 	}
 }
