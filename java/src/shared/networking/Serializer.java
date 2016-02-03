@@ -2,6 +2,7 @@ package shared.networking;
 
 import java.util.List;
 
+
 import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
@@ -17,8 +18,9 @@ public interface Serializer
 	 * @param username The user's username
 	 * @param password The user's password
 	 * @return Serialized data
+	 * @throws Exception 
 	 */
-	public String sCredentials(String username, String password);
+	public String sCredentials(String username, String password) throws Exception;
 	
 	/**
 	 * Serializes data for requests to create a game
@@ -28,7 +30,7 @@ public interface Serializer
 	 * @param name The name of the game to create
 	 * @return Serialized data
 	 */
-	public String sCreateGameReq(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name);
+	public String sCreateGameReq(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name) throws Exception;
 	
 	/**
 	 * Serializes a request from a user to join a game
@@ -36,14 +38,14 @@ public interface Serializer
 	 * @param color The color the user requests
 	 * @return Serialized data
 	 */
-	public String sJoinGameReq(int id, CatanColor color);
+	public String sJoinGameReq(int id, CatanColor color) throws Exception;
 	
 	/**
 	 * Serializes a request to add AI to a game
 	 * @param AIType The type of AI to add to the game
 	 * @return Serialized data
 	 */
-	public String sAddAIReq(AIType aitype);
+	public String sAddAIReq(AIType aitype) throws Exception;
 	
 	/**
 	 * Serializes a request to send a chat message
@@ -51,7 +53,7 @@ public interface Serializer
 	 * @param content The chat content
 	 * @return Serialized data
 	 */
-	public String sSendChatReq(int playerIndex, String content);
+	public String sSendChatReq(int playerIndex, String content) throws Exception;
 	
 	/**
 	 * Serializes a request to roll a dice, where the result is already known
@@ -59,7 +61,7 @@ public interface Serializer
 	 * @param number The number rolled
 	 * @return Serialized data
 	 */
-	public String sRollNumberReq(int playerIndex, int number);
+	public String sRollNumberReq(int playerIndex, int number) throws Exception;
 	
 	/**
 	 * Serializes a request to rob a player
@@ -68,21 +70,21 @@ public interface Serializer
 	 * @param location The new location of the robber
 	 * @return Serialized data
 	 */
-	public String sRobPlayerReq(int playerIndex, int victimIndex, HexLocation location);
+	public String sRobPlayerReq(int playerIndex, int victimIndex, HexLocation location) throws Exception;
 	
 	/**
 	 * Serializes a request to finish a turn
 	 * @param playerIndex The index of the player who is finishing their turn
 	 * @return Serialized data
 	 */
-	public String sFinishTurnReq(int playerIndex);
+	public String sFinishTurnReq(int playerIndex) throws Exception;
 	
 	/**
 	 * Serializes a request to buy a development card
 	 * @param playerIndex The index of the player who is buying the development card
 	 * @return Serialized data
 	 */
-	public String sBuyDevCardReq(int playerIndex);
+	public String sBuyDevCardReq(int playerIndex) throws Exception;
 	
 	/**
 	 * Serializes a request to play a Year of Plenty card
@@ -91,7 +93,7 @@ public interface Serializer
 	 * @param resource2 The second resource to take from the bank
 	 * @return Serialized data
 	 */
-	public String sYearOfPlentyCardReq(int playerIndex, ResourceType resource1, ResourceType resource2);
+	public String sYearOfPlentyCardReq(int playerIndex, ResourceType resource1, ResourceType resource2) throws Exception;
 	
 	/**
 	 * Serializes a request to play a road building card
@@ -100,7 +102,7 @@ public interface Serializer
 	 * @param edgeLoc2 The location of the second road
 	 * @return Serialized data
 	 */
-	public String sRoadBuildingCardReq(int playerIndex, EdgeLocation edgeLoc1, EdgeLocation edgeLoc2);
+	public String sRoadBuildingCardReq(int playerIndex, EdgeLocation edgeLoc1, EdgeLocation edgeLoc2) throws Exception;
 	
 	/**
 	 * Serializes a request to play a soldier card
@@ -109,7 +111,7 @@ public interface Serializer
 	 * @param location The new hex location of the soldier
 	 * @return Serialized data
 	 */
-	public String sSoldierCardReq(int playerIndex, int victimIndex, HexLocation location);
+	public String sSoldierCardReq(int playerIndex, int victimIndex, HexLocation location) throws Exception;
 	
 	/**
 	 * Serializes a request to play a monopoly card
@@ -117,14 +119,14 @@ public interface Serializer
 	 * @param resource The resource to have a monopoly on
 	 * @return Serialized data
 	 */
-	public String sMonopolyCardReq(int playerIndex, ResourceType resource);
+	public String sMonopolyCardReq(int playerIndex, ResourceType resource) throws Exception;
 	
 	/**
 	 * Serializes a request to play a monument card
 	 * @param playerIndex The index of the player who wishes to play the card
 	 * @return Serialized data
 	 */
-	public String sMonumentCardReq(int playerIndex);
+	public String sMonumentCardReq(int playerIndex) throws Exception;
 	
 	/**
 	 * Serializes a request to build a road
@@ -133,7 +135,7 @@ public interface Serializer
 	 * @param free Whether this road is free (doesn't cost resources) or not
 	 * @return Serialized data
 	 */
-	public String sBuildRoadReq(int playerIndex, EdgeLocation roadLocation, boolean free);
+	public String sBuildRoadReq(int playerIndex, EdgeLocation roadLocation, boolean free) throws Exception;
 	
 	/**
 	 * Serializes a request to build a settlement 
@@ -142,7 +144,7 @@ public interface Serializer
 	 * @param free Whether this settlement is free (doesn't cost resources) or not
 	 * @return Serialized data
 	 */
-	public String sBuildSettlementReq(int playerIndex, VertexLocation vertexLocation, boolean free);
+	public String sBuildSettlementReq(int playerIndex, VertexLocation vertexLocation, boolean free) throws Exception;
 	
 	/**
 	 * Serializes a request to build a city
@@ -150,7 +152,7 @@ public interface Serializer
 	 * @param vertexLocation Where to build the city
 	 * @return Serialized data
 	 */
-	public String sBuildCityReq(int playerIndex, VertexLocation vertexLocation);
+	public String sBuildCityReq(int playerIndex, VertexLocation vertexLocation) throws Exception;
 	
 	/**
 	 * Serializes a request to offer a trade
@@ -159,7 +161,7 @@ public interface Serializer
 	 * @param receiver The index of the receiver
 	 * @return Serialized data
 	 */
-	public String sOfferTradeReq(int playerIndex, List<Integer> resourceList, int receiver);
+	public String sOfferTradeReq(int playerIndex, List<Integer> resourceList, int receiver) throws Exception;
 	
 	/**
 	 * Serializes a request to accept (or reject) a trade
@@ -167,7 +169,7 @@ public interface Serializer
 	 * @param willAccept Whether the trade is accepted
 	 * @return Serialized data
 	 */
-	public String sAcceptTradeReq(int playerIndex, boolean willAccept);
+	public String sAcceptTradeReq(int playerIndex, boolean willAccept) throws Exception;
 	
 	/**
 	 * Serializes a request to perform a maritime trade
@@ -177,7 +179,7 @@ public interface Serializer
 	 * @param outputResource The resource being traded for
 	 * @return Serialized data
 	 */
-	public String sMaritimeTradeReq(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource);
+	public String sMaritimeTradeReq(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource) throws Exception;
 	
 	/**
 	 * Serializes a request to discard cards
@@ -185,7 +187,7 @@ public interface Serializer
 	 * @param resourceList A resource list with the cards being discarded
 	 * @return Serialized data
 	 */
-	public String sDiscardCardsReq(int playerIndex, List<Integer> resourceList);
+	public String sDiscardCardsReq(int playerIndex, List<Integer> resourceList) throws Exception;
 	
 	
 }
