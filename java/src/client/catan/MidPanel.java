@@ -5,6 +5,7 @@ import javax.swing.*;
 
 import client.map.*;
 import client.map.view.MapView;
+import client.model.ClientGame;
 import shared.model.IMapController;
 
 @SuppressWarnings("serial")
@@ -27,6 +28,8 @@ public class MidPanel extends JPanel
 		mapView = new MapView();
 		robView = new RobView();
 		mapController = new MapController(mapView, robView);
+		//Give the game the right map controller
+		ClientGame.getGame().map = mapController;
 		mapView.setController(mapController);
 		robView.setController(mapController);
 		
