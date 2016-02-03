@@ -1,7 +1,6 @@
 package shared.model;
 
 import shared.definitions.GameRound;
-import shared.definitions.GameStatus;
 
 /**
  * An object that keeps track of whose turn it is.

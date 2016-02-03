@@ -39,7 +39,7 @@ public class Translate
 	public GameState fromNetTurnTracker(NetTurnTracker netTurnTracker)
 	{
 		GameState gameState = new GameState();
-		gameState.gameRound = netTurnTracker.getRound();
+		gameState.state = netTurnTracker.getRound();
 		gameState.activePlayerIndex = netTurnTracker.getCurrentTurn();
 		return null;
 	}

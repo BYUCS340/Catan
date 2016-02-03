@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import shared.definitions.GameStatus;
+import shared.definitions.GameRound;
 import shared.model.GameState;
 
 public class TestGameState {
@@ -23,7 +23,7 @@ public class TestGameState {
 	@Test
 	public void test() {
 		assertTrue(gm.startGame());
-		assertEquals(gm.gameState, GameStatus.START);
+		assertEquals(gm.state, GameRound.FIRSTROUND);
 		
 		//TODO: so much
 		
