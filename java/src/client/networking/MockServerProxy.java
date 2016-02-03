@@ -14,6 +14,7 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.networking.JSONDeserializer;
 import shared.networking.UserCookie;
 import shared.networking.transport.*;
 
@@ -41,564 +42,579 @@ public class MockServerProxy implements ServerProxy
 		userLoggedIn = false;
 		userJoinedGame = false;
 		
-		initializeStaticStateOfGame();
-		initializeStaticListOfGames();
+		//  using deserializer to use real server reponses instead of hardcoding the values
+		JSONDeserializer serverResponseDeserializer = new JSONDeserializer();
+		initializeStaticStateOfGame(serverResponseDeserializer);
+		initializeStaticListOfGames(serverResponseDeserializer);
 	}
 	
 	
-	private void initializeStaticStateOfGame(){
-		currentStateOfGame = new NetGameModel();
-		
-		NetLog currentLog = new NetLog();
-		NetLine line = new NetLine();
-		line.setMessage("hi");
-		line.setSource("source1");
-		currentLog.addLine(line);
-		currentStateOfGame.setNetGameLog(currentLog);
-		
-		NetMap currentMap = new NetMap();
-		ArrayList<NetHex> mapHexes = new ArrayList<NetHex>();
-		
-		NetHex hex1 = new NetHex();
-		NetHexLocation location1 = new NetHexLocation();
-		location1.setX(0);
-		location1.setY(-2);
-		hex1.setNetHexLocation(location1);
-		hex1.setResourceType(ResourceType.ORE);
-		hex1.setNumberChit(9);
-		mapHexes.add(hex1);
-		
-		NetHex hex2 = new NetHex();
-		NetHexLocation location2 = new NetHexLocation();
-		location2.setX(1);
-		location2.setY(-2);
-		hex2.setNetHexLocation(location2);
-		hex2.setResourceType(ResourceType.SHEEP);
-		hex2.setNumberChit(10);
-		mapHexes.add(hex2);
-		
-		NetHex hex3 = new NetHex();
-		NetHexLocation location3 = new NetHexLocation();
-		location3.setX(2);
-		location3.setY(-2);
-		hex3.setNetHexLocation(location3);
-		hex3.setResourceType(ResourceType.SHEEP);
-		hex3.setNumberChit(12);
-		mapHexes.add(hex3);
-		
-		NetHex hex4 = new NetHex();
-		NetHexLocation location4 = new NetHexLocation();
-		location4.setX(-1);
-		location4.setY(-1);
-		hex4.setNetHexLocation(location4);
-		hex4.setResourceType(ResourceType.WOOD);
-		hex4.setNumberChit(3);
-		mapHexes.add(hex4);
-		
-		NetHex hex5 = new NetHex();
-		NetHexLocation location5 = new NetHexLocation();
-		location5.setX(0);
-		location5.setY(-1);
-		hex5.setNetHexLocation(location5);
-		hex5.setResourceType(ResourceType.WHEAT);
-		hex5.setNumberChit(8);
-		mapHexes.add(hex5);
-		
-		NetHex hex6 = new NetHex();
-		NetHexLocation location6 = new NetHexLocation();
-		location6.setX(1);
-		location6.setY(-1);
-		hex6.setNetHexLocation(location6);
-		hex6.setResourceType(ResourceType.WHEAT);
-		hex6.setNumberChit(2);
-		mapHexes.add(hex6);
-		
-		NetHex hex7 = new NetHex();
-		NetHexLocation location7 = new NetHexLocation();
-		location7.setX(2);
-		location7.setY(-1);
-		hex7.setNetHexLocation(location7);
-		hex7.setResourceType(ResourceType.WOOD);
-		hex7.setNumberChit(4);
-		mapHexes.add(hex7);
-		
-		NetHex hex8 = new NetHex();
-		NetHexLocation location8 = new NetHexLocation();
-		location8.setX(-2);
-		location8.setY(0);
-		hex8.setNetHexLocation(location8);
-		hex8.setResourceType(ResourceType.WOOD);
-		hex8.setNumberChit(11);
-		mapHexes.add(hex8);
-		
-		NetHex hex9 = new NetHex();
-		NetHexLocation location9 = new NetHexLocation();
-		location9.setX(-1);
-		location9.setY(0);
-		hex9.setNetHexLocation(location9);
-		hex9.setResourceType(ResourceType.SHEEP);
-		hex9.setNumberChit(9);
-		mapHexes.add(hex9);
-		
-		NetHex hex10 = new NetHex();
-		NetHexLocation location10 = new NetHexLocation();
-		location10.setX(0);
-		location10.setY(0);
-		hex10.setNetHexLocation(location10);
-		hex10.setResourceType(ResourceType.WHEAT);
-		hex10.setNumberChit(6);
-		mapHexes.add(hex10);
-		
-		NetHex hex11 = new NetHex();
-		NetHexLocation location11 = new NetHexLocation();
-		location11.setX(1);
-		location11.setY(0);
-		hex11.setNetHexLocation(location11);
-		hex11.setResourceType(ResourceType.BRICK);
-		hex11.setNumberChit(4);
-		mapHexes.add(hex11);
-		
-		NetHex hex12 = new NetHex();
-		NetHexLocation location12 = new NetHexLocation();
-		location12.setX(-2);
-		location12.setY(1);
-		hex12.setNetHexLocation(location12);
-		hex12.setResourceType(ResourceType.ORE);
-		hex12.setNumberChit(5);
-		mapHexes.add(hex12);
-		
-		NetHex hex13 = new NetHex();
-		NetHexLocation location13 = new NetHexLocation();
-		location13.setX(-1);
-		location13.setY(1);
-		hex13.setNetHexLocation(location13);
-		hex13.setResourceType(ResourceType.WOOD);
-		hex13.setNumberChit(6);
-		mapHexes.add(hex13);
-		
-		NetHex hex14 = new NetHex();
-		NetHexLocation location14 = new NetHexLocation();
-		location14.setX(0);
-		location14.setY(1);
-		hex14.setNetHexLocation(location14);
-		hex14.setResourceType(ResourceType.SHEEP);
-		hex14.setNumberChit(10);
-		mapHexes.add(hex14);
-		
-		NetHex hex15 = new NetHex();
-		NetHexLocation location15 = new NetHexLocation();
-		location15.setX(1);
-		location15.setY(1);
-		hex15.setNetHexLocation(location15);
-		hex15.setResourceType(ResourceType.ORE);
-		hex15.setNumberChit(3);
-		mapHexes.add(hex15);
-		
-		NetHex hex16 = new NetHex();
-		NetHexLocation location16 = new NetHexLocation();
-		location16.setX(-2);
-		location16.setY(2);
-		hex16.setNetHexLocation(location16);
-		hex16.setResourceType(ResourceType.WHEAT);
-		hex16.setNumberChit(11);
-		mapHexes.add(hex16);
-		
-		NetHex hex17 = new NetHex();
-		NetHexLocation location17 = new NetHexLocation();
-		location17.setX(-1);
-		location17.setY(2);
-		hex17.setNetHexLocation(location17);
-		hex17.setResourceType(ResourceType.BRICK);
-		hex17.setNumberChit(8);
-		mapHexes.add(hex17);
-		
-		NetHex hex18 = new NetHex();
-		NetHexLocation location18 = new NetHexLocation();
-		location18.setX(0);
-		location18.setY(2);
-		hex18.setNetHexLocation(location18);
-		hex18.setResourceType(ResourceType.BRICK);
-		hex18.setNumberChit(5);
-		mapHexes.add(hex18);
-		
-		currentMap.setNetHexes(mapHexes);
-		
-		//  no roads placed
-		ArrayList<NetRoad> mapRoads = new ArrayList<NetRoad>();
-		currentMap.setNetRoads(mapRoads);
-		
-		//  no cities placed
-		ArrayList<NetCity> mapCities = new ArrayList<NetCity>();
-		currentMap.setNetCities(mapCities);
-		
-		//  no settlements placed
-		ArrayList<NetSettlement> mapSettlements = new ArrayList<NetSettlement>();
-		currentMap.setNetSettlements(mapSettlements);
-		
-		currentMap.setRadius(3);
-		
-		
-		ArrayList<NetPort> mapPorts = new ArrayList<NetPort>();
-		
-		NetPort port1 = new NetPort();
-		port1.setDirection(Direction.S);
-		port1.setRatio(2);
-		port1.setResource(ResourceType.ORE);
-		NetHexLocation location01 = new NetHexLocation();
-		location01.setX(-1);
-		location01.setY(-2);
-		port1.setNetHexLocation(location01);
-		mapPorts.add(port1);
-		
-		NetPort port2 = new NetPort();
-		port2.setDirection(Direction.NE);
-		port2.setRatio(3);
-		NetHexLocation locatoin02 = new NetHexLocation();
-		locatoin02.setX(-2);
-		locatoin02.setY(3);
-		port2.setNetHexLocation(locatoin02);
-		mapPorts.add(port2);
+	private void initializeStaticStateOfGame(JSONDeserializer serverResponseDeserializer){
+		String gameModelReturnedByServer = "{\n  \"deck\": {\n    \"yearOfPlenty\": 2,\n    \"monopoly\": 2,\n    \"soldier\": 14,\n    \"roadBuilding\": 2,\n    \"monument\": 5\n  },\n  \"map\": {\n    \"hexes\": [\n      {\n        \"resource\": \"wood\",\n        \"location\": {\n          \"x\": 0,\n          \"y\": -2\n        },\n        \"number\": 3\n      },\n      {\n        \"resource\": \"sheep\",\n        \"location\": {\n          \"x\": 1,\n          \"y\": -2\n        },\n        \"number\": 10\n      },\n      {\n        \"location\": {\n          \"x\": 2,\n          \"y\": -2\n        }\n      },\n      {\n        \"resource\": \"wood\",\n        \"location\": {\n          \"x\": -1,\n          \"y\": -1\n        },\n        \"number\": 4\n      },\n      {\n        \"resource\": \"brick\",\n        \"location\": {\n          \"x\": 0,\n          \"y\": -1\n        },\n        \"number\": 4\n      },\n      {\n        \"resource\": \"ore\",\n        \"location\": {\n          \"x\": 1,\n          \"y\": -1\n        },\n        \"number\": 9\n      },\n      {\n        \"resource\": \"wheat\",\n        \"location\": {\n          \"x\": 2,\n          \"y\": -1\n        },\n        \"number\": 6\n      },\n      {\n        \"resource\": \"wheat\",\n        \"location\": {\n          \"x\": -2,\n          \"y\": 0\n        },\n        \"number\": 2\n      },\n      {\n        \"resource\": \"ore\",\n        \"location\": {\n          \"x\": -1,\n          \"y\": 0\n        },\n        \"number\": 3\n      },\n      {\n        \"resource\": \"wheat\",\n        \"location\": {\n          \"x\": 0,\n          \"y\": 0\n        },\n        \"number\": 8\n      },\n      {\n        \"resource\": \"brick\",\n        \"location\": {\n          \"x\": 1,\n          \"y\": 0\n        },\n        \"number\": 5\n      },\n      {\n        \"resource\": \"wood\",\n        \"location\": {\n          \"x\": 2,\n          \"y\": 0\n        },\n        \"number\": 6\n      },\n      {\n        \"resource\": \"sheep\",\n        \"location\": {\n          \"x\": -2,\n          \"y\": 1\n        },\n        \"number\": 9\n      },\n      {\n        \"resource\": \"sheep\",\n        \"location\": {\n          \"x\": -1,\n          \"y\": 1\n        },\n        \"number\": 12\n      },\n      {\n        \"resource\": \"wood\",\n        \"location\": {\n          \"x\": 0,\n          \"y\": 1\n        },\n        \"number\": 11\n      },\n      {\n        \"resource\": \"sheep\",\n        \"location\": {\n          \"x\": 1,\n          \"y\": 1\n        },\n        \"number\": 10\n      },\n      {\n        \"resource\": \"ore\",\n        \"location\": {\n          \"x\": -2,\n          \"y\": 2\n        },\n        \"number\": 5\n      },\n      {\n        \"resource\": \"wheat\",\n        \"location\": {\n          \"x\": -1,\n          \"y\": 2\n        },\n        \"number\": 11\n      },\n      {\n        \"resource\": \"brick\",\n        \"location\": {\n          \"x\": 0,\n          \"y\": 2\n        },\n        \"number\": 8\n      }\n    ],\n    \"roads\": [],\n    \"cities\": [],\n    \"settlements\": [],\n    \"radius\": 3,\n    \"ports\": [\n      {\n        \"ratio\": 3,\n        \"direction\": \"NE\",\n        \"location\": {\n          \"x\": -2,\n          \"y\": 3\n        }\n      },\n      {\n        \"ratio\": 2,\n        \"resource\": \"brick\",\n        \"direction\": \"NW\",\n        \"location\": {\n          \"x\": 2,\n          \"y\": 1\n        }\n      },\n      {\n        \"ratio\": 2,\n        \"resource\": \"ore\",\n        \"direction\": \"SW\",\n        \"location\": {\n          \"x\": 3,\n          \"y\": -3\n        }\n      },\n      {\n        \"ratio\": 3,\n        \"direction\": \"NW\",\n        \"location\": {\n          \"x\": 3,\n          \"y\": -1\n        }\n      },\n      {\n        \"ratio\": 3,\n        \"direction\": \"NE\",\n        \"location\": {\n          \"x\": -3,\n          \"y\": 2\n        }\n      },\n      {\n        \"ratio\": 3,\n        \"direction\": \"SE\",\n        \"location\": {\n          \"x\": -3,\n          \"y\": 0\n        }\n      },\n      {\n        \"ratio\": 2,\n        \"resource\": \"sheep\",\n        \"direction\": \"S\",\n        \"location\": {\n          \"x\": 1,\n          \"y\": -3\n        }\n      },\n      {\n        \"ratio\": 2,\n        \"resource\": \"wood\",\n        \"direction\": \"N\",\n        \"location\": {\n          \"x\": 0,\n          \"y\": 3\n        }\n      },\n      {\n        \"ratio\": 2,\n        \"resource\": \"wheat\",\n        \"direction\": \"S\",\n        \"location\": {\n          \"x\": -1,\n          \"y\": -2\n        }\n      }\n    ],\n    \"robber\": {\n      \"x\": 2,\n      \"y\": -2\n    }\n  },\n  \"players\": [\n    {\n      \"resources\": {\n        \"brick\": 0,\n        \"wood\": 0,\n        \"sheep\": 0,\n        \"wheat\": 0,\n        \"ore\": 0\n      },\n      \"oldDevCards\": {\n        \"yearOfPlenty\": 0,\n        \"monopoly\": 0,\n        \"soldier\": 0,\n        \"roadBuilding\": 0,\n        \"monument\": 0\n      },\n      \"newDevCards\": {\n        \"yearOfPlenty\": 0,\n        \"monopoly\": 0,\n        \"soldier\": 0,\n        \"roadBuilding\": 0,\n        \"monument\": 0\n      },\n      \"roads\": 15,\n      \"cities\": 4,\n      \"settlements\": 5,\n      \"soldiers\": 0,\n      \"victoryPoints\": 0,\n      \"monuments\": 0,\n      \"playedDevCard\": false,\n      \"discarded\": false,\n      \"playerID\": 12,\n      \"playerIndex\": 0,\n      \"name\": \"larry\",\n      \"color\": \"yellow\"\n    },\n    null,\n    null,\n    null\n  ],\n  \"log\": {\n    \"lines\": []\n  },\n  \"chat\": {\n    \"lines\": []\n  },\n  \"bank\": {\n    \"brick\": 24,\n    \"wood\": 24,\n    \"sheep\": 24,\n    \"wheat\": 24,\n    \"ore\": 24\n  },\n  \"turnTracker\": {\n    \"status\": \"FirstRound\",\n    \"currentTurn\": 0,\n    \"longestRoad\": -1,\n    \"largestArmy\": -1\n  },\n  \"winner\": -1,\n  \"version\": 0\n}";
 
-		
-		NetPort port3 = new NetPort();
-		port3.setDirection(Direction.S);
-		port3.setRatio(3);
-		NetHexLocation locatoin03 = new NetHexLocation();
-		locatoin03.setX(1);
-		locatoin03.setY(-3);
-		port3.setNetHexLocation(locatoin03);
-		mapPorts.add(port3);
-
-		
-		NetPort port4 = new NetPort();
-		port4.setDirection(Direction.NW);
-		port4.setRatio(2);
-		port4.setResource(ResourceType.BRICK);
-		NetHexLocation location04 = new NetHexLocation();
-		location04.setX(2);
-		location04.setY(1);
-		port4.setNetHexLocation(location04);
-		mapPorts.add(port4);
-
-		
-		NetPort port5 = new NetPort();
-		port5.setDirection(Direction.SW);
-		port5.setRatio(3);
-		NetHexLocation location05 = new NetHexLocation();
-		location05.setX(3);
-		location05.setY(-3);
-		port5.setNetHexLocation(location05);
-		mapPorts.add(port5);
-
-		
-		NetPort port6 = new NetPort();
-		port6.setDirection(Direction.NW);
-		port6.setRatio(3);
-		NetHexLocation location06 = new NetHexLocation();
-		location06.setX(3);
-		location06.setY(-1);
-		port6.setNetHexLocation(location06);
-		mapPorts.add(port6);
-
-		
-		NetPort port7 = new NetPort();
-		port7.setDirection(Direction.N);
-		port7.setRatio(2);
-		port7.setResource(ResourceType.WOOD);
-		NetHexLocation location07 = new NetHexLocation();
-		location07.setX(0);
-		location07.setY(3);
-		port7.setNetHexLocation(location07);
-		mapPorts.add(port7);
-
-		
-		NetPort port8 = new NetPort();
-		port8.setDirection(Direction.SE);
-		port8.setRatio(2);
-		port8.setResource(ResourceType.WHEAT);
-		NetHexLocation location08 = new NetHexLocation();
-		location08.setX(-3);
-		location08.setY(0);
-		port8.setNetHexLocation(location08);
-		mapPorts.add(port8);
-
-		
-		NetPort port9 = new NetPort();
-		port9.setDirection(Direction.NE);
-		port9.setRatio(2);
-		port9.setResource(ResourceType.SHEEP);
-		NetHexLocation location09 = new NetHexLocation();
-		location09.setX(-3);
-		location09.setY(2);
-		port9.setNetHexLocation(location09);
-		mapPorts.add(port9);
-		
-		currentMap.setNetPorts(mapPorts);
-		
-		NetHexLocation robberLocation = new NetHexLocation();
-		robberLocation.setX(2);
-		robberLocation.setY(0);
-		currentMap.setRobberLocation(robberLocation);
-		
-		currentStateOfGame.setNetMap(currentMap);
+		currentStateOfGame = serverResponseDeserializer.parseNetGameModel(gameModelReturnedByServer);
 		
 		
 		
+//		currentStateOfGame = new NetGameModel();
+//		
+//		NetLog currentLog = new NetLog();
+//		NetLine line = new NetLine();
+//		line.setMessage("hi");
+//		line.setSource("source1");
+//		currentLog.addLine(line);
+//		currentStateOfGame.setNetGameLog(currentLog);
+//		
+//		NetMap currentMap = new NetMap();
+//		ArrayList<NetHex> mapHexes = new ArrayList<NetHex>();
+//		
+//		NetHex hex1 = new NetHex();
+//		NetHexLocation location1 = new NetHexLocation();
+//		location1.setX(0);
+//		location1.setY(-2);
+//		hex1.setNetHexLocation(location1);
+//		hex1.setResourceType(ResourceType.ORE);
+//		hex1.setNumberChit(9);
+//		mapHexes.add(hex1);
+//		
+//		NetHex hex2 = new NetHex();
+//		NetHexLocation location2 = new NetHexLocation();
+//		location2.setX(1);
+//		location2.setY(-2);
+//		hex2.setNetHexLocation(location2);
+//		hex2.setResourceType(ResourceType.SHEEP);
+//		hex2.setNumberChit(10);
+//		mapHexes.add(hex2);
+//		
+//		NetHex hex3 = new NetHex();
+//		NetHexLocation location3 = new NetHexLocation();
+//		location3.setX(2);
+//		location3.setY(-2);
+//		hex3.setNetHexLocation(location3);
+//		hex3.setResourceType(ResourceType.SHEEP);
+//		hex3.setNumberChit(12);
+//		mapHexes.add(hex3);
+//		
+//		NetHex hex4 = new NetHex();
+//		NetHexLocation location4 = new NetHexLocation();
+//		location4.setX(-1);
+//		location4.setY(-1);
+//		hex4.setNetHexLocation(location4);
+//		hex4.setResourceType(ResourceType.WOOD);
+//		hex4.setNumberChit(3);
+//		mapHexes.add(hex4);
+//		
+//		NetHex hex5 = new NetHex();
+//		NetHexLocation location5 = new NetHexLocation();
+//		location5.setX(0);
+//		location5.setY(-1);
+//		hex5.setNetHexLocation(location5);
+//		hex5.setResourceType(ResourceType.WHEAT);
+//		hex5.setNumberChit(8);
+//		mapHexes.add(hex5);
+//		
+//		NetHex hex6 = new NetHex();
+//		NetHexLocation location6 = new NetHexLocation();
+//		location6.setX(1);
+//		location6.setY(-1);
+//		hex6.setNetHexLocation(location6);
+//		hex6.setResourceType(ResourceType.WHEAT);
+//		hex6.setNumberChit(2);
+//		mapHexes.add(hex6);
+//		
+//		NetHex hex7 = new NetHex();
+//		NetHexLocation location7 = new NetHexLocation();
+//		location7.setX(2);
+//		location7.setY(-1);
+//		hex7.setNetHexLocation(location7);
+//		hex7.setResourceType(ResourceType.WOOD);
+//		hex7.setNumberChit(4);
+//		mapHexes.add(hex7);
+//		
+//		NetHex hex8 = new NetHex();
+//		NetHexLocation location8 = new NetHexLocation();
+//		location8.setX(-2);
+//		location8.setY(0);
+//		hex8.setNetHexLocation(location8);
+//		hex8.setResourceType(ResourceType.WOOD);
+//		hex8.setNumberChit(11);
+//		mapHexes.add(hex8);
+//		
+//		NetHex hex9 = new NetHex();
+//		NetHexLocation location9 = new NetHexLocation();
+//		location9.setX(-1);
+//		location9.setY(0);
+//		hex9.setNetHexLocation(location9);
+//		hex9.setResourceType(ResourceType.SHEEP);
+//		hex9.setNumberChit(9);
+//		mapHexes.add(hex9);
+//		
+//		NetHex hex10 = new NetHex();
+//		NetHexLocation location10 = new NetHexLocation();
+//		location10.setX(0);
+//		location10.setY(0);
+//		hex10.setNetHexLocation(location10);
+//		hex10.setResourceType(ResourceType.WHEAT);
+//		hex10.setNumberChit(6);
+//		mapHexes.add(hex10);
+//		
+//		NetHex hex11 = new NetHex();
+//		NetHexLocation location11 = new NetHexLocation();
+//		location11.setX(1);
+//		location11.setY(0);
+//		hex11.setNetHexLocation(location11);
+//		hex11.setResourceType(ResourceType.BRICK);
+//		hex11.setNumberChit(4);
+//		mapHexes.add(hex11);
+//		
+//		NetHex hex12 = new NetHex();
+//		NetHexLocation location12 = new NetHexLocation();
+//		location12.setX(-2);
+//		location12.setY(1);
+//		hex12.setNetHexLocation(location12);
+//		hex12.setResourceType(ResourceType.ORE);
+//		hex12.setNumberChit(5);
+//		mapHexes.add(hex12);
+//		
+//		NetHex hex13 = new NetHex();
+//		NetHexLocation location13 = new NetHexLocation();
+//		location13.setX(-1);
+//		location13.setY(1);
+//		hex13.setNetHexLocation(location13);
+//		hex13.setResourceType(ResourceType.WOOD);
+//		hex13.setNumberChit(6);
+//		mapHexes.add(hex13);
+//		
+//		NetHex hex14 = new NetHex();
+//		NetHexLocation location14 = new NetHexLocation();
+//		location14.setX(0);
+//		location14.setY(1);
+//		hex14.setNetHexLocation(location14);
+//		hex14.setResourceType(ResourceType.SHEEP);
+//		hex14.setNumberChit(10);
+//		mapHexes.add(hex14);
+//		
+//		NetHex hex15 = new NetHex();
+//		NetHexLocation location15 = new NetHexLocation();
+//		location15.setX(1);
+//		location15.setY(1);
+//		hex15.setNetHexLocation(location15);
+//		hex15.setResourceType(ResourceType.ORE);
+//		hex15.setNumberChit(3);
+//		mapHexes.add(hex15);
+//		
+//		NetHex hex16 = new NetHex();
+//		NetHexLocation location16 = new NetHexLocation();
+//		location16.setX(-2);
+//		location16.setY(2);
+//		hex16.setNetHexLocation(location16);
+//		hex16.setResourceType(ResourceType.WHEAT);
+//		hex16.setNumberChit(11);
+//		mapHexes.add(hex16);
+//		
+//		NetHex hex17 = new NetHex();
+//		NetHexLocation location17 = new NetHexLocation();
+//		location17.setX(-1);
+//		location17.setY(2);
+//		hex17.setNetHexLocation(location17);
+//		hex17.setResourceType(ResourceType.BRICK);
+//		hex17.setNumberChit(8);
+//		mapHexes.add(hex17);
+//		
+//		NetHex hex18 = new NetHex();
+//		NetHexLocation location18 = new NetHexLocation();
+//		location18.setX(0);
+//		location18.setY(2);
+//		hex18.setNetHexLocation(location18);
+//		hex18.setResourceType(ResourceType.BRICK);
+//		hex18.setNumberChit(5);
+//		mapHexes.add(hex18);
+//		
+//		currentMap.setNetHexes(mapHexes);
+//		
+//		//  no roads placed
+//		ArrayList<NetRoad> mapRoads = new ArrayList<NetRoad>();
+//		currentMap.setNetRoads(mapRoads);
+//		
+//		//  no cities placed
+//		ArrayList<NetCity> mapCities = new ArrayList<NetCity>();
+//		currentMap.setNetCities(mapCities);
+//		
+//		//  no settlements placed
+//		ArrayList<NetSettlement> mapSettlements = new ArrayList<NetSettlement>();
+//		currentMap.setNetSettlements(mapSettlements);
+//		
+//		currentMap.setRadius(3);
+//		
+//		
+//		ArrayList<NetPort> mapPorts = new ArrayList<NetPort>();
+//		
+//		NetPort port1 = new NetPort();
+//		port1.setDirection(Direction.S);
+//		port1.setRatio(2);
+//		port1.setResource(ResourceType.ORE);
+//		NetHexLocation location01 = new NetHexLocation();
+//		location01.setX(-1);
+//		location01.setY(-2);
+//		port1.setNetHexLocation(location01);
+//		mapPorts.add(port1);
+//		
+//		NetPort port2 = new NetPort();
+//		port2.setDirection(Direction.NE);
+//		port2.setRatio(3);
+//		NetHexLocation locatoin02 = new NetHexLocation();
+//		locatoin02.setX(-2);
+//		locatoin02.setY(3);
+//		port2.setNetHexLocation(locatoin02);
+//		mapPorts.add(port2);
+//
+//		
+//		NetPort port3 = new NetPort();
+//		port3.setDirection(Direction.S);
+//		port3.setRatio(3);
+//		NetHexLocation locatoin03 = new NetHexLocation();
+//		locatoin03.setX(1);
+//		locatoin03.setY(-3);
+//		port3.setNetHexLocation(locatoin03);
+//		mapPorts.add(port3);
+//
+//		
+//		NetPort port4 = new NetPort();
+//		port4.setDirection(Direction.NW);
+//		port4.setRatio(2);
+//		port4.setResource(ResourceType.BRICK);
+//		NetHexLocation location04 = new NetHexLocation();
+//		location04.setX(2);
+//		location04.setY(1);
+//		port4.setNetHexLocation(location04);
+//		mapPorts.add(port4);
+//
+//		
+//		NetPort port5 = new NetPort();
+//		port5.setDirection(Direction.SW);
+//		port5.setRatio(3);
+//		NetHexLocation location05 = new NetHexLocation();
+//		location05.setX(3);
+//		location05.setY(-3);
+//		port5.setNetHexLocation(location05);
+//		mapPorts.add(port5);
+//
+//		
+//		NetPort port6 = new NetPort();
+//		port6.setDirection(Direction.NW);
+//		port6.setRatio(3);
+//		NetHexLocation location06 = new NetHexLocation();
+//		location06.setX(3);
+//		location06.setY(-1);
+//		port6.setNetHexLocation(location06);
+//		mapPorts.add(port6);
+//
+//		
+//		NetPort port7 = new NetPort();
+//		port7.setDirection(Direction.N);
+//		port7.setRatio(2);
+//		port7.setResource(ResourceType.WOOD);
+//		NetHexLocation location07 = new NetHexLocation();
+//		location07.setX(0);
+//		location07.setY(3);
+//		port7.setNetHexLocation(location07);
+//		mapPorts.add(port7);
+//
+//		
+//		NetPort port8 = new NetPort();
+//		port8.setDirection(Direction.SE);
+//		port8.setRatio(2);
+//		port8.setResource(ResourceType.WHEAT);
+//		NetHexLocation location08 = new NetHexLocation();
+//		location08.setX(-3);
+//		location08.setY(0);
+//		port8.setNetHexLocation(location08);
+//		mapPorts.add(port8);
+//
+//		
+//		NetPort port9 = new NetPort();
+//		port9.setDirection(Direction.NE);
+//		port9.setRatio(2);
+//		port9.setResource(ResourceType.SHEEP);
+//		NetHexLocation location09 = new NetHexLocation();
+//		location09.setX(-3);
+//		location09.setY(2);
+//		port9.setNetHexLocation(location09);
+//		mapPorts.add(port9);
+//		
+//		currentMap.setNetPorts(mapPorts);
+//		
+//		NetHexLocation robberLocation = new NetHexLocation();
+//		robberLocation.setX(2);
+//		robberLocation.setY(0);
+//		currentMap.setRobberLocation(robberLocation);
+//		
+//		currentStateOfGame.setNetMap(currentMap);
+//		
+//		
+//		
+//		
+//		ArrayList<NetPlayer> netPlayers = new ArrayList<NetPlayer>();
+//		NetPlayer player1 = new NetPlayer();
+//		player1.setNumCities(4);
+//		player1.setColor(CatanColor.BLUE);
+//		player1.setHasDiscarded(false);
+//		player1.setNumMonuments(0);
+//		player1.setName("SAMM2");
+//		NetDevCardList devCardList1 = new NetDevCardList();
+//		player1.setOldNetDevCardList(devCardList1);
+//		NetDevCardList devCardList2 = new NetDevCardList();
+//		player1.setNewNetDevCardList(devCardList2);
+//		player1.setPlayerIndex(0);
+//		player1.setPlayedDevCard(false);
+//		player1.setPlayerID(13);
+//		NetResourceList resourceList = new NetResourceList();
+//		player1.setNetResourceList(resourceList);
+//		player1.setNumRoads(15);
+//		player1.setNumSoldiers(0);
+//		player1.setNumVictoryPoints(0);
+//		player1.setNumSettlements(5);
+//		
+//		netPlayers.add(player1);
+//		
+//		currentStateOfGame.setNetPlayers(netPlayers);
+//		
+//		NetDevCardList netDeck = new NetDevCardList();
+//		netDeck.setNumMonopoly(2);
+//		netDeck.setNumMonument(5);
+//		netDeck.setNumRoadBuilding(2);
+//		netDeck.setNumSoldier(14);
+//		netDeck.setNumYearOfPlenty(2);
+//		currentStateOfGame.setNetDeck(netDeck);
+//		
+//		NetBank netBank = new NetBank();
+//		netBank.setNumBrick(24);
+//		netBank.setNumOre(24);
+//		netBank.setNumWood(24);
+//		netBank.setNumSheep(24);
+//		netBank.setNumWheat(24);
+//		currentStateOfGame.setNetBank(netBank);
+//		
+//		
+//		NetChat netChat = new NetChat();
+//		NetLine newLine = new NetLine();
+//		newLine.setMessage("string");
+//		newLine.setSource("SAMM2");
+//		netChat.addLine(newLine);
+//		currentStateOfGame.setNetChat(netChat);
+//		currentStateOfGame.setNetTradeOffer(null);
+//		
+//		NetTurnTracker turnTracker = new NetTurnTracker();
+//		turnTracker.setCurrentTurn(0);
+//		turnTracker.setLongestRoad(-1);
+//		turnTracker.setLargestArmy(-1);
+//		turnTracker.setRound(GameRound.FIRSTROUND);
+//		currentStateOfGame.setNetTurnTracker(turnTracker);
+//		
+//		currentStateOfGame.setWinner(-1);
+//		currentStateOfGame.setVersion(0);
 		
-		ArrayList<NetPlayer> netPlayers = new ArrayList<NetPlayer>();
-		NetPlayer player1 = new NetPlayer();
-		player1.setNumCities(4);
-		player1.setColor(CatanColor.BLUE);
-		player1.setHasDiscarded(false);
-		player1.setNumMonuments(0);
-		player1.setName("SAMM2");
-		NetDevCardList devCardList1 = new NetDevCardList();
-		player1.setOldNetDevCardList(devCardList1);
-		NetDevCardList devCardList2 = new NetDevCardList();
-		player1.setNewNetDevCardList(devCardList2);
-		player1.setPlayerIndex(0);
-		player1.setPlayedDevCard(false);
-		player1.setPlayerID(13);
-		NetResourceList resourceList = new NetResourceList();
-		player1.setNetResourceList(resourceList);
-		player1.setNumRoads(15);
-		player1.setNumSoldiers(0);
-		player1.setNumVictoryPoints(0);
-		player1.setNumSettlements(5);
-		
-		netPlayers.add(player1);
-		
-		currentStateOfGame.setNetPlayers(netPlayers);
-		
-		NetDevCardList netDeck = new NetDevCardList();
-		netDeck.setNumMonopoly(2);
-		netDeck.setNumMonument(5);
-		netDeck.setNumRoadBuilding(2);
-		netDeck.setNumSoldier(14);
-		netDeck.setNumYearOfPlenty(2);
-		currentStateOfGame.setNetDeck(netDeck);
-		
-		NetBank netBank = new NetBank();
-		netBank.setNumBrick(24);
-		netBank.setNumOre(24);
-		netBank.setNumWood(24);
-		netBank.setNumSheep(24);
-		netBank.setNumWheat(24);
-		currentStateOfGame.setNetBank(netBank);
-		
-		
-		NetChat netChat = new NetChat();
-		NetLine newLine = new NetLine();
-		newLine.setMessage("string");
-		newLine.setSource("SAMM2");
-		netChat.addLine(newLine);
-		currentStateOfGame.setNetChat(netChat);
-		currentStateOfGame.setNetTradeOffer(null);
-		
-		NetTurnTracker turnTracker = new NetTurnTracker();
-		turnTracker.setCurrentTurn(0);
-		turnTracker.setLongestRoad(-1);
-		turnTracker.setLargestArmy(-1);
-		turnTracker.setRound(GameRound.FIRSTROUND);
-		currentStateOfGame.setNetTurnTracker(turnTracker);
-		
-		currentStateOfGame.setWinner(-1);
-		currentStateOfGame.setVersion(0);
 	}
 	
 	
-	private void initializeStaticListOfGames(){
-		gameList = new ArrayList<NetGame>();
-		
-		NetGame game1 = new NetGame();
-		game1.setId(0);
-		game1.setTitle("Default Game");
+	private void initializeStaticListOfGames(JSONDeserializer serverResponseDeserializer){
+		String gameListReturnedByServer = "[\n  {\n    \"title\": \"Default Game\",\n    \"id\": 0,\n    \"players\": [\n      {\n        \"color\": \"orange\",\n        \"name\": \"Sam\",\n        \"id\": 0\n      },\n      {\n        \"color\": \"blue\",\n        \"name\": \"Brooke\",\n        \"id\": 1\n      },\n      {\n        \"color\": \"red\",\n        \"name\": \"Pete\",\n        \"id\": 10\n      },\n      {\n        \"color\": \"green\",\n        \"name\": \"Mark\",\n        \"id\": 11\n      }\n    ]\n  },\n  {\n    \"title\": \"AI Game\",\n    \"id\": 1,\n    \"players\": [\n      {\n        \"color\": \"orange\",\n        \"name\": \"Pete\",\n        \"id\": 10\n      },\n      {\n        \"color\": \"puce\",\n        \"name\": \"Miguel\",\n        \"id\": -2\n      },\n      {\n        \"color\": \"blue\",\n        \"name\": \"Quinn\",\n        \"id\": -3\n      },\n      {\n        \"color\": \"purple\",\n        \"name\": \"Squall\",\n        \"id\": -4\n      }\n    ]\n  },\n  {\n    \"title\": \"Empty Game\",\n    \"id\": 2,\n    \"players\": [\n      {\n        \"color\": \"orange\",\n        \"name\": \"Sam\",\n        \"id\": 0\n      },\n      {\n        \"color\": \"blue\",\n        \"name\": \"Brooke\",\n        \"id\": 1\n      },\n      {\n        \"color\": \"red\",\n        \"name\": \"Pete\",\n        \"id\": 10\n      },\n      {\n        \"color\": \"green\",\n        \"name\": \"Mark\",\n        \"id\": 11\n      }\n    ]\n  }\n]";
+	
+		gameList = serverResponseDeserializer.parseNetGameList(gameListReturnedByServer);
 
-		ArrayList<NetPlayer> netPlayers = new ArrayList<NetPlayer>();
-		
-		NetPlayer player1 = new NetPlayer();
-		player1.setNumCities(4);
-		player1.setColor(CatanColor.ORANGE);
-		player1.setHasDiscarded(false);
-		player1.setNumMonuments(0);
-		player1.setName("Sam");
-		NetDevCardList devCardList1 = new NetDevCardList();
-		player1.setOldNetDevCardList(devCardList1);
-		NetDevCardList devCardList2 = new NetDevCardList();
-		player1.setNewNetDevCardList(devCardList2);
-		player1.setPlayerIndex(0);
-		player1.setPlayedDevCard(false);
-		player1.setPlayerID(0);
-		NetResourceList resourceList = new NetResourceList();
-		player1.setNetResourceList(resourceList);
-		player1.setNumRoads(15);
-		player1.setNumSoldiers(0);
-		player1.setNumVictoryPoints(0);
-		player1.setNumSettlements(5);
-		netPlayers.add(player1);
-		
-		NetPlayer player2 = new NetPlayer();
-		player2.setNumCities(4);
-		player2.setColor(CatanColor.RED);
-		player2.setHasDiscarded(false);
-		player2.setNumMonuments(0);
-		player2.setName("Pete");
-		NetDevCardList devCardList3 = new NetDevCardList();
-		player2.setOldNetDevCardList(devCardList3);
-		NetDevCardList devCardList4 = new NetDevCardList();
-		player2.setNewNetDevCardList(devCardList4);
-		player2.setPlayerIndex(0);
-		player2.setPlayedDevCard(false);
-		player2.setPlayerID(10);
-		NetResourceList resourceList2 = new NetResourceList();
-		player2.setNetResourceList(resourceList2);
-		player2.setNumRoads(15);
-		player2.setNumSoldiers(0);
-		player2.setNumVictoryPoints(0);
-		player2.setNumSettlements(5);
-		netPlayers.add(player2);
-		
-		NetPlayer player3 = new NetPlayer();
-		player3.setNumCities(4);
-		player3.setColor(CatanColor.BLUE);
-		player3.setHasDiscarded(false);
-		player3.setNumMonuments(0);
-		player3.setName("Brooke");
-		NetDevCardList devCardList5 = new NetDevCardList();
-		player3.setOldNetDevCardList(devCardList5);
-		NetDevCardList devCardList6 = new NetDevCardList();
-		player3.setNewNetDevCardList(devCardList6);
-		player3.setPlayerIndex(0);
-		player3.setPlayedDevCard(false);
-		player3.setPlayerID(1);
-		NetResourceList resourceList3 = new NetResourceList();
-		player3.setNetResourceList(resourceList3);
-		player3.setNumRoads(15);
-		player3.setNumSoldiers(0);
-		player3.setNumVictoryPoints(0);
-		player3.setNumSettlements(5);
-		netPlayers.add(player3);
-		
-		NetPlayer player4 = new NetPlayer();
-		player4.setNumCities(4);
-		player4.setColor(CatanColor.GREEN);
-		player4.setHasDiscarded(false);
-		player4.setNumMonuments(0);
-		player4.setName("Mark");
-		NetDevCardList devCardList7 = new NetDevCardList();
-		player4.setOldNetDevCardList(devCardList7);
-		NetDevCardList devCardList8 = new NetDevCardList();
-		player4.setNewNetDevCardList(devCardList8);
-		player4.setPlayerIndex(0);
-		player4.setPlayedDevCard(false);
-		player4.setPlayerID(11);
-		NetResourceList resourceList4 = new NetResourceList();
-		player4.setNetResourceList(resourceList4);
-		player4.setNumRoads(15);
-		player4.setNumSoldiers(0);
-		player4.setNumVictoryPoints(0);
-		player4.setNumSettlements(5);
-		netPlayers.add(player4);
-		
-		game1.setNetPlayers(netPlayers);
-		gameList.add(game1);
 		
 		
-		
-		
-		
-		NetGame game2 = new NetGame();
-		game2.setId(1);
-		game2.setTitle("AI Game");
-
-		ArrayList<NetPlayer> netPlayers2 = new ArrayList<NetPlayer>();
-		
-		NetPlayer aplayer1 = new NetPlayer();
-		aplayer1.setNumCities(4);
-		aplayer1.setColor(CatanColor.ORANGE);
-		aplayer1.setHasDiscarded(false);
-		aplayer1.setNumMonuments(0);
-		aplayer1.setName("Pete");
-		NetDevCardList adevCardList1 = new NetDevCardList();
-		aplayer1.setOldNetDevCardList(devCardList1);
-		NetDevCardList adevCardList2 = new NetDevCardList();
-		aplayer1.setNewNetDevCardList(devCardList2);
-		aplayer1.setPlayerIndex(0);
-		aplayer1.setPlayedDevCard(false);
-		aplayer1.setPlayerID(10);
-		NetResourceList aresourceList = new NetResourceList();
-		aplayer1.setNetResourceList(resourceList);
-		aplayer1.setNumRoads(15);
-		aplayer1.setNumSoldiers(0);
-		aplayer1.setNumVictoryPoints(0);
-		aplayer1.setNumSettlements(5);
-		netPlayers2.add(aplayer1);
-		
-		NetPlayer aplayer2 = new NetPlayer();
-		aplayer2.setNumCities(4);
-		aplayer2.setColor(CatanColor.PUCE);
-		aplayer2.setHasDiscarded(false);
-		aplayer2.setNumMonuments(0);
-		aplayer2.setName("Hannah");
-		NetDevCardList adevCardList3 = new NetDevCardList();
-		aplayer2.setOldNetDevCardList(devCardList3);
-		NetDevCardList adevCardList4 = new NetDevCardList();
-		aplayer2.setNewNetDevCardList(devCardList4);
-		aplayer2.setPlayerIndex(0);
-		aplayer2.setPlayedDevCard(false);
-		aplayer2.setPlayerID(-2);
-		NetResourceList aresourceList2 = new NetResourceList();
-		aplayer2.setNetResourceList(resourceList2);
-		aplayer2.setNumRoads(15);
-		aplayer2.setNumSoldiers(0);
-		aplayer2.setNumVictoryPoints(0);
-		aplayer2.setNumSettlements(5);
-		netPlayers2.add(aplayer2);
-		
-		NetPlayer aplayer3 = new NetPlayer();
-		aplayer3.setNumCities(4);
-		aplayer3.setColor(CatanColor.YELLOW);
-		aplayer3.setHasDiscarded(false);
-		aplayer3.setNumMonuments(0);
-		aplayer3.setName("Squall");
-		NetDevCardList adevCardList5 = new NetDevCardList();
-		aplayer3.setOldNetDevCardList(devCardList5);
-		NetDevCardList adevCardList6 = new NetDevCardList();
-		aplayer3.setNewNetDevCardList(devCardList6);
-		aplayer3.setPlayerIndex(0);
-		aplayer3.setPlayedDevCard(false);
-		aplayer3.setPlayerID(-3);
-		NetResourceList aresourceList3 = new NetResourceList();
-		aplayer3.setNetResourceList(resourceList3);
-		aplayer3.setNumRoads(15);
-		aplayer3.setNumSoldiers(0);
-		aplayer3.setNumVictoryPoints(0);
-		aplayer3.setNumSettlements(5);
-		netPlayers2.add(aplayer3);
-		
-		NetPlayer aplayer4 = new NetPlayer();
-		aplayer4.setNumCities(4);
-		aplayer4.setColor(CatanColor.RED);
-		aplayer4.setHasDiscarded(false);
-		aplayer4.setNumMonuments(0);
-		aplayer4.setName("Quinn");
-		NetDevCardList adevCardList7 = new NetDevCardList();
-		aplayer4.setOldNetDevCardList(devCardList7);
-		NetDevCardList adevCardList8 = new NetDevCardList();
-		aplayer4.setNewNetDevCardList(devCardList8);
-		aplayer4.setPlayerIndex(0);
-		aplayer4.setPlayedDevCard(false);
-		aplayer4.setPlayerID(-4);
-		NetResourceList aresourceList4 = new NetResourceList();
-		aplayer4.setNetResourceList(resourceList4);
-		aplayer4.setNumRoads(15);
-		aplayer4.setNumSoldiers(0);
-		aplayer4.setNumVictoryPoints(0);
-		aplayer4.setNumSettlements(5);
-		netPlayers2.add(aplayer4);
-		
-		game2.setNetPlayers(netPlayers2);
-		gameList.add(game2);
+//		gameList = new ArrayList<NetGame>();
+//		
+//		NetGame game1 = new NetGame();
+//		game1.setId(0);
+//		game1.setTitle("Default Game");
+//
+//		ArrayList<NetPlayer> netPlayers = new ArrayList<NetPlayer>();
+//		
+//		NetPlayer player1 = new NetPlayer();
+//		player1.setNumCities(4);
+//		player1.setColor(CatanColor.ORANGE);
+//		player1.setHasDiscarded(false);
+//		player1.setNumMonuments(0);
+//		player1.setName("Sam");
+//		NetDevCardList devCardList1 = new NetDevCardList();
+//		player1.setOldNetDevCardList(devCardList1);
+//		NetDevCardList devCardList2 = new NetDevCardList();
+//		player1.setNewNetDevCardList(devCardList2);
+//		player1.setPlayerIndex(0);
+//		player1.setPlayedDevCard(false);
+//		player1.setPlayerID(0);
+//		NetResourceList resourceList = new NetResourceList();
+//		player1.setNetResourceList(resourceList);
+//		player1.setNumRoads(15);
+//		player1.setNumSoldiers(0);
+//		player1.setNumVictoryPoints(0);
+//		player1.setNumSettlements(5);
+//		netPlayers.add(player1);
+//		
+//		NetPlayer player2 = new NetPlayer();
+//		player2.setNumCities(4);
+//		player2.setColor(CatanColor.RED);
+//		player2.setHasDiscarded(false);
+//		player2.setNumMonuments(0);
+//		player2.setName("Pete");
+//		NetDevCardList devCardList3 = new NetDevCardList();
+//		player2.setOldNetDevCardList(devCardList3);
+//		NetDevCardList devCardList4 = new NetDevCardList();
+//		player2.setNewNetDevCardList(devCardList4);
+//		player2.setPlayerIndex(0);
+//		player2.setPlayedDevCard(false);
+//		player2.setPlayerID(10);
+//		NetResourceList resourceList2 = new NetResourceList();
+//		player2.setNetResourceList(resourceList2);
+//		player2.setNumRoads(15);
+//		player2.setNumSoldiers(0);
+//		player2.setNumVictoryPoints(0);
+//		player2.setNumSettlements(5);
+//		netPlayers.add(player2);
+//		
+//		NetPlayer player3 = new NetPlayer();
+//		player3.setNumCities(4);
+//		player3.setColor(CatanColor.BLUE);
+//		player3.setHasDiscarded(false);
+//		player3.setNumMonuments(0);
+//		player3.setName("Brooke");
+//		NetDevCardList devCardList5 = new NetDevCardList();
+//		player3.setOldNetDevCardList(devCardList5);
+//		NetDevCardList devCardList6 = new NetDevCardList();
+//		player3.setNewNetDevCardList(devCardList6);
+//		player3.setPlayerIndex(0);
+//		player3.setPlayedDevCard(false);
+//		player3.setPlayerID(1);
+//		NetResourceList resourceList3 = new NetResourceList();
+//		player3.setNetResourceList(resourceList3);
+//		player3.setNumRoads(15);
+//		player3.setNumSoldiers(0);
+//		player3.setNumVictoryPoints(0);
+//		player3.setNumSettlements(5);
+//		netPlayers.add(player3);
+//		
+//		NetPlayer player4 = new NetPlayer();
+//		player4.setNumCities(4);
+//		player4.setColor(CatanColor.GREEN);
+//		player4.setHasDiscarded(false);
+//		player4.setNumMonuments(0);
+//		player4.setName("Mark");
+//		NetDevCardList devCardList7 = new NetDevCardList();
+//		player4.setOldNetDevCardList(devCardList7);
+//		NetDevCardList devCardList8 = new NetDevCardList();
+//		player4.setNewNetDevCardList(devCardList8);
+//		player4.setPlayerIndex(0);
+//		player4.setPlayedDevCard(false);
+//		player4.setPlayerID(11);
+//		NetResourceList resourceList4 = new NetResourceList();
+//		player4.setNetResourceList(resourceList4);
+//		player4.setNumRoads(15);
+//		player4.setNumSoldiers(0);
+//		player4.setNumVictoryPoints(0);
+//		player4.setNumSettlements(5);
+//		netPlayers.add(player4);
+//		
+//		game1.setNetPlayers(netPlayers);
+//		gameList.add(game1);
+//		
+//		
+//		
+//		
+//		
+//		NetGame game2 = new NetGame();
+//		game2.setId(1);
+//		game2.setTitle("AI Game");
+//
+//		ArrayList<NetPlayer> netPlayers2 = new ArrayList<NetPlayer>();
+//		
+//		NetPlayer aplayer1 = new NetPlayer();
+//		aplayer1.setNumCities(4);
+//		aplayer1.setColor(CatanColor.ORANGE);
+//		aplayer1.setHasDiscarded(false);
+//		aplayer1.setNumMonuments(0);
+//		aplayer1.setName("Pete");
+//		NetDevCardList adevCardList1 = new NetDevCardList();
+//		aplayer1.setOldNetDevCardList(devCardList1);
+//		NetDevCardList adevCardList2 = new NetDevCardList();
+//		aplayer1.setNewNetDevCardList(devCardList2);
+//		aplayer1.setPlayerIndex(0);
+//		aplayer1.setPlayedDevCard(false);
+//		aplayer1.setPlayerID(10);
+//		NetResourceList aresourceList = new NetResourceList();
+//		aplayer1.setNetResourceList(resourceList);
+//		aplayer1.setNumRoads(15);
+//		aplayer1.setNumSoldiers(0);
+//		aplayer1.setNumVictoryPoints(0);
+//		aplayer1.setNumSettlements(5);
+//		netPlayers2.add(aplayer1);
+//		
+//		NetPlayer aplayer2 = new NetPlayer();
+//		aplayer2.setNumCities(4);
+//		aplayer2.setColor(CatanColor.PUCE);
+//		aplayer2.setHasDiscarded(false);
+//		aplayer2.setNumMonuments(0);
+//		aplayer2.setName("Hannah");
+//		NetDevCardList adevCardList3 = new NetDevCardList();
+//		aplayer2.setOldNetDevCardList(devCardList3);
+//		NetDevCardList adevCardList4 = new NetDevCardList();
+//		aplayer2.setNewNetDevCardList(devCardList4);
+//		aplayer2.setPlayerIndex(0);
+//		aplayer2.setPlayedDevCard(false);
+//		aplayer2.setPlayerID(-2);
+//		NetResourceList aresourceList2 = new NetResourceList();
+//		aplayer2.setNetResourceList(resourceList2);
+//		aplayer2.setNumRoads(15);
+//		aplayer2.setNumSoldiers(0);
+//		aplayer2.setNumVictoryPoints(0);
+//		aplayer2.setNumSettlements(5);
+//		netPlayers2.add(aplayer2);
+//		
+//		NetPlayer aplayer3 = new NetPlayer();
+//		aplayer3.setNumCities(4);
+//		aplayer3.setColor(CatanColor.YELLOW);
+//		aplayer3.setHasDiscarded(false);
+//		aplayer3.setNumMonuments(0);
+//		aplayer3.setName("Squall");
+//		NetDevCardList adevCardList5 = new NetDevCardList();
+//		aplayer3.setOldNetDevCardList(devCardList5);
+//		NetDevCardList adevCardList6 = new NetDevCardList();
+//		aplayer3.setNewNetDevCardList(devCardList6);
+//		aplayer3.setPlayerIndex(0);
+//		aplayer3.setPlayedDevCard(false);
+//		aplayer3.setPlayerID(-3);
+//		NetResourceList aresourceList3 = new NetResourceList();
+//		aplayer3.setNetResourceList(resourceList3);
+//		aplayer3.setNumRoads(15);
+//		aplayer3.setNumSoldiers(0);
+//		aplayer3.setNumVictoryPoints(0);
+//		aplayer3.setNumSettlements(5);
+//		netPlayers2.add(aplayer3);
+//		
+//		NetPlayer aplayer4 = new NetPlayer();
+//		aplayer4.setNumCities(4);
+//		aplayer4.setColor(CatanColor.RED);
+//		aplayer4.setHasDiscarded(false);
+//		aplayer4.setNumMonuments(0);
+//		aplayer4.setName("Quinn");
+//		NetDevCardList adevCardList7 = new NetDevCardList();
+//		aplayer4.setOldNetDevCardList(devCardList7);
+//		NetDevCardList adevCardList8 = new NetDevCardList();
+//		aplayer4.setNewNetDevCardList(devCardList8);
+//		aplayer4.setPlayerIndex(0);
+//		aplayer4.setPlayedDevCard(false);
+//		aplayer4.setPlayerID(-4);
+//		NetResourceList aresourceList4 = new NetResourceList();
+//		aplayer4.setNetResourceList(resourceList4);
+//		aplayer4.setNumRoads(15);
+//		aplayer4.setNumSoldiers(0);
+//		aplayer4.setNumVictoryPoints(0);
+//		aplayer4.setNumSettlements(5);
+//		netPlayers2.add(aplayer4);
+//		
+//		game2.setNetPlayers(netPlayers2);
+//		gameList.add(game2);
 	}
 	
 	/**
@@ -1018,8 +1034,8 @@ public class MockServerProxy implements ServerProxy
 	
 	
 	private NetGameModel currentStateOfGame;
-	private ArrayList<NetGame> gameList;
-	private ArrayList<String[]> loginCredentials;
+	private List<NetGame> gameList;
+	private List<String[]> loginCredentials;
 	private boolean userLoggedIn;
 	private boolean userJoinedGame;
 }
