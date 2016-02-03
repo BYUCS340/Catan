@@ -79,16 +79,31 @@ public class LoginController extends Controller implements ILoginController {
 		
 		try {
 			if (!ClientGame.getCurrentProxy().loginUser(username, password))
+			{
+				this.showMessage("User/Password not found");
 				return;
+			}
 		} catch (ServerProxyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			this.showMessage("Unable to connect to server");
 			return;
 		}
 
 		// If log in succeeded
 		getLoginView().closeModal();
 		loginAction.execute();
+	}
+	
+	/**
+	 * Shows a message via the message view modal
+	 * @param mess
+	 */
+	private void showMessage(String mess)
+	{
+		System.err.println(mess);
+		getMessageView().setMessage(mess);
+		getMessageView().showModal();
 	}
 
 	@Override
@@ -102,15 +117,19 @@ public class LoginController extends Controller implements ILoginController {
 		//check to make sure the passwords patch
 		if (!password.equals(password2))
 		{
-			getMessageView().setMessage("Passwords do not match");
+			this.showMessage("Register User Passwords do not match");
 			return;
 		}
 		
 		try {
 			if (!ClientGame.getCurrentProxy().registerUser(username, password))
+			{
+				this.showMessage("Unable Register User");
 				return;
+			}
 		} catch (ServerProxyException e) {
 			// TODO Auto-generated catch block
+			this.showMessage("Unable to connect to server");
 			e.printStackTrace();
 			return;
 		}

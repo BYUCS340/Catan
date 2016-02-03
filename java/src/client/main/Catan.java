@@ -29,7 +29,7 @@ public class Catan extends JFrame
 		this.setTitle("Settlers of Catan");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-		ServerProxy sp = new RealServerProxy();
+		ServerProxy sp = new MockServerProxy();
 		ClientGame.startGameWithProxy(sp);
 		
 		catanPanel = new CatanPanel();
