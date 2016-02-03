@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Scanner;
 import static org.junit.Assert.*;
 
-import org.json.JSONObject;
+//import org.json.JSONObject;
 
 import shared.definitions.AIType;
 import shared.definitions.CatanColor;

@@ -2,6 +2,8 @@ package client.login;
 
 import client.base.*;
 import client.misc.*;
+import client.model.ClientGame;
+import client.networking.ServerProxyException;
 
 import java.net.*;
 import java.io.*;
@@ -72,7 +74,17 @@ public class LoginController extends Controller implements ILoginController {
 	public void signIn() {
 		
 		// TODO: log in user
+		String username = getLoginView().getLoginUsername();
+		String password = getLoginView().getLoginPassword();
 		
+		try {
+			if (!ClientGame.getCurrentProxy().loginUser(username, password))
+				return;
+		} catch (ServerProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
 
 		// If log in succeeded
 		getLoginView().closeModal();
@@ -83,6 +95,25 @@ public class LoginController extends Controller implements ILoginController {
 	public void register() {
 		
 		// TODO: register new user (which, if successful, also logs them in)
+		String username = getLoginView().getRegisterUsername()
+		String password = getLoginView().getRegisterPassword();
+		String password2 = getLoginView().getRegisterPasswordRepeat();
+		
+		//check to make sure the passwords patch
+		if (!password.equals(password2))
+		{
+			getMessageView().setMessage("Passwords do not match");
+			return;
+		}
+		
+		try {
+			if (!ClientGame.getCurrentProxy().registerUser(username, password))
+				return;
+		} catch (ServerProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
 		
 		// If register succeeded
 		getLoginView().closeModal();

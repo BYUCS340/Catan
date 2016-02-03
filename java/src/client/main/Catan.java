@@ -6,6 +6,10 @@ import client.catan.*;
 import client.login.*;
 import client.join.*;
 import client.misc.*;
+import client.model.ClientGame;
+import client.networking.MockServerProxy;
+import client.networking.RealServerProxy;
+import client.networking.ServerProxy;
 import client.base.*;
 
 /**
@@ -24,6 +28,9 @@ public class Catan extends JFrame
 		
 		this.setTitle("Settlers of Catan");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		ServerProxy sp = new RealServerProxy();
+		ClientGame.startGameWithProxy(sp);
 		
 		catanPanel = new CatanPanel();
 		this.setContentPane(catanPanel);

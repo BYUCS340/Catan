@@ -6,6 +6,7 @@ import shared.model.ModelException;
 
 public class ClientGame {
 	static private ClientGameManager game;
+	static private ServerProxy proxy;
 	
 	/**
 	 * Gets the current game manager
@@ -24,6 +25,12 @@ public class ClientGame {
 	 */
 	static public void startGameWithProxy(ServerProxy proxy)
 	{
+		ClientGame.proxy = proxy;
 		ClientGame.game = new ClientGameManager(proxy);
+	}
+	
+	static public ServerProxy getCurrentProxy()
+	{
+		return ClientGame.proxy;
 	}
 }
