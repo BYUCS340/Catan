@@ -15,8 +15,8 @@ public enum GameRound
 			case DISCARDING: return "discarding";
 			case FIRSTROUND: return "firstround";
 			case SECONDROUND: return "secondround";
+			default: return "unknown";
 		}
-		return "unknown";
 	}
 	
 	public static GameRound fromString(String s)
