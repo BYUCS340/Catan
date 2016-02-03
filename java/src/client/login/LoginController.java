@@ -95,7 +95,7 @@ public class LoginController extends Controller implements ILoginController {
 	public void register() {
 		
 		// TODO: register new user (which, if successful, also logs them in)
-		String username = getLoginView().getRegisterUsername()
+		String username = getLoginView().getRegisterUsername();
 		String password = getLoginView().getRegisterPassword();
 		String password2 = getLoginView().getRegisterPasswordRepeat();
 		
