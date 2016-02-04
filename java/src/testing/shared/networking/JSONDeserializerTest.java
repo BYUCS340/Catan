@@ -3,6 +3,7 @@ package testing.shared.networking;
 import static org.junit.Assert.assertTrue;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -40,7 +41,7 @@ public class JSONDeserializerTest
 	}
 
 	@Test
-	public void testPartialParseNetPlayer()
+	public void testPartialParseNetPlayer() throws Exception
 	{
 		Deserializer testDS = new JSONDeserializer(); 
 		JSONObject testObj = new JSONObject();
@@ -57,7 +58,7 @@ public class JSONDeserializerTest
 	}
 	
 	@Test
-	public void testNetGame()
+	public void testNetGame() throws Exception
 	{
 		Deserializer testDS = new JSONDeserializer(); 
 		JSONObject testGame = new JSONObject();

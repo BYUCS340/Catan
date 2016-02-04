@@ -46,7 +46,7 @@ public class JSONDeserializer implements Deserializer
 	 * @see shared.networking.Deserializer#parseNetAI(java.lang.String)
 	 */
 	@Override
-	public List<AIType> parseAIList(String rawData)
+	public List<AIType> parseAIList(String rawData) throws JSONException
 	{
 		JSONArray obj = new JSONArray(rawData);
 		
@@ -64,7 +64,7 @@ public class JSONDeserializer implements Deserializer
 	 * @see shared.networking.Deserializer#parseNetGame(java.lang.String)
 	 */
 	@Override
-	public NetGame parseNetGame(String rawData)
+	public NetGame parseNetGame(String rawData) throws JSONException
 	{
 		NetGame netGame = new NetGame();
 		
@@ -98,7 +98,7 @@ public class JSONDeserializer implements Deserializer
 	 * @see shared.networking.Deserializer#parsePartialNetPlayer(java.lang.String)
 	 */
 	@Override
-	public NetPlayer parsePartialNetPlayer(String rawData)
+	public NetPlayer parsePartialNetPlayer(String rawData) throws JSONException
 	{
 		NetPlayer netPlayer = new NetPlayer();
 		JSONObject obj = new JSONObject(rawData);
@@ -118,7 +118,7 @@ public class JSONDeserializer implements Deserializer
 	 * @see shared.networking.Deserializer#parseNetPlayer(java.lang.String)
 	 */
 	@Override
-	public NetPlayer parseNetPlayer(String rawData)
+	public NetPlayer parseNetPlayer(String rawData) throws JSONException
 	{
 		NetPlayer netPlayer = new NetPlayer();
 		JSONObject obj = new JSONObject(rawData);
@@ -164,7 +164,7 @@ public class JSONDeserializer implements Deserializer
 	 * @see shared.networking.Deserializer#parseNetGameModel(java.lang.String)
 	 */
 	@Override
-	public NetGameModel parseNetGameModel(String rawData)
+	public NetGameModel parseNetGameModel(String rawData) throws JSONException
 	{
 		// TODO Auto-generated method stub
 		//setup needed objects
@@ -209,7 +209,7 @@ public class JSONDeserializer implements Deserializer
 		return result;
 	}
 	
-	public NetTradeOffer parseNetTradeOffer(String rawData)
+	public NetTradeOffer parseNetTradeOffer(String rawData) throws JSONException
 	{
 		//set up needed objects
 		JSONObject obj = new JSONObject(rawData);
@@ -228,7 +228,7 @@ public class JSONDeserializer implements Deserializer
 		return result;
 	}
 	
-	public NetDevCardList parseNetDevCardList(String rawData)
+	public NetDevCardList parseNetDevCardList(String rawData) throws JSONException
 	{
 		//set up needed objects
 		JSONObject obj = new JSONObject(rawData);
@@ -252,7 +252,7 @@ public class JSONDeserializer implements Deserializer
 		
 	}
 	
-	public NetMap parseNetMap(String rawData)
+	public NetMap parseNetMap(String rawData) throws JSONException
 	{
 		//set up needed objects
 		JSONObject obj = new JSONObject(rawData);
@@ -327,7 +327,7 @@ public class JSONDeserializer implements Deserializer
 		return result;
 	}
 	
-	public NetSettlement parseNetSettlement(String rawData)
+	public NetSettlement parseNetSettlement(String rawData) throws JSONException
 	{
 		//set up needed Objects
 		JSONObject obj = new JSONObject(rawData);
@@ -344,7 +344,7 @@ public class JSONDeserializer implements Deserializer
 		return result;
 	}
 	
-	public NetCity parseNetCity(String rawData)
+	public NetCity parseNetCity(String rawData) throws JSONException
 	{
 		//set up needed Objects
 		JSONObject obj = new JSONObject(rawData);
@@ -361,7 +361,7 @@ public class JSONDeserializer implements Deserializer
 		return result;
 	}
 	
-	public NetRoad parseNetRoad(String rawData)
+	public NetRoad parseNetRoad(String rawData) throws JSONException
 	{
 		//set up needed Objects
 		JSONObject obj = new JSONObject(rawData);
@@ -378,7 +378,7 @@ public class JSONDeserializer implements Deserializer
 		return result;
 	}
 	
-	public NetEdgeLocation parseNetEdgeLocation(String rawData)
+	public NetEdgeLocation parseNetEdgeLocation(String rawData) throws JSONException
 	{
 		//set up needed Objects
 		JSONObject obj = new JSONObject(rawData);
@@ -397,7 +397,7 @@ public class JSONDeserializer implements Deserializer
 		return result;
 	}
 	
-	public NetPort parseNetPort(String rawData)
+	public NetPort parseNetPort(String rawData) throws JSONException
 	{
 		//set up needed objects
 		JSONObject obj = new JSONObject(rawData);
@@ -418,7 +418,7 @@ public class JSONDeserializer implements Deserializer
 		return result;
 	}
 	
-	public NetHex parseNetHex(String rawData)
+	public NetHex parseNetHex(String rawData) throws JSONException
 	{
 		//set up needed objects
 		NetHex result = new NetHex();
@@ -437,7 +437,7 @@ public class JSONDeserializer implements Deserializer
 		return null;
 	}
 	
-	public NetHexLocation parseNetHexLocation(String rawData)
+	public NetHexLocation parseNetHexLocation(String rawData) throws JSONException
 	{
 		//Set up needed objects
 		NetHexLocation result = new NetHexLocation();
@@ -454,7 +454,7 @@ public class JSONDeserializer implements Deserializer
 		return result;
 	}
 	
-	public NetTurnTracker parseNetTurnTracker(String rawData)
+	public NetTurnTracker parseNetTurnTracker(String rawData) throws JSONException
 	{
 		//set up needed objects
 		NetTurnTracker result = new NetTurnTracker();
@@ -477,7 +477,7 @@ public class JSONDeserializer implements Deserializer
 		
 	}
 	
-	public NetResourceList parseNetResourceList(String rawData)
+	public NetResourceList parseNetResourceList(String rawData) throws JSONException
 	{
 		//set up needed objects
 		NetResourceList result = new NetResourceList();
@@ -500,7 +500,7 @@ public class JSONDeserializer implements Deserializer
 		return result;
 	}
 	
-	public NetLog parseNetLog(String rawData)
+	public NetLog parseNetLog(String rawData) throws JSONException
 	{
 		//set up needed objects
 		NetLog result = new NetLog();
@@ -521,7 +521,7 @@ public class JSONDeserializer implements Deserializer
 		return result;
 	}
 	
-	public NetLine parseNetLine(String rawData)
+	public NetLine parseNetLine(String rawData) throws JSONException
 	{
 		//set up needed objects
 		NetLine result = new NetLine();
@@ -540,7 +540,7 @@ public class JSONDeserializer implements Deserializer
 	
 
 	@Override
-	public List<NetGame> parseNetGameList(String rawData)
+	public List<NetGame> parseNetGameList(String rawData) throws JSONException
 	{
 		List<NetGame> netGames = new ArrayList<NetGame>();
 	

@@ -5,6 +5,7 @@ package shared.networking;
 
 import java.util.List;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import shared.definitions.AIType;
@@ -28,7 +29,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sCredentials(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public String sCredentials(String username, String password)
+	public String sCredentials(String username, String password) throws JSONException
 	{
 		
 		JSONObject obj = new JSONObject();
@@ -42,7 +43,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sCreateGameReq(boolean, boolean, boolean, java.lang.String)
 	 */
 	@Override
-	public String sCreateGameReq(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
+	public String sCreateGameReq(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -58,7 +59,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sJoinGameReq(int, java.lang.String)
 	 */
 	@Override
-	public String sJoinGameReq(int id, CatanColor color)
+	public String sJoinGameReq(int id, CatanColor color) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -72,7 +73,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sAddAIReq(java.lang.String)
 	 */
 	@Override
-	public String sAddAIReq(AIType aitype)
+	public String sAddAIReq(AIType aitype) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 	
@@ -85,7 +86,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sSendChatReq(int, java.lang.String)
 	 */
 	@Override
-	public String sSendChatReq(int playerIndex, String content)
+	public String sSendChatReq(int playerIndex, String content) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -100,7 +101,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sRollNumberReq(int, int)
 	 */
 	@Override
-	public String sRollNumberReq(int playerIndex, int number)
+	public String sRollNumberReq(int playerIndex, int number) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -115,7 +116,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sRobPlayerReq(int, int, shared.locations.HexLocation)
 	 */
 	@Override
-	public String sRobPlayerReq(int playerIndex, int victimIndex, HexLocation location)
+	public String sRobPlayerReq(int playerIndex, int victimIndex, HexLocation location) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -127,7 +128,7 @@ public class JSONSerializer implements Serializer
 		return obj.toString();
 	}
 	
-	private JSONObject oHexLocation(HexLocation location){
+	private JSONObject oHexLocation(HexLocation location) throws JSONException{
 		JSONObject obj = new JSONObject();
 		
 		obj.put("x", location.getX());
@@ -140,7 +141,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sFinishTurnReq(int)
 	 */
 	@Override
-	public String sFinishTurnReq(int playerIndex)
+	public String sFinishTurnReq(int playerIndex) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -154,7 +155,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sBuyDevCardReq(int)
 	 */
 	@Override
-	public String sBuyDevCardReq(int playerIndex)
+	public String sBuyDevCardReq(int playerIndex) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -168,7 +169,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sYearOfPlentyCardReq(int, shared.definitions.ResourceType, shared.definitions.ResourceType)
 	 */
 	@Override
-	public String sYearOfPlentyCardReq(int playerIndex, ResourceType resource1, ResourceType resource2)
+	public String sYearOfPlentyCardReq(int playerIndex, ResourceType resource1, ResourceType resource2) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -184,7 +185,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sRoadBuildingCardReq(int, shared.locations.EdgeLocation, shared.locations.EdgeLocation)
 	 */
 	@Override
-	public String sRoadBuildingCardReq(int playerIndex, EdgeLocation edgeLoc1, EdgeLocation edgeLoc2)
+	public String sRoadBuildingCardReq(int playerIndex, EdgeLocation edgeLoc1, EdgeLocation edgeLoc2) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -196,7 +197,7 @@ public class JSONSerializer implements Serializer
 		return obj.toString();
 	}
 	
-	private JSONObject oEdgeLocation(EdgeLocation edgeLocation)
+	private JSONObject oEdgeLocation(EdgeLocation edgeLocation) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		obj.put("x", edgeLocation.getHexLoc().getX());
@@ -210,7 +211,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sSoldierCardReq(int, int, shared.locations.HexLocation)
 	 */
 	@Override
-	public String sSoldierCardReq(int playerIndex, int victimIndex, HexLocation location)
+	public String sSoldierCardReq(int playerIndex, int victimIndex, HexLocation location) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -226,7 +227,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sMonopolyCardReq(int, shared.definitions.ResourceType)
 	 */
 	@Override
-	public String sMonopolyCardReq(int playerIndex, ResourceType resource)
+	public String sMonopolyCardReq(int playerIndex, ResourceType resource) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -241,7 +242,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sMonumentCardReq(int)
 	 */
 	@Override
-	public String sMonumentCardReq(int playerIndex)
+	public String sMonumentCardReq(int playerIndex) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -255,7 +256,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sBuildRoadReq(int, shared.locations.EdgeLocation, boolean)
 	 */
 	@Override
-	public String sBuildRoadReq(int playerIndex, EdgeLocation roadLocation, boolean free)
+	public String sBuildRoadReq(int playerIndex, EdgeLocation roadLocation, boolean free) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -271,7 +272,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sBuildSettlementReq(int, shared.locations.VertexLocation, boolean)
 	 */
 	@Override
-	public String sBuildSettlementReq(int playerIndex, VertexLocation vertexLocation, boolean free)
+	public String sBuildSettlementReq(int playerIndex, VertexLocation vertexLocation, boolean free) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -283,7 +284,7 @@ public class JSONSerializer implements Serializer
 		return obj.toString();
 	}
 	
-	private JSONObject oVertexLocation(VertexLocation vertexLocation)
+	private JSONObject oVertexLocation(VertexLocation vertexLocation) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		obj.put("x", vertexLocation.getHexLoc().getX());
@@ -297,7 +298,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sBuildCityReq(int, shared.locations.VertexLocation)
 	 */
 	@Override
-	public String sBuildCityReq(int playerIndex, VertexLocation vertexLocation)
+	public String sBuildCityReq(int playerIndex, VertexLocation vertexLocation) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -312,7 +313,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sOfferTradeReq(int, java.util.List, int)
 	 */
 	@Override
-	public String sOfferTradeReq(int playerIndex, List<Integer> resourceList, int receiver)
+	public String sOfferTradeReq(int playerIndex, List<Integer> resourceList, int receiver) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -324,7 +325,7 @@ public class JSONSerializer implements Serializer
 		return obj.toString();
 	}
 	
-	private JSONObject oResourceList(List<Integer> resourceList)
+	private JSONObject oResourceList(List<Integer> resourceList) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -341,7 +342,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sAcceptTradeReq(int, boolean)
 	 */
 	@Override
-	public String sAcceptTradeReq(int playerIndex, boolean willAccept)
+	public String sAcceptTradeReq(int playerIndex, boolean willAccept) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -356,7 +357,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sMaritimeTrade(int, int, shared.definitions.ResourceType, shared.definitions.ResourceType)
 	 */
 	@Override
-	public String sMaritimeTradeReq(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource)
+	public String sMaritimeTradeReq(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
@@ -385,7 +386,7 @@ public class JSONSerializer implements Serializer
 	 * @see shared.networking.Serializer#sDiscardCards(int, java.util.List)
 	 */
 	@Override
-	public String sDiscardCardsReq(int playerIndex, List<Integer> resourceList)
+	public String sDiscardCardsReq(int playerIndex, List<Integer> resourceList) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 		
