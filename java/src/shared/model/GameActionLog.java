@@ -36,7 +36,7 @@ public class GameActionLog
 	 * @param color
 	 * @throws ModelException if bad playerID
 	 */
-	public void setPlayer(int playerID, String name,CatanColor color) throws ModelException
+	public void setPlayer(int playerID, String name, CatanColor color) throws ModelException
 	{
 		if (playerID < 0 || playerID > 3) 
 			throw new ModelException();

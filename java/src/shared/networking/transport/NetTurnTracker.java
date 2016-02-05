@@ -8,6 +8,7 @@ public class NetTurnTracker
 	int currentTurn;
 	int longestRoad;
 	int largestArmy;
+	int largestArmySize;
 	
 	/**
 	 * Default constructor, sets everything as if it were the first
@@ -19,6 +20,7 @@ public class NetTurnTracker
 		currentTurn = 0;
 		longestRoad = -1;
 		largestArmy = -1;
+		largestArmySize = 0;
 	}
 
 	/**
@@ -55,7 +57,7 @@ public class NetTurnTracker
 	}
 
 	/**
-	 * @return the longestRoad
+	 * @return the longestRoad's player ID
 	 */
 	public int getLongestRoad()
 	{
@@ -72,7 +74,7 @@ public class NetTurnTracker
 	}
 
 	/**
-	 * @return the largestArmy
+	 * @return the largestArmy's player ID
 	 */
 	public int getLargestArmy()
 	{
@@ -86,6 +88,23 @@ public class NetTurnTracker
 	public void setLargestArmy(int largestArmy)
 	{
 		this.largestArmy = largestArmy;
+	}
+	
+	/**
+	 * @return the largestArmy's player ID
+	 */
+	public int getLargestArmySize()
+	{
+		return largestArmySize;
+	}
+
+	/**
+	 * @param largestArmy sets the ID of the player who has
+	 * the largest army
+	 */
+	public void setLargestArmySize(int size)
+	{
+		this.largestArmySize = size;
 	}
 	
 	

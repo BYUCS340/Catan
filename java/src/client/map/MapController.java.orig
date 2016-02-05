@@ -4,8 +4,12 @@ import shared.definitions.*;
 import shared.model.IMapController;
 import shared.model.map.*;
 import shared.model.map.objects.*;
-import shared.model.map.MapException;
+<<<<<<< HEAD
+
 import java.util.ArrayList;
+=======
+import shared.model.map.MapException;
+>>>>>>> master
 import java.util.Iterator;
 import java.util.List;
 

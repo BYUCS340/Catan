@@ -1,13 +1,15 @@
 package client.networking;
 
-import shared.networking.*;
-import shared.networking.transport.NetAI;
+import java.util.List;
+
+import shared.definitions.AIType;
+import shared.definitions.CatanColor;
+import shared.definitions.ResourceType;
+import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
+import shared.locations.VertexLocation;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
-import shared.definitions.*;
-import shared.locations.*;
-import shared.model.*;
-import java.util.List;
 
 public interface ServerProxy 
 {
@@ -50,10 +52,9 @@ public interface ServerProxy
 	/**
 	 * 
 	 * @param color the color the user wishes to represent him
-	 * @return a ProxyGame object that represents the game the user joined
 	 * @throws ServerProxyException if something goes wrong
 	 */
-	public NetGame joinGame(String color) throws ServerProxyException; 
+	public void joinGame(int id, CatanColor color) throws ServerProxyException; 
 
 	/**
 	 * Retrieves the game model from the server
@@ -67,14 +68,14 @@ public interface ServerProxy
 	 * @param aiType the type of AI the user wishes to add
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public void addAI(String aiType) throws ServerProxyException;
+	public void addAI(AIType aiType) throws ServerProxyException;
 	
 	/**
 	 * 
 	 * @return a list of supported AI player types
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public List<NetAI> listAI() throws ServerProxyException;
+	public List<AIType> listAI() throws ServerProxyException;
 	
 	
 	/**
@@ -124,7 +125,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel yearOfPlentyCard(String resource1, String resource2) throws ServerProxyException;
+	public NetGameModel yearOfPlentyCard(ResourceType resource1, ResourceType resource2) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has played a road building card
@@ -150,7 +151,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel monopolyCard(String resource) throws ServerProxyException;
+	public NetGameModel monopolyCard(ResourceType resource) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has played a monument card
@@ -212,7 +213,7 @@ public interface ServerProxy
 	 * @return a NetGameModel object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public NetGameModel maritimeTrade(int ratio, String inputResource, String outputResource) throws ServerProxyException;
+	public NetGameModel maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has discarded cards

@@ -46,7 +46,7 @@ public class MidPanel extends JPanel
 	
 	public IMapController getMapController()
 	{
-		return mapController;
+		return this.mapController;
 	}
 	
 }

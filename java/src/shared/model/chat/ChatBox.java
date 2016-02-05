@@ -1,5 +1,6 @@
 package shared.model.chat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,14 +8,22 @@ import java.util.List;
  * @author matthewcarlson
  *
  */
-public class ChatBox {
+public class ChatBox
+{
 	List <ChatMessage> messages;
 	
-	public void put(String message, int playerID){
-		ChatMessage mess = new ChatMessage(playerID,message);
+	public ChatBox()
+	{
+		messages = new ArrayList<>();
+	}
+	
+	public void put(String message, int playerID)
+	{
+		ChatMessage mess = new ChatMessage(playerID, message);
 		messages.add(mess);
 	}
-	public ChatMessage get(int i){
+	public ChatMessage get(int i)
+	{
 		return null;
 	}
 }

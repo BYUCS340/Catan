@@ -17,7 +17,7 @@ public class VictoryPointManager
 	
 	private final int LongestRoadValue = 2;
 	private final int LargestArmyValue = 2;
-	private final int RoadValue = 1;
+	private final int RoadValue = 0;
 	private final int SettlementValue = 1;
 	private final int CityValue = 2;
 	
@@ -25,18 +25,48 @@ public class VictoryPointManager
 	//This class keeps track of each players' victory points.
 	
 	/**
+	 * 
+	 * @param p1Score
+	 * @param p2Score
+	 * @param p3Score
+	 * @param p4Score
+	 * @param currRoadOwner
+	 * @param currArmyOWner
+	 * @param armySize
+	 */
+	public VictoryPointManager(int p1Score, int p2Score, int p3Score, int p4Score, int currRoadOwner, int currArmyOwner, int armySize)
+	{
+		victoryPoints[0] = p1Score;
+		victoryPoints[1] = p2Score;
+		victoryPoints[2] = p3Score;
+		victoryPoints[3] = p4Score;
+		
+		this.currentLargestArmyPlayer = currArmyOwner;
+		this.currentLargestArmySize = armySize;
+		this.currentLongestRoadPlayer = currRoadOwner;
+	}
+	
+	/**
+	 * Generic default contructor
+	 */
+	public VictoryPointManager() {
+		// TODO Auto-generated constructor stub
+	}
+	/**
 	 * Gets the current number of victory points the current player has
 	 * @param playerIndex 0 to 3
 	 * @return 0-10
 	 */
-	public int getVictoryPoints(int playerIndex)
+	public int getVictoryPoints(int playerID)
 	{
-		return 0;
+		if (playerID < 0 || playerID > 3) return 0;
+		return victoryPoints[playerID];
 	}
 	
 	private void adjustPlayersPoints(int playerID, int points)
 	{
-		
+		if (playerID < 0 || playerID > 3) return;
+		victoryPoints[playerID] += points;
 	}
 	
 	/**
@@ -68,14 +98,14 @@ public class VictoryPointManager
 	 * @see Map
 	 * @return successful or not (almost always is true)
 	 */
-	public boolean setPlayerToHaveLargestArmy(int playerIndex)
+	private boolean setPlayerToHaveLargestArmy(int playerIndex)
 	{
 		if (playerIndex < 0 || playerIndex > 3) return false;
 		
 		if (currentLargestArmyPlayer != -1)
 		{
 			//A player has the card already so deduct points from them
-			adjustPlayersPoints(currentLargestArmyPlayer, -1 * LargestArmyValue);
+			adjustPlayersPoints(currentLargestArmyPlayer, -1*LargestArmyValue);
 		}
 		
 		currentLargestArmyPlayer = playerIndex;
@@ -95,7 +125,7 @@ public class VictoryPointManager
 	{
 		if (this.currentLargestArmySize < armySize)
 		{
-			this.currentLargestArmyPlayer = armySize;
+			this.currentLargestArmySize = armySize;
 			this.setPlayerToHaveLargestArmy(playerIndex);
 		}
 	}
@@ -142,24 +172,24 @@ public class VictoryPointManager
 	}
 	
 	/**
-	 * Gets the specified player's current number of victory points
-	 * @param playerIndex
-	 * @see Map
-	 * @return an int between 0 and 10, -1 if invalid index
-	 */
-	public int currentPlayerScore(int playerIndex)
-	{
-		if (playerIndex < 0 || playerIndex > 3) 
-			return -1;
-		return victoryPoints[playerIndex];
-	}
-	
-	/**
 	 * Checks if anyone has won yet
 	 * @return true if there is a winner
 	 */
 	public boolean anyWinner()
 	{
+		for (int i=0;i<=3; i++)
+		{
+			if (victoryPoints[i] >= 10) return true;
+		}
 		return false;
+	}
+	
+	public int winner()
+	{
+		for (int i=0;i<=3; i++)
+		{
+			if (victoryPoints[i] >= 10) return i;
+		}
+		return -1;
 	}
 }

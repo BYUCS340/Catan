@@ -382,7 +382,7 @@ public class MapComponent extends JComponent
 		g2.setColor(this.getBackground());
 		g2.fillRect(0, 0, this.getWidth(), this.getHeight());		
 
-		if (model == null)
+		if (model == null || !model.IsInitialized())
 			return;
 
 		g2.translate(this.getWidth() / 2, this.getHeight() / 2);
