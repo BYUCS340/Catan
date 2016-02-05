@@ -3,7 +3,7 @@ package shared.networking.transport;
 public abstract class NetVertexObject
 {
 	int owner;
-	NetEdgeLocation netEdgeLocation;
+	NetDirectionalLocation netDirectionalLocation;
 	
 	/**
 	 * Default constructor, sets owner to -1 and
@@ -12,7 +12,7 @@ public abstract class NetVertexObject
 	public NetVertexObject()
 	{
 		owner = -1;
-		netEdgeLocation = new NetEdgeLocation();
+		netDirectionalLocation = new NetDirectionalLocation();
 	}
 	
 	/**
@@ -32,16 +32,16 @@ public abstract class NetVertexObject
 	/**
 	 * @return the netEdgeLocation
 	 */
-	public NetEdgeLocation getNetEdgeLocation()
+	public NetDirectionalLocation getNetDirectionalLocation()
 	{
-		return netEdgeLocation;
+		return netDirectionalLocation;
 	}
 	/**
-	 * @param netEdgeLocation the netEdgeLocation to set
+	 * @param netDirectionalLocation the netEdgeLocation to set
 	 */
-	public void setNetEdgeLocation(NetEdgeLocation netEdgeLocation)
+	public void setNetEdgeLocation(NetDirectionalLocation netDirectionalLocation)
 	{
-		this.netEdgeLocation = netEdgeLocation;
+		this.netDirectionalLocation = netDirectionalLocation;
 	}
 
 }

@@ -953,7 +953,6 @@ public class RealServerProxy implements ServerProxy
 	public NetGameModel maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource)
 		throws ServerProxyException
 	{
-		//TODO fix the interface to accept a ResourceType instead of a string
 		if(userCookie == null)
 		{
 			throw new ServerProxyException("A user must be logged in before maritime trading!\n"

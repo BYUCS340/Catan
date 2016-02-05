@@ -2,7 +2,7 @@ package shared.definitions;
 
 public enum Direction
 {
-	NW, N, NE, SW, S, SE();
+	NW, N, NE, SW, S, SE, W, E();
 	
 	public static String toString(Direction type)
 	{
@@ -14,6 +14,9 @@ public enum Direction
 			case SW: return "sw";
 			case S: return "s";
 			case SE: return "se";
+			case W: return "w";
+			case E: return "e";
+			
 		}
 		return "unknown";
 	}
@@ -27,6 +30,8 @@ public enum Direction
 			case "ne": return Direction.NE;
 			case "s" : return Direction.S;
 			case "se": return Direction.SE;
+			case "w" : return Direction.W;
+			case "e" : return Direction.E;
 		}
 		return null;
 	}
