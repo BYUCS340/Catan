@@ -27,11 +27,12 @@ public class TestClientPoller {
 	public void test() throws InterruptedException {
 		poller.beginPolling();
 		//Not sure how to check if poller began polling
-		long i = 1;
+		int i = 1;
 		while(ClientGame.getGame().GetRefreshCount() == 0 && i != 0) {
 			i++;
-			//System.out.println(ClientGame.getGame().GetRefreshCount());
+			System.out.print("-");
 		}
+		System.out.println("Polled the server");
 		poller.stopPolling();
 		if (i == 0) fail("Timeout on poll");
 		

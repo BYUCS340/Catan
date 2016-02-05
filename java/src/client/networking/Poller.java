@@ -56,7 +56,7 @@ public class Poller implements ActionListener
 	
 	private void pollServer()
 	{
-		System.out.println("POLLED THE SERVER");
+		//System.out.println("POLLED THE SERVER");
 		try {
 			ClientGame.getGame().RefreshFromServer();
 		} catch (ModelException e) {
