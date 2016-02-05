@@ -1,0 +1,6 @@
+language: java
+jdk:
+  - oraclejdk8
+script: ant test-travisci
+notifications:
+  slack: cs340-mjgc:p0YZyo1Vjyn0HtGjjCQxJ2Sd
