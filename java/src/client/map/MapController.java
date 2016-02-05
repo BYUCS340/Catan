@@ -143,36 +143,40 @@ public class MapController extends Controller implements IMapController
 			return false;
 		}
 	}
-	
-	/**
-	 * Gets the settlements or villages that are associated with a role.
-	 * @param role The role of the dice.
-	 * @return The associated villages.
-	 */
+
 	public Iterator<Transaction> GetVillages(int role)
 	{
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		
-		Iterator<Hex> hexes = model.GetHex(role);
-		while (hexes.hasNext())
+		try
 		{
-			Hex hex = hexes.next();
-			
-			Iterator<Vertex> vertices = model.GetVerticies(hex);
-			while (vertices.hasNext())
+			Iterator<Hex> hexes = model.GetHex(role);
+			while (hexes.hasNext())
 			{
-				Vertex vertex = vertices.next();
+				Hex hex = hexes.next();
 				
-				if (vertex.getType() == PieceType.NONE)
-					continue;
-				
-				HexType hexType = hex.getType();
-				PieceType pieceType = vertex.getType();
-				CatanColor color = vertex.getColor();
-				Transaction transaction = new Transaction(hexType, pieceType, color);
-				
-				transactions.add(transaction);
+				Iterator<Vertex> vertices = model.GetVerticies(hex);
+				while (vertices.hasNext())
+				{
+					Vertex vertex = vertices.next();
+					
+					if (vertex.getType() == PieceType.NONE)
+						continue;
+					
+					HexType hexType = hex.getType();
+					PieceType pieceType = vertex.getType();
+					CatanColor color = vertex.getColor();
+					Transaction transaction = new Transaction(hexType, pieceType, color);
+					
+					transactions.add(transaction);
+				}
 			}
+		}
+		catch (MapException e)
+		{
+			//Don't need to do anything.
+			//Simply means the role didn't exist, so we don't form any
+			//transactions.
 		}
 		
 		return java.util.Collections.unmodifiableList(transactions).iterator();

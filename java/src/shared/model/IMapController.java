@@ -1,7 +1,10 @@
 package shared.model;
 
+import java.util.Iterator;
+
 import client.base.*;
 import client.data.*;
+import client.map.Transaction;
 import shared.definitions.*;
 import shared.model.map.Coordinate;
 
@@ -88,6 +91,13 @@ public interface IMapController extends IController
 	 * @param point the coordinate of the hex
 	 */
 	void placeRobber(Coordinate point);
+	
+	/**
+	 * Gets the settlements or villages that are associated with a role.
+	 * @param role The role of the dice.
+	 * @return The associated villages.
+	 */
+	public Iterator<Transaction> GetVillages(int role);
 	
 	/**
 	 * This method is called when the user requests to place a piece on the map

@@ -148,13 +148,17 @@ public class MapModel {
 	}
 	
 	/**
-	 * Gets all the hexes associated with the dice role
-	 * @param role The combined value of the dice
-	 * @return The associated hex
+	 * Gets all the hexes associated with the dice role.
+	 * @param role The combined value of the dice.
+	 * @return The associated hex.
+	 * @throws MapException Thrown if the value doesn't exist.
 	 */
-	public Iterator<Hex> GetHex(int role)
+	public Iterator<Hex> GetHex(int role) throws MapException
 	{
-		return java.util.Collections.unmodifiableList(values.get(role)).iterator();
+		if (!values.containsKey(role))
+			throw new MapException("Role value does not exist.");
+		else
+			return java.util.Collections.unmodifiableList(values.get(role)).iterator();
 	}
 	
 	/**
