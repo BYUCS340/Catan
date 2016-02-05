@@ -11,6 +11,7 @@ import shared.definitions.CatanColor;
 import shared.model.GameManager;
 import shared.model.ModelException;
 import shared.model.Player;
+import shared.model.map.MapModel;
 
 public class TestGameManager {
 
@@ -40,7 +41,7 @@ public class TestGameManager {
 			fail("Player wasn't able to add");
 			e.printStackTrace();
 		}
-		MapController controller = new MapController(new MapView(), null);
+		MapController controller = new MapController(new MapView(), null, new MapModel());
 		gm.map = controller;
 		
 		
