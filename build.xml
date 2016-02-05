@@ -172,6 +172,30 @@
 			</assertions>
 		</java>
 	</target>
+	
+	<target name="test-travisci" depends="compile" description="compiles and runs all JUNIT tests, fails if a test fails">
+		<junit printsummary="yes" haltonfailure="yes" fork="yes">
+			<classpath>
+				<path refid="lib-classpath"/>
+				<pathelement location="${java.build}"/>
+			</classpath>
+			<assertions>
+				<enable/>
+			</assertions>
+            <batchtest>
+            	<fileset dir="${java.build}">
+                	<include name="**/Test*.class" />
+					<include name="**/*Test.class" />
+					<include name="**/test*.class" />
+					<include name="**/*test.class" />
+					<exclude name="**/RealServerProxyTest.class" />
+					<exclude name="**/TestRealServerProxy.class" />
+					<exclude name="**/UnitTests.class" />
+            	</fileset>
+            </batchtest>
+			<formatter type="plain" usefile="false"/>
+        </junit>
+	</target>
     
     <target name="make-tester-zip" depends="package" description="makes a zip file for your testing team">
         <zip destfile="./tester.zip" basedir="${java.dist}" />

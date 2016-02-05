@@ -714,14 +714,14 @@ public class MockServerProxy implements ServerProxy
 	 * @throws ServerProxyException if something goes wrong
 	 */
 	@Override
-	public NetGame joinGame(int id, CatanColor color) throws ServerProxyException
+	public void joinGame(int id, CatanColor color) throws ServerProxyException
 	{
         if(!userLoggedIn){
             throw new ServerProxyException("JoinGame invalid when user not logged in");
         }
         
-        userJoinedGame = true;
-		return gameList.get(0);
+//        userJoinedGame = true;
+//		return gameList.get(0);
 	}
 
 	/**

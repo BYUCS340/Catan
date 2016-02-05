@@ -52,10 +52,9 @@ public interface ServerProxy
 	/**
 	 * 
 	 * @param color the color the user wishes to represent him
-	 * @return a ProxyGame object that represents the game the user joined
 	 * @throws ServerProxyException if something goes wrong
 	 */
-	public NetGame joinGame(int id, CatanColor color) throws ServerProxyException; 
+	public void joinGame(int id, CatanColor color) throws ServerProxyException; 
 
 	/**
 	 * Retrieves the game model from the server
