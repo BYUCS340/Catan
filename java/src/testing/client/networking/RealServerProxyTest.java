@@ -2,6 +2,7 @@ package testing.client.networking;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -12,6 +13,7 @@ import org.junit.Test;
 
 import client.networking.RealServerProxy;
 import shared.definitions.CatanColor;
+import shared.definitions.ResourceType;
 import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -19,6 +21,7 @@ import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.networking.UserCookie;
 import shared.networking.transport.NetGame;
+import shared.networking.transport.NetGameModel;
 
 public class RealServerProxyTest
 {
@@ -229,6 +232,160 @@ public class RealServerProxyTest
 		
 		//send request to the server
 		testProxy.buildCity(vertLoc);
+		
+		//if there are no errors, call it good.
+		//TODO expand this past a "200" test
+	}
+	
+	@Test
+	public void testOfferTrade() throws Exception
+	{
+		String username1 = "offerTradeUser1";
+		String password1 = "offerTradePassword1";
+		String username2 = "offerTradeUser2";
+		String password2 = "offerTradePassword2";
+		String game = "offerTradeGame";
+		CatanColor col1 = CatanColor.BLUE;
+		CatanColor col2 = CatanColor.RED;
+		
+		//sign first user in
+		RealServerProxy testProxy1 = new RealServerProxy();
+		testProxy1.registerUser(username1, password1);
+		testProxy1.loginUser(username1, password1);
+		testProxy1.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy1.listGames();
+		
+		//sign second user in
+		RealServerProxy testProxy2 = new RealServerProxy();
+		testProxy2.registerUser(username2, password2);
+		testProxy2.loginUser(username2, password2);
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy1.joinGame(targetGame.getId(), col1);
+		testProxy1.getGameModel();
+		
+		testProxy2.joinGame(targetGame.getId(), col2);
+		testProxy2.getGameModel();
+		
+		//REALLY TEST THE offerTrade
+		//1. Set up needed structures
+		List<Integer> tradeList = new ArrayList<Integer>();
+		tradeList.add(1);
+		tradeList.add(-1);
+		tradeList.add(0);
+		tradeList.add(0);
+		tradeList.add(0);
+		
+		//send request to the server
+		testProxy1.offerTrade(tradeList, 1);
+		
+		//make sure the request was really registered
+		NetGameModel mod = testProxy2.getGameModel();
+		assertTrue(mod.getNetTradeOffer().getReceiver() == 1);
+		
+		//if there are no errors, call it good.
+	}
+	
+	@Test
+	public void testAcceptTrade() throws Exception
+	{
+		String username1 = "acceptTradeUser1";
+		String password1 = "acceptTradePassword1";
+		String username2 = "acceptTradeUser2";
+		String password2 = "acceptTradePassword2";
+		String game = "offerTradeGame";
+		CatanColor col1 = CatanColor.BLUE;
+		CatanColor col2 = CatanColor.RED;
+		
+		//sign first user in
+		RealServerProxy testProxy1 = new RealServerProxy();
+		testProxy1.registerUser(username1, password1);
+		testProxy1.loginUser(username1, password1);
+		testProxy1.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy1.listGames();
+		
+		//sign second user in
+		RealServerProxy testProxy2 = new RealServerProxy();
+		testProxy2.registerUser(username2, password2);
+		testProxy2.loginUser(username2, password2);
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy1.joinGame(targetGame.getId(), col1);
+		testProxy1.getGameModel();
+		
+		testProxy2.joinGame(targetGame.getId(), col2);
+		testProxy2.getGameModel();
+		
+		//REALLY TEST THE offerTrade
+		//1. Set up needed structures
+		List<Integer> tradeList = new ArrayList<Integer>();
+		tradeList.add(1);
+		tradeList.add(-1);
+		tradeList.add(0);
+		tradeList.add(0);
+		tradeList.add(0);
+		
+		//send request to the server
+		testProxy1.offerTrade(tradeList, 1);
+		
+		//make sure the request was really registered
+		NetGameModel mod = testProxy2.getGameModel();
+		assertTrue(mod.getNetTradeOffer().getReceiver() == 1);
+		
+		//have the second user accept the trade
+		mod = testProxy2.acceptTrade(true);
+		
+		//make sure the request made it through to the server
+		assertTrue(mod.getNetTradeOffer() == null);
+		//if there are no errors, call it good.
+	}
+
+	@Test
+	public void testMaritimeTrade() throws Exception
+	{
+		String username = "maritimeTradeUser";
+		String password = "maritimeTradePassword";
+		String game = "maritimeTradeGame";
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+		RealServerProxy testProxy = new RealServerProxy();
+		testProxy.registerUser(username, password);
+		testProxy.loginUser(username, password);
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		testProxy.getGameModel();
+		
+		
+		//send request to the server
+		testProxy.maritimeTrade(2, ResourceType.WHEAT, ResourceType.WOOD);
 		
 		//if there are no errors, call it good.
 		//TODO expand this past a "200" test
