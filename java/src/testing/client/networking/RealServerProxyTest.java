@@ -48,6 +48,49 @@ public class RealServerProxyTest
 	{
 		//TODO wipe server
 	}
+	
+	/**
+	 * This only works if the testProxy can register/loging users, and create games. This is for setting up clean games for testing other methods
+	 * @param newUsername
+	 * @param password
+	 * @return
+	 */
+	private boolean joinNewFilledGame(String newUsername, String password) throws Exception
+	{
+		RealServerProxy testProxy = new RealServerProxy();
+		boolean couldRegister = testProxy.registerUser(newUsername, password);
+		if(!couldRegister)
+			return false;
+		
+		boolean couldLogin = testProxy.loginUser(newUsername, password);
+		if(!couldLogin)
+			return false;
+		
+		testProxy.createGame(true, true, false, "testCreatGame...Game");
+
+		
+		
+		
+		return false;
+	}
+	
+	@Test
+	public void testCreateGame() throws Exception
+	{
+		RealServerProxy testProxy = new RealServerProxy();
+		boolean couldRegister = testProxy.registerUser("rob", "robsAGuy");
+		assertTrue(couldRegister);
+		
+		boolean couldLogin = testProxy.loginUser("rob", "robsAGuy");
+		assertTrue(couldLogin);
+		
+		List<NetGame> gamesBeforeCreate = testProxy.listGames();
+		testProxy.createGame(true, true, false, "testCreatGame...Game");
+		List<NetGame> gamesAfterCreate = testProxy.listGames();
+		
+		assertTrue(gamesBeforeCreate.size() + 1 == gamesAfterCreate.size());
+		assertTrue(gamesAfterCreate.get(gamesAfterCreate.size() - 1).getTitle().equals("testCreatGame...Game"));
+	}
 
 	@Test
 	public void testRegisterUser() throws Exception
@@ -397,5 +440,12 @@ public class RealServerProxyTest
 		
 		//if there are no errors, call it good.
 		//TODO expand this past a "200" test
+	}
+	
+	
+	@Test 
+	public void testListAI() throws Exception
+	{
+		
 	}
 }
