@@ -18,6 +18,7 @@ public class TestBank {
 	@Before
 	public void setUp() throws Exception {
 		bank = new Bank();
+		bank.resetToPlayerDefaults();
 	}
 
 	/**
@@ -36,7 +37,9 @@ public class TestBank {
 		assertFalse(bank.canBuildRoad());
 		assertFalse(bank.canBuildSettlement());
 		assertFalse(bank.canBuyDevCard());
-		
+	}
+	@Test
+	public void testRoadBuild() {
 		try 
 		{
 			bank.resetToPlayerDefaults();
@@ -47,7 +50,6 @@ public class TestBank {
 			assertFalse(bank.canBuildRoad());
 			
 			
-			
 		} 
 		catch (ModelException e) 
 		{
@@ -56,6 +58,9 @@ public class TestBank {
 			e.printStackTrace();
 		}
 		
+	}
+	@Test
+	public void testException() {
 		
 		//Test settlement building exceotion
 		try {
@@ -89,7 +94,9 @@ public class TestBank {
 			//We need to get here
 		}
 		
-		
+	}
+	@Test
+	public void testBuildSettlement() {
 		
 		//build a settlement (one wood, one brick, one sheep, one wheat, one settlement)
 		try{
@@ -107,12 +114,14 @@ public class TestBank {
 		catch (ModelException e) {
 			fail("We should be able to build a settlement");
 		}
-		
-
+	}
+	@Test
+	public void testBuildCity() {
+		bank.resetToPlayerDefaults();
 		//build a city (two wheat, three ore, one city)
 		try{
 			bank.giveResource(ResourceType.ORE,3);
-			assertFalse(bank.canBuildSettlement());
+			assertFalse(bank.canBuildCity());
 			bank.giveResource(ResourceType.WHEAT,2);
 			assertTrue(bank.canBuildCity());
 			bank.buildCity();
