@@ -15,6 +15,8 @@ import shared.definitions.CatanColor;
 import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
+import shared.locations.VertexDirection;
+import shared.locations.VertexLocation;
 import shared.networking.UserCookie;
 import shared.networking.transport.NetGame;
 
@@ -146,9 +148,89 @@ public class RealServerProxyTest
 		//1. Set up needed road structure
 		HexLocation hexLoc = new HexLocation(0,0);
 		EdgeLocation edgeLoc = new EdgeLocation(hexLoc, EdgeDirection.North);
+		
+		//send request to the server
 		testProxy.buildRoad(edgeLoc, true);
 		
 		//if there are no errors, call it good.
+		//TODO expand this past a "200" test
+	}
+	
+	@Test
+	public void testBuildSettlement() throws Exception
+	{
+		String username = "buildSettlementUser";
+		String password = "buildSettlementPassword";
+		String game = "buildSettlementGame";
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+		RealServerProxy testProxy = new RealServerProxy();
+		testProxy.registerUser(username, password);
+		testProxy.loginUser(username, password);
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		testProxy.getGameModel();
+		
+		//REALLY TEST THE BUILDSETTLEMENT
+		//1. Set up needed settlement structures
+		HexLocation hexLoc = new HexLocation(0,0);
+		VertexLocation vertLoc = new VertexLocation(hexLoc, VertexDirection.West);	
+		
+		//send request to the server
+		testProxy.buildSettlement(vertLoc, true);
+		
+		//if there are no errors, call it good.
+		//TODO expand this past a "200" test
 	}
 
+	@Test
+	public void testBuildCity() throws Exception
+	{
+		String username = "buildCityUser";
+		String password = "buildCityPassword";
+		String game = "buildCityGame";
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+		RealServerProxy testProxy = new RealServerProxy();
+		testProxy.registerUser(username, password);
+		testProxy.loginUser(username, password);
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		testProxy.getGameModel();
+		
+		//REALLY TEST THE BUILDCITY
+		//1. Set up needed city structures
+		HexLocation hexLoc = new HexLocation(0,0);
+		VertexLocation vertLoc = new VertexLocation(hexLoc, VertexDirection.West);	
+		
+		//send request to the server
+		testProxy.buildCity(vertLoc);
+		
+		//if there are no errors, call it good.
+		//TODO expand this past a "200" test
+	}
 }
