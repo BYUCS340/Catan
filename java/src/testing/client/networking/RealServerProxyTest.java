@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -51,14 +52,16 @@ public class RealServerProxyTest
 	@Test
 	public void testRegisterUser() throws Exception
 	{
-		RealServerProxy testProxy = new RealServerProxy();
-		boolean couldRegister = testProxy.registerUser("reguser", "imatest");
+		String username1 = UUID.randomUUID().toString();
+		String password1 = UUID.randomUUID().toString();
+		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
+		boolean couldRegister = testProxy.registerUser(username1, password1);
 		
 		//double check that the user could be registered
 		assertTrue(couldRegister);
 		
 		//make sure the same user can't register twice
-		couldRegister = testProxy.registerUser("reguser", "imatest");
+		couldRegister = testProxy.registerUser(username1, password1);
 		assertTrue(!couldRegister);
 		
 	}
@@ -66,26 +69,31 @@ public class RealServerProxyTest
 	@Test
 	public void testLoginUser() throws Exception
 	{
-		RealServerProxy testProxy = new RealServerProxy();
-		boolean couldRegister = testProxy.registerUser("qwer", "rewq");
+		String username1 = UUID.randomUUID().toString();
+		String password1 = UUID.randomUUID().toString();
+		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
+		boolean couldRegister = testProxy.registerUser(username1, password1);
 		
 		assertTrue(couldRegister);
-		boolean couldLogin = testProxy.loginUser("qwer", "rewq");
+		boolean couldLogin = testProxy.loginUser(username1, password1);
 		assertTrue(couldLogin);
 		
 		UserCookie uCookie = testProxy.getUserCookie();
 		
 		//make sure the cookie was set correctly
 		String user = uCookie.getUsername();
-		assertTrue(user.equalsIgnoreCase("qwer"));
+		assertTrue(user.equalsIgnoreCase(username1));
 		
 		String password = uCookie.getPassword();
-		assertTrue(password.equalsIgnoreCase("rewq"));
+		assertTrue(password.equalsIgnoreCase(password1));
 		
 		testProxy.clearCookies();
 		
+		String username2 = UUID.randomUUID().toString();
+		String password2 = UUID.randomUUID().toString();
+		
 		//make sure bad login attempts are rejected without an exception
-		couldLogin = testProxy.loginUser("randomness", "MoreRand");
+		couldLogin = testProxy.loginUser(username2, password2);
 		assertTrue(!couldLogin);
 		
 	}
@@ -93,7 +101,7 @@ public class RealServerProxyTest
 	@Test
 	public void testListGames() throws Exception
 	{
-		RealServerProxy testProxy = new RealServerProxy();
+		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
 		
 		//get result from server
 		List<NetGame> gList = testProxy.listGames();
@@ -123,13 +131,13 @@ public class RealServerProxyTest
 	@Test
 	public void testBuildRoad() throws Exception
 	{
-		String username = "buildRoadUser";
-		String password = "buildRoadPassword";
-		String game = "buildRoadGame";
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
 		CatanColor col = CatanColor.BLUE;
 		
 		//set up the game
-		RealServerProxy testProxy = new RealServerProxy();
+		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
 		testProxy.registerUser(username, password);
 		testProxy.loginUser(username, password);
 		testProxy.createGame(true, true, true, game);
@@ -162,13 +170,13 @@ public class RealServerProxyTest
 	@Test
 	public void testBuildSettlement() throws Exception
 	{
-		String username = "buildSettlementUser";
-		String password = "buildSettlementPassword";
-		String game = "buildSettlementGame";
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
 		CatanColor col = CatanColor.BLUE;
 		
 		//set up the game
-		RealServerProxy testProxy = new RealServerProxy();
+		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
 		testProxy.registerUser(username, password);
 		testProxy.loginUser(username, password);
 		testProxy.createGame(true, true, true, game);
@@ -201,13 +209,13 @@ public class RealServerProxyTest
 	@Test
 	public void testBuildCity() throws Exception
 	{
-		String username = "buildCityUser";
-		String password = "buildCityPassword";
-		String game = "buildCityGame";
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
 		CatanColor col = CatanColor.BLUE;
 		
 		//set up the game
-		RealServerProxy testProxy = new RealServerProxy();
+		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
 		testProxy.registerUser(username, password);
 		testProxy.loginUser(username, password);
 		testProxy.createGame(true, true, true, game);
@@ -240,23 +248,23 @@ public class RealServerProxyTest
 	@Test
 	public void testOfferTrade() throws Exception
 	{
-		String username1 = "offerTradeUser1";
-		String password1 = "offerTradePassword1";
-		String username2 = "offerTradeUser2";
-		String password2 = "offerTradePassword2";
-		String game = "offerTradeGame";
+		String username1 = UUID.randomUUID().toString();
+		String password1 = UUID.randomUUID().toString();
+		String username2 = UUID.randomUUID().toString();
+		String password2 = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
 		CatanColor col1 = CatanColor.BLUE;
 		CatanColor col2 = CatanColor.RED;
 		
 		//sign first user in
-		RealServerProxy testProxy1 = new RealServerProxy();
+		RealServerProxy testProxy1 = new RealServerProxy("104.236.179.174", 8081);
 		testProxy1.registerUser(username1, password1);
 		testProxy1.loginUser(username1, password1);
 		testProxy1.createGame(true, true, true, game);
 		List<NetGame> gList = testProxy1.listGames();
 		
 		//sign second user in
-		RealServerProxy testProxy2 = new RealServerProxy();
+		RealServerProxy testProxy2 = new RealServerProxy("104.236.179.174", 8081);
 		testProxy2.registerUser(username2, password2);
 		testProxy2.loginUser(username2, password2);
 		
@@ -297,23 +305,23 @@ public class RealServerProxyTest
 	@Test
 	public void testAcceptTrade() throws Exception
 	{
-		String username1 = "acceptTradeUser1";
-		String password1 = "acceptTradePassword1";
-		String username2 = "acceptTradeUser2";
-		String password2 = "acceptTradePassword2";
-		String game = "offerTradeGame";
+		String username1 = UUID.randomUUID().toString();
+		String password1 = UUID.randomUUID().toString();
+		String username2 = UUID.randomUUID().toString();
+		String password2 = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
 		CatanColor col1 = CatanColor.BLUE;
 		CatanColor col2 = CatanColor.RED;
 		
 		//sign first user in
-		RealServerProxy testProxy1 = new RealServerProxy();
+		RealServerProxy testProxy1 = new RealServerProxy("104.236.179.174", 8081);
 		testProxy1.registerUser(username1, password1);
 		testProxy1.loginUser(username1, password1);
 		testProxy1.createGame(true, true, true, game);
 		List<NetGame> gList = testProxy1.listGames();
 		
 		//sign second user in
-		RealServerProxy testProxy2 = new RealServerProxy();
+		RealServerProxy testProxy2 = new RealServerProxy("104.236.179.174", 8081);
 		testProxy2.registerUser(username2, password2);
 		testProxy2.loginUser(username2, password2);
 		
@@ -359,13 +367,13 @@ public class RealServerProxyTest
 	@Test
 	public void testMaritimeTrade() throws Exception
 	{
-		String username = "maritimeTradeUser";
-		String password = "maritimeTradePassword";
-		String game = "maritimeTradeGame";
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
 		CatanColor col = CatanColor.BLUE;
 		
 		//set up the game
-		RealServerProxy testProxy = new RealServerProxy();
+		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
 		testProxy.registerUser(username, password);
 		testProxy.loginUser(username, password);
 		testProxy.createGame(true, true, true, game);

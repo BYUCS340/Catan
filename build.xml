@@ -188,8 +188,6 @@
 					<include name="**/*Test.class" />
 					<include name="**/test*.class" />
 					<include name="**/*test.class" />
-					<exclude name="**/RealServerProxyTest.class" />
-					<exclude name="**/TestRealServerProxy.class" />
 					<exclude name="**/UnitTests.class" />
             	</fileset>
             </batchtest>
