@@ -18,8 +18,8 @@ import client.map.view.IMapView;
  * Implementation for the map controller. Used to make updates or changes to
  * any object on the map.
  */
-public class MapController extends Controller implements IMapController {
-	
+public class MapController extends Controller implements IMapController
+{	
 	private MapModel model;
 	private IRobView robView;
 	
@@ -28,35 +28,37 @@ public class MapController extends Controller implements IMapController {
 	 * @param view The MapView object.
 	 * @param robView The RobberView object.
 	 */
-	public MapController(IMapView view, IRobView robView) {
-		
+	public MapController(IMapView view, IRobView robView, MapModel model)
+	{
 		super(view);
 		
-		model = new MapModel();
-		
+		this.model = model;
 		view.SetModel(model);
 		
 		setRobView(robView);
 	}
 	
-	public IMapView getView() {
-		
+	public IMapView getView()
+	{	
 		return (IMapView)super.getView();
 	}
 	
-	private IRobView getRobView() {
+	private IRobView getRobView()
+	{
 		return robView;
 	}
-	private void setRobView(IRobView robView) {
+	private void setRobView(IRobView robView)
+	{
 		this.robView = robView;
 	}
 
-	public boolean canPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color) {
-		
+	public boolean canPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
+	{	
 		if (!model.ContainsEdge(p1, p2))
 			return false;
 		
-		try {
+		try
+		{
 			Edge edge = model.GetEdge(p1, p2);
 			
 			if (edge.doesRoadExists())
@@ -67,8 +69,8 @@ public class MapController extends Controller implements IMapController {
 			
 			return RoadsSatisfyRoadPlacement(edge, color);
 		} 
-		catch (MapException e) {
-			// TODO Auto-generated catch block
+		catch (MapException e)
+		{
 			e.printStackTrace();
 			return false;
 		}
@@ -79,7 +81,8 @@ public class MapController extends Controller implements IMapController {
 		if (!model.ContainsVertex(point))
 			return false;
 		
-		try {
+		try
+		{
 			Vertex vertex = model.GetVertex(point);
 			
 			if (vertex.getType() != PieceType.NONE)
@@ -104,12 +107,13 @@ public class MapController extends Controller implements IMapController {
 		}
 	}
 
-	public boolean canPlaceCity(Coordinate point, CatanColor color) {
-		
+	public boolean canPlaceCity(Coordinate point, CatanColor color)
+	{	
 		if (!model.ContainsVertex(point))
 			return false;
 		
-		try {
+		try
+		{
 			Vertex vertex = model.GetVertex(point);
 			
 			return vertex.getType() == PieceType.SETTLEMENT && 
@@ -122,8 +126,8 @@ public class MapController extends Controller implements IMapController {
 		}
 	}
 
-	public boolean canPlaceRobber(Coordinate point) {
-		
+	public boolean canPlaceRobber(Coordinate point)
+	{	
 		if (!model.ContainsHex(point))
 			return false;
 		
@@ -139,36 +143,40 @@ public class MapController extends Controller implements IMapController {
 			return false;
 		}
 	}
-	
-	/**
-	 * Gets the settlements or villages that are associated with a role.
-	 * @param role The role of the dice.
-	 * @return The associated villages.
-	 */
+
 	public Iterator<Transaction> GetVillages(int role)
 	{
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		
-		Iterator<Hex> hexes = model.GetHex(role);
-		while (hexes.hasNext())
+		try
 		{
-			Hex hex = hexes.next();
-			
-			Iterator<Vertex> vertices = model.GetVerticies(hex);
-			while (vertices.hasNext())
+			Iterator<Hex> hexes = model.GetHex(role);
+			while (hexes.hasNext())
 			{
-				Vertex vertex = vertices.next();
+				Hex hex = hexes.next();
 				
-				if (vertex.getType() == PieceType.NONE)
-					continue;
-				
-				HexType hexType = hex.getType();
-				PieceType pieceType = vertex.getType();
-				CatanColor color = vertex.getColor();
-				Transaction transaction = new Transaction(hexType, pieceType, color);
-				
-				transactions.add(transaction);
+				Iterator<Vertex> vertices = model.GetVerticies(hex);
+				while (vertices.hasNext())
+				{
+					Vertex vertex = vertices.next();
+					
+					if (vertex.getType() == PieceType.NONE)
+						continue;
+					
+					HexType hexType = hex.getType();
+					PieceType pieceType = vertex.getType();
+					CatanColor color = vertex.getColor();
+					Transaction transaction = new Transaction(hexType, pieceType, color);
+					
+					transactions.add(transaction);
+				}
 			}
+		}
+		catch (MapException e)
+		{
+			//Don't need to do anything.
+			//Simply means the role didn't exist, so we don't form any
+			//transactions.
 		}
 		
 		return java.util.Collections.unmodifiableList(transactions).iterator();
@@ -176,7 +184,8 @@ public class MapController extends Controller implements IMapController {
 
 	public void placeRoad(Coordinate p1, Coordinate p2, CatanColor color)
 	{	
-		try {
+		try
+		{
 			model.SetRoad(p1, p2, color);
 			getView().RefreshView();
 		}
@@ -188,7 +197,8 @@ public class MapController extends Controller implements IMapController {
 
 	public void placeSettlement(Coordinate point, CatanColor color)
 	{
-		try {
+		try
+		{
 			model.SetSettlement(point, color);
 			getView().RefreshView();
 		} 
@@ -200,7 +210,8 @@ public class MapController extends Controller implements IMapController {
 
 	public void placeCity(Coordinate point, CatanColor color)
 	{
-		try {
+		try 
+		{
 			model.SetCity(point, color);
 			getView().RefreshView();
 		}
@@ -223,9 +234,10 @@ public class MapController extends Controller implements IMapController {
 		}
 	}
 	
-	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {	
-		
-		getView().startDrop(pieceType, CatanColor.ORANGE, true);
+	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) 
+	{		
+		//TODO Implement
+		//getView().startDrop(pieceType, null, true);
 	}
 	
 	public void cancelMove() {

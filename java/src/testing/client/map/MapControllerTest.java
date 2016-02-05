@@ -12,10 +12,14 @@ import client.map.MapController;
 import client.map.view.MapView;
 import shared.definitions.CatanColor;
 import shared.model.map.Coordinate;
+import shared.model.map.MapGenerator;
+import shared.model.map.MapModel;
 
 public class MapControllerTest
 {	
 	private static MapView view;
+	
+	private MapModel model;
 	private MapController controller;
 
 	@BeforeClass
@@ -33,7 +37,8 @@ public class MapControllerTest
 	@Before
 	public void setUp() throws Exception
 	{
-		controller = new MapController(view, null);
+		model = new MapModel();
+		controller = new MapController(view, null, model);
 	}
 
 	@After
@@ -181,5 +186,32 @@ public class MapControllerTest
 		Coordinate p1 = new Coordinate(0,0);
 		
 		assertFalse(controller.canPlaceCity(p1, CatanColor.GREEN));
+	}
+	
+	@Test
+	public void testCanPlaceRobber_Valid()
+	{
+		MapGenerator.BeginnerMap(model);
+		
+		Coordinate point = new Coordinate(1,0);
+		assertTrue(controller.canPlaceRobber(point));
+	}
+	
+	@Test
+	public void testCanPlaceRobber_Invalid()
+	{
+		MapGenerator.BeginnerMap(model);
+		
+		Coordinate point = new Coordinate(0, 0);
+		assertFalse(controller.canPlaceRobber(point));
+	}
+	
+	@Test
+	public void testCanPlaceRobber_Water()
+	{
+		MapGenerator.BeginnerMap(model);
+		
+		Coordinate point = new Coordinate(0, 1);
+		assertFalse(controller.canPlaceRobber(point));
 	}
 }

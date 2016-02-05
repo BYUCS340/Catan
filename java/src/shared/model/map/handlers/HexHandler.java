@@ -14,7 +14,7 @@ import shared.model.map.objects.Hex;
  */
 public class HexHandler {
 
-	private static final int INITIAL_CAPACITY = 37;
+	private static final int MAX_SIZE = 37;
 	private static final int Y_SHIFT = 6;
 	
 	private Map<Integer, Hex> hexes;
@@ -24,7 +24,7 @@ public class HexHandler {
 	 */
 	public HexHandler()
 	{
-		hexes = new HashMap<Integer, Hex>(INITIAL_CAPACITY);
+		hexes = new HashMap<Integer, Hex>(MAX_SIZE);
 	}
 	
 	/**
@@ -34,8 +34,7 @@ public class HexHandler {
 	 */
 	public void AddHex(Hex hex) throws MapException
 	{
-		//TODO Make this more specific.
-		if (hexes.size() == 37)
+		if (hexes.size() == MAX_SIZE)
 			throw new MapException("Attempt to add too many hexes to board.");
 		
 		int key = GetKey(hex);
