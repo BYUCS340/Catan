@@ -1,7 +1,10 @@
 package shared.model;
 
+import java.util.Iterator;
+
 import client.base.*;
 import client.data.*;
+import client.map.Transaction;
 import shared.definitions.*;
 import shared.model.map.Coordinate;
 
@@ -10,7 +13,6 @@ import shared.model.map.Coordinate;
  */
 public interface IMapController extends IController
 {
-	
 	/**
 	 * This method is called whenever the user is trying to place a road on the
 	 * map. It is called by the view for each "mouse move" event. The returned
@@ -21,7 +23,7 @@ public interface IMapController extends IController
 	 * @param p2 The end of the road piece (it's the end of the road, get it? Never mind...)
 	 * @return true if the road can be placed at edgeLoc, false otherwise
 	 */
-	boolean canPlaceRoad(Coordinate p1, Coordinate p2);
+	boolean canPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color);
 	
 	/**
 	 * This method is called whenever the user is trying to place a settlement
@@ -89,6 +91,13 @@ public interface IMapController extends IController
 	 * @param point the coordinate of the hex
 	 */
 	void placeRobber(Coordinate point);
+	
+	/**
+	 * Gets the settlements or villages that are associated with a role.
+	 * @param role The role of the dice.
+	 * @return The associated villages.
+	 */
+	public Iterator<Transaction> GetVillages(int role);
 	
 	/**
 	 * This method is called when the user requests to place a piece on the map

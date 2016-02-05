@@ -2,10 +2,13 @@ package client.map.view;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Iterator;
+
 import javax.swing.*;
 
 import client.base.*;
 import client.data.*;
+import client.map.Transaction;
 import shared.definitions.*;
 import shared.model.IMapController;
 import shared.model.map.Coordinate;
@@ -39,7 +42,6 @@ public class MapView extends PanelView implements IMapView
 	@Override
 	public void setController(IController controller)
 	{
-		
 		super.setController(controller);
 		
 		map.setController(controller);
@@ -77,9 +79,9 @@ public class MapView extends PanelView implements IMapView
 		}
 		
 		@Override
-		public boolean canPlaceRoad(Coordinate p1, Coordinate p2)
+		public boolean canPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
 		{
-			return getController().canPlaceRoad(p1, p2);
+			return getController().canPlaceRoad(p1, p2, color);
 		}
 		
 		@Override
@@ -163,6 +165,12 @@ public class MapView extends PanelView implements IMapView
 		public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {
 			assert false;
 		}
+
+		@Override
+		public Iterator<Transaction> GetVillages(int role) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	};
 	
 	private static class MapOverlay extends OverlayView
@@ -194,7 +202,6 @@ public class MapView extends PanelView implements IMapView
 		public void startDrop(PieceType pieceType, CatanColor pieceColor,
 							  boolean isCancelAllowed)
 		{
-			
 			this.setOpaque(false);
 			this.setLayout(new BorderLayout());
 			this.setBorder(BorderFactory.createLineBorder(Color.black,
@@ -247,13 +254,11 @@ public class MapView extends PanelView implements IMapView
 		
 		public void cancelDrop()
 		{
-			
 			map.cancelDrop();
 		}
 		
 		private String getLabelText(PieceType pieceType)
 		{
-			
 			switch (pieceType)
 			{
 				case ROAD:
