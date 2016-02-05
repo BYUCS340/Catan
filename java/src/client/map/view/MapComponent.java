@@ -139,7 +139,6 @@ public class MapComponent extends JComponent
 	
 	public MapComponent copy()
 	{
-		
 		MapComponent copy = new MapComponent();
 		
 		copy.dropType = this.dropType;
@@ -267,7 +266,7 @@ public class MapComponent extends JComponent
 					Coordinate p1 = v1.getPoint();
 					Coordinate p2 = v2.getPoint();
 					
-					dropAllowed = getController().canPlaceRoad(p1, p2);
+					dropAllowed = getController().canPlaceRoad(p1, p2, dropColor);
 					
 					if (dropAllowed)
 					{
@@ -445,8 +444,9 @@ public class MapComponent extends JComponent
 		if (dropHexLoc != null)
 			return;
 		
-		//TODO Originally, the robber was checked to be non-null. I'm assuming
-		//the robber exists when the model exists. Verify this assumption.
+		//In case the robber doesn't exist yet.
+		if (!model.IsRobberInitialized())
+			return;
 		
 		Point2D hexPoint = getHexCenterPoint(model.GetRobberPlacement());
 		BufferedImage robberImage = ImageHandler.getRobberImage();
@@ -720,8 +720,13 @@ public class MapComponent extends JComponent
 			Point2D vertexPoint = getVertexPoint(vertex.getPoint());
 			
 			double distance = vertexPoint.distance(point);
-			//TODO Figure out a way to handle if there are multiple distances that
-			//are the same.
+			
+			//This is in the (hopefully) off chance of getting the same
+			//distance for multiple vertices. The odds of getting dead
+			//center or midpoints is kind of slim though (I hope).
+			while (result.containsKey(distance))
+				distance += .0001;
+			
 			result.put(distance, vertex);
 		}
 		
