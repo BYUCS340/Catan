@@ -10,7 +10,6 @@ import shared.model.map.Coordinate;
  */
 public interface IMapController extends IController
 {
-	
 	/**
 	 * This method is called whenever the user is trying to place a road on the
 	 * map. It is called by the view for each "mouse move" event. The returned
@@ -21,7 +20,7 @@ public interface IMapController extends IController
 	 * @param p2 The end of the road piece (it's the end of the road, get it? Never mind...)
 	 * @return true if the road can be placed at edgeLoc, false otherwise
 	 */
-	boolean canPlaceRoad(Coordinate p1, Coordinate p2);
+	boolean canPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color);
 	
 	/**
 	 * This method is called whenever the user is trying to place a settlement

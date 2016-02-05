@@ -345,7 +345,8 @@ public class GameManager
 			if (!GetPlayer(playerID).playerBank.canBuildRoad())
 				return false;
 			//check map
-			if (!map.canPlaceRoad(start, end))
+			CatanColor color = getPlayerColorByIndex(playerID);
+			if (!map.canPlaceRoad(start, end, color))
 				return false;
 		}
 		catch (ModelException e)
