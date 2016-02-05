@@ -142,7 +142,7 @@ public class MapController extends Controller implements IMapController {
 	
 	/**
 	 * Gets the settlements or villages that are associated with a role.
-	 * @param role The role of the dice.
+	 * @param role The roll of the dice.
 	 * @return The associated villages.
 	 */
 	public Iterator<Transaction> GetVillages(int role)
