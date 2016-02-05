@@ -107,5 +107,19 @@ public class TestBank {
 		catch (ModelException e) {
 			fail("We should be able to build a settlement");
 		}
+		
+
+		//build a city (two wheat, three ore, one city)
+		try{
+			bank.giveResource(ResourceType.ORE,3);
+			assertFalse(bank.canBuildSettlement());
+			bank.giveResource(ResourceType.WHEAT,2);
+			assertTrue(bank.canBuildCity());
+			bank.buildCity();
+			assertFalse(bank.canBuildCity());
+		}
+		catch (ModelException e) {
+			fail("We should be able to build a settlement");
+		}
 	}
 }
