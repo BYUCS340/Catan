@@ -167,8 +167,7 @@ public class MapView extends PanelView implements IMapView
 		}
 
 		@Override
-		public Iterator<Transaction> GetVillages(int role)
-		{
+		public Iterator<Transaction> GetVillages(int role) {
 			// TODO Auto-generated method stub
 			return null;
 		}
