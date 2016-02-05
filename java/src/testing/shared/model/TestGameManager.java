@@ -8,6 +8,7 @@ import org.junit.Test;
 import client.map.MapController;
 import client.map.view.MapView;
 import shared.definitions.CatanColor;
+import shared.definitions.GameRound;
 import shared.model.GameManager;
 import shared.model.ModelException;
 import shared.model.Player;
@@ -44,6 +45,46 @@ public class TestGameManager {
 		MapController controller = new MapController(new MapView(), null, new MapModel());
 		gm.map = controller;
 		
+		gm.StartGame();
+		
+		try{
+			assertEquals(GameRound.FIRSTROUND,gm.CurrentState());
+			assertEquals(gm.CurrentPlayersTurn(),0);
+			gm.FinishTurn();
+			assertEquals(gm.CurrentPlayersTurn(),1);
+			gm.FinishTurn();
+			assertEquals(GameRound.FIRSTROUND,gm.CurrentState());
+			assertEquals(gm.CurrentPlayersTurn(),2);
+			gm.FinishTurn();
+			assertEquals(gm.CurrentPlayersTurn(),3);
+			assertEquals(GameRound.FIRSTROUND,gm.CurrentState());
+			gm.FinishTurn();
+			assertEquals(gm.CurrentPlayersTurn(),0);
+			assertEquals(GameRound.SECONDROUND,gm.CurrentState());
+			gm.FinishTurn();
+			assertEquals(gm.CurrentPlayersTurn(),1);
+			gm.FinishTurn();
+			assertEquals(gm.CurrentPlayersTurn(),2);
+			gm.FinishTurn();
+			assertEquals(gm.CurrentPlayersTurn(),3);
+			assertEquals(GameRound.SECONDROUND,gm.CurrentState());
+			gm.FinishTurn();
+			assertEquals(GameRound.ROLLING,gm.CurrentState());
+			assertFalse(gm.CanFinishTurn());
+		}
+		catch (Exception e){
+			fail("No exceptions here!");
+		}
+		
+		
+		try{
+			int roll = gm.RollDice();
+			assertEquals(GameRound.PLAYING,gm.CurrentState());
+			int roll = gm.RollDice();
+		}
+		catch (Exception e){
+			fail("No exceptions here!");
+		}
 		
 		
 	}

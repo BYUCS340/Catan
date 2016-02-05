@@ -2,6 +2,7 @@ package shared.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import client.map.MapController;
@@ -10,8 +11,10 @@ import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
+import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
+import shared.model.map.Transaction;
 import shared.model.chat.ChatBox;
 import shared.networking.transport.NetGameModel;
 
@@ -157,10 +160,11 @@ public class GameManager
 	 * @see <a href="https://imgs.xkcd.com/comics/random_number.png">Sauce</a>
 	 * @post all player's banks will be added resources
 	 * @return the number rolled
+	 * @throws ModelException if we aren't in the rolling phase
 	 */
-	public int RollDice()
+	public int RollDice() throws ModelException
 	{
-		
+		if (gameState.state != GameRound.ROLLING) throw new ModelException();
 		gameState.startBuildPhase();
 		int diceRoll = 4;
 		//check if we can move the robber
@@ -171,7 +175,35 @@ public class GameManager
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
 		
 		//Call map to update the get the transacations
-		//map.
+		Iterator<Transaction> transList = map.GetVillages(diceRoll);
+		//Go through each trasaction
+		while (transList.hasNext())
+		{
+			Transaction trans = transList.next();
+			//Get the player ID
+			int playerID = this.getPlayerIndexByColor(trans.getColor());
+			try {
+				//Get the player
+				Player player = this.GetPlayer(playerID);
+				//The piece type
+				PieceType harvester = trans.getPieceType();
+				int amount = 0;
+				//Get the correct amount for the piece type
+				if (harvester == PieceType.CITY) amount = 2;
+				else if (harvester == PieceType.SETTLEMENT) amount = 1;
+				//Get the resource
+				ResourceType resource = ResourceType.fromHex(trans.getHexType());
+				//Give it to them
+				player.playerBank.giveResource(resource, amount);
+				//player.playerBank
+			} catch (ModelException e) {
+				// TODO Auto-generated catch block
+				System.err.println("No player with the color specified by transaction found");
+				System.err.println(trans.getColor());
+				//e.printStackTrace();
+			}
+			
+		}
 		return diceRoll; // chosen by fair dice roll
 						// guaranteed to be random
 	}
@@ -462,15 +494,25 @@ public class GameManager
 	}
 	
 	/**
-	 * 
+	 * Checks whether a player can finish their turn
 	 * @param playerID
 	 * @return
 	 */
 	public boolean CanFinishTurn (int playerID)
 	{
+		//TODO check to make sure they've built their settlements during the first round
 		if (this.CurrentPlayersTurn() != playerID) return false;
-		if (this.CurrentState() == GameRound.PLAYING) return true;
+		if (this.CurrentState() == GameRound.PLAYING || this.CurrentState() == GameRound.FIRSTROUND || this.CurrentState() == GameRound.SECONDROUND) return true;
 		return false;
+	}
+	
+	/**
+	 * Checks whether the current player can finish their turn
+	 * @return true or false
+	 */
+	public boolean CanFinishTurn ()
+	{
+		return this.CanFinishTurn(gameState.activePlayerIndex);
 	}
 	
 	/**
@@ -637,13 +679,12 @@ public class GameManager
 	
 	/**
 	 * Ends the current player's turn
+	 * @throws ModelException 
 	 */
-	public void FinishTurn()
+	public void FinishTurn() throws ModelException
 	{
-		gameState.activePlayerIndex++;
-		if (gameState.activePlayerIndex > 3)
-			gameState.activePlayerIndex = 0;
-		gameState.state = GameRound.ROLLING;
+		if (!this.CanFinishTurn()) throw new ModelException();
+		gameState.nextTurn();
 	}
 	
 	/**

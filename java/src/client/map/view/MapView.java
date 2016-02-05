@@ -3,16 +3,17 @@ package client.map.view;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.*;
 
 import client.base.*;
 import client.data.*;
-import client.map.Transaction;
 import shared.definitions.*;
 import shared.model.IMapController;
 import shared.model.map.Coordinate;
 import shared.model.map.MapModel;
+import shared.model.map.Transaction;
 
 /**
  * Implementation for the map view
@@ -169,6 +170,19 @@ public class MapView extends PanelView implements IMapView
 		@Override
 		public Iterator<Transaction> GetVillages(int role) {
 			// TODO Auto-generated method stub
+			return null;
+		}
+		
+
+		/**
+		 * This gets the list of ports that a player is connected to
+		 * @see matthew: "Why does this implement a anyonmous interface"
+		 * @see johnathon: "I remember why but I don't remembery why"
+		 * @param color the player color
+		 * @return the list - possibly empty
+		 */
+		public List<PortType> playerPorts(CatanColor color){
+			//TODO for real
 			return null;
 		}
 	};
