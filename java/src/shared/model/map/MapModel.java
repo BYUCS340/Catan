@@ -374,10 +374,18 @@ public class MapModel {
 	 */
 	public void SetPip(int value, Hex hex)
 	{
-		//TODO Data validation needed to ensure a hex doesn't have multiple pips
 		if (values.containsKey(value))
 		{
-			values.get(value).add(hex);
+			//If a hex contains a value, we are simply changing the value.
+			if (values.get(value).contains(hex))
+			{
+				values.get(value).remove(hex);
+				SetPip(value, hex);
+			}
+			else
+			{
+				values.get(value).add(hex);
+			}
 		}
 		else
 		{
