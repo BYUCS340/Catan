@@ -719,8 +719,13 @@ public class MapComponent extends JComponent
 			Point2D vertexPoint = getVertexPoint(vertex.getPoint());
 			
 			double distance = vertexPoint.distance(point);
-			//TODO Figure out a way to handle if there are multiple distances that
-			//are the same.
+			
+			//This is in the (hopefully) off chance of getting the same
+			//distance for multiple vertices. The odds of getting dead
+			//center or midpoints is kind of slim though (I hope).
+			while (result.containsKey(distance))
+				distance += .0001;
+			
 			result.put(distance, vertex);
 		}
 		
