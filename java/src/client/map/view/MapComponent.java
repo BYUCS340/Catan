@@ -382,7 +382,7 @@ public class MapComponent extends JComponent
 		g2.setColor(this.getBackground());
 		g2.fillRect(0, 0, this.getWidth(), this.getHeight());		
 
-		if (model == null || !model.IsInitialized())
+		if (model == null)
 			return;
 
 		g2.translate(this.getWidth() / 2, this.getHeight() / 2);
@@ -444,8 +444,9 @@ public class MapComponent extends JComponent
 		if (dropHexLoc != null)
 			return;
 		
-		//TODO Originally, the robber was checked to be non-null. I'm assuming
-		//the robber exists when the model exists. Verify this assumption.
+		//In case the robber doesn't exist yet.
+		if (!model.IsRobberInitialized())
+			return;
 		
 		Point2D hexPoint = getHexCenterPoint(model.GetRobberPlacement());
 		BufferedImage robberImage = ImageHandler.getRobberImage();

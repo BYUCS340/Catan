@@ -24,8 +24,6 @@ public class MapModel {
 	
 	private static final int LONGEST_ROAD_INITIAL_VALUE = 2;
 	
-	private boolean initialized = false;
-	
 	private Map<Integer, List<Hex>> values;
 	
 	private HexHandler hexes;
@@ -52,11 +50,6 @@ public class MapModel {
 		ports = new PortHandler();
 		
 		longestRoadLength = LONGEST_ROAD_INITIAL_VALUE;
-	}
-	
-	public boolean IsInitialized()
-	{
-		return initialized;
 	}
 	
 	/**
@@ -291,6 +284,15 @@ public class MapModel {
 	public Iterator<Entry<Edge, Hex>> GetAllPorts()
 	{
 		return ports.GetAllPorts();
+	}
+	
+	/**
+	 * Returns if the robber is initialized.
+	 * @return True if yes, else false.
+	 */
+	public boolean IsRobberInitialized()
+	{
+		return robber != null;
 	}
 	
 	/**
