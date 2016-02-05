@@ -245,6 +245,19 @@ public class GameManager
 	}
 	
 	/**
+	 * Plays a dev card
+	 * @param playerID
+	 * @param type
+	 */
+	public void playDevCard(int playerID, DevCardType type)
+	{
+		if (type == DevCardType.SOLDIER)
+		{
+			this.playerCanMoveRobber = playerID;
+		}
+	}
+	
+	/**
 	 * Gets the trade ratio for a given resource for a player
 	 * @param playerID
 	 * @return never more than 4 or less than 2
@@ -416,21 +429,26 @@ public class GameManager
 		}
 		return true;
 	}
+	
+	/**
+	 * Can do method for whether a player can accept an article
+	 * @todo need to figure out what this does
+	 * @param playerID
+	 * @return
+	 */
+	public boolean canAcceptTrade(int playerID)
+	{
+		return false;
+	}
+	
+	/**
+	 * Can do method for determinign wheter a player can martitime trade
+	 * @param playerID
+	 * @return
+	 */
 	public boolean CanMaritimeTrade (int playerID)
 	{
-		if (!CanPlayerPlay(playerID))
-			return false;
-		try 
-		{
-			GetPlayer(playerID).playerBank.canBuildCity();
-		}
-		catch (ModelException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+		return !CanPlayerPlay(playerID);
 	}
 	
 	/**
@@ -464,6 +482,16 @@ public class GameManager
 			// if the player isn't found
 			return false;
 		}
+	}
+	
+	/**
+	 * Check if player can chat
+	 * @param playerID
+	 * @return always true?
+	 */
+	public boolean canChat(int playerID)
+	{
+		return true;
 	}
 	
 	/**

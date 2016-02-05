@@ -15,6 +15,7 @@ public class ClientGameManager extends GameManager
 	private ServerProxy proxy;
 	private int myPlayerID;
 	private int gameID;
+	private int refreshCount = 0;
 	/**
 	 * Creates the client game manager with the proxy
 	 * @param clientProxy
@@ -185,21 +186,35 @@ public class ClientGameManager extends GameManager
 		
 		//make sure I assign the colors correctly
 	}
-	
+
+	public int GetRefreshCount()
+	{
+		return refreshCount;
+	}
 	/**
 	 * What the poller pokes to refresh the game model from teh server
 	 * @see client.networking.Poller
 	 */
 	public void RefreshFromServer() throws ModelException
 	{
-		NetGameModel model;
+		this.refreshCount++;
 		try {
-			model = proxy.getGameModel();
+			if (proxy == null) 
+			{
+				System.err.println("Proxy was null");
+				return;
+			}
+			NetGameModel model = proxy.getGameModel();
+			if (model == null) {
+				System.err.println("Model was null from the server");
+				return;
+			}
+			this.reloadGame(model);
 		} catch (ServerProxyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new ModelException();
 		}
-		this.reloadGame(model);
+		
 	}
 }
