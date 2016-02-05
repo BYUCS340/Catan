@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.Bank;
@@ -130,5 +131,34 @@ public class TestBank {
 		catch (ModelException e) {
 			fail("We should be able to build a settlement");
 		}
+	}
+	
+	@Test
+	public void testBuildDevCard(){
+		
+		//Buy dev card (one wheat, one sheep, one ore)
+		try{
+			bank.giveResource(ResourceType.ORE);
+			assertFalse(bank.canBuyDevCard());
+			bank.giveResource(ResourceType.SHEEP);
+			assertFalse(bank.canBuyDevCard());
+			bank.giveResource(ResourceType.WHEAT);
+			assertTrue(bank.canBuyDevCard());
+			bank.buyDevCard();
+			assertFalse(bank.canBuyDevCard());
+		}
+		catch (ModelException e) {
+			fail("We should be able to build a settlement");
+		}
+	}
+	
+	@Test
+	public void testGetDevCard(){
+		assertEquals(0,bank.getDevCardCount());
+		assertEquals(0,bank.getArmyCount());
+		bank.giveDevCard(DevCardType.SOLDIER);
+		assertEquals(1,bank.getDevCardCount());
+		assertEquals(1,bank.getArmyCount());
+		
 	}
 }
