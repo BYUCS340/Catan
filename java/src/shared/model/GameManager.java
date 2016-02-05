@@ -170,9 +170,8 @@ public class GameManager
 		}
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
 		
-		
 		//Call map to update the get the transacations
-		
+		//map.
 		return diceRoll; // chosen by fair dice roll
 						// guaranteed to be random
 	}
@@ -297,10 +296,18 @@ public class GameManager
 	public boolean CanPlayerPlay(int playerID)
 	{
 		//If we aren't in the building phase and this player isn't their turn
-		if (CurrentState() != GameRound.PLAYING || this.gameState.activePlayerIndex != playerID)
+		if (this.gameState.activePlayerIndex != playerID)
+		{
 			return false;
+		}
+		else if (this.gameState.state != GameRound.FIRSTROUND && this.gameState.state != GameRound.SECONDROUND && this.gameState.state != GameRound.PLAYING)
+		{
+			return false;
+		}
 		else
-			return false;
+		{
+			return true;
+		}
 	}
 	/**
 	 * See if a player can discard cards
