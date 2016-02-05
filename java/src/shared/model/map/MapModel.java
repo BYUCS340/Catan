@@ -265,7 +265,7 @@ public class MapModel {
 	 * @param hex The hex being requested.
 	 * @return A list of the surrounding vertices.
 	 */
-	public List<Vertex> GetOccupiedVerticies(Hex hex)
+	public Iterator<Vertex> GetOccupiedVerticies(Hex hex)
 	{
 		Coordinate point = hex.getPoint();
 		
@@ -278,7 +278,7 @@ public class MapModel {
 		HandleAddingOccupiedVertex(point.GetNorthEast(), verticies);
 		HandleAddingOccupiedVertex(point.GetSouthEast(), verticies);
 		
-		return java.util.Collections.unmodifiableList(verticies);
+		return java.util.Collections.unmodifiableList(verticies).iterator();
 	}
 	
 	/**
@@ -302,10 +302,14 @@ public class MapModel {
 	/**
 	 * Gets the hex the robber is placed on.
 	 * @return The robber's hex.
+	 * @throws MapException Thrown if the robber isn't initialized
 	 */
-	public Hex GetRobberPlacement()
+	public Hex GetRobberPlacement() throws MapException
 	{
-		return robber.GetHex();
+		if (!IsRobberInitialized())
+			throw new MapException("Robber not initialized");
+		else
+			return robber.GetHex();
 	}
 	
 	public boolean LongestRoadExists()

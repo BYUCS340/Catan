@@ -310,7 +310,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		//send the request to the server
-		String urlPath = "/games/addAI";
+		String urlPath = "/game/addAI";
 		String postData;
 		try
 		{
@@ -331,7 +331,7 @@ public class RealServerProxy implements ServerProxy
 	public List<AIType> listAI() throws ServerProxyException
 	{
 		//get data from server
-		String urlPath = "/games/listAI";
+		String urlPath = "/game/listAI";
 		String result = doJSONGet(urlPath);
 		
 		//deserialize

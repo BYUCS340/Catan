@@ -53,6 +53,9 @@ public class JSONDeserializer implements Deserializer
 		List<AIType> aiList = new ArrayList<AIType>();
 		for(int i = 0; i < obj.length(); i++)
 		{
+			if(obj.isNull(i) || obj.getString(i).length() == 0){
+				continue;
+			}
 			AIType tempAI = AIType.fromString(obj.getString(i));
 			aiList.add(tempAI);
 		}
