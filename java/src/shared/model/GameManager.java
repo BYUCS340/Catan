@@ -169,6 +169,8 @@ public class GameManager
 			this.playerCanMoveRobber = this.CurrentPlayersTurn();
 		}
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
+		
+		
 		//Call map to update the get the transacations
 		
 		return diceRoll; // chosen by fair dice roll
