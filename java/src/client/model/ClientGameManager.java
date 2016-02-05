@@ -54,8 +54,9 @@ public class ClientGameManager extends GameManager
 	public boolean joinGame(int gameID, CatanColor color)
 	{
 		try {
-			NetGame game = proxy.joinGame(gameID, color);
-			this.LoadGame(game);
+			proxy.joinGame(gameID, color);
+			//If we can't joing a game then an exception will be thrown
+			this.RefreshFromServer();
 		} catch (ServerProxyException | ModelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
