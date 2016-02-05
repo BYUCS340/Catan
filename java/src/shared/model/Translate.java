@@ -3,18 +3,15 @@ package shared.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import client.map.*;
 import shared.definitions.*;
 import shared.model.chat.*;
-import shared.model.map.Coordinate;
-import shared.model.map.MapException;
-import shared.model.map.MapModel;
-import shared.model.map.objects.Hex;
+import shared.model.map.*;
+import shared.model.map.objects.*;
 import shared.networking.transport.*;
 
 /**
  * The Translate class changes game objects into net game objects, and vice versa
- * @author garrettegan
+ * @author garrettegan, Jonathan Sadler (Map)
  *
  */
 public class Translate
@@ -30,31 +27,32 @@ public class Translate
 		gameModel.waterCooler = fromNetChat(netGameModel.getNetChat());  //FINISHED? -- but only posts as player 0
 		gameModel.log = fromNetLog(netGameModel.getNetGameLog());  //FINISHED? -- but only logs as player 0
 		gameModel.version = netGameModel.getVersion();  //FINISHED
-		gameModel.mapModel = fromNetMap(netGameModel.getNetMap());  //UNSTARTED -- this is tricky cause I don't know our Map very well
+		gameModel.mapModel = fromNetMap(netGameModel.getNetMap(), netGameModel.getNetPlayers());  //FINISHED -- I think ...
 
 		return gameModel;
 	}
 	
-	public MapModel fromNetMap(NetMap netMap)
+	public MapModel fromNetMap(NetMap netMap, List<NetPlayer> players)
 	{
 		MapModel model = new MapModel();
 		
-		SetHexes(model, netMap);
-		SetSettlements(model, netMap);
-		SetCities(model, netMap);
+		SetHexes(model, netMap.getNetHexes());
+		SetSettlements(model, netMap.getNetSettlements(), players);
+		SetCities(model, netMap.getNetCities(), players);
+		SetRoads(model, netMap.getNetRoads(), players);
+		SetPorts(model, netMap.getNetPorts());
+		SetRobber(model, netMap.getRobberLocation());
 		
 		return model;
 	}
 	
-	private void SetHexes(MapModel model, NetMap netMap)
+	private void SetHexes(MapModel model, List<NetHex> hexes)
 	{
 		if (model.IsInitialized())
 			return;
-		
-		List<NetHex> hexes = netMap.getNetHexes();
+	
 		for (NetHex hex : hexes)
 		{
-			//TODO How do we know about dessert and water?
 			ResourceType resourceType = hex.getResourceType();
 			HexType hexType = HexType.GetFromResource(resourceType);
 			
@@ -80,40 +78,113 @@ public class Translate
 		}
 	}
 	
-	private void SetSettlements(MapModel model, NetMap netMap)
+	private void SetSettlements(MapModel model, List<NetSettlement> settlements, List<NetPlayer> players)
 	{
-		List<NetSettlement> settlements = netMap.getNetSettlements();
-		
 		for (NetSettlement settlement : settlements)
 		{
-			
-			NetEdgeLocation location = settlement.getNetEdgeLocation();
+			NetDirectionalLocation location = settlement.getNetDirectionalLocation();
 			int x = location.getX();
 			int y = location.getY();
 			
-			
 			Coordinate hex = GetHexCoordinate(x, y);
-			Coordinate vertex = GetVertexCoordinate(hex);
+			Coordinate vertex = GetVertexCoordinate(hex, location.getDirection());
 			
-			//model.SetSettlement(vertex, color);
+			int owner = settlement.getOwner();
+			CatanColor color = GetColorFromOwnerInt(owner, players);
+			
+			try
+			{
+				model.SetSettlement(vertex, color);
+			}
+			catch (MapException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 	
-	private void SetCities(MapModel model, NetMap netMap)
+	private void SetCities(MapModel model, List<NetCity> cities, List<NetPlayer> players)
 	{
-		List<NetCity> cities = netMap.getNetCities();
-		
 		for (NetCity city : cities)
 		{
-			//Set up like settlement
+			NetDirectionalLocation location = city.getNetDirectionalLocation();
+			int x = location.getX();
+			int y = location.getY();
+			
+			Coordinate hex = GetHexCoordinate(x, y);
+			Coordinate vertex = GetVertexCoordinate(hex, location.getDirection());
+			
+			int owner = city.getOwner();
+			CatanColor color = GetColorFromOwnerInt(owner, players);
+			
+			try
+			{
+				model.SetCity(vertex, color);
+			}
+			catch (MapException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 	
-	private void SetRobber(MapModel model, NetMap netMap)
+	private void SetRoads(MapModel model, List<NetRoad> roads, List<NetPlayer> players)
 	{
-		NetHexLocation hexLocation = netMap.getRobberLocation();
-		int x = hexLocation.getX();
-		int y = hexLocation.getY();
+		for (NetRoad road : roads)
+		{
+			NetDirectionalLocation location = road.getNetEdgeLocation();
+			int x = location.getX();
+			int y = location.getY();
+			
+			Coordinate hex = GetHexCoordinate(x, y);
+			List<Coordinate> edgeCoordinates = GetEdgeCoordinates(hex, location.getDirection());
+			
+			int owner = road.getOwnerID();
+			CatanColor color = GetColorFromOwnerInt(owner, players);
+			
+			try
+			{
+				model.SetRoad(edgeCoordinates.get(0), edgeCoordinates.get(1), color);
+			}
+			catch (MapException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void SetPorts(MapModel model, List<NetPort> ports)
+	{
+		for (NetPort port : ports)
+		{
+			try
+			{
+				NetHexLocation hexLocation = port.getNetHexLocation();
+				int x = hexLocation.getX();
+				int y = hexLocation.getY();
+				
+				Coordinate hexCoordinate = GetHexCoordinate(x, y);
+				Hex hex = model.GetHex(hexCoordinate);
+				
+				Direction edgeDirection = port.getDirection();
+				List<Coordinate> edgeCoordinates = GetEdgeCoordinates(hexCoordinate, edgeDirection);
+				Edge edge = model.GetEdge(edgeCoordinates.get(0), edgeCoordinates.get(1));
+				
+				PortType type = GetPortType(port.getRatio(), port.getResource());
+				
+				model.SetPort(type, edge, hex);
+			}
+			catch (MapException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void SetRobber(MapModel model, NetHexLocation robberLocation)
+	{
+		int x = robberLocation.getX();
+		int y = robberLocation.getY();
 		
 		try
 		{
@@ -132,20 +203,74 @@ public class Translate
 		return new Coordinate (x + 3, -2 * y - x);
 	}
 	
-	private Coordinate GetVertexCoordinate(Coordinate hex) //Needs vertex direction
+	private CatanColor GetColorFromOwnerInt(int owner, List<NetPlayer> players)
 	{
-		//TODO Finish with correct stuff
+		for (NetPlayer player : players)
+		{
+			if (player.getPlayerIndex() == owner)
+				return player.getColor();
+		}
+		
 		return null;
+	}
+	
+	private Coordinate GetVertexCoordinate(Coordinate hex, Direction direction) //Needs vertex direction
+	{
+		switch (direction)
+		{
+			case W: return hex;
+			case NW: return hex.GetNorth();
+			case NE: return hex.GetNorthEast();
+			case E: return hex.GetEast();
+			case SE: return hex.GetSouthEast();
+			case SW: return hex.GetSouth();
+			default: return null;
+		}
+	}
+	
+	private List<Coordinate> GetEdgeCoordinates(Coordinate hex, Direction direction)
+	{
+		List<Coordinate> coordinates = new ArrayList<Coordinate>(2);
 		
+		switch (direction)
+		{
+		case N:
+			coordinates.add(hex.GetNorth());
+			coordinates.add(hex.GetNorthEast());
+			break;
+		case NE:
+			coordinates.add(hex.GetNorthEast());
+			coordinates.add(hex.GetEast());
+			break;
+		case SE:
+			coordinates.add(hex.GetEast());
+			coordinates.add(hex.GetSouthEast());
+			break;
+		case S:
+			coordinates.add(hex.GetSouthEast());
+			coordinates.add(hex.GetSouth());
+			break;
+		case SW:
+			coordinates.add(hex.GetSouth());
+			coordinates.add(hex);
+			break;
+		case NW:
+			coordinates.add(hex);
+			coordinates.add(hex.GetNorth());
+			break;
+		default:
+			break;
+		}
 		
-		/*
-		 * if west      - return hex;
-		 * if northwest - return hex.GetNorth();
-		 * if northeast - return hex.GetNorthEast();
-		 * if east      - return hex.GetEast();
-		 * if southeast - return hex.GetSouthEast();
-		 * if southwest - return hex.GetWest();
-		 */
+		return null;
+	}
+	
+	private PortType GetPortType(int ratio, ResourceType type)
+	{
+		if (ratio == 3)
+			return PortType.THREE;
+		else
+			return PortType.GetFromResource(type);
 	}
 	
 	public GameState fromNetTurnTracker(NetTurnTracker netTurnTracker)
