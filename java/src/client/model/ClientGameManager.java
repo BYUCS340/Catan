@@ -197,7 +197,7 @@ public class ClientGameManager extends GameManager
 	 */
 	public void RefreshFromServer() throws ModelException
 	{
-		this.refreshCount++;
+		
 		try {
 			if (proxy == null) 
 			{
@@ -212,9 +212,11 @@ public class ClientGameManager extends GameManager
 			this.reloadGame(model);
 		} catch (ServerProxyException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new ModelException();
+			System.err.println("Wasn't able to update");
+			//e.printStackTrace();
+			//throw new ModelException();
 		}
+		this.refreshCount++;
 		
 	}
 }

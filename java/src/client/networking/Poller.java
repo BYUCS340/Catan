@@ -61,7 +61,7 @@ public class Poller implements ActionListener
 			ClientGame.getGame().RefreshFromServer();
 		} catch (ModelException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Unable to poll server");
+			System.err.println("Unable to poll server");
 			e.printStackTrace();
 		}
 	}

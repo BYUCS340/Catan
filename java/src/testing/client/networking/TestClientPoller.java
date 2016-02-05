@@ -14,7 +14,7 @@ public class TestClientPoller {
 	Poller poller;
 	@Before
 	public void setUp() throws Exception {
-		ClientGame.startGameWithProxy(null);
+		ClientGame.startGameWithProxy(new MockServerProxy());
 		poller = new Poller(1);
 	}
 
@@ -28,11 +28,12 @@ public class TestClientPoller {
 		poller.beginPolling();
 		//Not sure how to check if poller began polling
 		int i = 1;
+		Thread.sleep(5);
 		while(ClientGame.getGame().GetRefreshCount() == 0 && i != 0) {
 			i++;
-			System.out.print("-");
+			Thread.sleep(1);
 		}
-		System.out.println("Polled the server");
+		//System.out.println("Polled the server");
 		poller.stopPolling();
 		if (i == 0) fail("Timeout on poll");
 		
