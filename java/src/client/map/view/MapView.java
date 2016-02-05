@@ -2,10 +2,13 @@ package client.map.view;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Iterator;
+
 import javax.swing.*;
 
 import client.base.*;
 import client.data.*;
+import client.map.Transaction;
 import shared.definitions.*;
 import shared.model.IMapController;
 import shared.model.map.Coordinate;
@@ -161,6 +164,12 @@ public class MapView extends PanelView implements IMapView
 		@Override
 		public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {
 			assert false;
+		}
+
+		@Override
+		public Iterator<Transaction> GetVillages(int role) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	};
 	
