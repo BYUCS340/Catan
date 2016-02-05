@@ -84,6 +84,9 @@ public class JSONDeserializer implements Deserializer
 		List<NetPlayer> netPlayers = new ArrayList<NetPlayer>();
 		for(int i = 0; i < playerArr.length(); i++)
 		{
+			if(playerArr.isNull(i) || playerArr.getJSONObject(i).length() == 0){
+				continue;
+			}
 			NetPlayer tempNetPlayer = parsePartialNetPlayer(playerArr.getJSONObject(i).toString());
 			netPlayers.add(tempNetPlayer);
 		}
@@ -126,7 +129,7 @@ public class JSONDeserializer implements Deserializer
 		//get data
 		CatanColor color = CatanColor.fromString(obj.getString("color"));
 		String name = obj.getString("name");
-		int id = obj.getInt("id");
+		int id = obj.getInt("playerID");
 		int numCities = obj.getInt("cities");
 		boolean discarded = obj.getBoolean("discarded");
 		int numMonuments = obj.getInt("monuments");
@@ -181,16 +184,20 @@ public class JSONDeserializer implements Deserializer
 		//extract player array from JSON
 		JSONArray playerArr = obj.getJSONArray("players");
 		List<NetPlayer> playerList = new ArrayList<NetPlayer>();
-		for(int i = 0; i < playerList.size(); i++)
+		for(int i = 0; i < playerArr.length(); i++)
 		{
+			if(playerArr.isNull(i) || playerArr.getJSONObject(i).length() == 0)
+			{
+				continue;
+			}
 			NetPlayer tempPlayer = parseNetPlayer(playerArr.getJSONObject(i).toString());
 			playerList.add(tempPlayer);
 		}
 		
 		//extract objects from JSON
-		result.setNetBank((NetBank)parseNetResourceList(obj.getJSONObject("bank").toString()));
+		result.setNetBank(parseNetBank(obj.getJSONObject("bank").toString()));
 		result.setNetGameLog(parseNetLog(obj.getJSONObject("log").toString()));
-		result.setNetChat((NetChat)parseNetLog(obj.getJSONObject("chat").toString()));
+		result.setNetChat(parseNetChat(obj.getJSONObject("chat").toString()));
 		result.setNetTurnTracker(parseNetTurnTracker(obj.getJSONObject("turnTracker").toString()));
 		result.setNetMap(parseNetMap(obj.getJSONObject("map").toString()));
 		result.setNetDeck(parseNetDevCardList(obj.getJSONObject("deck").toString()));
@@ -404,10 +411,16 @@ public class JSONDeserializer implements Deserializer
 		NetPort result = new NetPort();
 		
 		//extract simple data
-		ResourceType resource = ResourceType.fromString(obj.getString("resource"));
+		ResourceType resource = null;
+		try{
+			resource = ResourceType.fromString(obj.getString("resource"));
+		}
+		catch(JSONException e){
+			//do nothing since resource is optional
+		}
 		Direction direction = Direction.fromString(obj.getString("direction"));
 		int ratio = obj.getInt("ratio");
-		NetHexLocation location = parseNetHexLocation(obj.getString("location"));
+		NetHexLocation location = parseNetHexLocation(obj.getJSONObject("location").toString());
 		
 		//put the data into the new object
 		result.setResource(resource);
@@ -425,8 +438,23 @@ public class JSONDeserializer implements Deserializer
 		JSONObject obj = new JSONObject(rawData);
 		
 		//get data
-		int number = obj.getInt("number");
-		ResourceType resource = ResourceType.fromString(obj.getString("resource"));
+		int number = -1;
+		ResourceType resource = null;
+		try{
+			number = obj.getInt("number");
+			
+		}
+		catch(JSONException e){
+			//keep going, because these are optional
+		}
+		
+		try{
+			resource = ResourceType.fromString(obj.getString("resource"));
+		}
+		catch(JSONException e){
+			//do nothing because the resource is optional
+		}
+		
 		NetHexLocation location = parseNetHexLocation(obj.getJSONObject("location").toString());
 		
 		//put data in new object
@@ -434,7 +462,7 @@ public class JSONDeserializer implements Deserializer
 		result.setNetHexLocation(location);
 		result.setNumberChit(number);
 		
-		return null;
+		return result;
 	}
 	
 	public NetHexLocation parseNetHexLocation(String rawData) throws JSONException
@@ -463,8 +491,22 @@ public class JSONDeserializer implements Deserializer
 		//get data from JSON
 		int currentTurn = obj.getInt("currentTurn");
 		String status = obj.getString("status");
-		int longestRoad = obj.getInt("longestRoad");
-		int largestArmy = obj.getInt("largestArmy");
+		int longestRoad = -1;
+		int largestArmy = -1;
+		
+		try{
+			longestRoad = obj.getInt("longestRoad");
+		}
+		catch(JSONException e){
+			//do nothing since longestRoad is optional
+		}
+		
+		try{
+			largestArmy = obj.getInt("largestArmy");
+		}
+		catch(JSONException e){
+			//do nothing since longestRoad is optional
+		}
 		
 		//put data into new object
 		result.setCurrentTurn(currentTurn);
@@ -500,10 +542,54 @@ public class JSONDeserializer implements Deserializer
 		return result;
 	}
 	
+	public NetBank parseNetBank(String rawData) throws JSONException
+	{
+		//set up needed objects
+		NetBank result = new NetBank();
+		JSONObject obj = new JSONObject(rawData);
+		
+		//get data from object
+		int brick = obj.getInt("brick");
+		int ore = obj.getInt("ore");
+		int sheep = obj.getInt("sheep");
+		int wheat = obj.getInt("wheat");
+		int wood = obj.getInt("wood");
+		
+		//add data to new object
+		result.setNumBrick(brick);
+		result.setNumOre(ore);
+		result.setNumSheep(sheep);
+		result.setNumWheat(wheat);
+		result.setNumWood(wood);
+		
+		return result;
+	}
+	
 	public NetLog parseNetLog(String rawData) throws JSONException
 	{
 		//set up needed objects
 		NetLog result = new NetLog();
+		JSONObject obj = new JSONObject(rawData);
+		
+		//extract data from JSON
+		JSONArray logLines = obj.getJSONArray("lines");
+		List<NetLine> lines = new ArrayList<NetLine>();
+		
+		for(int i = 0; i < logLines.length(); i++){
+			NetLine tempLine = parseNetLine(logLines.get(i).toString());
+			lines.add(tempLine);
+		}
+		
+		//add data to new object
+		result.setLines(lines);
+		
+		return result;
+	}
+	
+	public NetChat parseNetChat(String rawData) throws JSONException
+	{
+		//set up needed objects
+		NetChat result = new NetChat();
 		JSONObject obj = new JSONObject(rawData);
 		
 		//extract data from JSON

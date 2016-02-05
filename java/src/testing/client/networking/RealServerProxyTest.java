@@ -12,6 +12,9 @@ import org.junit.Test;
 
 import client.networking.RealServerProxy;
 import shared.definitions.CatanColor;
+import shared.locations.EdgeDirection;
+import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
 import shared.networking.UserCookie;
 import shared.networking.transport.NetGame;
 
@@ -110,6 +113,42 @@ public class RealServerProxyTest
 		//TODO: Make this test more complete and not reliant on the default instance
 		//of the server
 		
+	}
+	
+	@Test
+	public void testBuildRoad() throws Exception
+	{
+		String username = "buildRoadUser";
+		String password = "buildRoadPassword";
+		String game = "buildRoadGame";
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+		RealServerProxy testProxy = new RealServerProxy();
+		testProxy.registerUser(username, password);
+		testProxy.loginUser(username, password);
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		testProxy.getGameModel();
+		
+		//REALLY TEST THE BUILDROAD
+		//1. Set up needed road structure
+		HexLocation hexLoc = new HexLocation(0,0);
+		EdgeLocation edgeLoc = new EdgeLocation(hexLoc, EdgeDirection.North);
+		testProxy.buildRoad(edgeLoc, true);
+		
+		//if there are no errors, call it good.
 	}
 
 }

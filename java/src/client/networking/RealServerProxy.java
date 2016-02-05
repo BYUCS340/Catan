@@ -208,7 +208,7 @@ public class RealServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#joinGame(java.lang.String)
 	 */
 	@Override
-	public NetGame joinGame(int id, CatanColor color) throws ServerProxyException
+	public void joinGame(int id, CatanColor color) throws ServerProxyException
 	{
 		if(userCookie == null)
 		{
@@ -229,33 +229,16 @@ public class RealServerProxy implements ServerProxy
 		String result = doJSONPost(urlPath, postData, false, true);
 		
 		//parse the result into a NetGame
-		NetGame joinedGame;
-		try
-		{
-			joinedGame = deserializer.parseNetGame(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
-		
+//		NetGame joinedGame;
+//		try
+//		{
+//			joinedGame = deserializer.parseNetGame(result);
+//		} catch (Exception e)
+//		{
+//			throw new ServerProxyException(e.getMessage(), e.getCause());
+//		}
+//		
 		//get the userIndex
-		String name = userCookie.getUsername();
-		List<NetPlayer> playerList = joinedGame.getNetPlayers();
-		
-		for(NetPlayer p : playerList)
-		{
-			if(p.getName().equals(name))
-			{
-				userIndex = p.getPlayerIndex();
-			}
-		}
-		
-		//the user's name should have been found and the index should have been set.
-		//if this is not true, then there is something very wrong
-		assertTrue(userIndex >= 0 && userIndex <= 3);
-		
-		
-		return joinedGame;
 	}
 
 	/* (non-Javadoc)
@@ -288,6 +271,24 @@ public class RealServerProxy implements ServerProxy
 		{
 			throw new ServerProxyException(e.getMessage(), e.getCause());
 		}	
+		
+		//get user number
+		if(userIndex < 0);
+		String name = userCookie.getUsername();
+		List<NetPlayer> playerList = netGameModel.getNetPlayers();
+		for(NetPlayer p : playerList)
+		{
+			if(p.getName().equals(name))
+			{
+				userIndex = p.getPlayerIndex();
+			}
+		}
+		
+		//the user's name should have been found and the index should have been set.
+		//if this is not true, then there is something very wrong
+		assertTrue(userIndex >= 0 && userIndex <= 3);
+		
+		
 		return netGameModel;
 	}
 
