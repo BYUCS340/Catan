@@ -2,7 +2,7 @@ package shared.networking.transport;
 
 import shared.definitions.Direction;
 
-public class NetEdgeLocation
+public class NetDirectionalLocation
 {
 	int x;
 	int y;
@@ -11,7 +11,7 @@ public class NetEdgeLocation
 	/**
 	 * Default constructor, sets x and y to 0 and direction to null
 	 */
-	public NetEdgeLocation()
+	public NetDirectionalLocation()
 	{
 		x = 0;
 		y = 0;

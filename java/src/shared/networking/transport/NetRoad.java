@@ -3,7 +3,7 @@ package shared.networking.transport;
 public class NetRoad
 {
 	int ownerID;
-	NetEdgeLocation netEdgeLocation;
+	NetDirectionalLocation netEdgeLocation;
 	
 	/**
 	 * Default constructor, sets ownerID to -1 and
@@ -12,7 +12,7 @@ public class NetRoad
 	public NetRoad()
 	{
 		ownerID = -1;
-		netEdgeLocation = new NetEdgeLocation();
+		netEdgeLocation = new NetDirectionalLocation();
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class NetRoad
 	/**
 	 * @return the netEdgeLocation
 	 */
-	public NetEdgeLocation getNetEdgeLocation()
+	public NetDirectionalLocation getNetEdgeLocation()
 	{
 		return netEdgeLocation;
 	}
@@ -42,7 +42,7 @@ public class NetRoad
 	/**
 	 * @param netEdgeLocation the netEdgeLocation to set
 	 */
-	public void setNetEdgeLocation(NetEdgeLocation netEdgeLocation)
+	public void setNetEdgeLocation(NetDirectionalLocation netEdgeLocation)
 	{
 		this.netEdgeLocation = netEdgeLocation;
 	}

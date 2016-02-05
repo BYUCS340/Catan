@@ -19,7 +19,7 @@ import shared.networking.transport.NetBank;
 import shared.networking.transport.NetChat;
 import shared.networking.transport.NetCity;
 import shared.networking.transport.NetDevCardList;
-import shared.networking.transport.NetEdgeLocation;
+import shared.networking.transport.NetDirectionalLocation;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 import shared.networking.transport.NetHex;
@@ -342,7 +342,7 @@ public class JSONDeserializer implements Deserializer
 		
 		//get data from JSON
 		int owner = obj.getInt("owner");
-		NetEdgeLocation location = parseNetEdgeLocation(obj.getJSONObject("location").toString());
+		NetDirectionalLocation location = parseNetEdgeLocation(obj.getJSONObject("location").toString());
 		
 		//put data into new object
 		result.setNetEdgeLocation(location);
@@ -359,7 +359,7 @@ public class JSONDeserializer implements Deserializer
 		
 		//get data from JSON
 		int owner = obj.getInt("owner");
-		NetEdgeLocation location = parseNetEdgeLocation(obj.getJSONObject("location").toString());
+		NetDirectionalLocation location = parseNetEdgeLocation(obj.getJSONObject("location").toString());
 		
 		//put data into new object
 		result.setNetEdgeLocation(location);
@@ -376,7 +376,7 @@ public class JSONDeserializer implements Deserializer
 		
 		//get data from road
 		int owner = obj.getInt("owner");
-		NetEdgeLocation location = parseNetEdgeLocation(obj.getJSONObject("location").toString());
+		NetDirectionalLocation location = parseNetEdgeLocation(obj.getJSONObject("location").toString());
 		
 		//put data into new object
 		result.setNetEdgeLocation(location);
@@ -385,11 +385,11 @@ public class JSONDeserializer implements Deserializer
 		return result;
 	}
 	
-	public NetEdgeLocation parseNetEdgeLocation(String rawData) throws JSONException
+	public NetDirectionalLocation parseNetEdgeLocation(String rawData) throws JSONException
 	{
 		//set up needed Objects
 		JSONObject obj = new JSONObject(rawData);
-		NetEdgeLocation result = new NetEdgeLocation();
+		NetDirectionalLocation result = new NetDirectionalLocation();
 		
 		//get data from json object
 		int x = obj.getInt("x");
