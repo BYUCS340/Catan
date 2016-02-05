@@ -41,11 +41,71 @@ public class TestBank {
 		{
 			bank.resetToPlayerDefaults();
 			bank.giveResource(ResourceType.BRICK);
+			bank.giveResource(ResourceType.WOOD);
+			assertTrue(bank.canBuildRoad());
+			bank.buildRoad();
+			assertFalse(bank.canBuildRoad());
+			
+			
+			
 		} 
 		catch (ModelException e) 
 		{
+			fail("We shouldn't have an exception");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		
+		
+		//Test settlement building exceotion
+		try {
+			bank.buildSettlement();
+			fail("Can't build a settlement");
+		} catch (ModelException e) {
+			//We need to get here
+		}
+		
+		//Test buy dev card building exceotion
+		try {
+			bank.buyDevCard();
+			fail("Can't buy a dev card");
+		} catch (ModelException e) {
+			//We need to get here
+		}
+		
+		//Test road building exceotion
+		try {
+			bank.buildRoad();
+			fail("Can't build a road");
+		} catch (ModelException e) {
+			//We need to get here
+		}
+		
+		//Test city building exceotion
+		try {
+			bank.buildCity();
+			fail("Can't build a city");
+		} catch (ModelException e) {
+			//We need to get here
+		}
+		
+		
+		
+		//build a settlement (one wood, one brick, one sheep, one wheat, one settlement)
+		try{
+			bank.giveResource(ResourceType.WOOD);
+			assertFalse(bank.canBuildSettlement());
+			bank.giveResource(ResourceType.BRICK);
+			assertFalse(bank.canBuildSettlement());
+			bank.giveResource(ResourceType.SHEEP);
+			assertFalse(bank.canBuildSettlement());
+			bank.giveResource(ResourceType.WHEAT);
+			assertTrue(bank.canBuildSettlement());
+			bank.buildSettlement();
+			assertFalse(bank.canBuildSettlement());
+		}
+		catch (ModelException e) {
+			fail("We should be able to build a settlement");
 		}
 	}
 }
