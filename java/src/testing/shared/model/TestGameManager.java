@@ -21,10 +21,26 @@ public class TestGameManager {
 	}
 
 	@Test
-	public void test() {
-		//fail("Not yet implemented");
+	public void testPlayerTurns(){
+		GameManager gm = new GameManager();
+		try {
+			int index = gm.AddPlayer("Matt1", CatanColor.BLUE, false);
+			assertEquals(index,0);
+			index = gm.AddPlayer("Matt2", CatanColor.RED, false);
+			assertEquals(index,1);
+			index = gm.AddPlayer("Matt3", CatanColor.GREEN, false);
+			assertEquals(index,2);
+			index = gm.AddPlayer("Matt4", CatanColor.YELLOW, false);
+			assertEquals(index,3);
+			
+		} catch (ModelException e) {
+			// TODO Auto-generated catch block
+			fail("Player wasn't able to add");
+			e.printStackTrace();
+		}
+		
+		
 	}
-	
 	@Test
 	public void testPlayerAdding()
 	{
@@ -34,7 +50,22 @@ public class TestGameManager {
 			assertEquals(index,0);
 			index = gm.AddPlayer("Matt2", CatanColor.RED, false);
 			assertEquals(index,1);
-			index = gm.AddPlayer("Matt3", CatanColor.GREEN, false);
+		} catch (ModelException e) {
+			// TODO Auto-generated catch block
+			fail("Player wasn't able to add");
+			e.printStackTrace();
+		}
+		
+		//make sure we can't add the same color twice
+		try{
+			gm.AddPlayer("Matt1", CatanColor.BLUE, false);
+			fail("We can't add the same color twice");
+		} catch (ModelException e) {
+			//Good good
+		}
+		
+		try{
+			int index = gm.AddPlayer("Matt3", CatanColor.GREEN, false);
 			assertEquals(index,2);
 			index = gm.AddPlayer("Matt4", CatanColor.YELLOW, false);
 			assertEquals(index,3);
