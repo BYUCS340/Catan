@@ -44,6 +44,15 @@ public class TestGameManager {
 			fail("Player wasn't able to add");
 			e.printStackTrace();
 		}
+		
+		try{
+			int index = gm.AddPlayer("Matt5", CatanColor.WHITE, false);
+			fail("Can't add more players");
+		}
+		catch (ModelException e) {
+			
+			
+		}
 	}
 
 }

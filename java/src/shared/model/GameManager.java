@@ -22,15 +22,16 @@ import shared.networking.transport.NetGameModel;
  */
 public class GameManager
 {
-	public  MapController mapController; //this is exposed for easier access
-	
+	//public  MapController mapController; 
+	public int gameID;
+	public String gameTitle;
 	protected GameState gameState;
 	protected Bank gameBank;
 	protected List<Player> players;
 	protected VictoryPointManager victoryPointManager;
 	protected ChatBox waterCooler;
 	protected GameActionLog log;
-	public IMapController map;
+	public IMapController map; //this is exposed for easier access
 	protected int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;
@@ -43,6 +44,26 @@ public class GameManager
 	public GameManager()
 	{
 		//version is by default -1 before it is connected to a server
+		version = -1;
+		waterCooler = new ChatBox();
+		log = new GameActionLog();
+		players = new ArrayList<>();
+		gameBank = new Bank();
+		gameState = new GameState();
+		//mapController = new MapController();
+		victoryPointManager = new VictoryPointManager();
+		playerColors = new int[10];
+		//fill the array with -1 by default
+		Arrays.fill(playerColors,-1);
+		playerCanMoveRobber = -1;
+	}
+	
+	/**
+	 * Resets a game to default state
+	 */
+	public void reset()
+	{
+		Arrays.fill(playerColors,-1);
 		version = -1;
 		waterCooler = new ChatBox();
 		log = new GameActionLog();
@@ -81,6 +102,23 @@ public class GameManager
 		
 		playerColors[color.ordinal()] = newIndex;
 		return newIndex;
+	}
+	
+	/**
+	 * Sets the players 
+	 * @param players
+	 */
+	public void SetPlayers(List<Player> players)
+	{
+		Arrays.fill(playerColors,-1);
+		this.players.clear();
+		for (int i=0; i< players.size(); i++)
+		{
+			Player p = players.get(i);
+			this.players.set(i, p);
+			playerColors[p.color.ordinal()] = p.playerIndex();
+		}
+		
 	}
 	
 	/**
@@ -204,6 +242,19 @@ public class GameManager
 		playerBank.giveDevCard(devcard);
 		victoryPointManager.playerGotDevCard(playerID, devcard);
 		return devcard;
+	}
+	
+	/**
+	 * Plays a dev card
+	 * @param playerID
+	 * @param type
+	 */
+	public void playDevCard(int playerID, DevCardType type)
+	{
+		if (type == DevCardType.SOLDIER)
+		{
+			this.playerCanMoveRobber = playerID;
+		}
 	}
 	
 	/**
@@ -378,21 +429,26 @@ public class GameManager
 		}
 		return true;
 	}
+	
+	/**
+	 * Can do method for whether a player can accept an article
+	 * @todo need to figure out what this does
+	 * @param playerID
+	 * @return
+	 */
+	public boolean canAcceptTrade(int playerID)
+	{
+		return false;
+	}
+	
+	/**
+	 * Can do method for determinign wheter a player can martitime trade
+	 * @param playerID
+	 * @return
+	 */
 	public boolean CanMaritimeTrade (int playerID)
 	{
-		if (!CanPlayerPlay(playerID))
-			return false;
-		try 
-		{
-			GetPlayer(playerID).playerBank.canBuildCity();
-		}
-		catch (ModelException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+		return !CanPlayerPlay(playerID);
 	}
 	
 	/**
@@ -426,6 +482,16 @@ public class GameManager
 			// if the player isn't found
 			return false;
 		}
+	}
+	
+	/**
+	 * Check if player can chat
+	 * @param playerID
+	 * @return always true?
+	 */
+	public boolean canChat(int playerID)
+	{
+		return true;
 	}
 	
 	/**

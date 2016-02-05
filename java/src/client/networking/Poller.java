@@ -26,10 +26,16 @@ public class Poller implements ActionListener
 	 */
 	public Poller()
 	{
-		timer = new javax.swing.Timer(delay,(ActionListener) this);
+		timer = new javax.swing.Timer(this.delay,(ActionListener) this);
 		//timer.addActionListener((ActionListener) this);
 		timer.setRepeats(true);
 		
+	}
+	public Poller(int delay)
+	{
+		timer = new javax.swing.Timer(delay,(ActionListener) this);
+		//timer.addActionListener((ActionListener) this);
+		timer.setRepeats(true);
 	}
 	
 	/**
@@ -50,7 +56,7 @@ public class Poller implements ActionListener
 	
 	private void pollServer()
 	{
-		System.out.println("POLLED THE SERVER");
+		//System.out.println("POLLED THE SERVER");
 		try {
 			ClientGame.getGame().RefreshFromServer();
 		} catch (ModelException e) {

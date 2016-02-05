@@ -228,7 +228,7 @@ public class Bank
 	public int getPieceCount(PieceType type) throws ModelException
 	{
 		if (type == PieceType.ROBBER) throw new ModelException();
-		return this.resources[type.ordinal()];
+		return this.pieces[type.ordinal()];
 	}
 	
 	/**
@@ -238,7 +238,7 @@ public class Bank
 	 */
 	public int getDevCardCount(DevCardType type)
 	{
-		return this.resources[type.ordinal()];
+		return this.devCards[type.ordinal()];
 	}
 	
 	/**
@@ -254,7 +254,7 @@ public class Bank
 	 * Gets the total number of dev cards held
 	 * @return
 	 */
-	private int getDevCardCount()
+	public int getDevCardCount()
 	{
 		int total = 0;
 		for (int i=0; i< this.numberDevCardTypes; i++)

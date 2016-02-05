@@ -1,6 +1,7 @@
 package client.roll;
 
 import client.base.*;
+import client.model.ClientGame;
 
 
 /**
@@ -36,7 +37,8 @@ public class RollController extends Controller implements IRollController {
 	
 	@Override
 	public void rollDice() {
-		
+		int roll = ClientGame.getGame().RollDice();
+		getResultView().setRollValue(roll);
 		getResultView().showModal();
 	}
 

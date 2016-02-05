@@ -2,15 +2,20 @@ package client.model;
 
 import client.networking.ServerProxy;
 import client.networking.ServerProxyException;
+import shared.definitions.CatanColor;
 import shared.model.GameManager;
 import shared.model.ModelException;
+import shared.model.Translate;
 import shared.model.map.Coordinate;
+import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 
 public class ClientGameManager extends GameManager
 {
 	private ServerProxy proxy;
 	private int myPlayerID;
+	private int gameID;
+	private int refreshCount = 0;
 	/**
 	 * Creates the client game manager with the proxy
 	 * @param clientProxy
@@ -41,6 +46,53 @@ public class ClientGameManager extends GameManager
 		return this.myPlayerID;
 	}
 	
+	/**
+	 * Joins a game
+	 * @param gameID
+	 * @param color
+	 * @return
+	 */
+	public boolean joinGame(int gameID, CatanColor color)
+	{
+		try {
+			proxy.joinGame(gameID, color);
+			//If we can't joing a game then an exception will be thrown
+			this.RefreshFromServer();
+		} catch (ServerProxyException | ModelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+		
+	}
+	
+	/**
+	 * Joins a game
+	 * @param randomTiles
+	 * @param randomNumbers
+	 * @param randomPorts
+	 * @param name
+	 * @return
+	 */
+	public boolean createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
+	{
+		try {
+			NetGame game = proxy.createGame(randomTiles, randomNumbers, randomPorts, name);
+			this.LoadGame(game);
+		} catch (ServerProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} catch (ModelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
 	/**
 	 * Notifies the server after rolling the dice
 	 */
@@ -100,6 +152,10 @@ public class ClientGameManager extends GameManager
 		}
 	}
 	
+	/**
+	 * Gets the points of the current player
+	 * @return
+	 */
 	public int PlayerPoints()
 	{
 		return this.victoryPointManager.getVictoryPoints(this.myPlayerID);
@@ -113,27 +169,52 @@ public class ClientGameManager extends GameManager
 	 * @param model the model to be loaded in
 	 * @throws ModelException if model is incorrect
 	 */
-	public void LoadGame(NetGameModel model) throws ModelException
+	public void reloadGame(NetGameModel model) throws ModelException
 	{
 		if (model.getVersion() == this.version)
 			return;
 		throw new ModelException();
 	}
 	
+	public void LoadGame(NetGame model) throws ModelException
+	{
+		this.reset();
+		Translate trans = new Translate();
+		this.SetPlayers(trans.fromNetPlayers(model.getNetPlayers()));
+		this.gameID = model.getId();
+		this.gameTitle = model.getTitle();
+		
+		//make sure I assign the colors correctly
+	}
+
+	public int GetRefreshCount()
+	{
+		return refreshCount;
+	}
 	/**
 	 * What the poller pokes to refresh the game model from teh server
 	 * @see client.networking.Poller
 	 */
 	public void RefreshFromServer() throws ModelException
 	{
-		NetGameModel model;
+		this.refreshCount++;
 		try {
-			model = proxy.getGameModel();
+			if (proxy == null) 
+			{
+				System.err.println("Proxy was null");
+				return;
+			}
+			NetGameModel model = proxy.getGameModel();
+			if (model == null) {
+				System.err.println("Model was null from the server");
+				return;
+			}
+			this.reloadGame(model);
 		} catch (ServerProxyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new ModelException();
 		}
-		this.LoadGame(model);
+		
 	}
 }
