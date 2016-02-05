@@ -6,6 +6,7 @@ import javax.swing.*;
 import client.map.*;
 import client.map.view.MapView;
 import shared.model.IMapController;
+import shared.model.map.MapModel;
 
 @SuppressWarnings("serial")
 public class MidPanel extends JPanel
@@ -19,14 +20,13 @@ public class MidPanel extends JPanel
 	
 	public MidPanel()
 	{
-		
 		this.setLayout(new BorderLayout());
 		
 		tradePanel = new TradePanel();
 		
 		mapView = new MapView();
 		robView = new RobView();
-		mapController = new MapController(mapView, robView);
+		mapController = new MapController(mapView, robView, new MapModel());
 		mapView.setController(mapController);
 		robView.setController(mapController);
 		
