@@ -24,8 +24,6 @@ public class MapModel {
 	
 	private static final int LONGEST_ROAD_INITIAL_VALUE = 2;
 	
-	private boolean initialized = false;
-	
 	private Map<Integer, List<Hex>> values;
 	
 	private HexHandler hexes;
@@ -52,11 +50,6 @@ public class MapModel {
 		ports = new PortHandler();
 		
 		longestRoadLength = LONGEST_ROAD_INITIAL_VALUE;
-	}
-	
-	public boolean IsInitialized()
-	{
-		return initialized;
 	}
 	
 	/**
@@ -155,13 +148,17 @@ public class MapModel {
 	}
 	
 	/**
-	 * Gets all the hexes associated with the dice role
-	 * @param role The combined value of the dice
-	 * @return The associated hex
+	 * Gets all the hexes associated with the dice role.
+	 * @param role The combined value of the dice.
+	 * @return The associated hex.
+	 * @throws MapException Thrown if the value doesn't exist.
 	 */
-	public Iterator<Hex> GetHex(int role)
+	public Iterator<Hex> GetHex(int role) throws MapException
 	{
-		return java.util.Collections.unmodifiableList(values.get(role)).iterator();
+		if (!values.containsKey(role))
+			throw new MapException("Role value does not exist.");
+		else
+			return java.util.Collections.unmodifiableList(values.get(role)).iterator();
 	}
 	
 	/**
@@ -294,6 +291,15 @@ public class MapModel {
 	}
 	
 	/**
+	 * Returns if the robber is initialized.
+	 * @return True if yes, else false.
+	 */
+	public boolean IsRobberInitialized()
+	{
+		return robber != null;
+	}
+	
+	/**
 	 * Gets the hex the robber is placed on.
 	 * @return The robber's hex.
 	 */
@@ -374,10 +380,18 @@ public class MapModel {
 	 */
 	public void SetPip(int value, Hex hex)
 	{
-		//TODO Data validation needed to ensure a hex doesn't have multiple pips
 		if (values.containsKey(value))
 		{
-			values.get(value).add(hex);
+			//If a hex contains a value, we are simply changing the value.
+			if (values.get(value).contains(hex))
+			{
+				values.get(value).remove(hex);
+				SetPip(value, hex);
+			}
+			else
+			{
+				values.get(value).add(hex);
+			}
 		}
 		else
 		{

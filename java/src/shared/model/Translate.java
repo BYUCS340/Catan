@@ -48,9 +48,6 @@ public class Translate
 	
 	private void SetHexes(MapModel model, List<NetHex> hexes)
 	{
-		if (model.IsInitialized())
-			return;
-	
 		for (NetHex hex : hexes)
 		{
 			ResourceType resourceType = hex.getResourceType();
