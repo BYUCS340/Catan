@@ -2,8 +2,8 @@ package shared.model;
 
 import java.util.List;
 
-import client.map.MapController;
 import shared.model.chat.ChatBox;
+import shared.model.map.MapModel;
 
 /**
  * A simple data holder for communication between ServerProxy and GameManager
@@ -12,7 +12,7 @@ import shared.model.chat.ChatBox;
  */
 public class GameModel
 {
-	public MapController mapController;
+	public MapModel mapModel;
 	public GameState gameState;
 	public Bank gameBank;
 	public List<Player> players;

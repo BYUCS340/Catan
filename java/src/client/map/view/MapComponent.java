@@ -139,7 +139,6 @@ public class MapComponent extends JComponent
 	
 	public MapComponent copy()
 	{
-		
 		MapComponent copy = new MapComponent();
 		
 		copy.dropType = this.dropType;
@@ -267,7 +266,7 @@ public class MapComponent extends JComponent
 					Coordinate p1 = v1.getPoint();
 					Coordinate p2 = v2.getPoint();
 					
-					dropAllowed = getController().canPlaceRoad(p1, p2);
+					dropAllowed = getController().canPlaceRoad(p1, p2, dropColor);
 					
 					if (dropAllowed)
 					{
@@ -383,7 +382,7 @@ public class MapComponent extends JComponent
 		g2.setColor(this.getBackground());
 		g2.fillRect(0, 0, this.getWidth(), this.getHeight());		
 
-		if (model == null)
+		if (model == null || !model.IsInitialized())
 			return;
 
 		g2.translate(this.getWidth() / 2, this.getHeight() / 2);
