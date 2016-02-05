@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,6 +16,12 @@ import org.junit.Test;
 
 import shared.definitions.AIType;
 import shared.definitions.CatanColor;
+import shared.definitions.ResourceType;
+import shared.locations.EdgeDirection;
+import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
+import shared.locations.VertexDirection;
+import shared.locations.VertexLocation;
 import shared.networking.Deserializer;
 import shared.networking.JSONDeserializer;
 import shared.networking.JSONSerializer;
@@ -87,7 +94,7 @@ public class JSONSerializerTest
 	}
 	
 	@Test
-	public void testSJoinGameRez() throws Exception
+	public void testSJoinGameReq() throws Exception
 	{
 		Serializer testS = new JSONSerializer(); 
 		String results = testS.sJoinGameReq(7, CatanColor.YELLOW);
@@ -107,4 +114,288 @@ public class JSONSerializerTest
 		assertTrue(obj.getString("AIType").equalsIgnoreCase("largest_army"));
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Test
+	public void sSendChatReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sSendChatReq(7, "larry");
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 7);
+		assertTrue(obj.getString("content").equals("larry"));
+		assertTrue(obj.getString("type").equals("sendChat"));
+	}
+
+	@Test
+	public void sRollNumberReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sRollNumberReq(6, 7);
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 6);
+		assertTrue(obj.getInt("number") == 7);
+		assertTrue(obj.getString("type").equals("rollNumber"));
+	}
+
+	@Test
+	public void sRobPlayerReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sRobPlayerReq(6, 7, new HexLocation(1,2));
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 6);
+		assertTrue(obj.getInt("victimIndex") == 7);
+		assertTrue(obj.getJSONObject("location").getInt("x") == 1);
+		assertTrue(obj.getJSONObject("location").getInt("y") == 2);
+		assertTrue(obj.getString("type").equals("robPlayer"));
+
+	}
+	
+	
+	
+	
+	
+	
+
+	@Test
+	public void sFinishTurnReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sFinishTurnReq(4);
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 4);
+		assertTrue(obj.getString("type").equals("finishTurn"));
+	}
+
+	
+	
+	
+	
+	
+	
+	@Test
+	public void sBuyDevCardReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sBuyDevCardReq(5);
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 5);
+		assertTrue(obj.getString("type").equals("buyDevCard"));
+	}
+
+	@Test
+	public void sYearOfPlentyCardReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sYearOfPlentyCardReq(6, ResourceType.BRICK, ResourceType.WHEAT);
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 6);
+		assertTrue(obj.getString("resource1").equalsIgnoreCase("BRICK"));
+		assertTrue(obj.getString("resource2").equalsIgnoreCase("WHEAT"));
+		assertTrue(obj.getString("type").equals("Year_of_Plenty"));
+	}
+
+	
+	
+	
+	
+	
+	@Test
+	public void sRoadBuildingCardReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sRoadBuildingCardReq(7, new EdgeLocation(new HexLocation(1,2), EdgeDirection.North),  new EdgeLocation(new HexLocation(2,2), EdgeDirection.North));
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 7);
+		assertTrue(obj.getJSONObject("spot1").getInt("x") == 1);
+		assertTrue(obj.getJSONObject("spot1").getInt("y") == 2);
+		assertTrue(obj.getJSONObject("spot2").getInt("x") == 2);
+		assertTrue(obj.getJSONObject("spot2").getInt("y") == 2);
+		assertTrue(obj.getString("type").equals("Road_Building"));
+	}
+	
+
+	@Test
+	public void sSoldierCardReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sSoldierCardReq(6, 7, new HexLocation(1,2));
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 6);
+		assertTrue(obj.getInt("victimIndex") == 7);
+		assertTrue(obj.getJSONObject("location").getInt("x") == 1);
+		assertTrue(obj.getJSONObject("location").getInt("y") == 2);
+		assertTrue(obj.getString("type").equals("Soldier"));
+	}
+
+	@Test
+	public void sMonopolyCardReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sMonopolyCardReq(4, ResourceType.BRICK);
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 4);
+		assertTrue(obj.getString("resource").equalsIgnoreCase("BRICK"));
+		assertTrue(obj.getString("type").equals("Monopoly"));
+	}
+
+	@Test
+	public void sMonumentCardReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sMonumentCardReq(6);
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 6);
+		assertTrue(obj.getString("type").equals("Monument"));
+	}
+
+	@Test
+	public void sBuildRoadReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sBuildRoadReq(7, new EdgeLocation(new HexLocation(1,2), EdgeDirection.North), true);
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 7);
+		assertTrue(obj.getJSONObject("roadLocation").getInt("x") == 1);
+		assertTrue(obj.getJSONObject("roadLocation").getInt("y") == 2);
+		assertTrue(obj.getString("type").equals("buildRoad"));
+		assertTrue(obj.getBoolean("free") == true);
+
+	}
+
+	@Test
+	public void sBuildSettlementReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sBuildSettlementReq(7, new VertexLocation(new HexLocation(1,2), VertexDirection.East), true);
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 7);
+		assertTrue(obj.getBoolean("free") == true);
+		assertTrue(obj.getJSONObject("vertexLocation").getInt("x") == 1);
+		assertTrue(obj.getJSONObject("vertexLocation").getInt("y") == 2);
+		assertTrue(obj.getString("type").equals("buildSettlement"));
+	}
+	
+
+
+	@Test
+	public void sBuildCityReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sBuildCityReq(1,  new VertexLocation(new HexLocation(1,2), VertexDirection.East));
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 1);
+		assertTrue(obj.getJSONObject("vertexLocation").getInt("x") == 1);
+		assertTrue(obj.getJSONObject("vertexLocation").getInt("y") == 2);
+
+		assertTrue(obj.getJSONObject("vertexLocation").getString("direction").equalsIgnoreCase("E"));
+		assertTrue(obj.getString("type").equals("buildCity"));
+	}
+
+	@Test
+	public void sOfferTradeReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		List<Integer> resourceList = new ArrayList<Integer>();
+		resourceList.add(2);
+		resourceList.add(2);
+		resourceList.add(2);
+		resourceList.add(2);
+		resourceList.add(2);
+		String results = testS.sOfferTradeReq(7, resourceList, 2);
+		
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 7);
+		assertTrue(obj.getInt("receiver") == 2);
+		assertTrue(obj.getJSONObject("offer").getInt("brick") == 2);
+		assertTrue(obj.getJSONObject("offer").getInt("ore") == 2);
+		assertTrue(obj.getJSONObject("offer").getInt("sheep") == 2);
+		assertTrue(obj.getJSONObject("offer").getInt("wheat") == 2);
+		assertTrue(obj.getJSONObject("offer").getInt("wood") == 2);
+
+
+		assertTrue(obj.getString("type").equals("offerTrade"));
+	}
+	
+
+	@Test
+	public void sAcceptTradeReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sAcceptTradeReq(7, false);
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 7);
+		assertTrue(obj.getBoolean("willAccept") == false);
+		assertTrue(obj.getString("type").equals("acceptTrade"));
+	}
+
+	@Test
+	public void sMaritimeTradeReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		String results = testS.sMaritimeTradeReq(6,3,ResourceType.BRICK, ResourceType.SHEEP);
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 6);
+		assertTrue(obj.getInt("ratio") == 3);
+		assertTrue(obj.getString("inputResource").equalsIgnoreCase("BRICK"));
+		assertTrue(obj.getString("outputResource").equalsIgnoreCase("SHEEP"));
+		assertTrue(obj.getString("type").equals("maritimeTrade"));
+	}
+
+	
+	
+	@Test
+	public void sDiscardCardsReq() throws Exception
+	{
+		Serializer testS = new JSONSerializer(); 
+		
+		List<Integer> resourceList = new ArrayList<Integer>();
+		resourceList.add(2);
+		resourceList.add(2);
+		resourceList.add(2);
+		resourceList.add(2);
+		resourceList.add(2);
+		String results = testS.sDiscardCardsReq(7, resourceList);
+		
+		
+		JSONObject obj = new JSONObject(results);
+		assertTrue(obj.getInt("playerIndex") == 7);
+		assertTrue(obj.getJSONObject("discardedCards").getInt("brick") == 2);
+		assertTrue(obj.getJSONObject("discardedCards").getInt("ore") == 2);
+		assertTrue(obj.getJSONObject("discardedCards").getInt("sheep") == 2);
+		assertTrue(obj.getJSONObject("discardedCards").getInt("wheat") == 2);
+		assertTrue(obj.getJSONObject("discardedCards").getInt("wood") == 2);		
+		assertTrue(obj.getString("type").equals("discardCards"));
+	}
 }
