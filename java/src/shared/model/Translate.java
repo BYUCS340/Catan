@@ -6,6 +6,10 @@ import java.util.List;
 import client.map.*;
 import shared.definitions.*;
 import shared.model.chat.*;
+import shared.model.map.Coordinate;
+import shared.model.map.MapException;
+import shared.model.map.MapModel;
+import shared.model.map.objects.Hex;
 import shared.networking.transport.*;
 
 /**
@@ -19,7 +23,6 @@ public class Translate
 	{
 		GameModel gameModel = new GameModel();
 		
-		gameModel.mapController = fromNetMap(netGameModel.getNetMap());  //UNSTARTED -- this is tricky cause I don't know our Map very well
 		gameModel.gameState = fromNetTurnTracker(netGameModel.getNetTurnTracker());  //FINISHED? -- but NetGameModel doesn't return a GameStatus
 		gameModel.gameBank = fromNetBank(netGameModel.getNetBank());  //FINISHED? -- but only has resource cards (no dev cards)
 		gameModel.players = fromNetPlayers(netGameModel.getNetPlayers());  //FINISHED?
@@ -27,13 +30,122 @@ public class Translate
 		gameModel.waterCooler = fromNetChat(netGameModel.getNetChat());  //FINISHED? -- but only posts as player 0
 		gameModel.log = fromNetLog(netGameModel.getNetGameLog());  //FINISHED? -- but only logs as player 0
 		gameModel.version = netGameModel.getVersion();  //FINISHED
-		
+		gameModel.mapModel = fromNetMap(netGameModel.getNetMap());  //UNSTARTED -- this is tricky cause I don't know our Map very well
+
 		return gameModel;
 	}
 	
-	public MapController fromNetMap(NetMap netMap)
+	public MapModel fromNetMap(NetMap netMap)
 	{
+		MapModel model = new MapModel();
+		
+		SetHexes(model, netMap);
+		SetSettlements(model, netMap);
+		SetCities(model, netMap);
+		
+		return model;
+	}
+	
+	private void SetHexes(MapModel model, NetMap netMap)
+	{
+		if (model.IsInitialized())
+			return;
+		
+		List<NetHex> hexes = netMap.getNetHexes();
+		for (NetHex hex : hexes)
+		{
+			//TODO How do we know about dessert and water?
+			ResourceType resourceType = hex.getResourceType();
+			HexType hexType = HexType.GetFromResource(resourceType);
+			
+			NetHexLocation location = hex.getNetHexLocation();
+			int x = location.getX();
+			int y = location.getY();
+			
+			Coordinate point = GetHexCoordinate(x, y);
+			
+			try
+			{
+				model.SetHex(hexType, point);
+				
+				Hex hexFromModel = model.GetHex(point);
+				
+				int value = hex.getNumberChit();
+				model.SetPip(value, hexFromModel);
+			}
+			catch (MapException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void SetSettlements(MapModel model, NetMap netMap)
+	{
+		List<NetSettlement> settlements = netMap.getNetSettlements();
+		
+		for (NetSettlement settlement : settlements)
+		{
+			
+			NetEdgeLocation location = settlement.getNetEdgeLocation();
+			int x = location.getX();
+			int y = location.getY();
+			
+			
+			Coordinate hex = GetHexCoordinate(x, y);
+			Coordinate vertex = GetVertexCoordinate(hex);
+			
+			//model.SetSettlement(vertex, color);
+		}
+	}
+	
+	private void SetCities(MapModel model, NetMap netMap)
+	{
+		List<NetCity> cities = netMap.getNetCities();
+		
+		for (NetCity city : cities)
+		{
+			//Set up like settlement
+		}
+	}
+	
+	private void SetRobber(MapModel model, NetMap netMap)
+	{
+		NetHexLocation hexLocation = netMap.getRobberLocation();
+		int x = hexLocation.getX();
+		int y = hexLocation.getY();
+		
+		try
+		{
+			Coordinate hexPoint = GetHexCoordinate(x, y);
+			Hex hex = model.GetHex(hexPoint);
+			model.SetRobber(hex);
+		}
+		catch (MapException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	private Coordinate GetHexCoordinate(int x, int y)
+	{
+		return new Coordinate (x + 3, -2 * y - x);
+	}
+	
+	private Coordinate GetVertexCoordinate(Coordinate hex) //Needs vertex direction
+	{
+		//TODO Finish with correct stuff
 		return null;
+		
+		
+		/*
+		 * if west      - return hex;
+		 * if northwest - return hex.GetNorth();
+		 * if northeast - return hex.GetNorthEast();
+		 * if east      - return hex.GetEast();
+		 * if southeast - return hex.GetSouthEast();
+		 * if southwest - return hex.GetWest();
+		 */
 	}
 	
 	public GameState fromNetTurnTracker(NetTurnTracker netTurnTracker)

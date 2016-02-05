@@ -10,7 +10,6 @@ import shared.model.map.Coordinate;
  */
 public interface IMapController extends IController
 {
-	
 	/**
 	 * This method is called whenever the user is trying to place a road on the
 	 * map. It is called by the view for each "mouse move" event. The returned
