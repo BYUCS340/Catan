@@ -571,5 +571,81 @@ public class RealServerProxyTest
 		//TODO expand this past a "200" test
 	}
 	
+	@Test
+	public void testSendChat() throws Exception
+	{
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+		RealServerProxy testProxy = new RealServerProxy();
+		testProxy.registerUser(username, password);
+		testProxy.loginUser(username, password);
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		testProxy.getGameModel();
+				
+		//send request to the server
+		testProxy.sendChat("I'm a silly test case!");
+		
+		//if there are no errors, call it good.
+		//TODO expand this past a "200" test
+	}
+	
+	@Test
+	public void testRollNumber() throws Exception
+	{
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+		RealServerProxy testProxy = new RealServerProxy();
+		testProxy.registerUser(username, password);
+		assertTrue(testProxy.loginUser(username, password));
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		
+
+		NetGameModel mod = testProxy.getGameModel();
+		assertTrue(mod != null);
+
+		testProxy.addAI(AIType.LARGEST_ARMY);
+		testProxy.addAI(AIType.LARGEST_ARMY);
+		testProxy.addAI(AIType.LARGEST_ARMY);
+
+				
+		//send request to the server_host
+		int num = 5;
+		testProxy.rollNumber(num);
+		
+		//if there are no errors, call it good.
+		//TODO expand this past a "200" test
+	}
 	
 }
