@@ -3,6 +3,9 @@ package client.model;
 import client.networking.ServerProxy;
 import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
+import shared.definitions.DevCardType;
+import shared.definitions.PieceType;
+import shared.definitions.ResourceType;
 import shared.model.GameManager;
 import shared.model.ModelException;
 import shared.model.Translate;
@@ -37,6 +40,7 @@ public class ClientGameManager extends GameManager
 		this.myPlayerID = myPlayerID;
 	}
 	
+	
 	/**
 	 * Get the ID of the current player client
 	 * @return
@@ -44,6 +48,42 @@ public class ClientGameManager extends GameManager
 	public int myPlayerID()
 	{
 		return this.myPlayerID;
+	}
+	
+	/**
+	 * Gets the number of resources for the current player
+	 * @param type
+	 * @return
+	 */
+	public int playerResourceCount(ResourceType type)
+	{
+		return this.players.get(this.myPlayerID).playerBank.getResourceCount(type);
+	}
+	
+	/**
+	 * Gets the number of devCards for the current player
+	 * @param type
+	 * @return
+	 */
+	public int playerDevCardCount(DevCardType type)
+	{
+		return this.players.get(this.myPlayerID).playerBank.getDevCardCount(type);
+	}
+	
+	/**
+	 * Gets the number of devCards for the current player
+	 * @param type
+	 * @return
+	 */
+	public int playerPieceCount(PieceType type)
+	{
+		try {
+			return this.players.get(this.myPlayerID).playerBank.getPieceCount(type);
+		} catch (ModelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
 	}
 	
 	/**

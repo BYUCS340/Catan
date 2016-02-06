@@ -94,7 +94,8 @@ public class TestGameManager {
 		}
 		
 		try{
-			
+			assertTrue(gm.CanBuyDevCard(gm.CurrentPlayersTurn()));
+			gm.BuyDevCard(gm.CurrentPlayersTurn());
 		}
 		catch (Exception e){
 			
