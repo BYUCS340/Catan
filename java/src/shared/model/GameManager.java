@@ -2,6 +2,7 @@ package shared.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import client.map.MapController;
@@ -10,8 +11,10 @@ import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
+import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
+import shared.model.map.Transaction;
 import shared.model.chat.ChatBox;
 import shared.networking.transport.NetGameModel;
 
@@ -22,15 +25,16 @@ import shared.networking.transport.NetGameModel;
  */
 public class GameManager
 {
-	public  MapController mapController; //this is exposed for easier access
-	
+	//public  MapController mapController; 
+	public int gameID;
+	public String gameTitle;
 	protected GameState gameState;
 	protected Bank gameBank;
 	protected List<Player> players;
 	protected VictoryPointManager victoryPointManager;
 	protected ChatBox waterCooler;
 	protected GameActionLog log;
-	public IMapController map;
+	public IMapController map; //this is exposed for easier access
 	protected int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;
@@ -55,6 +59,28 @@ public class GameManager
 		//fill the array with -1 by default
 		Arrays.fill(playerColors,-1);
 		playerCanMoveRobber = -1;
+		gameBank.resetToBankDefaults();
+	}
+	
+	/**
+	 * Resets a game to default state
+	 */
+	public void reset()
+	{
+		Arrays.fill(playerColors,-1);
+		version = -1;
+		waterCooler = new ChatBox();
+		log = new GameActionLog();
+		players = new ArrayList<>();
+		gameBank = new Bank();
+		gameState = new GameState();
+		//mapController = new MapController();
+		victoryPointManager = new VictoryPointManager();
+		playerColors = new int[10];
+		//fill the array with -1 by default
+		Arrays.fill(playerColors,-1);
+		playerCanMoveRobber = -1;
+		gameBank.resetToBankDefaults();
 	}
 	
 	
@@ -84,6 +110,23 @@ public class GameManager
 	}
 	
 	/**
+	 * Sets the players 
+	 * @param players
+	 */
+	public void SetPlayers(List<Player> players)
+	{
+		Arrays.fill(playerColors,-1);
+		this.players.clear();
+		for (int i=0; i< players.size(); i++)
+		{
+			Player p = players.get(i);
+			this.players.set(i, p);
+			playerColors[p.color.ordinal()] = p.playerIndex();
+		}
+		
+	}
+	
+	/**
 	 * Gets the player index by color
 	 * @param color
 	 * @return -1 if not found
@@ -98,6 +141,55 @@ public class GameManager
 		return players.get(playerID).color;
 	}
 	
+	
+	/**
+	 * Gets the number of resources for the player
+	 * @param playerID
+	 * @param type
+	 * @return
+	 */
+	public int playerResourceCount(int playerID, ResourceType type)
+	{
+		return this.players.get(playerID).playerBank.getResourceCount(type);
+	}
+	
+	/**
+	 * Gets the number of devCards for the current player
+	 * @param playerID
+	 * @param type
+	 * @return
+	 */
+	public int playerDevCardCount(int playerID,DevCardType type)
+	{
+		return this.players.get(playerID).playerBank.getDevCardCount(type);
+	}
+	/**
+	 * Gets the total number of dev cards for a player
+	 * @param playerID
+	 * @return
+	 */
+	public int playerDevCardCount(int playerID)
+	{
+		return this.players.get(playerID).playerBank.getDevCardCount();
+	}
+	
+	/**
+	 * Gets the number of devCards for the current player
+	 * @param playerID
+	 * @param type
+	 * @return
+	 */
+	public int playerPieceCount(int playerID,PieceType type)
+	{
+		try {
+			return this.players.get(playerID).playerBank.getPieceCount(type);
+		} catch (ModelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
 	/**
 	 * The number of players in a game
 	 * @return
@@ -106,6 +198,8 @@ public class GameManager
 	{
 		return players.size();
 	}
+	
+	
 	
 	/**
 	 * Returns the current version
@@ -119,10 +213,11 @@ public class GameManager
 	 * @see <a href="https://imgs.xkcd.com/comics/random_number.png">Sauce</a>
 	 * @post all player's banks will be added resources
 	 * @return the number rolled
+	 * @throws ModelException if we aren't in the rolling phase
 	 */
-	public int RollDice()
+	public int RollDice() throws ModelException
 	{
-		
+		if (gameState.state != GameRound.ROLLING) throw new ModelException();
 		gameState.startBuildPhase();
 		int diceRoll = 4;
 		//check if we can move the robber
@@ -131,8 +226,38 @@ public class GameManager
 			this.playerCanMoveRobber = this.CurrentPlayersTurn();
 		}
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
-		//Call map to update the get the transacations
 		
+		//Call map to update the get the transacations
+		Iterator<Transaction> transList = map.GetVillages(diceRoll);
+		//Go through each trasaction
+		while (transList.hasNext())
+		{
+			Transaction trans = transList.next();
+			//Get the player ID
+			int playerID = this.getPlayerIndexByColor(trans.getColor());
+			try {
+				//Get the player
+				Player player = this.GetPlayer(playerID);
+				//The piece type
+				PieceType harvester = trans.getPieceType();
+				int amount = 0;
+				//Get the correct amount for the piece type
+				if (harvester == PieceType.CITY) amount = 2;
+				else if (harvester == PieceType.SETTLEMENT) amount = 1;
+				//Get the resource
+				ResourceType resource = ResourceType.fromHex(trans.getHexType());
+				//Give it to them
+				//TODO get the resources from the game bank and give them to the player
+				player.playerBank.giveResource(resource, amount);
+				//player.playerBank
+			} catch (ModelException e) {
+				// TODO Auto-generated catch block
+				System.err.println("No player with the color specified by transaction found");
+				System.err.println(trans.getColor());
+				//e.printStackTrace();
+			}
+			
+		}
 		return diceRoll; // chosen by fair dice roll
 						// guaranteed to be random
 	}
@@ -191,9 +316,10 @@ public class GameManager
 	}
 	
 	/**
-	 * Attempts to build a road
+	 * Attempts to buy a dev card
 	 * @param playerID 0 to 3
 	 * @throws ModelException if the player doesn't have the resources
+	 * @returns the dev card type bought (hopefully somewhat random)
 	 */
 	public DevCardType BuyDevCard(int playerID) throws ModelException
 	{
@@ -204,6 +330,23 @@ public class GameManager
 		playerBank.giveDevCard(devcard);
 		victoryPointManager.playerGotDevCard(playerID, devcard);
 		return devcard;
+	}
+	
+	/**
+	 * Plays a dev card
+	 * @param playerID
+	 * @param type
+	 * @throws ModelException 
+	 */
+	public void playDevCard(int playerID, DevCardType type) throws ModelException
+	{
+		if (players.get(playerID).playerBank.getDevCardCount(type) < 1) throw new ModelException();
+		if (type == DevCardType.SOLDIER)
+		{
+			this.playerCanMoveRobber = playerID;
+			
+		}
+		players.get(playerID).playerBank.getDevCard(type);
 	}
 	
 	/**
@@ -244,10 +387,18 @@ public class GameManager
 	public boolean CanPlayerPlay(int playerID)
 	{
 		//If we aren't in the building phase and this player isn't their turn
-		if (CurrentState() != GameRound.PLAYING || this.gameState.activePlayerIndex != playerID)
+		if (this.gameState.activePlayerIndex != playerID)
+		{
 			return false;
+		}
+		else if (this.gameState.state != GameRound.FIRSTROUND && this.gameState.state != GameRound.SECONDROUND && this.gameState.state != GameRound.PLAYING)
+		{
+			return false;
+		}
 		else
-			return false;
+		{
+			return true;
+		}
 	}
 	/**
 	 * See if a player can discard cards
@@ -379,33 +530,70 @@ public class GameManager
 		}
 		return true;
 	}
-	public boolean CanMaritimeTrade (int playerID)
+	
+	/**
+	 * Can do method for whether a player can accept an article
+	 * @todo need to figure out what this does
+	 * @param playerID
+	 * @return
+	 */
+	public boolean canAcceptTrade(int playerID)
 	{
-		if (!CanPlayerPlay(playerID))
-			return false;
-		try 
-		{
-			GetPlayer(playerID).playerBank.canBuildCity();
-		}
-		catch (ModelException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+		return false;
 	}
 	
 	/**
-	 * 
+	 * Testing function
+	 */
+	public void payDayForDayz()
+	{
+		//TODO remove
+		for (int i=0;i < this.NumberActivePlayers(); i++)
+		{
+			try {
+				players.get(i).playerBank.giveResource(ResourceType.BRICK, 5);
+				players.get(i).playerBank.giveResource(ResourceType.ORE, 5);
+				players.get(i).playerBank.giveResource(ResourceType.SHEEP, 5);
+				players.get(i).playerBank.giveResource(ResourceType.WOOD, 5);
+				players.get(i).playerBank.giveResource(ResourceType.WHEAT, 5);
+			} catch (ModelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	/**
+	 * Can do method for determinign wheter a player can martitime trade
+	 * @param playerID
+	 * @return
+	 */
+	public boolean CanMaritimeTrade (int playerID)
+	{
+		return !CanPlayerPlay(playerID);
+	}
+	
+	/**
+	 * Checks whether a player can finish their turn
 	 * @param playerID
 	 * @return
 	 */
 	public boolean CanFinishTurn (int playerID)
 	{
+		//TODO check to make sure they've built their settlements during the first round
 		if (this.CurrentPlayersTurn() != playerID) return false;
-		if (this.CurrentState() == GameRound.PLAYING) return true;
+		if (this.CurrentState() == GameRound.PLAYING || this.CurrentState() == GameRound.FIRSTROUND || this.CurrentState() == GameRound.SECONDROUND) return true;
 		return false;
+	}
+	
+	/**
+	 * Checks whether the current player can finish their turn
+	 * @return true or false
+	 */
+	public boolean CanFinishTurn ()
+	{
+		return this.CanFinishTurn(gameState.activePlayerIndex);
 	}
 	
 	/**
@@ -427,6 +615,16 @@ public class GameManager
 			// if the player isn't found
 			return false;
 		}
+	}
+	
+	/**
+	 * Check if player can chat
+	 * @param playerID
+	 * @return always true?
+	 */
+	public boolean canChat(int playerID)
+	{
+		return true;
 	}
 	
 	/**
@@ -518,13 +716,34 @@ public class GameManager
 	}
 	
 	/**
+	 * Determines whenter player can play card
+	 * @param playerID
+	 * @param type
+	 * @return
+	 */
+	public boolean CanPlayDevCard(int playerID, DevCardType type)
+	{
+		switch (type)
+		{
+		case MONOPOLY:  return this.CanUseMonopoly(playerID);
+		case MONUMENT:  return this.CanUseMonument(playerID);
+		case ROAD_BUILD:return this.CanUseRoadBuilder(playerID);
+		case SOLDIER:   return this.CanUseSoldier(playerID);
+		case YEAR_OF_PLENTY: return this.CanUseYearOfPlenty(playerID);
+		default:
+			return false;
+			
+		}
+	}
+	
+	/**
 	 * Checks to see if a player can place the robber
 	 * @param playerID
 	 * @return
 	 */
 	public boolean CanPlaceRobber (int playerID)
 	{
-		return this.playerCanMoveRobber == playerID;
+		return this.CurrentState() == GameRound.ROBBING || this.playerCanMoveRobber == playerID;
 	}
 	
 	
@@ -562,13 +781,11 @@ public class GameManager
 	
 	/**
 	 * Ends the current player's turn
+	 * @throws ModelException 
 	 */
-	public void FinishTurn()
+	public void FinishTurn() throws ModelException
 	{
-		gameState.activePlayerIndex++;
-		if (gameState.activePlayerIndex > 3)
-			gameState.activePlayerIndex = 0;
-		gameState.state = GameRound.ROLLING;
+		if (!this.CanFinishTurn() || !gameState.nextTurn()) throw new ModelException();
 	}
 	
 	/**

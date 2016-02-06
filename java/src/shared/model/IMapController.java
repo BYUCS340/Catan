@@ -1,12 +1,13 @@
 package shared.model;
 
 import java.util.Iterator;
+import java.util.List;
 
 import client.base.*;
 import client.data.*;
-import client.map.Transaction;
 import shared.definitions.*;
 import shared.model.map.Coordinate;
+import shared.model.map.Transaction;
 
 /**
  * Interface for the map controller
@@ -143,5 +144,13 @@ public interface IMapController extends IController
 	 *            The player to be robbed
 	 */
 	void robPlayer(RobPlayerInfo victim);
+	
+	
+	/**
+	 * This gets the list of ports that a player is connected to
+	 * @param color the player color
+	 * @return the list - possibly empty
+	 */
+	List<PortType> playerPorts(CatanColor color);
 }
 
