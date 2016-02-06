@@ -484,6 +484,28 @@ public class GameManager
 	}
 	
 	/**
+	 * Testing function
+	 */
+	public void payDayForDayz()
+	{
+		//TODO remove
+		for (int i=0;i < this.NumberActivePlayers(); i++)
+		{
+			try {
+				players.get(i).playerBank.giveResource(ResourceType.BRICK, 5);
+				players.get(i).playerBank.giveResource(ResourceType.ORE, 5);
+				players.get(i).playerBank.giveResource(ResourceType.SHEEP, 5);
+				players.get(i).playerBank.giveResource(ResourceType.WOOD, 5);
+				players.get(i).playerBank.giveResource(ResourceType.WHEAT, 5);
+			} catch (ModelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	/**
 	 * Can do method for determinign wheter a player can martitime trade
 	 * @param playerID
 	 * @return

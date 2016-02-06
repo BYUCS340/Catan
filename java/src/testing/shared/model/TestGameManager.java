@@ -75,9 +75,9 @@ public class TestGameManager {
 		catch (Exception e){
 			fail("No exceptions here!");
 		}
-		
-		
+		gm.payDayForDayz();
 		try{
+			assertFalse(gm.CanBuyDevCard(gm.CurrentPlayersTurn()));
 			int roll = gm.RollDice();
 			assertEquals(GameRound.PLAYING,gm.CurrentState());
 		}
@@ -92,6 +92,15 @@ public class TestGameManager {
 		catch (Exception e){
 			
 		}
+		
+		try{
+			
+		}
+		catch (Exception e){
+			
+		}
+		
+		
 		
 		
 	}
