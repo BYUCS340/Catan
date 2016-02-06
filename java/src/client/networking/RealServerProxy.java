@@ -84,6 +84,16 @@ public class RealServerProxy implements ServerProxy
 		gameID = -1;
 		userIndex = -1;
 	}
+	
+	
+	/**
+	 * Getting for current user index
+	 * @return
+	 */
+	public int getUserIndex()
+	{
+		return userIndex;
+	}
 
 	/* (non-Javadoc)
 	 * @see client.networking.ServerProxy#loginUser(java.lang.String, java.lang.String)
@@ -310,7 +320,7 @@ public class RealServerProxy implements ServerProxy
 		}
 		
 		//send the request to the server
-		String urlPath = "/games/addAI";
+		String urlPath = "/game/addAI";
 		String postData;
 		try
 		{
@@ -573,7 +583,7 @@ public class RealServerProxy implements ServerProxy
 			throw new ServerProxyException(e.getMessage(), e.getCause());
 		}
 		String result = doJSONPost(urlPath, postData, false, false);
-		
+//		System.out.println("Year of Plenty response: " + result);
 		NetGameModel ret;
 		try
 		{
@@ -1014,6 +1024,7 @@ public class RealServerProxy implements ServerProxy
 		{
 			throw new ServerProxyException(e.getMessage(), e.getCause());
 		}
+		System.out.println(urlPath + " " + postData);
 		String result = doJSONPost(urlPath, postData, false, false);
 		
 		NetGameModel ret;
