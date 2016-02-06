@@ -59,6 +59,7 @@ public class GameManager
 		//fill the array with -1 by default
 		Arrays.fill(playerColors,-1);
 		playerCanMoveRobber = -1;
+		gameBank.resetToBankDefaults();
 	}
 	
 	/**
@@ -79,6 +80,7 @@ public class GameManager
 		//fill the array with -1 by default
 		Arrays.fill(playerColors,-1);
 		playerCanMoveRobber = -1;
+		gameBank.resetToBankDefaults();
 	}
 	
 	
@@ -245,6 +247,7 @@ public class GameManager
 				//Get the resource
 				ResourceType resource = ResourceType.fromHex(trans.getHexType());
 				//Give it to them
+				//TODO get the resources from the game bank and give them to the player
 				player.playerBank.giveResource(resource, amount);
 				//player.playerBank
 			} catch (ModelException e) {
@@ -333,13 +336,17 @@ public class GameManager
 	 * Plays a dev card
 	 * @param playerID
 	 * @param type
+	 * @throws ModelException 
 	 */
-	public void playDevCard(int playerID, DevCardType type)
+	public void playDevCard(int playerID, DevCardType type) throws ModelException
 	{
+		if (players.get(playerID).playerBank.getDevCardCount(type) < 1) throw new ModelException();
 		if (type == DevCardType.SOLDIER)
 		{
 			this.playerCanMoveRobber = playerID;
+			
 		}
+		players.get(playerID).playerBank.getDevCard(type);
 	}
 	
 	/**
@@ -778,8 +785,7 @@ public class GameManager
 	 */
 	public void FinishTurn() throws ModelException
 	{
-		if (!this.CanFinishTurn()) throw new ModelException();
-		gameState.nextTurn();
+		if (!this.CanFinishTurn() || !gameState.nextTurn()) throw new ModelException();
 	}
 	
 	/**

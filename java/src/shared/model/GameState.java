@@ -35,8 +35,9 @@ public class GameState
 		{
 			activePlayerIndex = 0;
 			if (state == GameRound.FIRSTROUND) state = GameRound.SECONDROUND;
-			else if (state == GameRound.SECONDROUND) state = GameRound.ROLLING;
+			else if (state == GameRound.SECONDROUND ) state = GameRound.ROLLING;
 		}
+		if (state == GameRound.PLAYING) state = GameRound.ROLLING;
 		
 		return true;
 	}

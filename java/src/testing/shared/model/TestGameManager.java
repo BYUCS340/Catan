@@ -102,17 +102,31 @@ public class TestGameManager {
 		try{
 			assertTrue(gm.CanBuyDevCard(gm.CurrentPlayersTurn()));
 			DevCardType card = gm.BuyDevCard(gm.CurrentPlayersTurn());
-			System.out.println("Bought card: ");
-			System.out.println(card.toString());
+			//System.out.println("Bought card: ");
+			//System.out.println(card.toString());
 			assertEquals(1,gm.playerDevCardCount(gm.CurrentPlayersTurn()));
 			assertTrue(gm.CanPlayDevCard(gm.CurrentPlayersTurn(), card));
 			gm.playDevCard(gm.CurrentPlayersTurn(), card);
 			assertEquals(0,gm.playerDevCardCount(gm.CurrentPlayersTurn()));
 		}
 		catch (Exception e){
+			e.printStackTrace();
+			fail("We failed in buying a dev card");
 			
 		}
 		
+		//Go to the next player's turn
+		try{
+			assertEquals(gm.CurrentPlayersTurn(),0);
+			gm.FinishTurn();
+			assertEquals(GameRound.ROLLING,gm.CurrentState());
+			assertEquals(gm.CurrentPlayersTurn(),1);
+			int roll = gm.RollDice();
+			assertEquals(GameRound.PLAYING,gm.CurrentState());
+		}
+		catch (Exception e){
+			fail("Shouldn't have failed on second player turn");
+		}
 		
 		
 		

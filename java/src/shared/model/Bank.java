@@ -50,6 +50,23 @@ public class Bank
 		}
 	}
 	
+	public void resetToBankDefaults()
+	{
+		try
+		{
+			this.giveDevCard(DevCardType.MONOPOLY, 5);
+			this.giveDevCard(DevCardType.MONUMENT, 5);
+			this.giveDevCard(DevCardType.ROAD_BUILD, 5);
+			this.giveDevCard(DevCardType.SOLDIER, 5);
+			this.giveDevCard(DevCardType.YEAR_OF_PLENTY, 5);
+			
+		}
+		catch (Exception e)
+		{
+			System.err.println("An Error has occured in the bank that should not have occurred");
+		}
+	}
+	
 	/**
 	 * Attempts to get a resource from the bank
 	 * @param type the type requested
@@ -79,6 +96,17 @@ public class Bank
 		{
 			throw new ModelException ();
 		}
+	}
+	
+	/**
+	 * Gets a dev card of the specific type
+	 * @param type
+	 * @throws ModelException
+	 */
+	public void getDevCard(DevCardType type) throws ModelException
+	{
+		if (this.getDevCardCount(type) < 1) throw new ModelException();
+		devCards[type.ordinal()]--;
 	}
 	
 	/**
@@ -112,7 +140,7 @@ public class Bank
 		
 		//Create a list of cards with at least one card
 		List<DevCardType> availableCards = new ArrayList<DevCardType>();
-		for (int i = 0; i <= this.numberDevCardTypes; i++)
+		for (int i = 0; i < this.numberDevCardTypes; i++)
 		{
 			if (this.devCards[i] > 0)
 				availableCards.add(DevCardType.fromInt(i));
@@ -194,6 +222,16 @@ public class Bank
 	public void giveDevCard(DevCardType type)
 	{
 		this.devCards[type.ordinal()]++;
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @param amount
+	 */
+	private void giveDevCard(DevCardType type, int amount)
+	{
+		this.devCards[type.ordinal()]+= amount;
 	}
 	
 	/**
