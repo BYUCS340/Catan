@@ -325,6 +325,12 @@ public class JSONSerializer implements Serializer
 		return obj.toString();
 	}
 	
+	/**
+	 * Turns the passed resource list into a JSONObject which is returned
+	 * @param resourceList
+	 * @return
+	 * @throws JSONException
+	 */
 	private JSONObject oResourceList(List<Integer> resourceList) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
