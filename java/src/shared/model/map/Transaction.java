@@ -1,4 +1,4 @@
-package client.map;
+package shared.model.map;
 
 import shared.definitions.*;
 
