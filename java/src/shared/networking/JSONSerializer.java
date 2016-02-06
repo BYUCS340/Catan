@@ -77,7 +77,7 @@ public class JSONSerializer implements Serializer
 	{
 		JSONObject obj = new JSONObject();
 	
-		obj.put("AIType", AIType.toString(aitype));
+		obj.put("AIType", AIType.toString(aitype).toUpperCase());
 		
 		return obj.toString();
 	}

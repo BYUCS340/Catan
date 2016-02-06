@@ -448,9 +448,16 @@ public class MapComponent extends JComponent
 		if (!model.IsRobberInitialized())
 			return;
 		
-		Point2D hexPoint = getHexCenterPoint(model.GetRobberPlacement());
-		BufferedImage robberImage = ImageHandler.getRobberImage();
-		drawImage(g2, robberImage, hexPoint);
+		try
+		{
+			Point2D hexPoint = getHexCenterPoint(model.GetRobberPlacement());
+			BufferedImage robberImage = ImageHandler.getRobberImage();
+			drawImage(g2, robberImage, hexPoint);
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	private void drawRoads(Graphics2D g2)

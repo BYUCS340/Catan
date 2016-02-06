@@ -86,6 +86,7 @@ public class RealServerProxyTest
 //		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
 		RealServerProxy testProxy = new RealServerProxy("127.0.0.1", 8081);		
 
+
 		boolean couldRegister = testProxy.registerUser(username1, password1);
 		assertTrue(couldRegister);
 		
@@ -100,6 +101,130 @@ public class RealServerProxyTest
 //		assertTrue(gamesBeforeCreate.size() + 1 == gamesAfterCreate.size());
 //		assertTrue(gamesAfterCreate.get(gamesAfterCreate.size() - 1).getTitle().equals(game1));
 	}
+	
+	@Test
+	public void testJoinGame() throws Exception
+	{
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+		RealServerProxy testProxy = new RealServerProxy();
+		testProxy.registerUser(username, password);
+		testProxy.loginUser(username, password);
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		//if 200 is returned, assuming that test completed succesfully
+	}
+	
+	
+	@Test
+	public void testGetGameModel() throws Exception
+	{
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+		RealServerProxy testProxy = new RealServerProxy();
+		testProxy.registerUser(username, password);
+		testProxy.loginUser(username, password);
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		testProxy.getGameModel();
+		//if 200 is returned, assuming that test completed succesfully
+	}
+	
+//	@Test
+//	public void testAddAI() throws Exception
+//	{
+//		String username = UUID.randomUUID().toString();
+//		String password = UUID.randomUUID().toString();
+//		String game = UUID.randomUUID().toString();
+//		CatanColor col = CatanColor.BLUE;
+//		
+//		//set up the game
+//		RealServerProxy testProxy = new RealServerProxy();
+//		testProxy.registerUser(username, password);
+//		testProxy.loginUser(username, password);
+//		testProxy.createGame(true, true, true, game);
+//		List<NetGame> gList = testProxy.listGames();
+//		
+//		//get the number of the game to join
+//		NetGame targetGame = null;
+//		for(NetGame g : gList){
+//			if(g.getTitle().equals(game)){
+//				targetGame = g;
+//			}
+//		}
+//		
+//		//join target game
+//		testProxy.joinGame(targetGame.getId(), col);
+//		testProxy.getGameModel();
+//		
+//		testProxy.addAI(AIType.LARGEST_ARMY);
+//		//if 200 is returned, assuming that test completed succesfully
+//	}
+	
+	@Test
+	public void testListAI() throws Exception
+	{
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+		RealServerProxy testProxy = new RealServerProxy();
+		testProxy.registerUser(username, password);
+		testProxy.loginUser(username, password);
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		testProxy.getGameModel();
+		
+		testProxy.addAI(AIType.LARGEST_ARMY);
+		List<AIType> ai = testProxy.listAI();
+		assertTrue(ai.size() == 1);
+		//if 200 is returned, assuming that test completed succesfully
+	}
+	
+	
 
 	@Test
 	public void testRegisterUser() throws Exception
@@ -108,6 +233,7 @@ public class RealServerProxyTest
 		String password1 = UUID.randomUUID().toString();
 //		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
 		RealServerProxy testProxy = new RealServerProxy("127.0.0.1", 8081);		
+
 
 		boolean couldRegister = testProxy.registerUser(username1, password1);
 		
@@ -120,6 +246,7 @@ public class RealServerProxyTest
 		
 	}
 	
+	
 	@Test
 	public void testLoginUser() throws Exception
 	{
@@ -127,6 +254,7 @@ public class RealServerProxyTest
 		String password1 = UUID.randomUUID().toString();
 //		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
 		RealServerProxy testProxy = new RealServerProxy("127.0.0.1", 8081);		
+
 
 		boolean couldRegister = testProxy.registerUser(username1, password1);
 		
@@ -159,6 +287,7 @@ public class RealServerProxyTest
 	{
 //		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
 		RealServerProxy testProxy = new RealServerProxy("127.0.0.1", 8081);		
+
 
 		
 		//get result from server
@@ -324,6 +453,7 @@ public class RealServerProxyTest
 //		RealServerProxy testProxy1 = new RealServerProxy("104.236.179.174", 8081);
 		RealServerProxy testProxy1 = new RealServerProxy("127.0.0.1", 8081);		
 
+
 		testProxy1.registerUser(username1, password1);
 		testProxy1.loginUser(username1, password1);
 		testProxy1.createGame(true, true, true, game);
@@ -332,6 +462,7 @@ public class RealServerProxyTest
 		//sign second user in
 //		RealServerProxy testProxy2 = new RealServerProxy("104.236.179.174", 8081);
 		RealServerProxy testProxy2 = new RealServerProxy("127.0.0.1", 8081);		
+
 
 		testProxy2.registerUser(username2, password2);
 		testProxy2.loginUser(username2, password2);
@@ -385,6 +516,7 @@ public class RealServerProxyTest
 //		RealServerProxy testProxy1 = new RealServerProxy("104.236.179.174", 8081);
 		RealServerProxy testProxy1 = new RealServerProxy("127.0.0.1", 8081);		
 
+
 		testProxy1.registerUser(username1, password1);
 		testProxy1.loginUser(username1, password1);
 		testProxy1.createGame(true, true, true, game);
@@ -393,6 +525,7 @@ public class RealServerProxyTest
 		//sign second user in
 //		RealServerProxy testProxy2 = new RealServerProxy("104.236.179.174", 8081);
 		RealServerProxy testProxy2 = new RealServerProxy("127.0.0.1", 8081);		
+
 
 		testProxy2.registerUser(username2, password2);
 		testProxy2.loginUser(username2, password2);
@@ -447,6 +580,7 @@ public class RealServerProxyTest
 		//set up the game
 //		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
 		RealServerProxy testProxy = new RealServerProxy("127.0.0.1", 8081);		
+
 		testProxy.registerUser(username, password);
 		testProxy.loginUser(username, password);
 		testProxy.createGame(true, true, true, game);
@@ -472,14 +606,85 @@ public class RealServerProxyTest
 		//TODO expand this past a "200" test
 	}
 	
-	
-	
-	
-	
-	@Test 
-	public void testListAI() throws Exception
+	@Test
+	public void testSendChat() throws Exception
 	{
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
+		CatanColor col = CatanColor.BLUE;
 		
+		//set up the game
+		RealServerProxy testProxy = new RealServerProxy();
+		testProxy.registerUser(username, password);
+		testProxy.loginUser(username, password);
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		testProxy.getGameModel();
+				
+		//send request to the server
+		testProxy.sendChat("I'm a silly test case!");
+		
+		//if there are no errors, call it good.
+		//TODO expand this past a "200" test
+	}
+	
+	
+	
+	
+
+	@Test
+	public void testRollNumber() throws Exception
+	{
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+		RealServerProxy testProxy = new RealServerProxy();
+		testProxy.registerUser(username, password);
+		assertTrue(testProxy.loginUser(username, password));
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		
+
+		NetGameModel mod = testProxy.getGameModel();
+		assertTrue(mod != null);
+
+		testProxy.addAI(AIType.LARGEST_ARMY);
+		testProxy.addAI(AIType.LARGEST_ARMY);
+		testProxy.addAI(AIType.LARGEST_ARMY);
+
+				
+		//send request to the server_host
+		int num = 5;
+		testProxy.rollNumber(num);
+		
+		//if there are no errors, call it good.
+		//TODO expand this past a "200" test
 	}
 	
 	
@@ -603,6 +808,7 @@ public class RealServerProxyTest
 
 		testProxy.registerUser(username, password);
 		testProxy.loginUser(username, password);
+
 		testProxy.createGame(true, true, true, game);
 		List<NetGame> gList = testProxy.listGames();
 		
@@ -727,6 +933,7 @@ public class RealServerProxyTest
 	
 	@Test
 	public void monopolyCard() throws Exception
+
 	{
 		String username = UUID.randomUUID().toString();
 		String password = UUID.randomUUID().toString();
@@ -739,6 +946,7 @@ public class RealServerProxyTest
 
 		testProxy.registerUser(username, password);
 		testProxy.loginUser(username, password);
+
 		testProxy.createGame(true, true, true, game);
 		List<NetGame> gList = testProxy.listGames();
 		
@@ -854,4 +1062,45 @@ public class RealServerProxyTest
 //		assertTrue(gameModelAfter.getNetPlayers().get(0).getNetResourceList().getNumWood() == gameModelBefore.getNetPlayers().get(0).getNetResourceList().getNumWood() );
 //
 //	}
+
+
+//
+//@Test
+//public void testFinishTurn() throws Exception
+//{		
+//		String username1 = UUID.randomUUID().toString();
+//		String password1 = UUID.randomUUID().toString();
+//		String game = UUID.randomUUID().toString();
+//		CatanColor col1 = CatanColor.RED;
+//		
+//		//set up the game
+//		RealServerProxy testProxy1 = new RealServerProxy();
+//		testProxy1.registerUser(username1, password1);
+//		assertTrue(testProxy1.loginUser(username1, password1));
+//		testProxy1.createGame(true, true, true, game);
+//		List<NetGame> gList = testProxy1.listGames();
+//		
+//		//get the number of the game to join
+//		NetGame targetGame = null;
+//		for(NetGame g : gList){
+//			if(g.getTitle().equals(game)){
+//				targetGame = g;
+//			}
+//		}
+//		
+//		
+//		//join target game
+//		testProxy1.joinGame(targetGame.getId(), col1);
+//		NetGameModel mod1 = testProxy1.getGameModel();
+//		
+//		testProxy1.addAI(AIType.LARGEST_ARMY);
+//		testProxy1.addAI(AIType.LARGEST_ARMY);
+//
+//		//send request to the server_host
+//		testProxy1.finishTurn();
+//		
+//		//if there are no errors, call it good.
+//		//TODO expand this past a "200" test
+//	}
+	
 }

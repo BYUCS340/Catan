@@ -35,8 +35,9 @@ public class GameState
 		{
 			activePlayerIndex = 0;
 			if (state == GameRound.FIRSTROUND) state = GameRound.SECONDROUND;
-			else if (state == GameRound.SECONDROUND) state = GameRound.MAINROUND;
+			else if (state == GameRound.SECONDROUND ) state = GameRound.ROLLING;
 		}
+		if (state == GameRound.PLAYING) state = GameRound.ROLLING;
 		
 		return true;
 	}
@@ -47,7 +48,33 @@ public class GameState
 	public boolean startBuildPhase()
 	{
 		if (state != GameRound.ROLLING) return false;
+		state = GameRound.PLAYING;
 
+		return true;
+	}
+	
+	/**
+	 * Start robbing
+	 * @todo throw an excpetion here
+	 * @return
+	 */
+	public boolean startRobbing()
+	{
+		if (state != GameRound.ROLLING && state != GameRound.PLAYING) return false;
+		state = GameRound.ROBBING;
+		
+		return true;
+	}
+	
+	/**
+	 * Stop the robbing
+	 * @return
+	 */
+	public boolean stopRobbing()
+	{
+		//SWIPER NOT SWIPING
+		if (state != GameRound.ROBBING) return false;
+		state = GameRound.PLAYING;
 		return true;
 	}
 	/**

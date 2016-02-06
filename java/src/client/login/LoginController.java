@@ -2,6 +2,8 @@ package client.login;
 
 import client.base.*;
 import client.misc.*;
+import client.model.ClientGame;
+import client.networking.ServerProxyException;
 
 import java.net.*;
 import java.io.*;
@@ -72,17 +74,65 @@ public class LoginController extends Controller implements ILoginController {
 	public void signIn() {
 		
 		// TODO: log in user
+		String username = getLoginView().getLoginUsername();
+		String password = getLoginView().getLoginPassword();
 		
+		try {
+			if (!ClientGame.getCurrentProxy().loginUser(username, password))
+			{
+				this.showMessage("User/Password not found");
+				return;
+			}
+		} catch (ServerProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			this.showMessage("Unable to connect to server");
+			return;
+		}
 
 		// If log in succeeded
 		getLoginView().closeModal();
 		loginAction.execute();
+	}
+	
+	/**
+	 * Shows a message via the message view modal
+	 * @param mess
+	 */
+	private void showMessage(String mess)
+	{
+		System.err.println(mess);
+		getMessageView().setMessage(mess);
+		getMessageView().showModal();
 	}
 
 	@Override
 	public void register() {
 		
 		// TODO: register new user (which, if successful, also logs them in)
+		String username = getLoginView().getRegisterUsername();
+		String password = getLoginView().getRegisterPassword();
+		String password2 = getLoginView().getRegisterPasswordRepeat();
+		
+		//check to make sure the passwords patch
+		if (!password.equals(password2))
+		{
+			this.showMessage("Register User Passwords do not match");
+			return;
+		}
+		
+		try {
+			if (!ClientGame.getCurrentProxy().registerUser(username, password))
+			{
+				this.showMessage("Unable Register User");
+				return;
+			}
+		} catch (ServerProxyException e) {
+			// TODO Auto-generated catch block
+			this.showMessage("Unable to connect to server");
+			e.printStackTrace();
+			return;
+		}
 		
 		// If register succeeded
 		getLoginView().closeModal();

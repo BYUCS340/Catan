@@ -4,6 +4,7 @@ import shared.definitions.CatanColor;
 import client.base.*;
 import client.data.*;
 import client.misc.*;
+import client.model.ClientGame;
 
 
 /**
@@ -107,13 +108,23 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void createNewGame() {
+		String name = getNewGameView().getTitle();
+		boolean randomTiles = getNewGameView().getRandomlyPlaceHexes();
+		boolean randomNumbers = getNewGameView().getRandomlyPlaceNumbers();
+		boolean randomPorts = getNewGameView().getUseRandomPorts();
+		if (!ClientGame.getGame().createGame(randomTiles, randomNumbers, randomPorts, name))
+		{
+			getMessageView().setMessage("Unable to create game: "+name);
+			getMessageView().showModal();
+			return;
+		}
 		
 		getNewGameView().closeModal();
 	}
 
 	@Override
 	public void startJoinGame(GameInfo game) {
-
+		game.getId();
 		getSelectColorView().showModal();
 	}
 
@@ -125,6 +136,12 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void joinGame(CatanColor color) {
+		int id = 0;
+		
+		if (!ClientGame.getGame().joinGame(id, color))
+		{
+			return;
+		}
 		
 		// If join succeeded
 		getSelectColorView().closeModal();

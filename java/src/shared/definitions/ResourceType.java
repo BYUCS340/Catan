@@ -29,7 +29,24 @@ public enum ResourceType
 		}
 		return null;
 	}
+	
+	public static ResourceType fromHex(HexType hex){
+		switch (hex)
+		{
+			case ORE:   return ResourceType.ORE;
+			case BRICK: return ResourceType.BRICK;
+			case SHEEP: return ResourceType.SHEEP;
+			case WHEAT: return ResourceType.WHEAT;
+			case WOOD:  return ResourceType.WOOD;
+		
+			case WATER:
+			case DESERT:
+			default:
+				return null;
+		}
+	}
 }
+
 
 
 

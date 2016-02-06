@@ -341,7 +341,7 @@ public class RealServerProxy implements ServerProxy
 	public List<AIType> listAI() throws ServerProxyException
 	{
 		//get data from server
-		String urlPath = "/games/listAI";
+		String urlPath = "/game/listAI";
 		String result = doJSONGet(urlPath);
 		
 		//deserialize
