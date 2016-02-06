@@ -80,10 +80,17 @@ public class TestGameManager {
 		try{
 			int roll = gm.RollDice();
 			assertEquals(GameRound.PLAYING,gm.CurrentState());
-			int roll = gm.RollDice();
 		}
 		catch (Exception e){
-			fail("No exceptions here!");
+			fail("exceptions trying to roll the dice!");
+		}
+		
+		try{
+			int roll = gm.RollDice();
+			fail("We should have got an exceptions rolling the dice!");
+		}
+		catch (Exception e){
+			
 		}
 		
 		

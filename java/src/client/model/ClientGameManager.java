@@ -99,10 +99,11 @@ public class ClientGameManager extends GameManager
 	@Override
 	public int RollDice()
 	{
-		int roll = super.RollDice();
+		int roll = 0;
 		try {
+			roll = super.RollDice();
 			proxy.rollNumber(roll);
-		} catch (ServerProxyException e) {
+		} catch (ServerProxyException|ModelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
