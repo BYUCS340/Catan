@@ -648,4 +648,126 @@ public class RealServerProxyTest
 		//TODO expand this past a "200" test
 	}
 	
+	@Test
+	public void testRobPlayer() throws Exception
+	{
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+		RealServerProxy testProxy = new RealServerProxy();
+		testProxy.registerUser(username, password);
+		assertTrue(testProxy.loginUser(username, password));
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		String username1 = UUID.randomUUID().toString();
+		String password1 = UUID.randomUUID().toString();
+		CatanColor col1 = CatanColor.RED;
+		
+		//set up the game
+		RealServerProxy testProxy1 = new RealServerProxy();
+		testProxy1.registerUser(username1, password1);
+		assertTrue(testProxy1.loginUser(username1, password1));
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		testProxy1.joinGame(targetGame.getId(), col1);
+
+		
+		
+		
+		NetGameModel mod = testProxy.getGameModel();
+		assertTrue(mod != null);
+		
+		NetGameModel mod1 = testProxy1.getGameModel();
+		assertTrue(mod1 != null);
+		
+		HexLocation tempHL = new HexLocation(0,0);
+		
+		VertexLocation loc = new VertexLocation(tempHL, VertexDirection.East);
+		testProxy1.buildSettlement(loc, true);
+
+		testProxy.addAI(AIType.LARGEST_ARMY);
+		testProxy.addAI(AIType.LARGEST_ARMY);
+
+		HexLocation tempLoc = new HexLocation(0,0);
+		
+		//send request to the server_host
+		testProxy.robPlayer(-1,tempLoc);
+		
+		//if there are no errors, call it good.
+		//TODO expand this past a "200" test
+	}
+	
+	@Test
+	public void testFinishTurn() throws Exception
+	{
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+		RealServerProxy testProxy = new RealServerProxy();
+		testProxy.registerUser(username, password);
+		assertTrue(testProxy.loginUser(username, password));
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		String username1 = UUID.randomUUID().toString();
+		String password1 = UUID.randomUUID().toString();
+		CatanColor col1 = CatanColor.RED;
+		
+		//set up the game
+		RealServerProxy testProxy1 = new RealServerProxy();
+		testProxy1.registerUser(username1, password1);
+		assertTrue(testProxy1.loginUser(username1, password1));
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		testProxy1.joinGame(targetGame.getId(), col1);
+
+		
+		
+		
+		NetGameModel mod = testProxy.getGameModel();
+		assertTrue(mod != null);
+		
+		NetGameModel mod1 = testProxy1.getGameModel();
+		assertTrue(mod1 != null);
+		
+		HexLocation tempHL = new HexLocation(0,0);
+		
+		VertexLocation loc = new VertexLocation(tempHL, VertexDirection.East);
+		testProxy1.buildSettlement(loc, true);
+
+		testProxy.addAI(AIType.LARGEST_ARMY);
+		testProxy.addAI(AIType.LARGEST_ARMY);
+
+		//send request to the server_host
+		testProxy.finishTurn();
+		
+		//if there are no errors, call it good.
+		//TODO expand this past a "200" test
+	}
+	
 }
