@@ -691,107 +691,107 @@ public class RealServerProxyTest
 	
 	
 	
-//	@Test
-//	public void buyDevCard() throws Exception
-//	{
-//		String username = UUID.randomUUID().toString();
-//		String password = UUID.randomUUID().toString();
-//		String game = UUID.randomUUID().toString();
-//		CatanColor col = CatanColor.BLUE;
-//		
-//		//set up the game
-////		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
-//		RealServerProxy testProxy = new RealServerProxy("127.0.0.1", 8081);
-//
-//		testProxy.registerUser(username, password);
-//		testProxy.loginUser(username, password);
-//		testProxy.createGame(true, true, true, game);
-//		List<NetGame> gList = testProxy.listGames();
-//		
-//		//get the number of the game to join
-//		NetGame targetGame = null;
-//		for(NetGame g : gList){
-//			if(g.getTitle().equals(game)){
-//				targetGame = g;
-//			}
-//		}
-//		
-//		//join target game
-//		
-//		testProxy.joinGame(targetGame.getId(), col);
-//		testProxy.getGameModel();
-//		NetGameModel gameModelBefore = testProxy.getGameModel();
-//		int currentUserIndex = testProxy.getUserIndex();
-////		System.out.println(currentUserIndex);
-//		NetGameModel gameModelAfter = testProxy.buyDevCard();
-//		int cardsAddedCount = 0;
-//		//  if a dev card was added
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonopoly() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonopoly();
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonument() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonument();
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumRoadBuilding() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumRoadBuilding();
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumSoldier() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumSoldier();
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumYearOfPlenty() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumYearOfPlenty();
-////		System.out.println(cardsAddedCount);
-//		assertTrue(cardsAddedCount != 0);
-//				
-//		int bankCardsSubtractedCount = 0;
-//		//  if a dev card was subtracted
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumMonopoly() - gameModelBefore.getNetDeck().getNumMonopoly();
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumMonument() - gameModelBefore.getNetDeck().getNumMonument();
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumRoadBuilding() - gameModelBefore.getNetDeck().getNumRoadBuilding();
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumSoldier() - gameModelBefore.getNetDeck().getNumSoldier();
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumYearOfPlenty() - gameModelBefore.getNetDeck().getNumYearOfPlenty();
-//		assertTrue(bankCardsSubtractedCount != 0);
-//		
-//		
-//		
-//		
-//		
-//		gameModelBefore = testProxy.getGameModel();
-//		gameModelAfter = testProxy.buyDevCard();
-//		cardsAddedCount = 0;
-//		//  if a dev card was added
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonopoly() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonopoly();
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonument() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonument();
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumRoadBuilding() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumRoadBuilding();
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumSoldier() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumSoldier();
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumYearOfPlenty() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumYearOfPlenty();
-//		assertTrue(cardsAddedCount != 0);
-//				
-//		bankCardsSubtractedCount = 0;
-//		//  if a dev card was subtracted
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumMonopoly() - gameModelBefore.getNetDeck().getNumMonopoly();
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumMonument() - gameModelBefore.getNetDeck().getNumMonument();
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumRoadBuilding() - gameModelBefore.getNetDeck().getNumRoadBuilding();
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumSoldier() - gameModelBefore.getNetDeck().getNumSoldier();
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumYearOfPlenty() - gameModelBefore.getNetDeck().getNumYearOfPlenty();
-//		assertTrue(bankCardsSubtractedCount != 0);
-//		
-//		
-//		
-//		gameModelBefore = testProxy.getGameModel();
-//		gameModelAfter = testProxy.buyDevCard();
-//		cardsAddedCount = 0;
-//		//  if a dev card was added
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonopoly() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonopoly();
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonument() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonument();
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumRoadBuilding() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumRoadBuilding();
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumSoldier() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumSoldier();
-//		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumYearOfPlenty() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumYearOfPlenty();
-//		assertTrue(cardsAddedCount != 0);
-//				
-//		bankCardsSubtractedCount = 0;
-//		//  if a dev card was subtracted
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumMonopoly() - gameModelBefore.getNetDeck().getNumMonopoly();
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumMonument() - gameModelBefore.getNetDeck().getNumMonument();
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumRoadBuilding() - gameModelBefore.getNetDeck().getNumRoadBuilding();
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumSoldier() - gameModelBefore.getNetDeck().getNumSoldier();
-//		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumYearOfPlenty() - gameModelBefore.getNetDeck().getNumYearOfPlenty();
-//		assertTrue(bankCardsSubtractedCount != 0);
-//		
-//
-//		
-//	}
+	@Test
+	public void buyDevCard() throws Exception
+	{
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+//		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
+		RealServerProxy testProxy = new RealServerProxy("127.0.0.1", 8081);
+
+		testProxy.registerUser(username, password);
+		testProxy.loginUser(username, password);
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		
+		testProxy.joinGame(targetGame.getId(), col);
+		testProxy.getGameModel();
+		NetGameModel gameModelBefore = testProxy.getGameModel();
+		int currentUserIndex = testProxy.getUserIndex();
+//		System.out.println(currentUserIndex);
+		NetGameModel gameModelAfter = testProxy.buyDevCard();
+		int cardsAddedCount = 0;
+		//  if a dev card was added
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonopoly() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonopoly();
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonument() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonument();
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumRoadBuilding() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumRoadBuilding();
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumSoldier() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumSoldier();
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumYearOfPlenty() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumYearOfPlenty();
+//		System.out.println(cardsAddedCount);
+		assertTrue(cardsAddedCount != 0);
+				
+		int bankCardsSubtractedCount = 0;
+		//  if a dev card was subtracted
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumMonopoly() - gameModelBefore.getNetDeck().getNumMonopoly();
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumMonument() - gameModelBefore.getNetDeck().getNumMonument();
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumRoadBuilding() - gameModelBefore.getNetDeck().getNumRoadBuilding();
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumSoldier() - gameModelBefore.getNetDeck().getNumSoldier();
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumYearOfPlenty() - gameModelBefore.getNetDeck().getNumYearOfPlenty();
+		assertTrue(bankCardsSubtractedCount != 0);
+		
+		
+		
+		
+		
+		gameModelBefore = testProxy.getGameModel();
+		gameModelAfter = testProxy.buyDevCard();
+		cardsAddedCount = 0;
+		//  if a dev card was added
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonopoly() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonopoly();
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonument() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonument();
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumRoadBuilding() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumRoadBuilding();
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumSoldier() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumSoldier();
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumYearOfPlenty() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumYearOfPlenty();
+		assertTrue(cardsAddedCount != 0);
+				
+		bankCardsSubtractedCount = 0;
+		//  if a dev card was subtracted
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumMonopoly() - gameModelBefore.getNetDeck().getNumMonopoly();
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumMonument() - gameModelBefore.getNetDeck().getNumMonument();
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumRoadBuilding() - gameModelBefore.getNetDeck().getNumRoadBuilding();
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumSoldier() - gameModelBefore.getNetDeck().getNumSoldier();
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumYearOfPlenty() - gameModelBefore.getNetDeck().getNumYearOfPlenty();
+		assertTrue(bankCardsSubtractedCount != 0);
+		
+		
+		
+		gameModelBefore = testProxy.getGameModel();
+		gameModelAfter = testProxy.buyDevCard();
+		cardsAddedCount = 0;
+		//  if a dev card was added
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonopoly() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonopoly();
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonument() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumMonument();
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumRoadBuilding() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumRoadBuilding();
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumSoldier() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumSoldier();
+		cardsAddedCount += gameModelAfter.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumYearOfPlenty() - gameModelBefore.getNetPlayers().get(currentUserIndex).getNewNetDevCardList().getNumYearOfPlenty();
+		assertTrue(cardsAddedCount != 0);
+				
+		bankCardsSubtractedCount = 0;
+		//  if a dev card was subtracted
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumMonopoly() - gameModelBefore.getNetDeck().getNumMonopoly();
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumMonument() - gameModelBefore.getNetDeck().getNumMonument();
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumRoadBuilding() - gameModelBefore.getNetDeck().getNumRoadBuilding();
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumSoldier() - gameModelBefore.getNetDeck().getNumSoldier();
+		bankCardsSubtractedCount += gameModelAfter.getNetDeck().getNumYearOfPlenty() - gameModelBefore.getNetDeck().getNumYearOfPlenty();
+		assertTrue(bankCardsSubtractedCount != 0);
+		
+
+		
+	}
 	
 	
 	@Test
@@ -914,13 +914,31 @@ public class RealServerProxyTest
 //		}
 //		
 //		//join target game
+//		testProxy.addAI(AIType.LARGEST_ARMY);
+//
 //		testProxy.joinGame(targetGame.getId(), col);
+//		NetGameModel gameModelBefore = testProxy.getGameModel();
+//		NetGameModel gameModelAfter = testProxy.soldierCard(1, new HexLocation(1,1));
+//
 //		testProxy.addAI(AIType.LARGEST_ARMY);
 //		testProxy.addAI(AIType.LARGEST_ARMY);
 //		testProxy.addAI(AIType.LARGEST_ARMY);
 //		
-//		NetGameModel gameModelBefore = testProxy.getGameModel();
-//		NetGameModel gameModelAfter = testProxy.soldierCard(1, new HexLocation(3,2));
+//		
+//		testProxy.buyDevCard();
+//		testProxy.buyDevCard();
+//		testProxy.buyDevCard();
+//		testProxy.buyDevCard();
+//		testProxy.buyDevCard();
+//		testProxy.buyDevCard();
+//		testProxy.buyDevCard();
+//		testProxy.buyDevCard();
+//		testProxy.buyDevCard();
+//		testProxy.buyDevCard();
+//		testProxy.buyDevCard();
+//
+//		
+//		NetGameModel gameModelAfter2 = testProxy.soldierCard(2, new HexLocation(1,1));
 //
 //		
 //		assertTrue(gameModelAfter.getNetMap().getRobberLocation().getX() != gameModelAfter.getNetMap().getRobberLocation().getX() ||
@@ -1006,53 +1024,59 @@ public class RealServerProxyTest
 		
 	}
 	
-//	@Test
-//	public void discardCards() throws Exception
-//	{
-//		String username = UUID.randomUUID().toString();
-//		String password = UUID.randomUUID().toString();
-//		String game = UUID.randomUUID().toString();
-//		CatanColor col = CatanColor.BLUE;
-//		
-//		//set up the game
-////		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
-//		RealServerProxy testProxy = new RealServerProxy("127.0.0.1", 8081);
-//
-//		testProxy.registerUser(username, password);
-//		testProxy.loginUser(username, password);
-//		testProxy.createGame(true, true, true, game);
-//		List<NetGame> gList = testProxy.listGames();
-//		
-//		//get the number of the game to join
-//		NetGame targetGame = null;
-//		for(NetGame g : gList){
-//			if(g.getTitle().equals(game)){
-//				targetGame = g;
-//			}
-//		}
-//		
-//		//join target game
-//		testProxy.joinGame(targetGame.getId(), col);
-//		testProxy.getGameModel();
-//		testProxy.yearOfPlentyCard(ResourceType.BRICK, ResourceType.ORE);
-//		testProxy.yearOfPlentyCard(ResourceType.BRICK, ResourceType.SHEEP);
-//		testProxy.yearOfPlentyCard(ResourceType.WHEAT, ResourceType.ORE);
-//		testProxy.yearOfPlentyCard(ResourceType.WHEAT, ResourceType.SHEEP);
-//		testProxy.yearOfPlentyCard(ResourceType.WHEAT, ResourceType.SHEEP);
-//		testProxy.yearOfPlentyCard(ResourceType.ORE, ResourceType.ORE);
-//		testProxy.yearOfPlentyCard(ResourceType.ORE, ResourceType.ORE);
-//		NetGameModel gameModelBefore = testProxy.getGameModel();
-//
-//		
-//		
-//		List<Integer> cardsToDiscard = new ArrayList<Integer>();
-//		cardsToDiscard.add(1);
-//		cardsToDiscard.add(1);
-//		cardsToDiscard.add(1);
-//		cardsToDiscard.add(2);
-//		cardsToDiscard.add(1);
-//
-//		
+	@Test
+	public void discardCards() throws Exception
+	{
+		String username = UUID.randomUUID().toString();
+		String password = UUID.randomUUID().toString();
+		String game = UUID.randomUUID().toString();
+		CatanColor col = CatanColor.BLUE;
+		
+		//set up the game
+//		RealServerProxy testProxy = new RealServerProxy("104.236.179.174", 8081);
+		RealServerProxy testProxy = new RealServerProxy("127.0.0.1", 8081);
+
+		testProxy.registerUser(username, password);
+		testProxy.loginUser(username, password);
+		testProxy.createGame(true, true, true, game);
+		List<NetGame> gList = testProxy.listGames();
+		
+		//get the number of the game to join
+		NetGame targetGame = null;
+		for(NetGame g : gList){
+			if(g.getTitle().equals(game)){
+				targetGame = g;
+			}
+		}
+		
+		//join target game
+		testProxy.joinGame(targetGame.getId(), col);
+		testProxy.getGameModel();
+		testProxy.yearOfPlentyCard(ResourceType.BRICK, ResourceType.ORE);
+		testProxy.yearOfPlentyCard(ResourceType.BRICK, ResourceType.SHEEP);
+		testProxy.yearOfPlentyCard(ResourceType.WHEAT, ResourceType.ORE);
+		testProxy.yearOfPlentyCard(ResourceType.WHEAT, ResourceType.SHEEP);
+		testProxy.yearOfPlentyCard(ResourceType.WHEAT, ResourceType.SHEEP);
+		testProxy.yearOfPlentyCard(ResourceType.ORE, ResourceType.ORE);
+		testProxy.yearOfPlentyCard(ResourceType.ORE, ResourceType.ORE);
+		NetGameModel gameModelBefore = testProxy.getGameModel();
+
+		
+		
+		List<Integer> cardsToDiscard = new ArrayList<Integer>();
+		cardsToDiscard.add(1);
+		cardsToDiscard.add(1);
+		cardsToDiscard.add(1);
+		cardsToDiscard.add(2);
+		cardsToDiscard.add(1);
+
+		
+		
+		//  TODO:  we need to set the client to be in "discarding mode" before we can test this, doesn't seem 
+		//  TODO:  possible right now
+		
+		
+		
 //		NetGameModel gameModelAfter = testProxy.discardCards(cardsToDiscard);
 //		
 //		assertTrue(gameModelAfter.getNetPlayers().get(0).getNetResourceList().getNumBrick() == gameModelBefore.getNetPlayers().get(0).getNetResourceList().getNumBrick() );
@@ -1060,47 +1084,8 @@ public class RealServerProxyTest
 //		assertTrue(gameModelAfter.getNetPlayers().get(0).getNetResourceList().getNumSheep() == gameModelBefore.getNetPlayers().get(0).getNetResourceList().getNumSheep() );
 //		assertTrue(gameModelAfter.getNetPlayers().get(0).getNetResourceList().getNumWheat() == gameModelBefore.getNetPlayers().get(0).getNetResourceList().getNumWheat() );
 //		assertTrue(gameModelAfter.getNetPlayers().get(0).getNetResourceList().getNumWood() == gameModelBefore.getNetPlayers().get(0).getNetResourceList().getNumWood() );
-//
-//	}
 
+	}
 
-//
-//@Test
-//public void testFinishTurn() throws Exception
-//{		
-//		String username1 = UUID.randomUUID().toString();
-//		String password1 = UUID.randomUUID().toString();
-//		String game = UUID.randomUUID().toString();
-//		CatanColor col1 = CatanColor.RED;
-//		
-//		//set up the game
-//		RealServerProxy testProxy1 = new RealServerProxy();
-//		testProxy1.registerUser(username1, password1);
-//		assertTrue(testProxy1.loginUser(username1, password1));
-//		testProxy1.createGame(true, true, true, game);
-//		List<NetGame> gList = testProxy1.listGames();
-//		
-//		//get the number of the game to join
-//		NetGame targetGame = null;
-//		for(NetGame g : gList){
-//			if(g.getTitle().equals(game)){
-//				targetGame = g;
-//			}
-//		}
-//		
-//		
-//		//join target game
-//		testProxy1.joinGame(targetGame.getId(), col1);
-//		NetGameModel mod1 = testProxy1.getGameModel();
-//		
-//		testProxy1.addAI(AIType.LARGEST_ARMY);
-//		testProxy1.addAI(AIType.LARGEST_ARMY);
-//
-//		//send request to the server_host
-//		testProxy1.finishTurn();
-//		
-//		//if there are no errors, call it good.
-//		//TODO expand this past a "200" test
-//	}
 	
 }
