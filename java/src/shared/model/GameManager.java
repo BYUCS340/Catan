@@ -139,6 +139,55 @@ public class GameManager
 		return players.get(playerID).color;
 	}
 	
+	
+	/**
+	 * Gets the number of resources for the player
+	 * @param playerID
+	 * @param type
+	 * @return
+	 */
+	public int playerResourceCount(int playerID, ResourceType type)
+	{
+		return this.players.get(playerID).playerBank.getResourceCount(type);
+	}
+	
+	/**
+	 * Gets the number of devCards for the current player
+	 * @param playerID
+	 * @param type
+	 * @return
+	 */
+	public int playerDevCardCount(int playerID,DevCardType type)
+	{
+		return this.players.get(playerID).playerBank.getDevCardCount(type);
+	}
+	/**
+	 * Gets the total number of dev cards for a player
+	 * @param playerID
+	 * @return
+	 */
+	public int playerDevCardCount(int playerID)
+	{
+		return this.players.get(playerID).playerBank.getDevCardCount();
+	}
+	
+	/**
+	 * Gets the number of devCards for the current player
+	 * @param playerID
+	 * @param type
+	 * @return
+	 */
+	public int playerPieceCount(int playerID,PieceType type)
+	{
+		try {
+			return this.players.get(playerID).playerBank.getPieceCount(type);
+		} catch (ModelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
 	/**
 	 * The number of players in a game
 	 * @return
@@ -147,6 +196,8 @@ public class GameManager
 	{
 		return players.size();
 	}
+	
+	
 	
 	/**
 	 * Returns the current version
@@ -262,9 +313,10 @@ public class GameManager
 	}
 	
 	/**
-	 * Attempts to build a road
+	 * Attempts to buy a dev card
 	 * @param playerID 0 to 3
 	 * @throws ModelException if the player doesn't have the resources
+	 * @returns the dev card type bought (hopefully somewhat random)
 	 */
 	public DevCardType BuyDevCard(int playerID) throws ModelException
 	{
@@ -657,13 +709,34 @@ public class GameManager
 	}
 	
 	/**
+	 * Determines whenter player can play card
+	 * @param playerID
+	 * @param type
+	 * @return
+	 */
+	public boolean CanPlayDevCard(int playerID, DevCardType type)
+	{
+		switch (type)
+		{
+		case MONOPOLY:  return this.CanUseMonopoly(playerID);
+		case MONUMENT:  return this.CanUseMonument(playerID);
+		case ROAD_BUILD:return this.CanUseRoadBuilder(playerID);
+		case SOLDIER:   return this.CanUseSoldier(playerID);
+		case YEAR_OF_PLENTY: return this.CanUseYearOfPlenty(playerID);
+		default:
+			return false;
+			
+		}
+	}
+	
+	/**
 	 * Checks to see if a player can place the robber
 	 * @param playerID
 	 * @return
 	 */
 	public boolean CanPlaceRobber (int playerID)
 	{
-		return this.playerCanMoveRobber == playerID;
+		return this.CurrentState() == GameRound.ROBBING || this.playerCanMoveRobber == playerID;
 	}
 	
 	

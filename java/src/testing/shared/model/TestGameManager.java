@@ -8,6 +8,7 @@ import org.junit.Test;
 import client.map.MapController;
 import client.map.view.MapView;
 import shared.definitions.CatanColor;
+import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
 import shared.model.GameManager;
 import shared.model.ModelException;
@@ -47,6 +48,7 @@ public class TestGameManager {
 		
 		gm.StartGame();
 		
+		//Get through the first two rounds for each player
 		try{
 			assertEquals(GameRound.FIRSTROUND,gm.CurrentState());
 			assertEquals(gm.CurrentPlayersTurn(),0);
@@ -75,6 +77,8 @@ public class TestGameManager {
 		catch (Exception e){
 			fail("No exceptions here!");
 		}
+		
+		//Give everyone 5 of every resource
 		gm.payDayForDayz();
 		try{
 			assertFalse(gm.CanBuyDevCard(gm.CurrentPlayersTurn()));
@@ -85,6 +89,7 @@ public class TestGameManager {
 			fail("exceptions trying to roll the dice!");
 		}
 		
+		//Make sure we can't roll the dice again
 		try{
 			int roll = gm.RollDice();
 			fail("We should have got an exceptions rolling the dice!");
@@ -93,9 +98,16 @@ public class TestGameManager {
 			
 		}
 		
+		//Try buying a dev card
 		try{
 			assertTrue(gm.CanBuyDevCard(gm.CurrentPlayersTurn()));
-			gm.BuyDevCard(gm.CurrentPlayersTurn());
+			DevCardType card = gm.BuyDevCard(gm.CurrentPlayersTurn());
+			System.out.println("Bought card: ");
+			System.out.println(card.toString());
+			assertEquals(1,gm.playerDevCardCount(gm.CurrentPlayersTurn()));
+			assertTrue(gm.CanPlayDevCard(gm.CurrentPlayersTurn(), card));
+			gm.playDevCard(gm.CurrentPlayersTurn(), card);
+			assertEquals(0,gm.playerDevCardCount(gm.CurrentPlayersTurn()));
 		}
 		catch (Exception e){
 			

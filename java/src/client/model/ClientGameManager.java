@@ -51,7 +51,7 @@ public class ClientGameManager extends GameManager
 	}
 	
 	/**
-	 * Gets the number of resources for the current player
+	 * Gets the number of resources for the player
 	 * @param type
 	 * @return
 	 */
