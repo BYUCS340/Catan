@@ -60,7 +60,9 @@ public class MockServerProxy implements ServerProxy
 		initializeStaticListOfGames();
 	}
 	
-	
+	/**
+	 * Initializes a hard-coded state of the game
+	 */
 	private void initializeStaticStateOfGame(){
 		currentStateOfGame = new NetGameModel();
 		
@@ -421,7 +423,9 @@ public class MockServerProxy implements ServerProxy
 		currentStateOfGame.setVersion(0);
 	}
 	
-	
+	/**
+	 * Initializes a hard coded static state of the game
+	 */
 	private void initializeStaticListOfGames(){
 		gameList = new ArrayList<NetGame>();
 		

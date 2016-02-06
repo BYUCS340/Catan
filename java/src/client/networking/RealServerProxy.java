@@ -1218,17 +1218,31 @@ public class RealServerProxy implements ServerProxy
 		gameID = -1;
 	}
 	
+	/**
+	 * Processes user's cached cookie string
+	 * @param uCookie
+	 * @return
+	 */
 	private String processUserCookie(String uCookie){
 		String tempStr = uCookie.substring(11);
 		tempStr = tempStr.substring(0, tempStr.indexOf(";Path"));
 		return tempStr;
 	}
 	
+	/**
+	 * Extracts and returns parameters from passed cookie
+	 * @param gCookie
+	 * @return
+	 */
 	private int processGameCookie(String gCookie){
 		String tempStr = gCookie.substring(11, gCookie.indexOf(';'));
 		return Integer.parseInt(tempStr);
 	}
 	
+	/**
+	 * Generates a cookie string for the user
+	 * @return
+	 */
 	private String getCookieString(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("catan.user=");
