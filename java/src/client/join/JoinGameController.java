@@ -1,10 +1,15 @@
 package client.join;
 
 import shared.definitions.CatanColor;
+import shared.networking.transport.NetGame;
+
+import java.util.List;
+
 import client.base.*;
 import client.data.*;
 import client.misc.*;
 import client.model.ClientGame;
+import client.networking.ServerProxyException;
 
 
 /**
@@ -90,7 +95,22 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void start() {
-		
+		try 
+		{
+			List<NetGame> allGames = ClientGame.getCurrentProxy().listGames();
+			GameInfo[] games = new GameInfo[allGames.size()];
+			for (int i=0; i< allGames.size(); i++)
+			{
+				games[i] = ClientDataTranslator.convert(allGames.get(i));
+			}
+			PlayerInfo localPlayer = new PlayerInfo();
+			getJoinGameView().setGames(games, localPlayer);
+		} 
+		catch (ServerProxyException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		getJoinGameView().showModal();
 	}
 
@@ -121,24 +141,25 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		
 		getNewGameView().closeModal();
 	}
-
+	private int lastGameID = 0;
 	@Override
 	public void startJoinGame(GameInfo game) {
-		game.getId();
+		lastGameID = game.getId();
+		
 		getSelectColorView().showModal();
 	}
 
 	@Override
 	public void cancelJoinGame() {
-	
+		lastGameID = 0;
 		getJoinGameView().closeModal();
 	}
 
 	@Override
 	public void joinGame(CatanColor color) {
-		int id = 0;
+		if (lastGameID == 0) return;
 		
-		if (!ClientGame.getGame().joinGame(id, color))
+		if (!ClientGame.getGame().joinGame(lastGameID, color))
 		{
 			return;
 		}
