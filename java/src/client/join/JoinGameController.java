@@ -103,6 +103,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			{
 				games[i] = ClientDataTranslator.convert(allGames.get(i));
 			}
+//			ClientGame.getCurrentProxy().
 			PlayerInfo localPlayer = new PlayerInfo();
 			getJoinGameView().setGames(games, localPlayer);
 		} 
