@@ -8,7 +8,7 @@ public enum AIType
 	{
 		switch(type)
 		{
-			case LARGEST_ARMY : return "largest_army";
+			case LARGEST_ARMY : return "LARGEST_ARMY";
 		}
 		return "unknown";
 	}
@@ -17,7 +17,7 @@ public enum AIType
 	{
 		switch(type.toLowerCase())
 		{
-			case "largest_army": return AIType.LARGEST_ARMY;
+			case "LARGEST_ARMY": return AIType.LARGEST_ARMY;
 		}
 		
 		return null;
