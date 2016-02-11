@@ -99,8 +99,6 @@ public class MapComponent extends JComponent
 	private double scale;
 	private AffineTransform transform;
 	
-	private MapModel model;
-	
 	public MapComponent()
 	{
 		setBackground(Color.white);
@@ -119,11 +117,6 @@ public class MapComponent extends JComponent
 		addComponentListener(componentAdapter);
 		
 		scale = Double.NaN;
-	}
-	
-	public void SetMapModel(MapModel model)
-	{
-		this.model = model;
 	}
 	
 	private void initDrop()
@@ -220,150 +213,150 @@ public class MapComponent extends JComponent
 		@Override
 		public void mouseMoved(MouseEvent e)
 		{
-			if(dropType == null)
-			{
-				return;
-			}
-			if(transform == null)
-			{
-				return;
-			}
-			
-			// Find
-			// closest
-			// drop
-			// point
-			
-			Point2D mousePoint = new Point2D.Double(e.getX(), e.getY());
-			
-			try
-			{
-				transform.inverseTransform(mousePoint, mousePoint);
-			}
-			catch(NoninvertibleTransformException ex)
-			{
-				ex.printStackTrace();
-				return;
-			}
-			
-			Coordinate closestHexCoordinate = getClosestHexCoordinate(mousePoint);
-			if (!model.ContainsHex(closestHexCoordinate))
-				return;
-			
-			Hex closestHex;
-			try 
-			{
-				closestHex = model.GetHex(closestHexCoordinate);
-				
-				if(dropType == PieceType.ROAD)
-				{
-					Map<Double, Vertex> possibleEnds = getSortedVerticies(mousePoint, closestHex);
-					
-					Iterator<Vertex> sortedVerticies = possibleEnds.values().iterator();
-					Vertex v1 = sortedVerticies.next();
-					Vertex v2 = sortedVerticies.next();
-					Coordinate p1 = v1.getPoint();
-					Coordinate p2 = v2.getPoint();
-					
-					dropAllowed = getController().canPlaceRoad(p1, p2, dropColor);
-					
-					if (dropAllowed)
-					{
-						try
-						{
-							dropEdgeLoc = model.GetEdge(p1, p2);
-						} 
-						catch (MapException e1) {
-							e1.printStackTrace();
-							dropAllowed = false;
-						}
-					}
-				}
-				else if (dropType == PieceType.CITY || dropType == PieceType.SETTLEMENT)
-				{
-					Map<Double, Vertex> possibleEnds = getSortedVerticies(mousePoint, closestHex);
-					
-					Iterator<Vertex> sortedVerticies = possibleEnds.values().iterator();
-					Vertex v1 = sortedVerticies.next();
-					Coordinate p1 = v1.getPoint();
-					
-					if (dropType == PieceType.CITY)
-						dropAllowed = getController().canPlaceCity(p1, dropColor);
-					else
-						dropAllowed = getController().canPlaceSettlement(p1);
-					
-					if (dropAllowed)
-					{
-						try
-						{
-							dropVertLoc = model.GetVertex(p1);
-						} 
-						catch (MapException e1) {
-							e1.printStackTrace();
-							dropAllowed = false;
-						}
-					}
-				}
-				else if(dropType == PieceType.ROBBER)
-				{
-					dropAllowed = getController().canPlaceRobber(closestHexCoordinate);
-					
-					if (dropAllowed)
-					{
-						try
-						{
-							dropHexLoc = model.GetHex(closestHexCoordinate);
-						} 
-						catch (MapException e1) {
-							e1.printStackTrace();
-							dropAllowed = false;
-						}
-					}
-				}
-				else
-				{
-					assert false;
-				}
-				
-				repaint();
-			} 
-			catch (MapException e2) {
-				e2.printStackTrace();
-			}	
+//			if(dropType == null)
+//			{
+//				return;
+//			}
+//			if(transform == null)
+//			{
+//				return;
+//			}
+//			
+//			// Find
+//			// closest
+//			// drop
+//			// point
+//			
+//			Point2D mousePoint = new Point2D.Double(e.getX(), e.getY());
+//			
+//			try
+//			{
+//				transform.inverseTransform(mousePoint, mousePoint);
+//			}
+//			catch(NoninvertibleTransformException ex)
+//			{
+//				ex.printStackTrace();
+//				return;
+//			}
+//			
+//			Coordinate closestHexCoordinate = getClosestHexCoordinate(mousePoint);
+//			if (!model.ContainsHex(closestHexCoordinate))
+//				return;
+//			
+//			Hex closestHex;
+//			try 
+//			{
+//				closestHex = model.GetHex(closestHexCoordinate);
+//				
+//				if(dropType == PieceType.ROAD)
+//				{
+//					Map<Double, Vertex> possibleEnds = getSortedVerticies(mousePoint, closestHex);
+//					
+//					Iterator<Vertex> sortedVerticies = possibleEnds.values().iterator();
+//					Vertex v1 = sortedVerticies.next();
+//					Vertex v2 = sortedVerticies.next();
+//					Coordinate p1 = v1.getPoint();
+//					Coordinate p2 = v2.getPoint();
+//					
+//					dropAllowed = getController().CanPlaceRoad(p1, p2, dropColor);
+//					
+//					if (dropAllowed)
+//					{
+//						try
+//						{
+//							dropEdgeLoc = model.GetEdge(p1, p2);
+//						} 
+//						catch (MapException e1) {
+//							e1.printStackTrace();
+//							dropAllowed = false;
+//						}
+//					}
+//				}
+//				else if (dropType == PieceType.CITY || dropType == PieceType.SETTLEMENT)
+//				{
+//					Map<Double, Vertex> possibleEnds = getSortedVerticies(mousePoint, closestHex);
+//					
+//					Iterator<Vertex> sortedVerticies = possibleEnds.values().iterator();
+//					Vertex v1 = sortedVerticies.next();
+//					Coordinate p1 = v1.getPoint();
+//					
+//					if (dropType == PieceType.CITY)
+//						dropAllowed = getController().canPlaceCity(p1, dropColor);
+//					else
+//						dropAllowed = getController().canPlaceSettlement(p1);
+//					
+//					if (dropAllowed)
+//					{
+//						try
+//						{
+//							dropVertLoc = model.GetVertex(p1);
+//						} 
+//						catch (MapException e1) {
+//							e1.printStackTrace();
+//							dropAllowed = false;
+//						}
+//					}
+//				}
+//				else if(dropType == PieceType.ROBBER)
+//				{
+//					dropAllowed = getController().canPlaceRobber(closestHexCoordinate);
+//					
+//					if (dropAllowed)
+//					{
+//						try
+//						{
+//							dropHexLoc = model.GetHex(closestHexCoordinate);
+//						} 
+//						catch (MapException e1) {
+//							e1.printStackTrace();
+//							dropAllowed = false;
+//						}
+//					}
+//				}
+//				else
+//				{
+//					assert false;
+//				}
+//				
+//				repaint();
+//			} 
+//			catch (MapException e2) {
+//				e2.printStackTrace();
+//			}	
 		}
 		
 		@Override
 		public void mouseClicked(MouseEvent e)
 		{
-			if(dropType != null)
-			{
-				
-				if(dropAllowed)
-				{
-					switch (dropType)
-					{
-						case ROAD:
-							getController().placeRoad(dropEdgeLoc.getStart(), dropEdgeLoc.getEnd(), dropColor);
-							break;
-						case SETTLEMENT:
-							getController().placeSettlement(dropVertLoc.getPoint(), dropColor);
-							break;
-						case CITY:
-							getController().placeCity(dropVertLoc.getPoint(), dropColor);
-							break;
-						case ROBBER:
-							getController().placeRobber(dropHexLoc.getPoint());
-							break;
-						default:
-							assert false;
-							break;
-					}
-					
-					initDrop();
-				}
-				
-				repaint();
-			}
+//			if(dropType != null)
+//			{
+//				
+//				if(dropAllowed)
+//				{
+//					switch (dropType)
+//					{
+//						case ROAD:
+//							getController().placeRoad(dropEdgeLoc.getStart(), dropEdgeLoc.getEnd(), dropColor);
+//							break;
+//						case SETTLEMENT:
+//							getController().placeSettlement(dropVertLoc.getPoint(), dropColor);
+//							break;
+//						case CITY:
+//							getController().placeCity(dropVertLoc.getPoint(), dropColor);
+//							break;
+//						case ROBBER:
+//							getController().placeRobber(dropHexLoc.getPoint());
+//							break;
+//						default:
+//							assert false;
+//							break;
+//					}
+//					
+//					initDrop();
+//				}
+//				
+//				repaint();
+//			}
 		}
 		
 	};
@@ -379,10 +372,7 @@ public class MapComponent extends JComponent
 		Graphics2D g2 = (Graphics2D)g;
 		
 		g2.setColor(this.getBackground());
-		g2.fillRect(0, 0, this.getWidth(), this.getHeight());		
-
-		if (model == null)
-			return;
+		g2.fillRect(0, 0, this.getWidth(), this.getHeight());
 
 		g2.translate(this.getWidth() / 2, this.getHeight() / 2);
 		g2.scale(scale, scale);
@@ -399,7 +389,7 @@ public class MapComponent extends JComponent
 	
 	private void drawHexes(Graphics2D g2)
 	{
-		Iterator<Hex> hexes = model.GetAllHexes();
+		Iterator<Hex> hexes = controller.GetHexes();
 		
 		while (hexes.hasNext())
 		{
@@ -422,7 +412,7 @@ public class MapComponent extends JComponent
 	
 	private void drawNumbers(Graphics2D g2)
 	{
-		Iterator<Entry<Integer, List<Hex>>> pips = model.GetPips();
+		Iterator<Entry<Integer, List<Hex>>> pips = controller.GetPips();
 		while(pips.hasNext())
 		{
 			Entry<Integer, List<Hex>> entry = pips.next();
@@ -444,12 +434,11 @@ public class MapComponent extends JComponent
 			return;
 		
 		//In case the robber doesn't exist yet.
-		if (!model.IsRobberInitialized())
-			return;
+		//TODO Find means to check
 		
 		try
 		{
-			Point2D hexPoint = getHexCenterPoint(model.GetRobberPlacement());
+			Point2D hexPoint = getHexCenterPoint(controller.GetRobberPlacement());
 			BufferedImage robberImage = ImageHandler.getRobberImage();
 			drawImage(g2, robberImage, hexPoint);
 		}
@@ -461,7 +450,7 @@ public class MapComponent extends JComponent
 	
 	private void drawRoads(Graphics2D g2)
 	{
-		Iterator<Edge> edges = model.GetAllEdges();
+		Iterator<Edge> edges = controller.GetEdges();
 		while (edges.hasNext())
 		{
 			Edge edge = edges.next();
@@ -488,7 +477,7 @@ public class MapComponent extends JComponent
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 							RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		Iterator<Vertex> verticies = model.GetAllVerticies();
+		Iterator<Vertex> verticies = controller.GetVertices();
 		while (verticies.hasNext())
 		{
 			Vertex vertex = verticies.next();
@@ -522,7 +511,7 @@ public class MapComponent extends JComponent
 	
 	private void drawPorts(Graphics2D g2)
 	{
-		Iterator<Entry<Edge, Hex>> ports = model.GetAllPorts();
+		Iterator<Entry<Edge, Hex>> ports = controller.GetPorts();
 		while (ports.hasNext())
 		{
 			Entry<Edge, Hex> port = ports.next();
@@ -699,45 +688,45 @@ public class MapComponent extends JComponent
 		return new Point2D.Double(wX, wY);
 	}
 	
-	private Coordinate getClosestHexCoordinate(Point2D point)
-	{
-		int wCenterY = WORLD_HEIGHT / 2;
-		
-		double wX = point.getX();
-		double wY = point.getY();
-		
-		double hX = ((4.0 * wX / HEX_IMAGE_WIDTH) - 2) / 3.0;
-		double hY = (2 * (wY - wCenterY)) / HEX_IMAGE_HEIGHT;
-		
-		int iX = (int)Math.round(hX);
-		int iY = (int)Math.round(hY);
-		
-		return new Coordinate (iX, iY);
-	}
+//	private Coordinate getClosestHexCoordinate(Point2D point)
+//	{
+//		int wCenterY = WORLD_HEIGHT / 2;
+//		
+//		double wX = point.getX();
+//		double wY = point.getY();
+//		
+//		double hX = ((4.0 * wX / HEX_IMAGE_WIDTH) - 2) / 3.0;
+//		double hY = (2 * (wY - wCenterY)) / HEX_IMAGE_HEIGHT;
+//		
+//		int iX = (int)Math.round(hX);
+//		int iY = (int)Math.round(hY);
+//		
+//		return new Coordinate (iX, iY);
+//	}
 	
-	private Map<Double, Vertex> getSortedVerticies(Point2D point, Hex hex)
-	{
-		Map<Double, Vertex> result = new TreeMap<Double, Vertex>();
-		
-		Iterator<Vertex> verticies = model.GetVerticies(hex);
-		while (verticies.hasNext())
-		{
-			Vertex vertex = verticies.next();
-			Point2D vertexPoint = getVertexPoint(vertex.getPoint());
-			
-			double distance = vertexPoint.distance(point);
-			
-			//This is in the (hopefully) off chance of getting the same
-			//distance for multiple vertices. The odds of getting dead
-			//center or midpoints is kind of slim though (I hope).
-			while (result.containsKey(distance))
-				distance += .0001;
-			
-			result.put(distance, vertex);
-		}
-		
-		return result;
-	}
+//	private Map<Double, Vertex> getSortedVerticies(Point2D point, Hex hex)
+//	{
+//		Map<Double, Vertex> result = new TreeMap<Double, Vertex>();
+//		
+//		Iterator<Vertex> verticies = model.GetVerticies(hex);
+//		while (verticies.hasNext())
+//		{
+//			Vertex vertex = verticies.next();
+//			Point2D vertexPoint = getVertexPoint(vertex.getPoint());
+//			
+//			double distance = vertexPoint.distance(point);
+//			
+//			//This is in the (hopefully) off chance of getting the same
+//			//distance for multiple vertices. The odds of getting dead
+//			//center or midpoints is kind of slim though (I hope).
+//			while (result.containsKey(distance))
+//				distance += .0001;
+//			
+//			result.put(distance, vertex);
+//		}
+//		
+//		return result;
+//	}
 	
 	private static Point2D getEdgeCenterPoint(Edge edge)
 	{

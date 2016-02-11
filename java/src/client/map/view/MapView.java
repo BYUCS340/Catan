@@ -4,13 +4,16 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.*;
 
 import client.base.*;
-import client.data.*;
 import shared.definitions.*;
 import shared.model.map.*;
+import shared.model.map.objects.Edge;
+import shared.model.map.objects.Hex;
+import shared.model.map.objects.Vertex;
 
 /**
  * Implementation for the map view
@@ -44,12 +47,6 @@ public class MapView extends PanelView implements IMapView
 		
 		map.setController(controller);
 	}
-
-	@Override
-	public void SetModel(MapModel model)
-	{
-		map.SetMapModel(model);
-	}
 	
 	@Override
 	public void startDrop(PieceType pieceType, CatanColor pieceColor,
@@ -75,112 +72,77 @@ public class MapView extends PanelView implements IMapView
 			assert false;
 			return null;
 		}
-		
+
 		@Override
-		public boolean canPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
+		public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
 		{
-			return getController().canPlaceRoad(p1, p2, color);
-		}
-		
-		@Override
-		public boolean canPlaceSettlement(Coordinate point)
-		{
-			return getController().canPlaceSettlement(point);
-		}
-		
-		@Override
-		public boolean canPlaceCity(Coordinate point, CatanColor color)
-		{
-			return getController().canPlaceCity(point, color);
-		}
-		
-		@Override
-		public boolean canPlaceRobber(Coordinate point)
-		{
-			return getController().canPlaceRobber(point);
-		}
-		
-		@Override
-		public void placeRoad(Coordinate p1, Coordinate p2, CatanColor color)
-		{
-			closeModal();
-			getController().placeRoad(p1, p2, color);
-		}
-		
-		@Override
-		public void placeSettlement(Coordinate point, CatanColor color)
-		{
-			closeModal();
-			getController().placeSettlement(point, color);
-		}
-		
-		@Override
-		public void placeCity(Coordinate point, CatanColor color)
-		{
-			closeModal();
-			getController().placeCity(point, color);
-		}
-		
-		@Override
-		public void placeRobber(Coordinate point)
-		{
-			closeModal();
-			getController().placeRobber(point);
-		}
-		
-		@Override
-		public void cancelMove()
-		{
-			closeModal();
-			getController().cancelMove();
-		}
-		
-		@Override
-		public void playSoldierCard()
-		{
-			assert false;
-		}
-		
-		@Override
-		public void playRoadBuildingCard()
-		{
-			assert false;
-		}
-		
-		@Override
-		public void robPlayer(RobPlayerInfo victim)
-		{
-			assert false;
-		}
-		
-		private void closeModal()
-		{
-			overlay.cancelDrop();
-			overlay.closeModal();
+			return getController().CanPlaceRoad(p1, p2, color);
 		}
 
 		@Override
-		public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {
-			assert false;
+		public boolean CanPlaceSettlement(Coordinate point)
+		{
+			return getController().CanPlaceSettlement(point);
 		}
 
 		@Override
-		public Iterator<Transaction> GetVillages(int role) {
+		public boolean CanPlaceCity(Coordinate point, CatanColor color)
+		{
+			return getController().CanPlaceCity(point, color);
+		}
+
+		@Override
+		public boolean CanPlaceRobber(Coordinate point) 
+		{
+			return getController().CanPlaceRobber(point);
+		}
+
+		@Override
+		public Iterator<Hex> GetHexes()
+		{
+			return getController().GetHexes();
+		}
+
+		@Override
+		public Iterator<Edge> GetEdges()
+		{
+			return getController().GetEdges();
+		}
+
+		@Override
+		public Iterator<Vertex> GetVertices()
+		{
+			return getController().GetVertices();
+		}
+
+		@Override
+		public Iterator<Entry<Edge, Hex>> GetPorts()
+		{
+			return getController().GetPorts();
+		}
+
+		@Override
+		public Iterator<Entry<Integer, List<Hex>>> GetPips()
+		{
+			return getController().GetPips();
+		}
+
+		@Override
+		public Hex GetRobberPlacement() throws MapException
+		{
+			return getController().GetRobberPlacement();
+		}
+
+		@Override
+		public void StartMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {
 			// TODO Auto-generated method stub
-			return null;
+			
 		}
-		
 
-		/**
-		 * This gets the list of ports that a player is connected to
-		 * @see matthew: "Why does this implement a anyonmous interface"
-		 * @see johnathon: "I remember why but I don't remembery why"
-		 * @param color the player color
-		 * @return the list - possibly empty
-		 */
-		public List<PortType> playerPorts(CatanColor color){
-			//TODO for real
-			return null;
+		@Override
+		public void CancelMove() {
+			// TODO Auto-generated method stub
+			
 		}
 	};
 	
@@ -259,14 +221,9 @@ public class MapView extends PanelView implements IMapView
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				getController().cancelMove();
+				getController().CancelMove();
 			}
 		};
-		
-		public void cancelDrop()
-		{
-			map.cancelDrop();
-		}
 		
 		private String getLabelText(PieceType pieceType)
 		{
@@ -285,6 +242,12 @@ public class MapView extends PanelView implements IMapView
 					return "";
 			}
 		}
+	}
+
+	@Override
+	public void SetModel(MapModel model) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 

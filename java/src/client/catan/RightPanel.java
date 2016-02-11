@@ -36,14 +36,16 @@ public class RightPanel extends JPanel
 			@Override
 			public void execute()
 			{
-				mapController.playSoldierCard();
+				//TODO Handle. Likely don't want this going through the map.
+				//mapController.playSoldierCard();
 			}
 		};
 		IAction roadAction = new IAction() {
 			@Override
 			public void execute()
 			{
-				mapController.playRoadBuildingCard();
+				//TODO Handle. Likely don't want this going through the map.
+				//mapController.playRoadBuildingCard();
 			}
 		};
 		devCardController = new DevCardController(playCardView, buyCardView,
@@ -104,7 +106,7 @@ public class RightPanel extends JPanel
 			{
 				boolean isFree = false;
 				boolean allowDisconnected = false;
-				mapController.startMove(pieceType, isFree, allowDisconnected);
+				mapController.StartMove(pieceType, isFree, allowDisconnected);
 			}
 		};
 	}

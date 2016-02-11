@@ -28,7 +28,7 @@ public class MapModel {
 	
 	private HexHandler hexes;
 	private EdgeHandler edges;
-	private VertexHandler verticies;	
+	private VertexHandler vertices;	
 	private PortHandler ports;
 	
 	private int longestRoadLength;
@@ -46,294 +46,165 @@ public class MapModel {
 		
 		hexes = new HexHandler();
 		edges = new EdgeHandler();
-		verticies = new VertexHandler();
+		vertices = new VertexHandler();
 		ports = new PortHandler();
 		
 		longestRoadLength = LONGEST_ROAD_INITIAL_VALUE;
 	}
 	
 	/**
-	 * Returns if an edge is on the board.
-	 * @param p1 The first end point.
-	 * @param p2 The second end point.
-	 * @return True if the edge exists, else false.
-	 */
-	public boolean ContainsEdge(Coordinate p1, Coordinate p2)
-	{
-		return edges.ContainsEdge(p1, p2);
-	}
-	
-	/**
-	 * Returns if a hex is contained on the board.
-	 * @param point The coordinate.
-	 * @return True if the hex exists, else false.
-	 */
-	public boolean ContainsHex(Coordinate point)
-	{
-		return hexes.ContainsHex(point);
-	}
-	
-	/**
-	 * Returns if a vertex is on the board.
-	 * @param point The coordinate.
-	 * @return True if the vertex is on the board, else false.
-	 */
-	public boolean ContainsVertex(Coordinate point)
-	{
-		return verticies.ContainsVertex(point);
-	}
-	
-	/**
-	 * Gets the edge associated with the two end points. The order of the points
-	 * does not matter.
-	 * @param p1 The coordinate of the first point.
-	 * @param p2 The coordinate of the second point.
-	 * @return The associated edge.
-	 * @throws MapException Thrown if the edge doesn't exist
-	 */
-	public Edge GetEdge(Coordinate p1, Coordinate p2) throws MapException
-	{
-		return edges.GetEdge(p1, p2);
-	}
-	
-	/**
-	 * Gets the edges surrounding a vertex.
-	 * @param vertex The vertex.
-	 * @return The surrounding edges.
-	 */
-	public Iterator<Edge> GetEdges(Vertex vertex)
-	{
-		List<Edge> associatedEdges = new ArrayList<Edge>(3);
-		
-		Iterator<Vertex> vertices = GetVerticies(vertex);
-		while(vertices.hasNext())
-		{
-			Vertex neighbor = vertices.next();
-			
-			Coordinate mainPoint = vertex.getPoint();
-			Coordinate neighborPoint = neighbor.getPoint();
-			try
-			{
-				if (edges.ContainsEdge(mainPoint, neighborPoint))
-					associatedEdges.add(edges.GetEdge(mainPoint, neighborPoint));
-			}
-			catch (MapException e)
-			{
-				//Shouldn't happen
-				e.printStackTrace();
-			}
-		}
-		
-		return java.util.Collections.unmodifiableList(associatedEdges).iterator();
-	}
-	
-	/**
-	 * Gets all the edges.
-	 * @return An iterator of edges.
-	 */
-	public Iterator<Edge> GetAllEdges()
-	{
-		return edges.GetAllEdges();
-	}
-	
-	/**
-	 * Returns the hex associated with the coordinate.
-	 * @param point The coordinate of the hex.
-	 * @return The associated hex
-	 * @throws MapException Thrown if the hex doesn't exist.
-	 */
-	public Hex GetHex(Coordinate point) throws MapException
-	{
-		return hexes.GetHex(point);
-	}
-	
-	/**
-	 * Gets all the hexes associated with the dice role.
-	 * @param role The combined value of the dice.
-	 * @return The associated hex.
-	 * @throws MapException Thrown if the value doesn't exist.
-	 */
-	public Iterator<Hex> GetHex(int role) throws MapException
-	{
-		if (!values.containsKey(role))
-			throw new MapException("Role value does not exist.");
-		else
-			return java.util.Collections.unmodifiableList(values.get(role)).iterator();
-	}
-	
-	/**
-	 * Gets all the hexes in the map.
-	 * @return A iterator to all the hexes.
-	 */
-	public Iterator<Hex> GetAllHexes()
-	{
-		return hexes.GetAllHexes();
-	}
-	
-	/**
-	 * Gets the list of all the pips on the playing board.
-	 * @return The pip list.
-	 */
-	public Iterator<Map.Entry<Integer, List<Hex>>> GetPips()
-	{
-		return java.util.Collections.unmodifiableSet(values.entrySet()).iterator();
-	}
-	
-	/**
-	 * Gets the vertex associated with the coordinate.
-	 * @param point The coordinate of the vertex.
-	 * @return The associated vertex.
-	 * @throws MapException Thrown if the vertex doesn't exist.
-	 */
-	public Vertex GetVertex(Coordinate point) throws MapException
-	{
-		return verticies.GetVertex(point);
-	}
-	
-	/**
-	 * Gets the neighbors (surrounding) vertices of a vertex.
-	 * @param vertex The vertex which the neighbors are being requested.
-	 * @return An iterator the the neighbors.
-	 */
-	public Iterator<Vertex> GetVerticies(Vertex vertex)
-	{
-		List<Vertex> neighbors = new ArrayList<Vertex>(3);
-		
-		try
-		{
-			if (verticies.ContainsVertex(vertex.getPoint().GetNorth()))
-				neighbors.add(verticies.GetVertex(vertex.getPoint().GetNorth()));
-			if (verticies.ContainsVertex(vertex.getPoint().GetSouth()))
-				neighbors.add(verticies.GetVertex(vertex.getPoint().GetSouth()));
-			
-			Coordinate sideNeighbor;
-			if (vertex.getPoint().isRightHandCoordinate())
-				sideNeighbor = vertex.getPoint().GetEast();
-			else
-				sideNeighbor = vertex.getPoint().GetWest();
-			
-			if (verticies.ContainsVertex(sideNeighbor))
-				neighbors.add(verticies.GetVertex(sideNeighbor));
-		}
-		catch (MapException e)
-		{
-			//This shouldn't occur since we are checking.
-			e.printStackTrace();
-		}
-		
-		return java.util.Collections.unmodifiableList(neighbors).iterator();
-	}
-	
-	/**
-	 * Gets the verticies that are associated with a hex.
-	 * @param hex The hex.
-	 * @return The associated verticies.
-	 */
-	public Iterator<Vertex> GetVerticies(Hex hex)
-	{
-		List<Vertex> verticiesAlongHex = new ArrayList<Vertex>(6);
-		
-		try
-		{
-			verticiesAlongHex.add(verticies.GetVertex(hex.getTopLeftCoordinate()));
-			verticiesAlongHex.add(verticies.GetVertex(hex.getLeftCoordinate()));
-			verticiesAlongHex.add(verticies.GetVertex(hex.getBottomLeftCoordinate()));
-			verticiesAlongHex.add(verticies.GetVertex(hex.getTopRightCoordinate()));
-			verticiesAlongHex.add(verticies.GetVertex(hex.getRightCoordinate()));
-			verticiesAlongHex.add(verticies.GetVertex(hex.getBottomRightCoordinate()));
-		}
-		catch (MapException e) {
-			//This would only trigger if we pass in a piece that is water.
-			//Otherwise, it implies the map hasn't been initialized.
-			e.printStackTrace();
-		}
-		
-		return java.util.Collections.unmodifiableList(verticiesAlongHex).iterator();
-	}
-	
-	/**
-	 * Gets all the verticies on the map.
-	 * @return A iterator to all the verticies.
-	 */
-	public Iterator<Vertex> GetAllVerticies()
-	{
-		return verticies.GetVerticies();
-	}
-	
-	/**
-	 * Gets the vertices surrounding a hex.
-	 * @param hex The hex being requested.
-	 * @return A list of the surrounding vertices.
-	 */
-	public Iterator<Vertex> GetOccupiedVerticies(Hex hex)
-	{
-		Coordinate point = hex.getPoint();
-		
-		List<Vertex> verticies = new ArrayList<Vertex>();
-		
-		HandleAddingOccupiedVertex(point, verticies);
-		HandleAddingOccupiedVertex(point.GetNorth(), verticies);
-		HandleAddingOccupiedVertex(point.GetSouth(), verticies);
-		HandleAddingOccupiedVertex(point.GetEast(), verticies);
-		HandleAddingOccupiedVertex(point.GetNorthEast(), verticies);
-		HandleAddingOccupiedVertex(point.GetSouthEast(), verticies);
-		
-		return java.util.Collections.unmodifiableList(verticies).iterator();
-	}
-	
-	/**
-	 * Returns all the ports.
-	 * @return An iterator to all the ports.
-	 */
-	public Iterator<Entry<Edge, Hex>> GetAllPorts()
-	{
-		return ports.GetAllPorts();
-	}
-	
-	/**
-	 * Returns if the robber is initialized.
-	 * @return True if yes, else false.
-	 */
-	public boolean IsRobberInitialized()
-	{
-		return robber != null;
-	}
-	
-	/**
-	 * Gets the hex the robber is placed on.
-	 * @return The robber's hex.
-	 * @throws MapException Thrown if the robber isn't initialized
-	 */
-	public Hex GetRobberPlacement() throws MapException
-	{
-		if (!IsRobberInitialized())
-			throw new MapException("Robber not initialized");
-		else
-			return robber.GetHex();
-	}
-	
-	public boolean LongestRoadExists()
-	{
-		return longestRoadLength > LONGEST_ROAD_INITIAL_VALUE;
-	}
-	
-	public CatanColor GetLongestRoadColor() throws MapException
-	{
-		if (LongestRoadExists())
-			return longestRoadColor;
-		else
-			throw new MapException("Longest road doesn't exist.");
-	}
-	
-	/**
-	 * Adds a road to the map.
+	 * Returns if a road can be placed.
 	 * @param p1 The start of the road.
 	 * @param p2 The end of the road.
 	 * @param color The color of the road.
-	 * @throws MapException What made you think you could add a road?
+	 * @return True if yes, else false.
 	 */
-	public void SetRoad(Coordinate p1, Coordinate p2, CatanColor color) throws MapException
+	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
+	{	
+		if (!edges.ContainsEdge(p1, p2))
+			return false;
+		
+		try
+		{
+			Edge edge = edges.GetEdge(p1, p2);
+			
+			if (edge.doesRoadExists())
+				return false;
+			
+			if (VillagesSatisfyRoadPlacement(edge, color))
+				return true;
+			
+			return RoadsSatisfyRoadPlacement(edge, color);
+		} 
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns if a Settlement can be placed at the specified location.
+	 * @param point The point of placement.
+	 * @return True if yes, else false.
+	 */
+	public boolean CanPlaceSettlement(Coordinate point)
 	{
+		if (!vertices.ContainsVertex(point))
+			return false;
+		
+		try
+		{
+			Vertex vertex = vertices.GetVertex(point);
+			
+			if (vertex.getType() != PieceType.NONE)
+				return false;
+			
+			Iterator<Vertex> neighbors = GetVertices(vertex);
+			
+			while(neighbors.hasNext())
+			{
+				Vertex neighbor = neighbors.next();
+				
+				if (neighbor.getType() != PieceType.NONE)
+					return false;
+			}
+			
+			return true;
+		} 
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns if a city can be placed.
+	 * @param point The coordinate of the city.
+	 * @param color The color of the city.
+	 * @return True if yes, else false.
+	 */
+	public boolean CanPlaceCity(Coordinate point, CatanColor color)
+	{	
+		if (!vertices.ContainsVertex(point))
+			return false;
+		
+		try
+		{
+			Vertex vertex = vertices.GetVertex(point);
+			
+			return vertex.getType() == PieceType.SETTLEMENT && 
+					vertex.getColor() == color;
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns if the robber can be placed at the specified location.
+	 * @param point The point to place the robber.
+	 * @return True if yes, else false.
+	 */
+	public boolean CanPlaceRobber(Coordinate point)
+	{	
+		if (!hexes.ContainsHex(point))
+			return false;
+		
+		try
+		{
+			Hex hex = hexes.GetHex(point);
+			
+			return hex.getType() != HexType.WATER;
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean CanPlacePip(Coordinate point)
+	{
+		if(!hexes.ContainsHex(point))
+			return false;
+		
+		try
+		{
+			Hex hex = hexes.GetHex(point);
+			
+			return hex.getType() != HexType.WATER && hex.getType() != HexType.DESERT;
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
+	 * Creates a hex at the specified location.
+	 * @param type The resource type associated with the hex.
+	 * @param point The coordinate of the hex.
+	 * @throws MapException Thrown if there is an issue adding the hex.
+	 */
+	public void PlaceHex(HexType type, Coordinate point) throws MapException
+	{
+		hexes.AddHex(new Hex(type, point));
+	}
+	
+	/**
+	 * Puts a road on the map.
+	 * @param p1 The start of the road.
+	 * @param p2 The end of the road.
+	 * @param color The color of the road.
+	 * @throws MapException Thrown if issues occur adding road.
+	 */
+	public void PlaceRoad(Coordinate p1, Coordinate p2, CatanColor color) throws MapException
+	{	
 		edges.AddRoad(p1, p2, color);
 		
 		Set<Edge> handledEdges = new HashSet<Edge>();
@@ -343,8 +214,8 @@ public class MapModel {
 		{
 			handledEdges.add(edges.GetEdge(p1, p2));
 			
-			Vertex v1 = verticies.GetVertex(p1);
-			Vertex v2 = verticies.GetVertex(p2);
+			Vertex v1 = vertices.GetVertex(p1);
+			Vertex v2 = vertices.GetVertex(p2);
 			
 			//All handled edges accounts for loops. That is why it can be passed in
 			//for the right. If the road connects a loop, then the left alread counted
@@ -367,30 +238,82 @@ public class MapModel {
 	}
 	
 	/**
-	 * Creates a hex at the specified location.
-	 * @param type The resource type associated with the hex.
-	 * @param point The coordinate of the hex.
-	 * @throws MapException Thrown if there is an issue adding the hex.
+	 * Adds a settlement to the map.
+	 * @param point The coordinate of the settlement.
+	 * @param color The color of the settlement.
+	 * @throws MapException The government vetod your settlement.
 	 */
-	public void SetHex(HexType type, Coordinate point) throws MapException
+	public void PlaceSettlement(Coordinate point, CatanColor color) throws MapException
 	{
-		hexes.AddHex(new Hex(type, point));
+		vertices.SetSettlement(point, color);
 	}
 	
 	/**
-	 * Adds a pip to a hex
-	 * @param value The value of the pip
-	 * @param hex The hex to which it is added.
+	 * Adds a city to the board.
+	 * @param point The coordinate of the city.
+	 * @param color The color of the city.
+	 * @throws MapException If you pay 15% tithing, this won't happen (just kidding, your
+	 * 						city couldn't be added).
 	 */
-	public void SetPip(int value, Hex hex)
+	public void PlaceCity(Coordinate point, CatanColor color) throws MapException
 	{
+		vertices.SetCity(point, color);
+	}
+	
+	/**
+	 * Sets a vertex as a port
+	 * @param type The type of port to set.
+	 * @param point The coordinate of the port.
+	 * @throws MapException Thrown if the port is added to a vertex that doesn't exist.
+	 */
+	public void PlacePort(PortType type, Coordinate hexCoordinate, 
+			Coordinate edgeStart, Coordinate edgeEnd) throws MapException
+	{
+		try 
+		{
+			Hex hex = hexes.GetHex(hexCoordinate);
+			Edge edge = edges.GetEdge(edgeStart, edgeEnd);
+			
+			ports.AddPort(type, edge, hex);
+		} 
+		catch (MapException e)
+		{
+			throw new MapException("Attempt to add port to non-existent vertex", e);
+		}
+	}
+	
+	/**
+	 * Sets which hex the robber is on.
+	 * @param hex The hex to place the robber on.
+	 * @throws MapException  Thrown if the hex is invalid.
+	 */
+	public void PlaceRobber(Coordinate point) throws MapException
+	{
+		Hex hex = hexes.GetHex(point);
+		
+		if (robber == null)
+			robber = new Robber(hex);
+		else
+			robber.setRobber(hex);
+	}
+	
+	/**
+	 * Adds a pip to a hex.
+	 * @param value The value of the pip.
+	 * @param hex The hex to which it is added.
+	 * @throws MapException Thrown if the hex doesn't exist.
+	 */
+	public void PlacePip(int value, Coordinate point) throws MapException
+	{
+		Hex hex = hexes.GetHex(point);
+		
 		if (values.containsKey(value))
 		{
 			//If a hex contains a value, we are simply changing the value.
 			if (values.get(value).contains(hex))
 			{
 				values.get(value).remove(hex);
-				SetPip(value, hex);
+				PlacePip(value, point);
 			}
 			else
 			{
@@ -406,75 +329,206 @@ public class MapModel {
 	}
 	
 	/**
-	 * Adds a settlement to the map.
-	 * @param point The coordinate of the settlement.
-	 * @param color The color of the settlement.
-	 * @throws MapException The government vetod your settlement.
+	 * Gets all the hexes.
+	 * @return All the hexes.
 	 */
-	public void SetSettlement(Coordinate point, CatanColor color) throws MapException
+	public Iterator<Hex> GetHexes()
 	{
-		verticies.SetSettlement(point, color);
+		return hexes.GetAllHexes();
 	}
 	
 	/**
-	 * Adds a city to the board.
-	 * @param point The coordinate of the city.
-	 * @param color The color of the city.
-	 * @throws MapException If you pay 15% tithing, this won't happen (just kidding, your
-	 * 						city couldn't be added).
+	 * Gets all the edges.
+	 * @return All the edges.
 	 */
-	public void SetCity(Coordinate point, CatanColor color) throws MapException
+	public Iterator<Edge> GetEdges()
 	{
-		verticies.SetCity(point, color);
+		return edges.GetAllEdges();
 	}
 	
 	/**
-	 * Sets a vertex as a port
-	 * @param type The type of port to set.
-	 * @param point The coordinate of the port.
-	 * @throws MapException Thrown if the port is added to a vertex that doesn't exist.
+	 * Gets all the vertices.
+	 * @return All the vertices.
 	 */
-	public void SetPort(PortType type, Edge edge, Hex hex) throws MapException
+	public Iterator<Vertex> GetVertices()
 	{
-		try {
-			ports.AddPort(type, edge, hex);
-		} 
-		catch (MapException e) {
-			throw new MapException("Attempt to add port to non-existent vertex", e);
-		}
+		return vertices.GetVerticies();
 	}
 	
 	/**
-	 * Sets which hex the robber is on.
-	 * @param hex The hex to place the robber on.
+	 * Gets all the ports.
+	 * @return All the ports.
 	 */
-	public void SetRobber(Hex hex)
+	public Iterator<Entry<Edge, Hex>> GetPorts()
 	{
-		if (robber == null)
-			robber = new Robber(hex);
-		else
-			robber.setRobber(hex);
+		return ports.GetAllPorts();
 	}
 	
-	private void HandleAddingOccupiedVertex(Coordinate point, List<Vertex> vertexList)
+	/**
+	 * Gets the location of the robber.
+	 * @return The robber location.
+	 */
+	public Hex GetRobberLocation()
 	{
+		return robber.GetHex();
+	}
+	
+	/**
+	 * Gets all the pips.
+	 * @return All the pips.
+	 */
+	public Iterator<Entry<Integer, List<Hex>>> GetPips()
+	{
+		return java.util.Collections.unmodifiableSet(values.entrySet()).iterator();
+	}
+	
+	/**
+	 * Gets the transactions associated with a role.
+	 * @param role The role value.
+	 * @return Transaction objects associated with role.
+	 */
+	public Iterator<Transaction> GetTransactions(int role)
+	{
+		List<Transaction> transactions = new ArrayList<Transaction>();
+		
 		try
 		{
-			if (verticies.ContainsVertex(point))
-				AddOccupiedVertex(GetVertex(point), vertexList);
+			Iterator<Hex> hexes = GetHex(role);
+			while (hexes.hasNext())
+			{
+				Hex hex = hexes.next();
+				
+				Iterator<Vertex> vertices = GetVerticies(hex);
+				while (vertices.hasNext())
+				{
+					Vertex vertex = vertices.next();
+					
+					if (vertex.getType() == PieceType.NONE)
+						continue;
+					
+					HexType hexType = hex.getType();
+					PieceType pieceType = vertex.getType();
+					CatanColor color = vertex.getColor();
+					Transaction transaction = new Transaction(hexType, pieceType, color);
+					
+					transactions.add(transaction);
+				}
+			}
 		}
-		catch (MapException ex)
+		catch (MapException e)
 		{
-			ex.printStackTrace();
-			//Yeah, so this code shouldn't ever execute. If it does, somebody messed with
-			//the methods that are being called.
+			//Don't need to do anything.
+			//Simply means the role didn't exist, so we don't form any
+			//transactions.
 		}
+		
+		return java.util.Collections.unmodifiableList(transactions).iterator();
 	}
 	
-	private void AddOccupiedVertex(Vertex vertex, List<Vertex> vertexList)
+	/**
+	 * Gets all the hexes associated with the dice role.
+	 * @param role The combined value of the dice.
+	 * @return The associated hex.
+	 * @throws MapException Thrown if the value doesn't exist.
+	 */
+	private Iterator<Hex> GetHex(int role) throws MapException
 	{
-		if (vertex.getType() != PieceType.NONE)
-			vertexList.add(vertex);
+		if (!values.containsKey(role))
+			throw new MapException("Role value does not exist.");
+		else
+			return java.util.Collections.unmodifiableList(values.get(role)).iterator();
+	}
+	
+	/**
+	 * Gets the edges surrounding a vertex.
+	 * @param vertex The vertex.
+	 * @return The surrounding edges.
+	 */
+	private Iterator<Edge> GetEdges(Vertex vertex)
+	{
+		List<Edge> associatedEdges = new ArrayList<Edge>(3);
+		
+		Iterator<Vertex> vertices = GetVertices(vertex);
+		while(vertices.hasNext())
+		{
+			Vertex neighbor = vertices.next();
+			
+			Coordinate mainPoint = vertex.getPoint();
+			Coordinate neighborPoint = neighbor.getPoint();
+			try
+			{
+				if (edges.ContainsEdge(mainPoint, neighborPoint))
+					associatedEdges.add(edges.GetEdge(mainPoint, neighborPoint));
+			}
+			catch (MapException e)
+			{
+				//Shouldn't happen
+				e.printStackTrace();
+			}
+		}
+		
+		return java.util.Collections.unmodifiableList(associatedEdges).iterator();
+	}
+	
+	/**
+	 * Gets the neighbors (surrounding) vertices of a vertex.
+	 * @param vertex The vertex which the neighbors are being requested.
+	 * @return An iterator the the neighbors.
+	 */
+	private Iterator<Vertex> GetVertices(Vertex vertex)
+	{
+		List<Vertex> neighbors = new ArrayList<Vertex>(3);
+		
+		try
+		{
+			if (vertices.ContainsVertex(vertex.getPoint().GetNorth()))
+				neighbors.add(vertices.GetVertex(vertex.getPoint().GetNorth()));
+			if (vertices.ContainsVertex(vertex.getPoint().GetSouth()))
+				neighbors.add(vertices.GetVertex(vertex.getPoint().GetSouth()));
+			
+			Coordinate sideNeighbor;
+			if (vertex.getPoint().isRightHandCoordinate())
+				sideNeighbor = vertex.getPoint().GetEast();
+			else
+				sideNeighbor = vertex.getPoint().GetWest();
+			
+			if (vertices.ContainsVertex(sideNeighbor))
+				neighbors.add(vertices.GetVertex(sideNeighbor));
+		}
+		catch (MapException e)
+		{
+			//This shouldn't occur since we are checking.
+			e.printStackTrace();
+		}
+		
+		return java.util.Collections.unmodifiableList(neighbors).iterator();
+	}
+	
+	/**
+	 * Gets the verticies that are associated with a hex.
+	 * @param hex The hex.
+	 * @return The associated verticies.
+	 */
+	private Iterator<Vertex> GetVerticies(Hex hex)
+	{
+		List<Vertex> verticiesAlongHex = new ArrayList<Vertex>(6);
+		
+		try
+		{
+			verticiesAlongHex.add(vertices.GetVertex(hex.getTopLeftCoordinate()));
+			verticiesAlongHex.add(vertices.GetVertex(hex.getLeftCoordinate()));
+			verticiesAlongHex.add(vertices.GetVertex(hex.getBottomLeftCoordinate()));
+			verticiesAlongHex.add(vertices.GetVertex(hex.getTopRightCoordinate()));
+			verticiesAlongHex.add(vertices.GetVertex(hex.getRightCoordinate()));
+			verticiesAlongHex.add(vertices.GetVertex(hex.getBottomRightCoordinate()));
+		}
+		catch (MapException e) {
+			//This would only trigger if we pass in a piece that is water.
+			//Otherwise, it implies the map hasn't been initialized.
+			e.printStackTrace();
+		}
+		
+		return java.util.Collections.unmodifiableList(verticiesAlongHex).iterator();
 	}
 	
 	private int GetRoadCount(Vertex vertex, CatanColor color, 
@@ -496,9 +550,9 @@ public class MapModel {
 					
 					Vertex newVertex = null;
 					if (edge.getStart() == vertex.getPoint())
-						newVertex = verticies.GetVertex(edge.getEnd());
+						newVertex = vertices.GetVertex(edge.getEnd());
 					else
-						newVertex = verticies.GetVertex(edge.getStart());
+						newVertex = vertices.GetVertex(edge.getStart());
 					
 					int branchCount = 1 + GetRoadCount(newVertex, color, handledEdges, allHandledEdges);
 					
@@ -517,4 +571,147 @@ public class MapModel {
 		
 		return totalCount;
 	}
+	
+	private boolean RoadsSatisfyRoadPlacement(Edge edge, CatanColor color) throws MapException
+	{
+		Vertex vStart = vertices.GetVertex(edge.getStart());
+		Iterator<Edge> startEdges = GetEdges(vStart);
+		while(startEdges.hasNext())
+		{
+			Edge edgeToCheck = startEdges.next();
+			if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
+				return true;
+		}
+		
+		Vertex vEnd = vertices.GetVertex(edge.getEnd());
+		Iterator<Edge> endEdges = GetEdges(vEnd);
+		while(endEdges.hasNext())
+		{
+			Edge edgeToCheck = endEdges.next();
+			if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
+				return true;
+		}
+		
+		return false;
+	}
+	
+	private boolean VillagesSatisfyRoadPlacement(Edge edge, CatanColor color) throws MapException
+	{
+		Vertex vStart = vertices.GetVertex(edge.getStart());
+		if (vStart.getType() != PieceType.NONE && vStart.getColor() == color)
+			return true;
+		
+		Vertex vEnd = vertices.GetVertex(edge.getEnd());
+		if (vEnd.getType() != PieceType.NONE && vEnd.getColor() == color)
+			return true;
+		
+		return false;
+	}
+//	
+//	/**
+//	 * Gets the list of all the pips on the playing board.
+//	 * @return The pip list.
+//	 */
+//	public Iterator<Map.Entry<Integer, List<Hex>>> GetPips()
+//	{
+//		return java.util.Collections.unmodifiableSet(values.entrySet()).iterator();
+//	}
+	
+	
+//	
+//	
+//	/**
+//	 * Gets the vertices surrounding a hex.
+//	 * @param hex The hex being requested.
+//	 * @return A list of the surrounding vertices.
+//	 */
+//	public Iterator<Vertex> GetOccupiedVerticies(Hex hex)
+//	{
+//		Coordinate point = hex.getPoint();
+//		
+//		List<Vertex> verticies = new ArrayList<Vertex>();
+//		
+//		HandleAddingOccupiedVertex(point, verticies);
+//		HandleAddingOccupiedVertex(point.GetNorth(), verticies);
+//		HandleAddingOccupiedVertex(point.GetSouth(), verticies);
+//		HandleAddingOccupiedVertex(point.GetEast(), verticies);
+//		HandleAddingOccupiedVertex(point.GetNorthEast(), verticies);
+//		HandleAddingOccupiedVertex(point.GetSouthEast(), verticies);
+//		
+//		return java.util.Collections.unmodifiableList(verticies).iterator();
+//	}
+//	
+//	/**
+//	 * Returns if the robber is initialized.
+//	 * @return True if yes, else false.
+//	 */
+//	public boolean IsRobberInitialized()
+//	{
+//		return robber != null;
+//	}
+//	
+//	/**
+//	 * Gets the hex the robber is placed on.
+//	 * @return The robber's hex.
+//	 * @throws MapException Thrown if the robber isn't initialized
+//	 */
+//	public Hex GetRobberPlacement() throws MapException
+//	{
+//		if (!IsRobberInitialized())
+//			throw new MapException("Robber not initialized");
+//		else
+//			return robber.GetHex();
+//	}
+//	
+//	public boolean LongestRoadExists()
+//	{
+//		return longestRoadLength > LONGEST_ROAD_INITIAL_VALUE;
+//	}
+//	
+//	public CatanColor GetLongestRoadColor() throws MapException
+//	{
+//		if (LongestRoadExists())
+//			return longestRoadColor;
+//		else
+//			throw new MapException("Longest road doesn't exist.");
+//	}
+//	
+//	/**
+//	 * Adds a road to the map.
+//	 * @param p1 The start of the road.
+//	 * @param p2 The end of the road.
+//	 * @param color The color of the road.
+//	 * @throws MapException What made you think you could add a road?
+//	 */
+//	public void SetRoad(Coordinate p1, Coordinate p2, CatanColor color) throws MapException
+//	{
+		
+//	}
+//
+//	
+//	
+//	
+//	
+//	
+//	private void HandleAddingOccupiedVertex(Coordinate point, List<Vertex> vertexList)
+//	{
+//		try
+//		{
+//			if (verticies.ContainsVertex(point))
+//				AddOccupiedVertex(GetVertex(point), vertexList);
+//		}
+//		catch (MapException ex)
+//		{
+//			ex.printStackTrace();
+//			//Yeah, so this code shouldn't ever execute. If it does, somebody messed with
+//			//the methods that are being called.
+//		}
+//	}
+//	
+//	private void AddOccupiedVertex(Vertex vertex, List<Vertex> vertexList)
+//	{
+//		if (vertex.getType() != PieceType.NONE)
+//			vertexList.add(vertex);
+//	}
+//	
 }
