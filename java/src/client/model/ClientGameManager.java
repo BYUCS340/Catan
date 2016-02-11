@@ -214,7 +214,9 @@ public class ClientGameManager extends GameManager
 	{
 		if (model.getVersion() == this.version)
 			return;
-		throw new ModelException();
+		this.version = model.getVersion();
+		//TODO All of this
+		//throw new ModelException();
 	}
 	
 	public void LoadGame(NetGame model) throws ModelException

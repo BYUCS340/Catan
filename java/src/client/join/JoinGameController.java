@@ -167,9 +167,12 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		
 		if (!ClientGame.getGame().joinGame(lastGameID, color))
 		{
+			getMessageView().setMessage("Unable to join game: #"+lastGameID);
+			getMessageView().showModal();
 			return;
 		}
-		
+		System.out.println("joining game "+lastGameID);
+		this.refreshGameList();
 		// If join succeeded
 		getSelectColorView().closeModal();
 		getJoinGameView().closeModal();
