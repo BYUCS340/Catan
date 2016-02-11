@@ -5,7 +5,7 @@ package shared.model;
  * @author matthewcarlson
  *
  */
-public interface ModelListener {
+public interface ModelObserver {
 	/**
 	 * Notifies an object that something has happened
 	 */

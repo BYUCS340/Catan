@@ -23,7 +23,7 @@ import shared.networking.transport.NetGameModel;
  * @author matthewcarlson, garrettegan
  *
  */
-public class GameManager
+public class GameManager implements ModelSubject
 {
 	//public  MapController mapController; 
 	protected int gameID;
@@ -99,23 +99,16 @@ public class GameManager
 	
 	//========================================================================================
 	//Notification Center
-	/**
-	 * Starts listening for changes in model
-	 * @param listener
-	 * @return
-	 */
-	public boolean startListening(ModelListener listener)
+
+	@Override
+	public boolean startListening(ModelObserver listener)
 	{
 		notifyCenter.add(listener);
 		return true;
 	}
 	
-	/**
-	 * Stops listening for changes in model
-	 * @param listener
-	 * @return
-	 */
-	public boolean stopListening(ModelListener listener)
+	@Override
+	public boolean stopListening(ModelObserver listener)
 	{
 		return true;
 	}
