@@ -876,7 +876,8 @@ public class GameManager
 	public boolean hasGameStarted()
 	{
 		return gameState.state != GameRound.WAITING;
-
+	}
+	
     /**
 	 * Returns the log 
 	 * @return the log
