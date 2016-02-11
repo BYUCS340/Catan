@@ -9,7 +9,7 @@ import shared.definitions.GameRound;
  */
 public class GameState
 {
-	public GameRound state = GameRound.FIRSTROUND;
+	public GameRound state = GameRound.WAITING;
 	public int activePlayerIndex = 0;  //This keeps track of which player's turn it is
 	
 	/**

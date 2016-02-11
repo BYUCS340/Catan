@@ -147,31 +147,31 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		this.refreshGameList();
 		getNewGameView().closeModal();
 	}
-	private int lastGameID = 0;
+	private GameInfo lastGameSelected = null;
 	@Override
 	public void startJoinGame(GameInfo game) {
-		lastGameID = game.getId();
+		lastGameSelected = game;
 		
 		getSelectColorView().showModal();
 	}
 
 	@Override
 	public void cancelJoinGame() {
-		lastGameID = 0;
+		lastGameSelected = null;
 		getJoinGameView().closeModal();
 	}
 
 	@Override
 	public void joinGame(CatanColor color) {
-		if (lastGameID == 0) return;
+		if (lastGameSelected == null) return;
 		
-		if (!ClientGame.getGame().joinGame(lastGameID, color))
+		if (!ClientGame.getGame().joinGame(lastGameSelected, color))
 		{
-			getMessageView().setMessage("Unable to join game: #"+lastGameID);
+			getMessageView().setMessage("Unable to join game: #"+lastGameSelected);
 			getMessageView().showModal();
 			return;
 		}
-		System.out.println("joining game "+lastGameID);
+		System.out.println("joining game "+lastGameSelected);
 		this.refreshGameList();
 		// If join succeeded
 		getSelectColorView().closeModal();

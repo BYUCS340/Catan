@@ -26,7 +26,7 @@ import shared.networking.transport.NetGameModel;
 public class GameManager
 {
 	//public  MapController mapController; 
-	public int gameID;
+	protected int gameID;
 	public String gameTitle;
 	protected GameState gameState;
 	protected Bank gameBank;
@@ -44,10 +44,21 @@ public class GameManager
 	 * Constructor for the game manager
 	 * @post all players
 	 */
-	public GameManager()
+	public GameManager(){
+		this("Default",0);
+	}
+	
+	/**
+	 * Creates a game manager with the specified id
+	 * @param name the title of the game
+	 * @param id
+	 */
+	public GameManager(String name,int id)
 	{
 		//version is by default -1 before it is connected to a server
 		version = -1;
+		this.gameID = id;
+		this.gameTitle = name;
 		waterCooler = new ChatBox();
 		log = new GameActionLog();
 		players = new ArrayList<>();
@@ -830,5 +841,14 @@ public class GameManager
 	public GameRound CurrentState()
 	{
 		return gameState.state;
+	}
+	
+	/**
+	 * Check whether the game has started
+	 * @return
+	 */
+	public boolean hasGameStarted()
+	{
+		return gameState.state != GameRound.WAITING;
 	}
 }

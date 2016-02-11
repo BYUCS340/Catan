@@ -1,5 +1,9 @@
 package client.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import client.data.GameInfo;
 import client.networking.ServerProxy;
 import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
@@ -8,6 +12,7 @@ import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.GameManager;
 import shared.model.ModelException;
+import shared.model.Player;
 import shared.model.Translate;
 import shared.model.map.Coordinate;
 import shared.networking.transport.NetGame;
@@ -17,8 +22,9 @@ public class ClientGameManager extends GameManager
 {
 	private ServerProxy proxy;
 	private int myPlayerID;
-	private int gameID;
+	
 	private int refreshCount = 0;
+	private CatanColor myPlayerColor;
 	/**
 	 * Creates the client game manager with the proxy
 	 * @param clientProxy
@@ -48,6 +54,15 @@ public class ClientGameManager extends GameManager
 	public int myPlayerID()
 	{
 		return this.myPlayerID;
+	}
+	
+	/**
+	 * The current player's color
+	 * @return
+	 */
+	public CatanColor myPlayerColor()
+	{
+		return this.myPlayerColor;
 	}
 	
 	/**
@@ -92,13 +107,22 @@ public class ClientGameManager extends GameManager
 	 * @param color
 	 * @return
 	 */
-	public boolean joinGame(int gameID, CatanColor color)
+	public boolean joinGame(GameInfo game, CatanColor color)
 	{
 		try {
-			proxy.joinGame(gameID, color);
-			//If we can't joing a game then an exception will be thrown
-			this.RefreshFromServer();
-		} catch (ServerProxyException | ModelException e) {
+			proxy.joinGame(game.getId(), color);
+			this.gameID = game.getId();
+			this.gameTitle = game.getTitle();
+			this.myPlayerColor = color;
+			List<Player> players = new ArrayList<>();
+			for (int i=0; i< game.getPlayers().size(); i++)
+			{
+				
+			}
+			//this.SetPlayers(ClientDataTranslator.);
+			//If we can't joining a game then an exception will be thrown
+			
+		} catch (ServerProxyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
@@ -229,7 +253,11 @@ public class ClientGameManager extends GameManager
 		
 		//make sure I assign the colors correctly
 	}
-
+	
+	/**
+	 * The number of times the server has refreshed itself- used to test the poller
+	 * @return
+	 */
 	public int GetRefreshCount()
 	{
 		return refreshCount;
