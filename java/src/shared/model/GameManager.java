@@ -831,4 +831,13 @@ public class GameManager
 	{
 		return gameState.state;
 	}
+	
+	/**
+	 * Returns the log 
+	 * @return the log
+	 */
+	public GameActionLog getGameActionLog()
+	{
+		return log;
+	}
 }
