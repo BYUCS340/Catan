@@ -1,7 +1,8 @@
 package client.join;
 
-import client.base.*;
 
+
+import client.base.*;
 
 /**
  * Implementation for the player waiting controller
@@ -11,6 +12,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	public PlayerWaitingController(IPlayerWaitingView view) {
 
 		super(view);
+		
 	}
 
 	@Override
@@ -21,13 +23,14 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 
 	@Override
 	public void start() {
-
+		//Set the AI choices
+		//getView().setAIChoices();
 		getView().showModal();
 	}
 
 	@Override
 	public void addAI() {
-
+		
 		// TEMPORARY
 		getView().closeModal();
 	}
