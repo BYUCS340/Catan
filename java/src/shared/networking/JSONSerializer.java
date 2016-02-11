@@ -77,7 +77,7 @@ public class JSONSerializer implements Serializer
 	{
 		JSONObject obj = new JSONObject();
 	
-		obj.put("AIType", AIType.toString(aitype));
+		obj.put("AIType", AIType.toString(aitype).toUpperCase());
 		
 		return obj.toString();
 	}
@@ -325,6 +325,12 @@ public class JSONSerializer implements Serializer
 		return obj.toString();
 	}
 	
+	/**
+	 * Turns the passed resource list into a JSONObject which is returned
+	 * @param resourceList
+	 * @return
+	 * @throws JSONException
+	 */
 	private JSONObject oResourceList(List<Integer> resourceList) throws JSONException
 	{
 		JSONObject obj = new JSONObject();

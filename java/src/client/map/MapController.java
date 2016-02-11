@@ -4,7 +4,7 @@ import shared.definitions.*;
 import shared.model.IMapController;
 import shared.model.map.*;
 import shared.model.map.objects.*;
-import shared.model.map.MapException;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -254,6 +254,20 @@ public class MapController extends Controller implements IMapController
 	
 	public void robPlayer(RobPlayerInfo victim) {	
 		//TODO Implement		
+	}
+	
+
+	/**
+	 * This gets the list of ports that a player is connected to
+	 * @param color the player color
+	 * @return the list - possibly empty
+	 */
+	public List<PortType> playerPorts(CatanColor color)
+	{
+		//TODO implement
+		
+		//for now we return an empty list
+		return new ArrayList<>();
 	}
 	
 	private boolean VillagesSatisfyRoadPlacement(Edge edge, CatanColor color) throws MapException
