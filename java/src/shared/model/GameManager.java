@@ -38,6 +38,7 @@ public class GameManager
 	protected int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;
+	private NotificationCenter notifyCenter;
 	
 	
 	/**
@@ -66,6 +67,7 @@ public class GameManager
 		gameState = new GameState();
 		//mapController = new MapController();
 		victoryPointManager = new VictoryPointManager();
+		notifyCenter = new NotificationCenter();
 		playerColors = new int[10];
 		//fill the array with -1 by default
 		Arrays.fill(playerColors,-1);
@@ -92,6 +94,30 @@ public class GameManager
 		Arrays.fill(playerColors,-1);
 		playerCanMoveRobber = -1;
 		gameBank.resetToBankDefaults();
+	}
+	
+	
+	//========================================================================================
+	//Notification Center
+	/**
+	 * Starts listening for changes in model
+	 * @param listener
+	 * @return
+	 */
+	public boolean startListening(ModelListener listener)
+	{
+		notifyCenter.add(listener);
+		return true;
+	}
+	
+	/**
+	 * Stops listening for changes in model
+	 * @param listener
+	 * @return
+	 */
+	public boolean stopListening(ModelListener listener)
+	{
+		return true;
 	}
 	
 	

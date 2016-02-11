@@ -22,4 +22,6 @@ public enum AIType
 		
 		return null;
 	}
+	
+	
 }

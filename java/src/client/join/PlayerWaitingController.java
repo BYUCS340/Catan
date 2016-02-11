@@ -3,6 +3,7 @@ package client.join;
 
 
 import client.base.*;
+import client.data.PlayerInfo;
 import client.model.ClientGame;
 import client.networking.ServerProxyException;
 import shared.definitions.AIType;
@@ -35,7 +36,18 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			ais[i] = aiTypes[i].toString();
 		getView().setAIChoices(ais);
 		
+		refreshPlayersWaiting();
+		
 		getView().showModal();
+	}
+	
+	/**
+	 * 
+	 */
+	private void refreshPlayersWaiting()
+	{
+		PlayerInfo[] players = new PlayerInfo[4];
+		getView().setPlayers(players);
 	}
 
 	@Override
