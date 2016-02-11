@@ -95,6 +95,12 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void start() {
+		refreshGameList();
+		getJoinGameView().showModal();
+	}
+	
+	private void refreshGameList()
+	{
 		try 
 		{
 			List<NetGame> allGames = ClientGame.getCurrentProxy().listGames();
@@ -112,7 +118,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		getJoinGameView().showModal();
 	}
 
 	@Override
@@ -139,7 +144,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			getMessageView().showModal();
 			return;
 		}
-		
+		this.refreshGameList();
 		getNewGameView().closeModal();
 	}
 	private int lastGameID = 0;

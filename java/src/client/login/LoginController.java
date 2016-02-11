@@ -127,6 +127,11 @@ public class LoginController extends Controller implements ILoginController {
 				this.showMessage("Unable Register User");
 				return;
 			}
+			if (!ClientGame.getCurrentProxy().loginUser(username, password))
+			{
+				this.showMessage("Unable Register User");
+				return;
+			}
 		} catch (ServerProxyException e) {
 			// TODO Auto-generated catch block
 			this.showMessage("Unable to connect to server");
