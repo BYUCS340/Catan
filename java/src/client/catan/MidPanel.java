@@ -6,8 +6,7 @@ import javax.swing.*;
 import client.map.*;
 import client.map.view.MapView;
 import client.model.ClientGame;
-import shared.model.IMapController;
-import shared.model.map.MapModel;
+import shared.model.map.*;
 
 @SuppressWarnings("serial")
 public class MidPanel extends JPanel

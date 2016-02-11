@@ -1,4 +1,4 @@
-package shared.model;
+package shared.model.map;
 
 import java.util.Iterator;
 import java.util.List;
@@ -6,8 +6,6 @@ import java.util.List;
 import client.base.*;
 import client.data.*;
 import shared.definitions.*;
-import shared.model.map.Coordinate;
-import shared.model.map.Transaction;
 
 /**
  * Interface for the map controller

@@ -14,6 +14,7 @@ import shared.definitions.GameRound;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
+import shared.model.map.IMapController;
 import shared.model.map.Transaction;
 import shared.model.chat.ChatBox;
 import shared.networking.transport.NetGameModel;

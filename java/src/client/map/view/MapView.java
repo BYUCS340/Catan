@@ -10,10 +10,7 @@ import javax.swing.*;
 import client.base.*;
 import client.data.*;
 import shared.definitions.*;
-import shared.model.IMapController;
-import shared.model.map.Coordinate;
-import shared.model.map.MapModel;
-import shared.model.map.Transaction;
+import shared.model.map.*;
 
 /**
  * Implementation for the map view

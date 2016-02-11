@@ -1,7 +1,6 @@
 package client.map;
 
 import shared.definitions.*;
-import shared.model.IMapController;
 import shared.model.map.*;
 import shared.model.map.objects.*;
 
