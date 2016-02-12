@@ -21,6 +21,7 @@ public class ClientDataTranslator {
 		return pi;
 		
 	}
+	
 	/**
 	 * Converts a netgame into a game info
 	 * @param game

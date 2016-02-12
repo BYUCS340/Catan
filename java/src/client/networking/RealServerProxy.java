@@ -15,7 +15,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Scanner;
-import static org.junit.Assert.*;
+import org.junit.Assert.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -296,7 +296,8 @@ public class RealServerProxy implements ServerProxy
 		
 		//the user's name should have been found and the index should have been set.
 		//if this is not true, then there is something very wrong
-		assertTrue(userIndex >= 0 && userIndex <= 3);
+		if (!(userIndex >= 0 && userIndex <= 3))
+			throw new ServerProxyException("Bad User Index "+userIndex);
 		
 		
 		return netGameModel;
