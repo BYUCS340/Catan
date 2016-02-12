@@ -301,14 +301,14 @@ public class GameManager implements ModelSubject
 	 * @param playerID
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuildRoad(int playerID,Coordinate start, Coordinate end) throws ModelException
+	public void BuildRoad(int playerID, Coordinate start, Coordinate end) throws ModelException
 	{
 		//check to see if player has resources
-		if (!this.CanBuildRoad(playerID, start,end))
+		if (!this.CanBuildRoad(playerID, start, end))
 			throw new ModelException();
 		GetPlayer(playerID).playerBank.buildRoad();
 		CatanColor color = this.getPlayerColorByIndex(playerID);
-		map.placeRoad(start,end, color);
+		map.placeRoad(start, end, color);
 		victoryPointManager.playerBuiltRoad(playerID);
 	}
 	
@@ -317,7 +317,7 @@ public class GameManager implements ModelSubject
 	 * @param playerID
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuildSettlement(int playerID,Coordinate location) throws ModelException
+	public void BuildSettlement(int playerID, Coordinate location) throws ModelException
 	{
 		//check to see if player has resources
 		if (!this.CanBuildSettlement(playerID, location))
