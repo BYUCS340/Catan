@@ -1041,4 +1041,5 @@ public class MockServerProxy implements ServerProxy
 	private ArrayList<String[]> loginCredentials;
 	private boolean userLoggedIn;
 	private boolean userJoinedGame;
+	
 }
