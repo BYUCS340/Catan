@@ -1,13 +1,15 @@
 package client.communication;
 
-import client.base.*;
+import client.base.Controller;
 import client.model.ClientGame;
+import shared.model.ModelObserver;
+import shared.model.chat.ChatBox;
 
 
 /**
  * Chat controller implementation
  */
-public class ChatController extends Controller implements IChatController {
+public class ChatController extends Controller implements IChatController, ModelObserver {
 
 	public ChatController(IChatView view) {
 		
@@ -22,6 +24,14 @@ public class ChatController extends Controller implements IChatController {
 	@Override
 	public void sendMessage(String message) {
 		ClientGame.getGame().SendChat(message);
+	}
+
+	@Override
+	public void alert()
+	{
+		// TODO Access the model to get chat messages
+		ChatBox chat = ClientGame.getGame().getChat();
+		
 	}
 
 }

@@ -880,4 +880,13 @@ public class GameManager implements ModelSubject
 		return log;
 
 	}
+	
+	/**
+	 * Returns the chat
+	 * @return the chat
+	 */
+	public ChatBox getChat()
+	{
+		return waterCooler;
+	}
 }
