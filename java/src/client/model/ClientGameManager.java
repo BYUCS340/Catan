@@ -193,6 +193,23 @@ public class ClientGameManager extends GameManager
 		
 	}
 	
+	
+	/**
+	 * Discards the cards specified by the resourceList list
+	 * @param resourceList the list of resources to discard
+	 */
+	public void DiscardCards(List<Integer> resourceList)
+	{
+		try
+		{
+			proxy.discardCards(resourceList);
+		}
+		catch(ServerProxyException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Sends a chat message for the current player
 	 * @param message
