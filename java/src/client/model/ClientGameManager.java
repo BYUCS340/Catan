@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import client.data.GameInfo;
-import client.networking.RealServerProxy;
 import client.networking.ServerProxy;
 import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
+import shared.definitions.TurnState;
 import shared.model.GameManager;
 import shared.model.ModelException;
 import shared.model.Player;
@@ -23,6 +23,7 @@ public class ClientGameManager extends GameManager
 {
 	private ServerProxy proxy;
 	private int myPlayerID;
+	private TurnState turnState;
 	
 	private int refreshCount = 0;
 	private CatanColor myPlayerColor;
@@ -259,6 +260,7 @@ public class ClientGameManager extends GameManager
 			return;
 		this.version = model.getVersion();
 		//TODO All of this
+		//TODO update turn status
 		//throw new ModelException();
 	}
 	
