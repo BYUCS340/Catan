@@ -1,9 +1,15 @@
 package client.communication;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import client.base.Controller;
 import client.model.ClientGame;
+import shared.definitions.CatanColor;
+import shared.model.GameManager;
 import shared.model.ModelObserver;
 import shared.model.chat.ChatBox;
+import shared.model.chat.ChatMessage;
 
 
 /**
@@ -29,8 +35,26 @@ public class ChatController extends Controller implements IChatController, Model
 	@Override
 	public void alert()
 	{
-		// TODO Access the model to get chat messages
-		ChatBox chat = ClientGame.getGame().getChat();
+		GameManager mng = ClientGame.getGame();
+		ChatBox chat = mng.getChat();
+		
+		//go through messages and make a list of LogEntry objects
+		//to pass to the view
+		
+		List<LogEntry> entries = new ArrayList<LogEntry>();
+		int numChats = chat.size();
+		
+		for(int i = 0; i < numChats; i++)
+		{
+			ChatMessage tempChat = chat.get(i);
+			int playerIndex = tempChat.getPlayerId();
+			CatanColor col =  mng.getPlayerColorByIndex(playerIndex);
+			LogEntry tempEntry = new LogEntry(col, tempChat.getMessage());
+			entries.add(tempEntry);
+		}
+		
+		this.getView().setEntries(entries);
+		
 		
 	}
 
