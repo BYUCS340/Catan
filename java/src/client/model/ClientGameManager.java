@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import client.data.GameInfo;
+import client.networking.RealServerProxy;
 import client.networking.ServerProxy;
 import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
@@ -55,6 +56,7 @@ public class ClientGameManager extends GameManager
 	{
 		return this.myPlayerID;
 	}
+	
 	
 	/**
 	 * The current player's color
