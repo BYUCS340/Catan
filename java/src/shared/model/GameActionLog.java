@@ -7,7 +7,7 @@ import shared.definitions.CatanColor;
 
 /**
  * This keeps track of all the actions in the game
- * @author matthewcarlson
+ * @author matthewcarlson, parker ridd
  *
  */
 public class GameActionLog 

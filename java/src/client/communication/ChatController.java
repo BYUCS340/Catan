@@ -14,6 +14,7 @@ import shared.model.chat.ChatMessage;
 
 /**
  * Chat controller implementation
+ * @author parkerridd
  */
 public class ChatController extends Controller implements IChatController, ModelObserver {
 
@@ -31,16 +32,15 @@ public class ChatController extends Controller implements IChatController, Model
 	public void sendMessage(String message) {
 		ClientGame.getGame().SendChat(message);
 	}
-
-	@Override
-	public void alert()
+	
+	private void initFromModel()
 	{
+		//get needed objects
 		GameManager mng = ClientGame.getGame();
 		ChatBox chat = mng.getChat();
 		
 		//go through messages and make a list of LogEntry objects
 		//to pass to the view
-		
 		List<LogEntry> entries = new ArrayList<LogEntry>();
 		int numChats = chat.size();
 		
@@ -54,8 +54,12 @@ public class ChatController extends Controller implements IChatController, Model
 		}
 		
 		this.getView().setEntries(entries);
-		
-		
+	}
+
+	@Override
+	public void alert()
+	{
+		this.initFromModel();
 	}
 
 }
