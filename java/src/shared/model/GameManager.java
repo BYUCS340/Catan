@@ -898,4 +898,13 @@ public class GameManager implements ModelSubject
 	{
 		return waterCooler;
 	}
+	
+	/**
+	 * Returns the VictoryPointManager
+	 * @return the VictoryPointManager
+	 */
+	public VictoryPointManager getVictoryPointManager()
+	{
+		return victoryPointManager;
+	}
 }

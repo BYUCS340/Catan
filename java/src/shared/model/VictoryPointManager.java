@@ -184,6 +184,10 @@ public class VictoryPointManager
 		return false;
 	}
 	
+	/**
+	 * Returns the winner, if there is any
+	 * @return the index of the winner
+	 */
 	public int winner()
 	{
 		for (int i=0;i<=3; i++)
