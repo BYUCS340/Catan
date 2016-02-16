@@ -5,9 +5,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import client.map.MapController;
-import client.networking.ServerProxy;
-import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
@@ -258,7 +255,9 @@ public class GameManager implements ModelSubject
 	{
 		if (gameState.state != GameRound.ROLLING) throw new ModelException("Game isn't in rolling state");
 		gameState.startBuildPhase();
-		int diceRoll = 4;
+		
+		//Correctly rolls the dice
+		int diceRoll = (int) ((Math.random() * 5) + (Math.random() * 5) + 2);
 		//check if we can move the robber
 		if (diceRoll == 7 )
 		{
