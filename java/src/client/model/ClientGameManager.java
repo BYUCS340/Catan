@@ -60,7 +60,7 @@ public class ClientGameManager extends GameManager
 	
 	/**
 	 * The current player's color
-	 * @return
+	 * @return the current player color
 	 */
 	public CatanColor myPlayerColor()
 	{
