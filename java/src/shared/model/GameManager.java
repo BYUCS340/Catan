@@ -150,10 +150,19 @@ public class GameManager implements ModelSubject
 		for (int i=0; i< players.size(); i++)
 		{
 			Player p = players.get(i);
-			this.players.set(i, p);
+			this.players.add(p);
 			playerColors[p.color.ordinal()] = p.playerIndex();
 		}
 		
+	}
+	
+	/**
+	 * Gets the current number of players
+	 * @return
+	 */
+	public int getNumberPlayers()
+	{
+		return players.size();
 	}
 	
 	/**
