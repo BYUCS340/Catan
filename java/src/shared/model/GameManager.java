@@ -253,8 +253,8 @@ public class GameManager implements ModelSubject
 	 */
 	public int RollDice() throws ModelException
 	{
-		if (gameState.state != GameRound.ROLLING) throw new ModelException("Game isn't in rolling state");
-		gameState.startBuildPhase();
+		if (gameState.state != GameRound.ROLLING) 
+			throw new ModelException("Game isn't in rolling state");
 		
 		//Correctly rolls the dice
 		int diceRoll = (int) ((Math.random() * 5) + (Math.random() * 5) + 2);
