@@ -258,10 +258,16 @@ public class GameManager implements ModelSubject
 		
 		//Correctly rolls the dice
 		int diceRoll = (int) ((Math.random() * 5) + (Math.random() * 5) + 2);
+		
 		//check if we can move the robber
 		if (diceRoll == 7 )
 		{
 			this.playerCanMoveRobber = this.CurrentPlayersTurn();
+			gameState.startRobbing();
+		}
+		else
+		{
+			gameState.stopRolling();
 		}
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
 		
