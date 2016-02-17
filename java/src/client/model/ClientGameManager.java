@@ -3,7 +3,10 @@ package client.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import client.data.ClientDataTranslator;
 import client.data.GameInfo;
+import client.data.PlayerInfo;
+import client.networking.RealServerProxy;
 import client.networking.ServerProxy;
 import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
@@ -63,7 +66,7 @@ public class ClientGameManager extends GameManager
 	
 	/**
 	 * The current player's color
-	 * @return
+	 * @return the current player color
 	 */
 	public CatanColor myPlayerColor()
 	{
@@ -107,6 +110,17 @@ public class ClientGameManager extends GameManager
 	}
 	
 	/**
+	 * 
+	 * @return
+	 */
+	public PlayerInfo[] allCurrentPlayers()
+	{
+		PlayerInfo[] players = new PlayerInfo[this.players.size()];
+		
+		return players;
+	}
+	
+	/**
 	 * Joins a game
 	 * @param gameID
 	 * @param color
@@ -122,9 +136,12 @@ public class ClientGameManager extends GameManager
 			List<Player> players = new ArrayList<>();
 			for (int i=0; i< game.getPlayers().size(); i++)
 			{
+				Player play = ClientDataTranslator.convertPlayerInfo(game.getPlayers().get(i));
+				System.out.println(play);
+				players.add(play);
 				
 			}
-			//this.SetPlayers(ClientDataTranslator.);
+			this.SetPlayers(players);
 			//If we can't joining a game then an exception will be thrown
 			
 		} catch (ServerProxyException e) {
@@ -274,6 +291,14 @@ public class ClientGameManager extends GameManager
 		this.version = model.getVersion();
 		//TODO All of this
 		//TODO update turn status
+		
+		Translate trans = new Translate();
+		if (model.getNetPlayers().size() != this.getNumberPlayers())
+		{
+			System.out.println("Updated number of players");
+			this.SetPlayers(trans.fromNetPlayers(model.getNetPlayers()));
+		}
+		
 		//throw new ModelException();
 	}
 	
