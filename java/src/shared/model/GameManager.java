@@ -145,6 +145,8 @@ public class GameManager implements ModelSubject
 		Player newPlayer = new Player(name, newIndex, color, isHuman);
 		players.add(newPlayer);
 		
+		this.notifyCenter.notify(ModelNotification.PLAYERS);
+		
 		playerColors[color.ordinal()] = newIndex;
 		return newIndex;
 	}
@@ -163,6 +165,7 @@ public class GameManager implements ModelSubject
 			this.players.add(p);
 			playerColors[p.color.ordinal()] = p.playerIndex();
 		}
+		this.notifyCenter.notify(ModelNotification.PLAYERS);
 		
 	}
 	

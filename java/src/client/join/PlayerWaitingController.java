@@ -7,11 +7,13 @@ import client.data.PlayerInfo;
 import client.model.ClientGame;
 import client.networking.ServerProxyException;
 import shared.definitions.AIType;
+import shared.definitions.ModelNotification;
+import shared.model.ModelObserver;
 
 /**
  * Implementation for the player waiting controller
  */
-public class PlayerWaitingController extends Controller implements IPlayerWaitingController {
+public class PlayerWaitingController extends Controller implements IPlayerWaitingController,ModelObserver {
 
 	public PlayerWaitingController(IPlayerWaitingView view) {
 
@@ -36,6 +38,8 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			ais[i] = aiTypes[i].toString();
 		getView().setAIChoices(ais);
 		
+		
+		ClientGame.getGame().startListening(this,ModelNotification.PLAYERS);
 		refreshPlayersWaiting();
 		
 		getView().showModal();
@@ -47,6 +51,8 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	private void refreshPlayersWaiting()
 	{
 		PlayerInfo[] players = new PlayerInfo[1];
+		players[0] = new PlayerInfo();
+		players[0].setName("Joe");
 		
 		getView().setPlayers(players);
 	}
@@ -64,6 +70,14 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		}
 		// TEMPORARY
 		getView().closeModal();
+	}
+
+	@Override
+	public void alert() {
+		// TODO Auto-generated method stub
+		System.out.println("Refresh player waiting");
+		refreshPlayersWaiting();
+		
 	}
 
 }

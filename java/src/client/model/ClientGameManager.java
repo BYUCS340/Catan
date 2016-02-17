@@ -11,6 +11,7 @@ import client.networking.ServerProxy;
 import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
+import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.GameManager;
