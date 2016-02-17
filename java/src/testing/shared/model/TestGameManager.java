@@ -126,7 +126,10 @@ public class TestGameManager {
 			assertEquals(GameRound.ROLLING,gm.CurrentState());
 			assertEquals(gm.CurrentPlayersTurn(),1);
 			int roll = gm.RollDice();
-			assertEquals(GameRound.PLAYING,gm.CurrentState());
+			if (roll ==7)
+				assertEquals(GameRound.ROBBING,gm.CurrentState());
+			else
+				assertEquals(GameRound.PLAYING,gm.CurrentState());
 		}
 		catch (Exception e){
 			fail("Shouldn't have failed on second player turn");
