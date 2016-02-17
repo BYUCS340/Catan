@@ -15,7 +15,8 @@ import shared.model.ModelException;
  */
 public class Poller implements ActionListener 
 {
-	private final int delay = 1000;
+	//Refresh every second and half
+	private final int delay = 1500;
 	private Timer timer;
 	
 	/**

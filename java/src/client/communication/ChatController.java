@@ -25,6 +25,7 @@ public class ChatController extends Controller implements IChatController, Model
 	public void sendMessage(String message) {
 		ClientGame.getGame().SendChat(message);
 	}
+	
 
 	@Override
 	public void alert()
