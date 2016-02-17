@@ -112,9 +112,13 @@ public class ClientGameManager extends GameManager
 	 */
 	public PlayerInfo[] allCurrentPlayers()
 	{
-		PlayerInfo[] players = new PlayerInfo[this.players.size()];
+		PlayerInfo[] allplayers = new PlayerInfo[this.players.size()];
+		for (int i=0; i< this.players.size(); i++)
+		{
+			allplayers[i] = ClientDataTranslator.convertPlayerInfo(players.get(i));
+		}
 		
-		return players;
+		return allplayers;
 	}
 	
 	/**

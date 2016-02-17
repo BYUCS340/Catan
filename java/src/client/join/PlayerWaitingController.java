@@ -50,9 +50,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	 */
 	private void refreshPlayersWaiting()
 	{
-		PlayerInfo[] players = new PlayerInfo[1];
-		players[0] = new PlayerInfo();
-		players[0].setName("Joe");
+		PlayerInfo[] players = ClientGame.getGame().allCurrentPlayers();
 		
 		getView().setPlayers(players);
 	}
