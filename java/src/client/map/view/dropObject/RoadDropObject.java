@@ -13,16 +13,35 @@ import shared.model.map.objects.Vertex;
 
 public class RoadDropObject extends DropObject
 {
-	private Edge dropLocation = null;
+	private Coordinate p1 = null;
+	private Coordinate p2 = null;
 	
 	public RoadDropObject(IMapController controller, CatanColor color)
 	{
 		super(controller, color);
 	}
 	
-	public Edge GetDropLocation()
+	public Edge GetDropLocation() throws MapException
 	{
-		return dropLocation;
+		return controller.GetModel().GetEdge(p1, p2);
+	}
+	
+	@Override
+	public boolean IsValid()
+	{
+		if (p1 == null || p2 == null)
+			return false;
+		
+		return controller.GetModel().EdgeExists(p1, p2);
+	}
+	
+	@Override
+	public boolean IsAllowed()
+	{
+		if (!IsValid())
+			return false;
+		
+		return controller.CanPlaceRoad(p1, p2, color);
 	}
 
 	@Override
@@ -43,17 +62,12 @@ public class RoadDropObject extends DropObject
 			Iterator<Vertex> sortedVerticies = possibleEnds.values().iterator();
 			Vertex v1 = sortedVerticies.next();
 			Vertex v2 = sortedVerticies.next();
-			Coordinate p1 = v1.getPoint();
-			Coordinate p2 = v2.getPoint();
 			
-			isAllowed = controller.CanPlaceRoad(p1, p2, color);
-			
-			if (isAllowed)
-				dropLocation = model.GetEdge(p1, p2);
+			p1 = v1.getPoint();
+			p2 = v2.getPoint();
 		}
 		catch (MapException e)
 		{
-			isAllowed = false;
 			e.printStackTrace();
 		}
 	}
@@ -61,8 +75,6 @@ public class RoadDropObject extends DropObject
 	@Override
 	public void Click()
 	{
-		Coordinate p1 = dropLocation.getStart();
-		Coordinate p2 = dropLocation.getEnd();
 		controller.PlaceRoad(p1, p2);
 	}
 }

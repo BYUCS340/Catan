@@ -9,45 +9,45 @@ import shared.model.map.objects.Hex;
 
 public class RobberDropObject extends DropObject 
 {
-	private Hex dropLocation;
+	private Coordinate hexPoint;
 	
 	public RobberDropObject(IMapController controller, CatanColor color) 
 	{
 		super(controller, color);
 	}
 	
-	public Hex GetDropLocation()
+	public Hex GetDropLocation() throws MapException
 	{
-		return dropLocation;
+		return controller.GetModel().GetHex(hexPoint);
+	}
+	
+	@Override
+	public boolean IsValid()
+	{
+		if (hexPoint == null)
+			return false;
+		
+		return controller.GetModel().HexExists(hexPoint);
+	}
+	
+	@Override
+	public boolean IsAllowed()
+	{
+		if (!IsValid())
+			return false;
+		
+		return controller.CanPlaceRobber(hexPoint);
 	}
 
 	@Override
 	public void Handle(Point2D point)
 	{
-		IMapModel model = controller.GetModel();
-		
-		Coordinate closestHex = GetClosestHexCoordinate(point);
-		if (!model.HexExists(closestHex))
-			return;
-		
-		try
-		{
-			isAllowed = controller.CanPlaceRobber(closestHex);
-			
-			if (isAllowed)
-				dropLocation = model.GetHex(closestHex);
-		} 
-		catch (MapException e)
-		{
-			isAllowed = false;	
-			e.printStackTrace();
-		}
+		hexPoint = GetClosestHexCoordinate(point);
 	}
 
 	@Override
 	public void Click()
 	{
-		controller.PlaceRobber(dropLocation.getPoint());
+		controller.PlaceRobber(hexPoint);
 	}
-
 }

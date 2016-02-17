@@ -11,16 +11,34 @@ import shared.model.map.objects.*;
 
 public class SettlementDropObject extends DropObject 
 {
-	private Vertex dropLocation = null;
+	private Coordinate vertex = null;
 	
 	public SettlementDropObject(IMapController controller, CatanColor color) 
 	{
 		super(controller, color);
 	}
 	
-	public Vertex GetDropLocation()
+	public Vertex GetDropLocation() throws MapException
 	{
-		return dropLocation;
+		return controller.GetModel().GetVertex(vertex);
+	}
+	
+	@Override
+	public boolean IsValid()
+	{
+		if (vertex == null)
+			return false;
+		
+		return controller.GetModel().VertexExists(vertex);
+	}
+	
+	@Override
+	public boolean IsAllowed()
+	{
+		if (!IsValid())
+			return false;
+		
+		return controller.CanPlaceSettlement(vertex);
 	}
 
 	@Override
@@ -40,16 +58,11 @@ public class SettlementDropObject extends DropObject
 			
 			Iterator<Vertex> sortedVerticies = possibleEnds.values().iterator();
 			Vertex v1 = sortedVerticies.next();
-			Coordinate p1 = v1.getPoint();
 			
-			isAllowed = controller.CanPlaceSettlement(p1);
-			
-			if (isAllowed)
-				dropLocation = model.GetVertex(p1);
+			vertex = v1.getPoint();
 		}
 		catch (MapException e)
 		{
-			isAllowed = false;
 			e.printStackTrace();
 		}
 	}
@@ -57,7 +70,7 @@ public class SettlementDropObject extends DropObject
 	@Override
 	public void Click()
 	{
-		controller.PlaceSettlement(dropLocation.getPoint());
+		controller.PlaceSettlement(vertex);
 	}
 
 }

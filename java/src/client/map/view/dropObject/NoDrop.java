@@ -10,6 +10,18 @@ public class NoDrop extends DropObject
 	}
 
 	@Override
+	public boolean IsValid()
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean IsAllowed()
+	{
+		return false;
+	}
+	
+	@Override
 	public void Handle(Point2D point)
 	{
 		return;
@@ -19,5 +31,4 @@ public class NoDrop extends DropObject
 	public void Click() {
 		return;
 	}
-
 }

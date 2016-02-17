@@ -14,18 +14,36 @@ import shared.model.map.objects.Vertex;
 
 public class CityDropObject extends DropObject
 {
-	private Vertex dropLocation = null;
+	private Coordinate vertex = null;
 	
 	public CityDropObject(IMapController controller, CatanColor color)
 	{
 		super(controller, color);
 	}
 	
-	public Vertex GetDropLocation()
+	public Vertex GetDropLocation() throws MapException
 	{
-		return dropLocation;
+		return controller.GetModel().GetVertex(vertex);
+	}
+	
+	@Override
+	public boolean IsValid()
+	{
+		if (vertex == null)
+			return false;
+		
+		return controller.GetModel().VertexExists(vertex);
 	}
 
+	@Override
+	public boolean IsAllowed()
+	{
+		if (!IsValid())
+			return false;
+		
+		return controller.CanPlaceCity(vertex, color);
+	}
+	
 	@Override
 	public void Handle(Point2D point)
 	{
@@ -43,16 +61,11 @@ public class CityDropObject extends DropObject
 			
 			Iterator<Vertex> sortedVerticies = possibleEnds.values().iterator();
 			Vertex v1 = sortedVerticies.next();
-			Coordinate p1 = v1.getPoint();
 			
-			isAllowed = controller.CanPlaceCity(p1, color);
-			
-			if (isAllowed)
-				dropLocation = model.GetVertex(p1);
+			vertex = v1.getPoint();
 		}
 		catch (MapException e)
 		{
-			isAllowed = false;
 			e.printStackTrace();
 		}
 	}
@@ -60,7 +73,6 @@ public class CityDropObject extends DropObject
 	@Override
 	public void Click()
 	{
-		controller.PlaceCity(dropLocation.getPoint());
+		controller.PlaceCity(vertex);
 	}
-
 }

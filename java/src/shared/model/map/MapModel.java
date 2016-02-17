@@ -52,41 +52,37 @@ public class MapModel implements IMapModel {
 		longestRoadLength = LONGEST_ROAD_INITIAL_VALUE;
 	}
 	
-	/**
-	 * Returns if the robber is initialized.
-	 * @return True if yes, else false.
-	 */
+	@Override
 	public boolean IsRobberInitialized()
 	{
 		return robber != null;
 	}
 	
-	/**
-	 * Gets if the longest road exists.
-	 * @return True if yes, else false.
-	 */
+	@Override
 	public boolean LongestRoadExists()
 	{
 		return longestRoadLength > LONGEST_ROAD_INITIAL_VALUE;
 	}
 	
-	/**
-	 * Returns if a hex exists.
-	 * @param point The hex to check.
-	 * @return True if yes, else false.
-	 */
+	@Override
+	public boolean EdgeExists(Coordinate p1, Coordinate p2)
+	{
+		return edges.ContainsEdge(p1, p2);
+	}
+
+	@Override
+	public boolean VertexExists(Coordinate point)
+	{
+		return vertices.ContainsVertex(point);
+	}
+	
+	@Override
 	public boolean HexExists(Coordinate point)
 	{
 		return hexes.ContainsHex(point);
 	}
 	
-	/**
-	 * Returns if a road can be placed.
-	 * @param p1 The start of the road.
-	 * @param p2 The end of the road.
-	 * @param color The color of the road.
-	 * @return True if yes, else false.
-	 */
+	@Override
 	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
 	{	
 		if (!edges.ContainsEdge(p1, p2))
@@ -111,11 +107,7 @@ public class MapModel implements IMapModel {
 		}
 	}
 	
-	/**
-	 * Returns if a Settlement can be placed at the specified location.
-	 * @param point The point of placement.
-	 * @return True if yes, else false.
-	 */
+	@Override
 	public boolean CanPlaceSettlement(Coordinate point)
 	{
 		if (!vertices.ContainsVertex(point))
@@ -147,12 +139,7 @@ public class MapModel implements IMapModel {
 		}
 	}
 	
-	/**
-	 * Returns if a city can be placed.
-	 * @param point The coordinate of the city.
-	 * @param color The color of the city.
-	 * @return True if yes, else false.
-	 */
+	@Override
 	public boolean CanPlaceCity(Coordinate point, CatanColor color)
 	{	
 		if (!vertices.ContainsVertex(point))
@@ -172,11 +159,7 @@ public class MapModel implements IMapModel {
 		}
 	}
 	
-	/**
-	 * Returns if the robber can be placed at the specified location.
-	 * @param point The point to place the robber.
-	 * @return True if yes, else false.
-	 */
+	@Override
 	public boolean CanPlaceRobber(Coordinate point)
 	{	
 		if (!hexes.ContainsHex(point))
@@ -195,6 +178,7 @@ public class MapModel implements IMapModel {
 		}
 	}
 	
+	@Override
 	public boolean CanPlacePip(Coordinate point)
 	{
 		if(!hexes.ContainsHex(point))
@@ -213,24 +197,13 @@ public class MapModel implements IMapModel {
 		}
 	}
 	
-	/**
-	 * Creates a hex at the specified location.
-	 * @param type The resource type associated with the hex.
-	 * @param point The coordinate of the hex.
-	 * @throws MapException Thrown if there is an issue adding the hex.
-	 */
+	@Override
 	public void PlaceHex(HexType type, Coordinate point) throws MapException
 	{
 		hexes.AddHex(new Hex(type, point));
 	}
 	
-	/**
-	 * Puts a road on the map.
-	 * @param p1 The start of the road.
-	 * @param p2 The end of the road.
-	 * @param color The color of the road.
-	 * @throws MapException Thrown if issues occur adding road.
-	 */
+	@Override
 	public void PlaceRoad(Coordinate p1, Coordinate p2, CatanColor color) throws MapException
 	{	
 		edges.AddRoad(p1, p2, color);
@@ -265,35 +238,19 @@ public class MapModel implements IMapModel {
 		}
 	}
 	
-	/**
-	 * Adds a settlement to the map.
-	 * @param point The coordinate of the settlement.
-	 * @param color The color of the settlement.
-	 * @throws MapException The government vetod your settlement.
-	 */
+	@Override
 	public void PlaceSettlement(Coordinate point, CatanColor color) throws MapException
 	{
 		vertices.SetSettlement(point, color);
 	}
 	
-	/**
-	 * Adds a city to the board.
-	 * @param point The coordinate of the city.
-	 * @param color The color of the city.
-	 * @throws MapException If you pay 15% tithing, this won't happen (just kidding, your
-	 * 						city couldn't be added).
-	 */
+	@Override
 	public void PlaceCity(Coordinate point, CatanColor color) throws MapException
 	{
 		vertices.SetCity(point, color);
 	}
 	
-	/**
-	 * Sets a vertex as a port
-	 * @param type The type of port to set.
-	 * @param point The coordinate of the port.
-	 * @throws MapException Thrown if the port is added to a vertex that doesn't exist.
-	 */
+	@Override
 	public void PlacePort(PortType type, Coordinate hexCoordinate, 
 			Coordinate edgeStart, Coordinate edgeEnd) throws MapException
 	{
@@ -310,11 +267,7 @@ public class MapModel implements IMapModel {
 		}
 	}
 	
-	/**
-	 * Sets which hex the robber is on.
-	 * @param hex The hex to place the robber on.
-	 * @throws MapException  Thrown if the hex is invalid.
-	 */
+	@Override
 	public void PlaceRobber(Coordinate point) throws MapException
 	{
 		Hex hex = hexes.GetHex(point);
@@ -325,12 +278,7 @@ public class MapModel implements IMapModel {
 			robber.setRobber(hex);
 	}
 	
-	/**
-	 * Adds a pip to a hex.
-	 * @param value The value of the pip.
-	 * @param hex The hex to which it is added.
-	 * @throws MapException Thrown if the hex doesn't exist.
-	 */
+	@Override
 	public void PlacePip(int value, Coordinate point) throws MapException
 	{
 		Hex hex = hexes.GetHex(point);
@@ -356,65 +304,43 @@ public class MapModel implements IMapModel {
 		}
 	}
 	
-	/**
-	 * Gets a hex at the specified location.
-	 * @param point The desired coordinate.
-	 * @return The hex.
-	 * @throws MapException Thrown if the hex doesn't exist.
-	 */
+	@Override
 	public Hex GetHex(Coordinate point) throws MapException
 	{
 		return hexes.GetHex(point);
 	}
 	
-	/**
-	 * Gets all the hexes.
-	 * @return All the hexes.
-	 */
+	@Override
 	public Iterator<Hex> GetHexes()
 	{
 		return hexes.GetAllHexes();
 	}
 	
+	@Override
 	public Edge GetEdge(Coordinate p1, Coordinate p2) throws MapException
 	{
 		return edges.GetEdge(p1, p2);
 	}
 	
-	/**
-	 * Gets all the edges.
-	 * @return All the edges.
-	 */
+	@Override
 	public Iterator<Edge> GetEdges()
 	{
 		return edges.GetAllEdges();
 	}
 	
-	/**
-	 * Gets the vertex at a specified location.
-	 * @param point The specified location.
-	 * @return The vertex.
-	 * @throws MapException Thrown if the vertex doesn't exist.
-	 */
+	@Override
 	public Vertex GetVertex(Coordinate point) throws MapException
 	{
 		return vertices.GetVertex(point);
 	}
 	
-	/**
-	 * Gets all the vertices.
-	 * @return All the vertices.
-	 */
+	@Override
 	public Iterator<Vertex> GetVertices()
 	{
 		return vertices.GetVerticies();
 	}
 	
-	/**
-	 * Gets the vertices that are associated with a hex.
-	 * @param hex The hex.
-	 * @return The associated vertices.
-	 */
+	@Override
 	public Iterator<Vertex> GetVertices(Hex hex)
 	{
 		List<Vertex> verticiesAlongHex = new ArrayList<Vertex>(6);
@@ -437,11 +363,7 @@ public class MapModel implements IMapModel {
 		return java.util.Collections.unmodifiableList(verticiesAlongHex).iterator();
 	}
 	
-	/**
-	 * Gets the neighbors (surrounding) vertices of a vertex.
-	 * @param vertex The vertex which the neighbors are being requested.
-	 * @return An iterator the the neighbors.
-	 */
+	@Override
 	public Iterator<Vertex> GetVertices(Vertex vertex)
 	{
 		List<Vertex> neighbors = new ArrayList<Vertex>(3);
@@ -471,38 +393,25 @@ public class MapModel implements IMapModel {
 		return java.util.Collections.unmodifiableList(neighbors).iterator();
 	}
 	
-	/**
-	 * Gets all the ports.
-	 * @return All the ports.
-	 */
+	@Override
 	public Iterator<Entry<Edge, Hex>> GetPorts()
 	{
 		return ports.GetAllPorts();
 	}
 	
-	/**
-	 * Gets the location of the robber.
-	 * @return The robber location.
-	 */
+	@Override
 	public Hex GetRobberLocation()
 	{
 		return robber.GetHex();
 	}
 	
-	/**
-	 * Gets all the pips.
-	 * @return All the pips.
-	 */
+	@Override
 	public Iterator<Entry<Integer, List<Hex>>> GetPips()
 	{
 		return java.util.Collections.unmodifiableSet(values.entrySet()).iterator();
 	}
 	
-	/**
-	 * Gets the longest road.
-	 * @return The longest road.
-	 * @throws MapException Thrown if the road doesn't exist.
-	 */
+	@Override
 	public CatanColor GetLongestRoadColor() throws MapException
 	{
 		if (LongestRoadExists())
@@ -511,11 +420,7 @@ public class MapModel implements IMapModel {
 			throw new MapException("Longest road doesn't exist.");
 	}
 	
-	/**
-	 * Gets the transactions associated with a role.
-	 * @param role The role value.
-	 * @return Transaction objects associated with role.
-	 */
+	@Override
 	public Iterator<Transaction> GetTransactions(int role)
 	{
 		List<Transaction> transactions = new ArrayList<Transaction>();

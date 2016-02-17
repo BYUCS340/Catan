@@ -15,7 +15,6 @@ public abstract class DropObject
 	protected IMapController controller;
 	
 	protected CatanColor color;
-	protected boolean isAllowed;
 	
 	protected DropObject(IMapController controller, CatanColor color)
 	{
@@ -23,15 +22,14 @@ public abstract class DropObject
 		this.color = color;
 	}
 	
-	public boolean IsAllowed()
-	{
-		return isAllowed;
-	}
-	
 	public CatanColor GetColor()
 	{
 		return color;
 	}
+	
+	public abstract boolean IsValid();
+	
+	public abstract boolean IsAllowed();
 	
 	public abstract void Handle(Point2D point);
 	

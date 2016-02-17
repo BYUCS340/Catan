@@ -378,58 +378,68 @@ public class MapComponent extends JComponent
 		//TODO Come up with better way to do this.
 		DropObject dropObject = getController().GetDropObject();
 		
-		if (dropObject.getClass() == RoadDropObject.class)
+		if (!dropObject.IsValid())
+			return;
+		
+		try
 		{
-			RoadDropObject road = (RoadDropObject)dropObject;
-			
-			if (road.IsAllowed())
-				drawRoads(g2, road.GetDropLocation(), road.GetColor());
-			else
-				drawDisallowImage(g2, getEdgeCenterPoint(road.GetDropLocation()));
-		}
-		else if (dropObject.getClass() == SettlementDropObject.class)
-		{
-			SettlementDropObject settlement = (SettlementDropObject)dropObject;
-			Point2D vertPoint = getVertexPoint(settlement.GetDropLocation().getPoint());
-			
-			if (settlement.IsAllowed())
+			if (dropObject.getClass() == RoadDropObject.class)
 			{
-				List<Point2D> settlementShape = translateShape(SETTLEMENT, vertPoint);
+				RoadDropObject road = (RoadDropObject)dropObject;
 				
-				Polygon polygon = toPolygon(settlementShape);
-				drawGamePiece(g2, polygon, settlement.GetColor());
+				if (road.IsAllowed())
+					drawRoads(g2, road.GetDropLocation(), road.GetColor());
+				else
+					drawDisallowImage(g2, getEdgeCenterPoint(road.GetDropLocation()));
 			}
-			else
+			else if (dropObject.getClass() == SettlementDropObject.class)
 			{
-				drawDisallowImage(g2, vertPoint);
-			}
-		}
-		else if (dropObject.getClass() == CityDropObject.class)
-		{
-			CityDropObject city = (CityDropObject)dropObject;
-			Point2D vertPoint = getVertexPoint(city.GetDropLocation().getPoint());
-			
-			if (city.IsAllowed())
-			{
-				List<Point2D> cityShape = translateShape(CITY, vertPoint);
+				SettlementDropObject settlement = (SettlementDropObject)dropObject;
+				Point2D vertPoint = getVertexPoint(settlement.GetDropLocation().getPoint());
 				
-				Polygon polygon = toPolygon(cityShape);
-				drawGamePiece(g2, polygon, city.GetColor());
+				if (settlement.IsAllowed())
+				{
+					List<Point2D> settlementShape = translateShape(SETTLEMENT, vertPoint);
+					
+					Polygon polygon = toPolygon(settlementShape);
+					drawGamePiece(g2, polygon, settlement.GetColor());
+				}
+				else
+				{
+					drawDisallowImage(g2, vertPoint);
+				}
 			}
-			else
+			else if (dropObject.getClass() == CityDropObject.class)
 			{
-				drawDisallowImage(g2, vertPoint);
+				CityDropObject city = (CityDropObject)dropObject;
+				Point2D vertPoint = getVertexPoint(city.GetDropLocation().getPoint());
+				
+				if (city.IsAllowed())
+				{
+					List<Point2D> cityShape = translateShape(CITY, vertPoint);
+					
+					Polygon polygon = toPolygon(cityShape);
+					drawGamePiece(g2, polygon, city.GetColor());
+				}
+				else
+				{
+					drawDisallowImage(g2, vertPoint);
+				}
+			}
+			else if (dropObject.getClass() == RobberDropObject.class)
+			{
+				RobberDropObject robber = (RobberDropObject)dropObject;
+				Point2D hexPoint = getHexCenterPoint(robber.GetDropLocation());
+				
+				if (robber.IsAllowed())
+					drawImage(g2, ImageHandler.getRobberImage(), hexPoint);
+				else
+					drawDisallowImage(g2, hexPoint);
 			}
 		}
-		else if (dropObject.getClass() == RobberDropObject.class)
+		catch (MapException e)
 		{
-			RobberDropObject robber = (RobberDropObject)dropObject;
-			Point2D hexPoint = getHexCenterPoint(robber.GetDropLocation());
-			
-			if (robber.IsAllowed())
-				drawImage(g2, ImageHandler.getRobberImage(), hexPoint);
-			else
-				drawDisallowImage(g2, hexPoint);
+			e.printStackTrace();
 		}
 	}
 	

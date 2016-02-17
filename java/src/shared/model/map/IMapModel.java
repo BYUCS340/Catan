@@ -10,6 +10,33 @@ import shared.model.map.objects.*;
 public interface IMapModel
 {
 	/**
+	 * Returns if the robber is initialized.
+	 * @return True if yes, else false.
+	 */
+	public boolean IsRobberInitialized();
+	
+	/**
+	 * Gets if the longest road exists.
+	 * @return True if yes, else false.
+	 */
+	public boolean LongestRoadExists();
+	
+	/**
+	 * Returns if a edge exists.
+	 * @param p1 The start of the edge.
+	 * @param p2 The end of the edge.
+	 * @return True if yes, else false.
+	 */
+	public boolean EdgeExists(Coordinate p1, Coordinate p2);
+	
+	/**
+	 * Returns if a vertex exists.
+	 * @param point The vertex to check.
+	 * @return True if yes, else false.
+	 */
+	public boolean VertexExists(Coordinate point);
+	
+	/**
 	 * Returns if a hex exists.
 	 * @param point The hex to check.
 	 * @return True if yes, else false.
@@ -186,6 +213,13 @@ public interface IMapModel
 	 * @return All the pips.
 	 */
 	public Iterator<Entry<Integer, List<Hex>>> GetPips();
+	
+	/**
+	 * Gets the longest road.
+	 * @return The longest road.
+	 * @throws MapException Thrown if the road doesn't exist.
+	 */
+	public CatanColor GetLongestRoadColor() throws MapException;
 	
 	/**
 	 * Gets the transactions associated with a role.
