@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import client.map.*;
-import client.map.view.helpers.ImageHandler;
 import shared.definitions.CatanColor;
 import shared.model.map.Coordinate;
 import shared.model.map.objects.*;
@@ -48,8 +47,8 @@ public abstract class DropObject
 		double wX = point.getX();
 		double wY = point.getY();
 		
-		int hexWidth = ImageHandler.GetAverageHexWidth();
-		int hexHeight = ImageHandler.GetAverageHexHeight();
+		int hexWidth = Dimensions.HEX_IMAGE_HEIGHT;
+		int hexHeight = Dimensions.HEX_IMAGE_WIDTH;
 		
 		double hX = ((4.0 * wX / hexWidth) - 2) / 3.0;
 		double hY = (2 * (wY - wCenterY)) / hexHeight;
@@ -92,8 +91,8 @@ public abstract class DropObject
 		double x = 0;
 		double y;
 		
-		int hexWidth = ImageHandler.GetAverageHexWidth();
-		int hexHeight = ImageHandler.GetAverageHexHeight();
+		int hexWidth = Dimensions.HEX_IMAGE_WIDTH;
+		int hexHeight = Dimensions.HEX_IMAGE_HEIGHT;
 		
 		if (point.isRightHandCoordinate())
 			x = hexWidth / 4.0;
