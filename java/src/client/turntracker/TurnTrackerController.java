@@ -27,10 +27,11 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 
 	@Override
 	public void endTurn() {
-
+		ClientGame.getGame().endTurn();
 	}
 	
 	private void initFromModel() {
+		
 		//<temp>
 		getView().setLocalPlayerColor(CatanColor.RED);
 		//</temp>

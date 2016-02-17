@@ -35,6 +35,7 @@ public class ClientGameManager extends GameManager
 	{
 		super();		
 		this.proxy = clientProxy;
+		turnState = null;
 	}
 	
 	/**
@@ -46,6 +47,7 @@ public class ClientGameManager extends GameManager
 	{
 		this(clientProxy);
 		this.myPlayerID = myPlayerID;
+		turnState = null;
 	}
 	
 	
@@ -194,6 +196,17 @@ public class ClientGameManager extends GameManager
 		
 	}
 	
+	public void endTurn()
+	{
+		
+		try{
+			proxy.finishTurn();
+		}
+		catch(ServerProxyException e){
+			e.printStackTrace();
+		}
+	}
+	
 	
 	/**
 	 * Discards the cards specified by the resourceList list
@@ -310,5 +323,14 @@ public class ClientGameManager extends GameManager
 		}
 		this.refreshCount++;
 		
+	}
+	
+	/**
+	 * Gets the current TurnState
+	 * @return the TurnState
+	 */
+	public TurnState getTurnState()
+	{
+		return turnState;
 	}
 }
