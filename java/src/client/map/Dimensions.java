@@ -1,12 +1,9 @@
 package client.map;
 
-import client.map.view.helpers.ImageHandler;
-
 public class Dimensions
 {
-	//TODO Verify this doesn't slow down load times.
-	public static final int HEX_IMAGE_WIDTH = ImageHandler.GetAverageHexWidth();
-	public static final int HEX_IMAGE_HEIGHT = ImageHandler.GetAverageHexHeight();
+	public static final int HEX_IMAGE_WIDTH = 298;
+	public static final int HEX_IMAGE_HEIGHT = 258;
 	
 	public static final int WORLD_WIDTH = HEX_IMAGE_WIDTH * 5
 										   + HEX_IMAGE_WIDTH / 2;
