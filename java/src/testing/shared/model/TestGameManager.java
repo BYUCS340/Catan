@@ -83,6 +83,7 @@ public class TestGameManager {
 		try{
 			assertFalse(gm.CanBuyDevCard(gm.CurrentPlayersTurn()));
 			int roll = gm.RollDice();
+			//If we roll a 7 then we're robbing
 			if (roll ==7)
 				assertEquals(GameRound.ROBBING,gm.CurrentState());
 			else
