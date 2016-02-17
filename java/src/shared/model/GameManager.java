@@ -5,18 +5,15 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import client.map.MapController;
-import client.networking.ServerProxy;
-import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
+import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
 import shared.model.map.Transaction;
 import shared.model.chat.ChatBox;
-import shared.networking.transport.NetGameModel;
 
 /**
  * The game manager class acts as a facade between the player/game objects and the ServerProxy/UI
@@ -100,16 +97,29 @@ public class GameManager implements ModelSubject
 	//========================================================================================
 	//Notification Center
 
-	@Override
+	/**
+	 * Starts listening to all changes 
+	 */
 	public boolean startListening(ModelObserver listener)
 	{
 		notifyCenter.add(listener);
 		return true;
 	}
+	/**
+	 * starts listening for a specific type of change
+	 */
+	public boolean startListening(ModelObserver listener, ModelNotification type)
+	{
+		notifyCenter.add(listener,type);
+		return true;
+	}
 	
-	@Override
+	/**
+	 * Stops listening on a model observer
+	 */
 	public boolean stopListening(ModelObserver listener)
 	{
+		notifyCenter.remove(listener);
 		return true;
 	}
 	
@@ -130,7 +140,7 @@ public class GameManager implements ModelSubject
 		int newIndex = players.size();
 		if (newIndex > 3)
 		{
-			throw new ModelException();
+			throw new ModelException("Too many players already to add another");
 		}
 		Player newPlayer = new Player(name, newIndex, color, isHuman);
 		players.add(newPlayer);
@@ -150,10 +160,19 @@ public class GameManager implements ModelSubject
 		for (int i=0; i< players.size(); i++)
 		{
 			Player p = players.get(i);
-			this.players.set(i, p);
+			this.players.add(p);
 			playerColors[p.color.ordinal()] = p.playerIndex();
 		}
 		
+	}
+	
+	/**
+	 * Gets the current number of players
+	 * @return
+	 */
+	public int getNumberPlayers()
+	{
+		return players.size();
 	}
 	
 	/**
@@ -247,13 +266,21 @@ public class GameManager implements ModelSubject
 	 */
 	public int RollDice() throws ModelException
 	{
-		if (gameState.state != GameRound.ROLLING) throw new ModelException();
-		gameState.startBuildPhase();
-		int diceRoll = 4;
+		if (gameState.state != GameRound.ROLLING) 
+			throw new ModelException("Game isn't in rolling state");
+		
+		//Correctly rolls the dice
+		int diceRoll = (int) ((Math.random() * 5) + (Math.random() * 5) + 2);
+		
 		//check if we can move the robber
 		if (diceRoll == 7 )
 		{
 			this.playerCanMoveRobber = this.CurrentPlayersTurn();
+			gameState.startRobbing();
+		}
+		else
+		{
+			gameState.stopRolling();
 		}
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
 		
@@ -305,7 +332,7 @@ public class GameManager implements ModelSubject
 	{
 		//check to see if player has resources
 		if (!this.CanBuildRoad(playerIndex, start, end))
-			throw new ModelException();
+			throw new ModelException("Player can't build road right now");
 		GetPlayer(playerIndex).playerBank.buildRoad();
 		CatanColor color = this.getPlayerColorByIndex(playerIndex);
 		map.placeRoad(start, end, color);
@@ -321,7 +348,7 @@ public class GameManager implements ModelSubject
 	{
 		//check to see if player has resources
 		if (!this.CanBuildSettlement(playerIndex, location))
-			throw new ModelException();
+			throw new ModelException("Player can't build settlement right now");
 		GetPlayer(playerIndex).playerBank.buildSettlement();
 		CatanColor color = this.getPlayerColorByIndex(playerIndex);
 		map.placeSettlement(location, color);
@@ -338,7 +365,7 @@ public class GameManager implements ModelSubject
 	{
 		//check to see if player has resources
 		if (!this.CanBuildSettlement(playerIndex, location))
-			throw new ModelException();
+			throw new ModelException("Player can't build city right now");
 		GetPlayer(playerIndex).playerBank.buildRoad();
 		CatanColor color = this.getPlayerColorByIndex(playerIndex);
 		map.placeCity(location,color);
@@ -353,7 +380,7 @@ public class GameManager implements ModelSubject
 	 */
 	public DevCardType BuyDevCard(int playerIndex) throws ModelException
 	{
-		if (!this.CanBuyDevCard(playerIndex)) throw new ModelException();
+		if (!this.CanBuyDevCard(playerIndex)) throw new ModelException("Player can't buy dev card");
 		Bank playerBank = GetPlayer(playerIndex).playerBank;
 		playerBank.buyDevCard();
 		DevCardType devcard = gameBank.getDevCard();
@@ -370,7 +397,7 @@ public class GameManager implements ModelSubject
 	 */
 	public void playDevCard(int playerIndex, DevCardType type) throws ModelException
 	{
-		if (players.get(playerIndex).playerBank.getDevCardCount(type) < 1) throw new ModelException();
+		if (players.get(playerIndex).playerBank.getDevCardCount(type) < 1) throw new ModelException("Player doesn't have a dev card of that type to play");
 		if (type == DevCardType.SOLDIER)
 		{
 			this.playerCanMoveRobber = playerIndex;
@@ -400,7 +427,7 @@ public class GameManager implements ModelSubject
 	 */
 	public void placeRobber(int playerIndex, Coordinate location) throws ModelException
 	{
-		if (!this.CanPlaceRobber(playerIndex)) throw new ModelException();
+		if (!this.CanPlaceRobber(playerIndex)) throw new ModelException("Player can't place robber right now");
 		map.placeRobber(location);
 		//mark that the robber has been moved
 		this.playerCanMoveRobber = -1;
@@ -815,7 +842,7 @@ public class GameManager implements ModelSubject
 	 */
 	public void FinishTurn() throws ModelException
 	{
-		if (!this.CanFinishTurn() || !gameState.nextTurn()) throw new ModelException();
+		if (!this.CanFinishTurn() || !gameState.nextTurn()) throw new ModelException("Player can't finish turn right now");
 	}
 	
 	/**
@@ -834,13 +861,13 @@ public class GameManager implements ModelSubject
 	 */
 	private Player GetPlayer(int playerIndex) throws ModelException
 	{
-		if (playerIndex >= 0 && playerIndex < 4)
+		if (playerIndex >= 0 && playerIndex < 4 && playerIndex < players.size())
 		{
 			return this.players.get(playerIndex);
 		}
 		else
 		{
-			throw new ModelException();
+			throw new ModelException("Invalid player ID");
 		}
 	}
 	
@@ -898,4 +925,6 @@ public class GameManager implements ModelSubject
 	{
 		return victoryPointManager;
 	}
+
+	
 }

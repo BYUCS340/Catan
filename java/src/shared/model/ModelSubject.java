@@ -1,5 +1,7 @@
 package shared.model;
 
+import shared.definitions.ModelNotification;
+
 public interface ModelSubject
 {
 	/**
@@ -8,6 +10,13 @@ public interface ModelSubject
 	 * @return true if successful
 	 */
 	public boolean startListening(ModelObserver observer);
+	
+	/**
+	 * starts listening for a specific type of change
+	 * @param observer
+	 * @return
+	 */
+	public boolean startListening(ModelObserver observer, ModelNotification typs);
 	
 	/**
 	 * Stops listening for changes in model

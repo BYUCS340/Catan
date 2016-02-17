@@ -46,7 +46,8 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	 */
 	private void refreshPlayersWaiting()
 	{
-		PlayerInfo[] players = new PlayerInfo[4];
+		PlayerInfo[] players = new PlayerInfo[1];
+		
 		getView().setPlayers(players);
 	}
 

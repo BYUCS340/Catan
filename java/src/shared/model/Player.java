@@ -47,4 +47,13 @@ public class Player
 	{
 		return playerIndex;
 	}
+	
+	/**
+	 * 
+	 */
+	public String toString()
+	{
+		return name + ":"+ color.name();
+		
+	}
 }

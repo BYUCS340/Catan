@@ -83,7 +83,10 @@ public class TestGameManager {
 		try{
 			assertFalse(gm.CanBuyDevCard(gm.CurrentPlayersTurn()));
 			int roll = gm.RollDice();
-			assertEquals(GameRound.PLAYING,gm.CurrentState());
+			if (roll ==7)
+				assertEquals(GameRound.ROBBING,gm.CurrentState());
+			else
+				assertEquals(GameRound.PLAYING,gm.CurrentState());
 		}
 		catch (Exception e){
 			fail("exceptions trying to roll the dice!");
