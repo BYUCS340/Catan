@@ -25,7 +25,7 @@ import shared.networking.transport.NetGameModel;
 public class ClientGameManager extends GameManager
 {
 	private ServerProxy proxy;
-	private int myPlayerID;
+	private int myPlayerIndex;
 	
 	private int refreshCount = 0;
 	private CatanColor myPlayerColor;
@@ -44,10 +44,10 @@ public class ClientGameManager extends GameManager
 	 * @param clientProxy
 	 * @param myPlayerID
 	 */
-	public ClientGameManager(ServerProxy clientProxy, int myPlayerID)
+	public ClientGameManager(RealServerProxy clientProxy, int myPlayerID)
 	{
 		this(clientProxy);
-		this.myPlayerID = myPlayerID;
+		this.myPlayerIndex = myPlayerID;
 	}
 	
 	
@@ -57,7 +57,7 @@ public class ClientGameManager extends GameManager
 	 */
 	public int myPlayerID()
 	{
-		return this.myPlayerID;
+		return this.myPlayerIndex;
 	}
 	
 	
@@ -77,7 +77,7 @@ public class ClientGameManager extends GameManager
 	 */
 	public int playerResourceCount(ResourceType type)
 	{
-		return this.players.get(this.myPlayerID).playerBank.getResourceCount(type);
+		return this.players.get(this.myPlayerIndex).playerBank.getResourceCount(type);
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class ClientGameManager extends GameManager
 	 */
 	public int playerDevCardCount(DevCardType type)
 	{
-		return this.players.get(this.myPlayerID).playerBank.getDevCardCount(type);
+		return this.players.get(this.myPlayerIndex).playerBank.getDevCardCount(type);
 	}
 	
 	/**
@@ -98,7 +98,7 @@ public class ClientGameManager extends GameManager
 	public int playerPieceCount(PieceType type)
 	{
 		try {
-			return this.players.get(this.myPlayerID).playerBank.getPieceCount(type);
+			return this.players.get(this.myPlayerIndex).playerBank.getPieceCount(type);
 		} catch (ModelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -134,15 +134,26 @@ public class ClientGameManager extends GameManager
 			this.gameID = game.getId();
 			this.gameTitle = game.getTitle();
 			this.myPlayerColor = color;
-			List<Player> players = new ArrayList<>();
+			boolean rejoining = false;
+			List<Player> newplayers = new ArrayList<>();
 			for (int i=0; i< game.getPlayers().size(); i++)
-			{
-				Player play = ClientDataTranslator.convertPlayerInfo(game.getPlayers().get(i));
+			{	
+				PlayerInfo newplay = game.getPlayers().get(i);
+				if (newplay.getId() == proxy.getUserId())
+					rejoining = true;
+				Player play = ClientDataTranslator.convertPlayerInfo(newplay);
 				System.out.println(play);
-				players.add(play);
+				
+				newplayers.add(play);
 				
 			}
-			this.SetPlayers(players);
+			//If we are rejoining then don't add ourselves
+			if (!rejoining)
+			{
+				newplayers.add(new Player(proxy.getUserName(), players.size(), color, true));
+				this.myPlayerIndex = players.size();
+			}
+			this.SetPlayers(newplayers);
 			//If we can't joining a game then an exception will be thrown
 			
 		} catch (ServerProxyException e) {
@@ -205,7 +216,7 @@ public class ClientGameManager extends GameManager
 	public void BuildRoad(Coordinate start, Coordinate end)
 	{
 		try {
-			this.BuildRoad(myPlayerID, start, end);
+			this.BuildRoad(myPlayerIndex, start, end);
 			//proxy.buildRoad(edgeLocation, false);
 		} catch (ModelException e) {
 			// TODO Auto-generated catch block
@@ -220,7 +231,7 @@ public class ClientGameManager extends GameManager
 	 */
 	public void SendChat(String message)
 	{
-		this.PlayerChat(myPlayerID, message);
+		this.PlayerChat(myPlayerIndex, message);
 	}
 	
 
@@ -246,7 +257,7 @@ public class ClientGameManager extends GameManager
 	 */
 	public int PlayerPoints()
 	{
-		return this.victoryPointManager.getVictoryPoints(this.myPlayerID);
+		return this.victoryPointManager.getVictoryPoints(this.myPlayerIndex);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -263,6 +274,8 @@ public class ClientGameManager extends GameManager
 			return;
 		this.version = model.getVersion();
 		//TODO All of this
+		
+		System.out.println("Reloading the game");
 		
 		Translate trans = new Translate();
 		if (model.getNetPlayers().size() != this.getNumberPlayers())
