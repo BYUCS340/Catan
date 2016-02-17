@@ -3,7 +3,6 @@ package client.catan;
 import javax.swing.*;
 
 import shared.definitions.PieceType;
-import shared.model.map.IMapController;
 import client.points.*;
 import client.resources.*;
 import client.base.*;
@@ -106,7 +105,9 @@ public class RightPanel extends JPanel
 			{
 				boolean isFree = false;
 				boolean allowDisconnected = false;
-				mapController.StartMove(pieceType, isFree, allowDisconnected);
+				boolean temp = isFree;
+				//TODO Put this back in.
+				//mapController.StartMove(pieceType, isFree, allowDisconnected);
 			}
 		};
 	}

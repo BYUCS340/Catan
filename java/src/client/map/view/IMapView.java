@@ -1,20 +1,14 @@
 package client.map.view;
 
 import shared.definitions.*;
-import shared.model.map.MapModel;
+
 import client.base.*;
 
 /**
  * Interface for the map view
  */
 public interface IMapView extends IView
-{
-	/**
-	 * Set the model that the view should refer to
-	 * @param model the model being set
-	 */
-	void SetModel(MapModel model);
-	
+{	
 	/**
 	 * This method displays the modal map overlay and allows the player to place
 	 * the specified type of piece.

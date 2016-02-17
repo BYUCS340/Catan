@@ -20,7 +20,7 @@ import shared.model.map.objects.*;
  * @author Jonathan Sadler
  *
  */
-public class MapModel {
+public class MapModel implements IMapModel {
 	
 	private static final int LONGEST_ROAD_INITIAL_VALUE = 2;
 	
@@ -50,6 +50,34 @@ public class MapModel {
 		ports = new PortHandler();
 		
 		longestRoadLength = LONGEST_ROAD_INITIAL_VALUE;
+	}
+	
+	/**
+	 * Returns if the robber is initialized.
+	 * @return True if yes, else false.
+	 */
+	public boolean IsRobberInitialized()
+	{
+		return robber != null;
+	}
+	
+	/**
+	 * Gets if the longest road exists.
+	 * @return True if yes, else false.
+	 */
+	public boolean LongestRoadExists()
+	{
+		return longestRoadLength > LONGEST_ROAD_INITIAL_VALUE;
+	}
+	
+	/**
+	 * Returns if a hex exists.
+	 * @param point The hex to check.
+	 * @return True if yes, else false.
+	 */
+	public boolean HexExists(Coordinate point)
+	{
+		return hexes.ContainsHex(point);
 	}
 	
 	/**
@@ -329,12 +357,28 @@ public class MapModel {
 	}
 	
 	/**
+	 * Gets a hex at the specified location.
+	 * @param point The desired coordinate.
+	 * @return The hex.
+	 * @throws MapException Thrown if the hex doesn't exist.
+	 */
+	public Hex GetHex(Coordinate point) throws MapException
+	{
+		return hexes.GetHex(point);
+	}
+	
+	/**
 	 * Gets all the hexes.
 	 * @return All the hexes.
 	 */
 	public Iterator<Hex> GetHexes()
 	{
 		return hexes.GetAllHexes();
+	}
+	
+	public Edge GetEdge(Coordinate p1, Coordinate p2) throws MapException
+	{
+		return edges.GetEdge(p1, p2);
 	}
 	
 	/**
@@ -347,12 +391,84 @@ public class MapModel {
 	}
 	
 	/**
+	 * Gets the vertex at a specified location.
+	 * @param point The specified location.
+	 * @return The vertex.
+	 * @throws MapException Thrown if the vertex doesn't exist.
+	 */
+	public Vertex GetVertex(Coordinate point) throws MapException
+	{
+		return vertices.GetVertex(point);
+	}
+	
+	/**
 	 * Gets all the vertices.
 	 * @return All the vertices.
 	 */
 	public Iterator<Vertex> GetVertices()
 	{
 		return vertices.GetVerticies();
+	}
+	
+	/**
+	 * Gets the vertices that are associated with a hex.
+	 * @param hex The hex.
+	 * @return The associated vertices.
+	 */
+	public Iterator<Vertex> GetVertices(Hex hex)
+	{
+		List<Vertex> verticiesAlongHex = new ArrayList<Vertex>(6);
+		
+		try
+		{
+			verticiesAlongHex.add(vertices.GetVertex(hex.getTopLeftCoordinate()));
+			verticiesAlongHex.add(vertices.GetVertex(hex.getLeftCoordinate()));
+			verticiesAlongHex.add(vertices.GetVertex(hex.getBottomLeftCoordinate()));
+			verticiesAlongHex.add(vertices.GetVertex(hex.getTopRightCoordinate()));
+			verticiesAlongHex.add(vertices.GetVertex(hex.getRightCoordinate()));
+			verticiesAlongHex.add(vertices.GetVertex(hex.getBottomRightCoordinate()));
+		}
+		catch (MapException e) {
+			//This would only trigger if we pass in a piece that is water.
+			//Otherwise, it implies the map hasn't been initialized.
+			e.printStackTrace();
+		}
+		
+		return java.util.Collections.unmodifiableList(verticiesAlongHex).iterator();
+	}
+	
+	/**
+	 * Gets the neighbors (surrounding) vertices of a vertex.
+	 * @param vertex The vertex which the neighbors are being requested.
+	 * @return An iterator the the neighbors.
+	 */
+	public Iterator<Vertex> GetVertices(Vertex vertex)
+	{
+		List<Vertex> neighbors = new ArrayList<Vertex>(3);
+		
+		try
+		{
+			if (vertices.ContainsVertex(vertex.getPoint().GetNorth()))
+				neighbors.add(vertices.GetVertex(vertex.getPoint().GetNorth()));
+			if (vertices.ContainsVertex(vertex.getPoint().GetSouth()))
+				neighbors.add(vertices.GetVertex(vertex.getPoint().GetSouth()));
+			
+			Coordinate sideNeighbor;
+			if (vertex.getPoint().isRightHandCoordinate())
+				sideNeighbor = vertex.getPoint().GetEast();
+			else
+				sideNeighbor = vertex.getPoint().GetWest();
+			
+			if (vertices.ContainsVertex(sideNeighbor))
+				neighbors.add(vertices.GetVertex(sideNeighbor));
+		}
+		catch (MapException e)
+		{
+			//This shouldn't occur since we are checking.
+			e.printStackTrace();
+		}
+		
+		return java.util.Collections.unmodifiableList(neighbors).iterator();
 	}
 	
 	/**
@@ -383,6 +499,19 @@ public class MapModel {
 	}
 	
 	/**
+	 * Gets the longest road.
+	 * @return The longest road.
+	 * @throws MapException Thrown if the road doesn't exist.
+	 */
+	public CatanColor GetLongestRoadColor() throws MapException
+	{
+		if (LongestRoadExists())
+			return longestRoadColor;
+		else
+			throw new MapException("Longest road doesn't exist.");
+	}
+	
+	/**
 	 * Gets the transactions associated with a role.
 	 * @param role The role value.
 	 * @return Transaction objects associated with role.
@@ -398,7 +527,7 @@ public class MapModel {
 			{
 				Hex hex = hexes.next();
 				
-				Iterator<Vertex> vertices = GetVerticies(hex);
+				Iterator<Vertex> vertices = GetVertices(hex);
 				while (vertices.hasNext())
 				{
 					Vertex vertex = vertices.next();
@@ -468,67 +597,6 @@ public class MapModel {
 		}
 		
 		return java.util.Collections.unmodifiableList(associatedEdges).iterator();
-	}
-	
-	/**
-	 * Gets the neighbors (surrounding) vertices of a vertex.
-	 * @param vertex The vertex which the neighbors are being requested.
-	 * @return An iterator the the neighbors.
-	 */
-	private Iterator<Vertex> GetVertices(Vertex vertex)
-	{
-		List<Vertex> neighbors = new ArrayList<Vertex>(3);
-		
-		try
-		{
-			if (vertices.ContainsVertex(vertex.getPoint().GetNorth()))
-				neighbors.add(vertices.GetVertex(vertex.getPoint().GetNorth()));
-			if (vertices.ContainsVertex(vertex.getPoint().GetSouth()))
-				neighbors.add(vertices.GetVertex(vertex.getPoint().GetSouth()));
-			
-			Coordinate sideNeighbor;
-			if (vertex.getPoint().isRightHandCoordinate())
-				sideNeighbor = vertex.getPoint().GetEast();
-			else
-				sideNeighbor = vertex.getPoint().GetWest();
-			
-			if (vertices.ContainsVertex(sideNeighbor))
-				neighbors.add(vertices.GetVertex(sideNeighbor));
-		}
-		catch (MapException e)
-		{
-			//This shouldn't occur since we are checking.
-			e.printStackTrace();
-		}
-		
-		return java.util.Collections.unmodifiableList(neighbors).iterator();
-	}
-	
-	/**
-	 * Gets the verticies that are associated with a hex.
-	 * @param hex The hex.
-	 * @return The associated verticies.
-	 */
-	private Iterator<Vertex> GetVerticies(Hex hex)
-	{
-		List<Vertex> verticiesAlongHex = new ArrayList<Vertex>(6);
-		
-		try
-		{
-			verticiesAlongHex.add(vertices.GetVertex(hex.getTopLeftCoordinate()));
-			verticiesAlongHex.add(vertices.GetVertex(hex.getLeftCoordinate()));
-			verticiesAlongHex.add(vertices.GetVertex(hex.getBottomLeftCoordinate()));
-			verticiesAlongHex.add(vertices.GetVertex(hex.getTopRightCoordinate()));
-			verticiesAlongHex.add(vertices.GetVertex(hex.getRightCoordinate()));
-			verticiesAlongHex.add(vertices.GetVertex(hex.getBottomRightCoordinate()));
-		}
-		catch (MapException e) {
-			//This would only trigger if we pass in a piece that is water.
-			//Otherwise, it implies the map hasn't been initialized.
-			e.printStackTrace();
-		}
-		
-		return java.util.Collections.unmodifiableList(verticiesAlongHex).iterator();
 	}
 	
 	private int GetRoadCount(Vertex vertex, CatanColor color, 
@@ -607,111 +675,4 @@ public class MapModel {
 		
 		return false;
 	}
-//	
-//	/**
-//	 * Gets the list of all the pips on the playing board.
-//	 * @return The pip list.
-//	 */
-//	public Iterator<Map.Entry<Integer, List<Hex>>> GetPips()
-//	{
-//		return java.util.Collections.unmodifiableSet(values.entrySet()).iterator();
-//	}
-	
-	
-//	
-//	
-//	/**
-//	 * Gets the vertices surrounding a hex.
-//	 * @param hex The hex being requested.
-//	 * @return A list of the surrounding vertices.
-//	 */
-//	public Iterator<Vertex> GetOccupiedVerticies(Hex hex)
-//	{
-//		Coordinate point = hex.getPoint();
-//		
-//		List<Vertex> verticies = new ArrayList<Vertex>();
-//		
-//		HandleAddingOccupiedVertex(point, verticies);
-//		HandleAddingOccupiedVertex(point.GetNorth(), verticies);
-//		HandleAddingOccupiedVertex(point.GetSouth(), verticies);
-//		HandleAddingOccupiedVertex(point.GetEast(), verticies);
-//		HandleAddingOccupiedVertex(point.GetNorthEast(), verticies);
-//		HandleAddingOccupiedVertex(point.GetSouthEast(), verticies);
-//		
-//		return java.util.Collections.unmodifiableList(verticies).iterator();
-//	}
-//	
-//	/**
-//	 * Returns if the robber is initialized.
-//	 * @return True if yes, else false.
-//	 */
-//	public boolean IsRobberInitialized()
-//	{
-//		return robber != null;
-//	}
-//	
-//	/**
-//	 * Gets the hex the robber is placed on.
-//	 * @return The robber's hex.
-//	 * @throws MapException Thrown if the robber isn't initialized
-//	 */
-//	public Hex GetRobberPlacement() throws MapException
-//	{
-//		if (!IsRobberInitialized())
-//			throw new MapException("Robber not initialized");
-//		else
-//			return robber.GetHex();
-//	}
-//	
-//	public boolean LongestRoadExists()
-//	{
-//		return longestRoadLength > LONGEST_ROAD_INITIAL_VALUE;
-//	}
-//	
-//	public CatanColor GetLongestRoadColor() throws MapException
-//	{
-//		if (LongestRoadExists())
-//			return longestRoadColor;
-//		else
-//			throw new MapException("Longest road doesn't exist.");
-//	}
-//	
-//	/**
-//	 * Adds a road to the map.
-//	 * @param p1 The start of the road.
-//	 * @param p2 The end of the road.
-//	 * @param color The color of the road.
-//	 * @throws MapException What made you think you could add a road?
-//	 */
-//	public void SetRoad(Coordinate p1, Coordinate p2, CatanColor color) throws MapException
-//	{
-		
-//	}
-//
-//	
-//	
-//	
-//	
-//	
-//	private void HandleAddingOccupiedVertex(Coordinate point, List<Vertex> vertexList)
-//	{
-//		try
-//		{
-//			if (verticies.ContainsVertex(point))
-//				AddOccupiedVertex(GetVertex(point), vertexList);
-//		}
-//		catch (MapException ex)
-//		{
-//			ex.printStackTrace();
-//			//Yeah, so this code shouldn't ever execute. If it does, somebody messed with
-//			//the methods that are being called.
-//		}
-//	}
-//	
-//	private void AddOccupiedVertex(Vertex vertex, List<Vertex> vertexList)
-//	{
-//		if (vertex.getType() != PieceType.NONE)
-//			vertexList.add(vertex);
-//	}
-//	
 }

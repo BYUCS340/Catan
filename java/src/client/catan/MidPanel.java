@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import client.map.*;
+import client.map.IMapController;
 import client.map.view.MapView;
 import shared.model.map.*;
 

@@ -6,13 +6,15 @@ import shared.model.map.objects.Edge;
 import shared.model.map.objects.Hex;
 import shared.model.map.objects.Vertex;
 
+import java.awt.geom.Point2D;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 import client.base.*;
-import client.data.*;
 import client.map.view.IMapView;
+import client.map.view.dropObject.*;
+import client.model.ClientGame;
 
 
 /**
@@ -22,7 +24,7 @@ import client.map.view.IMapView;
 public class MapController extends Controller implements IMapController
 {	
 	private MapModel model;
-	private IRobView robView;
+	private DropObject dropObject;
 	
 	/**
 	 * Creates a MapController object.
@@ -34,23 +36,13 @@ public class MapController extends Controller implements IMapController
 		super(view);
 		
 		this.model = model;
-		view.SetModel(model);
 		
-		setRobView(robView);
+		this.dropObject = new NoDrop();
 	}
 	
 	public IMapView getView()
 	{	
 		return (IMapView)super.getView();
-	}
-	
-	private IRobView getRobView()
-	{
-		return robView;
-	}
-	private void setRobView(IRobView robView)
-	{
-		this.robView = robView;
 	}
 
 	@Override
@@ -112,19 +104,92 @@ public class MapController extends Controller implements IMapController
 	{
 		return model.GetRobberLocation();
 	}
+	
+	@Override
+	public boolean IsRobberInitialized()
+	{
+		return model.IsRobberInitialized();
+	}
+	
+	@Override
+	public DropObject GetDropObject()
+	{
+		return dropObject;
+	}
+	
+	@Override
+	public void PlaceRoad(Coordinate p1, Coordinate p2)
+	{
+		ClientGame.getGame().BuildRoad(p1, p2);
+	}
 
 	@Override
-	public void StartMove(PieceType pieceType, boolean isFree, boolean allowDisconnected)
+	public void PlaceSettlement(Coordinate point)
 	{
-		// TODO Auto-generated method stub
-		
+		//TODO Add appropriate call		
+	}
+
+	@Override
+	public void PlaceCity(Coordinate point)
+	{
+		//TODO Add appropriate call
+	}
+
+	@Override
+	public void PlaceRobber(Coordinate point)
+	{
+		//TODO Add appropriate call
+	}
+
+	@Override
+	public void StartMove(PieceType pieceType, CatanColor color, boolean allowDisconnected)
+	{
+		switch(pieceType)
+		{
+		case ROAD:
+			dropObject = new RoadDropObject(this, color);
+			break;
+		case SETTLEMENT:
+			dropObject = new SettlementDropObject(this, color);
+			break;
+		case CITY:
+			dropObject = new CityDropObject(this, color);
+			break;
+		case ROBBER:
+			dropObject = new RobberDropObject(this, color);
+			break;
+		default:
+			dropObject = new NoDrop();
+			break;
+		}
 	}
 
 	@Override
 	public void CancelMove() 
 	{
-		// TODO Auto-generated method stub
-		
+		dropObject = new NoDrop();
+	}
+
+	@Override
+	public void MouseMove(Point2D worldPoint)
+	{
+		dropObject.Handle(worldPoint);
+	}
+
+	@Override
+	public void MouseClick()
+	{
+		if (dropObject.IsAllowed())
+		{
+			dropObject.Click();
+			dropObject = new NoDrop();
+		}
+	}	
+
+	@Override
+	public IMapModel GetModel()
+	{
+		return model;
 	}
 }
 

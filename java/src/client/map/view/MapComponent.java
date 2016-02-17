@@ -10,6 +10,9 @@ import java.awt.image.*;
 import javax.swing.*;
 
 import client.base.*;
+import client.map.*;
+import client.map.IMapController;
+import client.map.view.dropObject.*;
 import client.map.view.helpers.ImageHandler;
 import shared.definitions.*;
 import shared.model.map.*;
@@ -23,24 +26,23 @@ import shared.model.map.objects.*;
 @SuppressWarnings("serial")
 public class MapComponent extends JComponent
 {
+	//TODO Verify this doesn't slow down load times.
+	public static final int HEX_IMAGE_WIDTH = Dimensions.HEX_IMAGE_WIDTH;
+	public static final int HEX_IMAGE_HEIGHT = Dimensions.HEX_IMAGE_HEIGHT;
 	
-	public static final int HEX_IMAGE_WIDTH = 298;
-	public static final int HEX_IMAGE_HEIGHT = 258;
+	public static final int WORLD_WIDTH = Dimensions.WORLD_WIDTH;
+	public static final int WORLD_HEIGHT = Dimensions.WORLD_HEIGHT;
 	
-	private static final int WORLD_WIDTH = HEX_IMAGE_WIDTH * 5
-										   + HEX_IMAGE_WIDTH / 2;
-	private static final int WORLD_HEIGHT = HEX_IMAGE_HEIGHT * 7;
+	private static final int ROAD_HEIGHT = Dimensions.ROAD_HEIGHT;
+	private static final int ROAD_WIDTH = Dimensions.ROAD_WIDTH;
 	
-	private static final int ROAD_HEIGHT = (int)(HEX_IMAGE_WIDTH * 0.11);
-	private static final int ROAD_WIDTH = (int)(HEX_IMAGE_WIDTH * 0.4);
+	private static final int SETTLEMENT_WIDTH = Dimensions.SETTLEMENT_WIDTH;
+	private static final int SETTLEMENT_WALL_HEIGHT = Dimensions.SETTLEMENT_WALL_HEIGHT;
+	private static final int SETTLEMENT_ROOF_HEIGHT = Dimensions.SETTLEMENT_ROOF_HEIGHT;
 	
-	private static final int SETTLEMENT_WIDTH = (int)(HEX_IMAGE_WIDTH * 0.2);
-	private static final int SETTLEMENT_WALL_HEIGHT = (int)(SETTLEMENT_WIDTH * 0.7);
-	private static final int SETTLEMENT_ROOF_HEIGHT = SETTLEMENT_WIDTH;
-	
-	private static final int CITY_WIDTH = (int)(HEX_IMAGE_WIDTH * 0.25);
-	private static final int CITY_WALL_HEIGHT = (int)(CITY_WIDTH * 0.7);
-	private static final int CITY_ROOF_HEIGHT = (int)(CITY_WIDTH * 1.0);
+	private static final int CITY_WIDTH = Dimensions.CITY_WIDTH;
+	private static final int CITY_WALL_HEIGHT = Dimensions.CITY_WALL_HEIGHT;
+	private static final int CITY_ROOF_HEIGHT = Dimensions.CITY_ROOF_HEIGHT;
 	
 	private static List<Point2D> SETTLEMENT;
 	private static List<Point2D> CITY;
@@ -87,14 +89,6 @@ public class MapComponent extends JComponent
 	
 	private IMapController controller;
 	
-	//Drag drop details
-	private PieceType dropType;
-	private CatanColor dropColor;
-	private boolean dropAllowed;
-	private Hex dropHexLoc;
-	private Edge dropEdgeLoc;
-	private Vertex dropVertLoc;
-	
 	//View details
 	private double scale;
 	private AffineTransform transform;
@@ -110,37 +104,11 @@ public class MapComponent extends JComponent
 		
 		setController(controller);
 		
-		initDrop();
-		
 		addMouseListener(mouseAdapter);
 		addMouseMotionListener(mouseAdapter);
 		addComponentListener(componentAdapter);
 		
 		scale = Double.NaN;
-	}
-	
-	private void initDrop()
-	{
-		dropType = null;
-		dropColor = null;
-		dropAllowed = false;
-		dropHexLoc = null;
-		dropEdgeLoc = null;
-		dropVertLoc = null;
-	}
-	
-	public MapComponent copy()
-	{
-		MapComponent copy = new MapComponent();
-		
-		copy.dropType = this.dropType;
-		copy.dropColor = this.dropColor;
-		copy.dropAllowed = this.dropAllowed;
-		copy.dropHexLoc = this.dropHexLoc;
-		copy.dropEdgeLoc = this.dropEdgeLoc;
-		copy.dropVertLoc = this.dropVertLoc;
-		
-		return copy;
 	}
 	
 	private void updateScale()
@@ -181,21 +149,6 @@ public class MapComponent extends JComponent
 		return scale;
 	}
 	
-	public void startDrop(PieceType pieceType, CatanColor pieceColor)
-	{
-		dropType = pieceType;
-		dropColor = pieceColor;
-		
-		this.repaint();
-	}
-	
-	public void cancelDrop()
-	{
-		initDrop();
-		
-		this.repaint();
-	}
-	
 	private ComponentAdapter componentAdapter = new ComponentAdapter()
 	{	
 		@Override
@@ -213,150 +166,37 @@ public class MapComponent extends JComponent
 		@Override
 		public void mouseMoved(MouseEvent e)
 		{
-//			if(dropType == null)
-//			{
-//				return;
-//			}
-//			if(transform == null)
-//			{
-//				return;
-//			}
-//			
-//			// Find
-//			// closest
-//			// drop
-//			// point
-//			
-//			Point2D mousePoint = new Point2D.Double(e.getX(), e.getY());
-//			
-//			try
-//			{
-//				transform.inverseTransform(mousePoint, mousePoint);
-//			}
-//			catch(NoninvertibleTransformException ex)
-//			{
-//				ex.printStackTrace();
-//				return;
-//			}
-//			
-//			Coordinate closestHexCoordinate = getClosestHexCoordinate(mousePoint);
-//			if (!model.ContainsHex(closestHexCoordinate))
-//				return;
-//			
-//			Hex closestHex;
-//			try 
-//			{
-//				closestHex = model.GetHex(closestHexCoordinate);
-//				
-//				if(dropType == PieceType.ROAD)
-//				{
-//					Map<Double, Vertex> possibleEnds = getSortedVerticies(mousePoint, closestHex);
-//					
-//					Iterator<Vertex> sortedVerticies = possibleEnds.values().iterator();
-//					Vertex v1 = sortedVerticies.next();
-//					Vertex v2 = sortedVerticies.next();
-//					Coordinate p1 = v1.getPoint();
-//					Coordinate p2 = v2.getPoint();
-//					
-//					dropAllowed = getController().CanPlaceRoad(p1, p2, dropColor);
-//					
-//					if (dropAllowed)
-//					{
-//						try
-//						{
-//							dropEdgeLoc = model.GetEdge(p1, p2);
-//						} 
-//						catch (MapException e1) {
-//							e1.printStackTrace();
-//							dropAllowed = false;
-//						}
-//					}
-//				}
-//				else if (dropType == PieceType.CITY || dropType == PieceType.SETTLEMENT)
-//				{
-//					Map<Double, Vertex> possibleEnds = getSortedVerticies(mousePoint, closestHex);
-//					
-//					Iterator<Vertex> sortedVerticies = possibleEnds.values().iterator();
-//					Vertex v1 = sortedVerticies.next();
-//					Coordinate p1 = v1.getPoint();
-//					
-//					if (dropType == PieceType.CITY)
-//						dropAllowed = getController().canPlaceCity(p1, dropColor);
-//					else
-//						dropAllowed = getController().canPlaceSettlement(p1);
-//					
-//					if (dropAllowed)
-//					{
-//						try
-//						{
-//							dropVertLoc = model.GetVertex(p1);
-//						} 
-//						catch (MapException e1) {
-//							e1.printStackTrace();
-//							dropAllowed = false;
-//						}
-//					}
-//				}
-//				else if(dropType == PieceType.ROBBER)
-//				{
-//					dropAllowed = getController().canPlaceRobber(closestHexCoordinate);
-//					
-//					if (dropAllowed)
-//					{
-//						try
-//						{
-//							dropHexLoc = model.GetHex(closestHexCoordinate);
-//						} 
-//						catch (MapException e1) {
-//							e1.printStackTrace();
-//							dropAllowed = false;
-//						}
-//					}
-//				}
-//				else
-//				{
-//					assert false;
-//				}
-//				
-//				repaint();
-//			} 
-//			catch (MapException e2) {
-//				e2.printStackTrace();
-//			}	
+			if(transform == null)
+			{
+				return;
+			}
+			
+			// Find
+			// closest
+			// drop
+			// point
+			
+			Point2D mousePoint = new Point2D.Double(e.getX(), e.getY());
+			
+			try
+			{
+				transform.inverseTransform(mousePoint, mousePoint);
+			}
+			catch(NoninvertibleTransformException ex)
+			{
+				ex.printStackTrace();
+				return;
+			}
+
+			getController().MouseMove(mousePoint);
+			
+			repaint();	
 		}
 		
 		@Override
 		public void mouseClicked(MouseEvent e)
 		{
-//			if(dropType != null)
-//			{
-//				
-//				if(dropAllowed)
-//				{
-//					switch (dropType)
-//					{
-//						case ROAD:
-//							getController().placeRoad(dropEdgeLoc.getStart(), dropEdgeLoc.getEnd(), dropColor);
-//							break;
-//						case SETTLEMENT:
-//							getController().placeSettlement(dropVertLoc.getPoint(), dropColor);
-//							break;
-//						case CITY:
-//							getController().placeCity(dropVertLoc.getPoint(), dropColor);
-//							break;
-//						case ROBBER:
-//							getController().placeRobber(dropHexLoc.getPoint());
-//							break;
-//						default:
-//							assert false;
-//							break;
-//					}
-//					
-//					initDrop();
-//				}
-//				
-//				repaint();
-//			}
+			getController().MouseClick();
 		}
 		
 	};
@@ -430,11 +270,12 @@ public class MapComponent extends JComponent
 	private void drawRobber(Graphics2D g2)
 	{
 		//I added this so it doesn't look as if there are multiple robbers.
-		if (dropHexLoc != null)
+		if (controller.GetDropObject().getClass() == RobberDropObject.class)
 			return;
 		
 		//In case the robber doesn't exist yet.
-		//TODO Find means to check
+		if (!controller.IsRobberInitialized())
+			return;
 		
 		try
 		{
@@ -533,96 +374,62 @@ public class MapComponent extends JComponent
 	}
 	
 	private void drawDropShape(Graphics2D g2)
-	{
+	{	
+		//TODO Come up with better way to do this.
+		DropObject dropObject = getController().GetDropObject();
 		
-		if(dropType == null)
+		if (dropObject.getClass() == RoadDropObject.class)
 		{
-			return;
+			RoadDropObject road = (RoadDropObject)dropObject;
+			
+			if (road.IsAllowed())
+				drawRoads(g2, road.GetDropLocation(), road.GetColor());
+			else
+				drawDisallowImage(g2, getEdgeCenterPoint(road.GetDropLocation()));
 		}
-		
-		switch (dropType)
+		else if (dropObject.getClass() == SettlementDropObject.class)
 		{
-			case ROAD:
+			SettlementDropObject settlement = (SettlementDropObject)dropObject;
+			Point2D vertPoint = getVertexPoint(settlement.GetDropLocation().getPoint());
+			
+			if (settlement.IsAllowed())
 			{
-				if(dropEdgeLoc != null)
-				{
-					if(dropAllowed)
-					{
-						drawRoads(g2, dropEdgeLoc, dropColor);
-					}
-					else
-					{
-						drawDisallowImage(g2, getEdgeCenterPoint(dropEdgeLoc));
-					}
-				}
+				List<Point2D> settlementShape = translateShape(SETTLEMENT, vertPoint);
+				
+				Polygon polygon = toPolygon(settlementShape);
+				drawGamePiece(g2, polygon, settlement.GetColor());
 			}
-				break;
-			case CITY:
+			else
 			{
-				if(dropVertLoc != null)
-				{
-					Point2D vertPoint = getVertexPoint(dropVertLoc.getPoint());
-					
-					if(dropAllowed)
-					{
-						List<Point2D> settlementShape = translateShape(CITY, vertPoint);
-						
-						Polygon polygon = toPolygon(settlementShape);
-						drawGamePiece(g2, polygon, dropColor);
-						
-						drawGamePiece(g2, polygon, dropColor);
-					}
-					else
-					{
-						drawDisallowImage(g2, vertPoint);
-					}
-				}
+				drawDisallowImage(g2, vertPoint);
 			}
-				break;
-			case SETTLEMENT:
+		}
+		else if (dropObject.getClass() == CityDropObject.class)
+		{
+			CityDropObject city = (CityDropObject)dropObject;
+			Point2D vertPoint = getVertexPoint(city.GetDropLocation().getPoint());
+			
+			if (city.IsAllowed())
 			{
-				if(dropVertLoc != null)
-				{
-					Point2D vertPoint = getVertexPoint(dropVertLoc.getPoint());
-					
-					if(dropAllowed)
-					{
-						List<Point2D> settlementShape = translateShape(SETTLEMENT, vertPoint);
-						
-						Polygon polygon = toPolygon(settlementShape);
-						drawGamePiece(g2, polygon, dropColor);
-						
-						drawGamePiece(g2, polygon, dropColor);
-					}
-					else
-					{
-						drawDisallowImage(g2, vertPoint);
-					}
-				}
+				List<Point2D> cityShape = translateShape(CITY, vertPoint);
+				
+				Polygon polygon = toPolygon(cityShape);
+				drawGamePiece(g2, polygon, city.GetColor());
 			}
-				break;
-			case ROBBER:
+			else
 			{
-				if(dropHexLoc != null)
-				{
-					if(dropAllowed)
-					{
-						Point2D hexPoint = getHexCenterPoint(dropHexLoc);
-						BufferedImage robberImage = ImageHandler.getRobberImage();
-						drawImage(g2, robberImage, hexPoint);
-					}
-					else
-					{
-						drawDisallowImage(g2, getHexCenterPoint(dropHexLoc));
-					}
-				}
+				drawDisallowImage(g2, vertPoint);
 			}
-				break;
-			default:
-			{
-				assert false;
-			}
-				break;
+		}
+		else if (dropObject.getClass() == RobberDropObject.class)
+		{
+			RobberDropObject robber = (RobberDropObject)dropObject;
+			Point2D hexPoint = getHexCenterPoint(robber.GetDropLocation());
+			
+			if (robber.IsAllowed())
+				drawImage(g2, ImageHandler.getRobberImage(), hexPoint);
+			else
+				drawDisallowImage(g2, hexPoint);
 		}
 	}
 	
@@ -688,46 +495,6 @@ public class MapComponent extends JComponent
 		return new Point2D.Double(wX, wY);
 	}
 	
-//	private Coordinate getClosestHexCoordinate(Point2D point)
-//	{
-//		int wCenterY = WORLD_HEIGHT / 2;
-//		
-//		double wX = point.getX();
-//		double wY = point.getY();
-//		
-//		double hX = ((4.0 * wX / HEX_IMAGE_WIDTH) - 2) / 3.0;
-//		double hY = (2 * (wY - wCenterY)) / HEX_IMAGE_HEIGHT;
-//		
-//		int iX = (int)Math.round(hX);
-//		int iY = (int)Math.round(hY);
-//		
-//		return new Coordinate (iX, iY);
-//	}
-	
-//	private Map<Double, Vertex> getSortedVerticies(Point2D point, Hex hex)
-//	{
-//		Map<Double, Vertex> result = new TreeMap<Double, Vertex>();
-//		
-//		Iterator<Vertex> verticies = model.GetVerticies(hex);
-//		while (verticies.hasNext())
-//		{
-//			Vertex vertex = verticies.next();
-//			Point2D vertexPoint = getVertexPoint(vertex.getPoint());
-//			
-//			double distance = vertexPoint.distance(point);
-//			
-//			//This is in the (hopefully) off chance of getting the same
-//			//distance for multiple vertices. The odds of getting dead
-//			//center or midpoints is kind of slim though (I hope).
-//			while (result.containsKey(distance))
-//				distance += .0001;
-//			
-//			result.put(distance, vertex);
-//		}
-//		
-//		return result;
-//	}
-	
 	private static Point2D getEdgeCenterPoint(Edge edge)
 	{
 		Coordinate start = edge.getStart();
@@ -751,21 +518,6 @@ public class MapComponent extends JComponent
 				(startPoint.getX() - endPoint.getX());
 		
 		return Math.atan(slope);
-	}
-	
-	private static Point2D getVertexPoint(Coordinate point)
-	{
-		double wCenterY = WORLD_HEIGHT / 2;
-		double x = 0;
-		double y;
-		
-		if (point.isRightHandCoordinate())
-			x = HEX_IMAGE_WIDTH / 4.0;
-		
-		x += point.getX() * 0.75 * HEX_IMAGE_WIDTH;
-		y = wCenterY + point.getY() * HEX_IMAGE_HEIGHT / 2.0;
-		
-		return new Point2D.Double(x, y);
 	}
 	
 	private static Polygon toPolygon(List<Point2D> points)
@@ -822,6 +574,21 @@ public class MapComponent extends JComponent
 		
 		return new Point2D.Double((int)(pt1.getX() + pt2.getX()),
 								  (int)(pt1.getY() + pt2.getY()));
+	}
+	
+	private static Point2D getVertexPoint(Coordinate point)
+	{
+		double wCenterY = WORLD_HEIGHT / 2.0;
+		double x = 0;
+		double y;
+		
+		if (point.isRightHandCoordinate())
+			x = HEX_IMAGE_WIDTH / 4.0;
+		
+		x += point.getX() * 0.75 * HEX_IMAGE_WIDTH;
+		y = wCenterY + point.getY() * HEX_IMAGE_HEIGHT / 2.0;
+		
+		return new Point2D.Double(x, y);
 	}
 }
 

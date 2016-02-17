@@ -1,0 +1,23 @@
+package client.map.view.dropObject;
+
+import java.awt.geom.Point2D;
+
+public class NoDrop extends DropObject 
+{
+	public NoDrop()
+	{
+		super(null, null);
+	}
+
+	@Override
+	public void Handle(Point2D point)
+	{
+		return;
+	}
+
+	@Override
+	public void Click() {
+		return;
+	}
+
+}

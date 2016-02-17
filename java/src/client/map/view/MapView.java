@@ -2,18 +2,12 @@ package client.map.view;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
 
 import javax.swing.*;
 
 import client.base.*;
+import client.map.IMapController;
 import shared.definitions.*;
-import shared.model.map.*;
-import shared.model.map.objects.Edge;
-import shared.model.map.objects.Hex;
-import shared.model.map.objects.Vertex;
 
 /**
  * Implementation for the map view
@@ -54,7 +48,7 @@ public class MapView extends PanelView implements IMapView
 	{
 		
 		overlay = new MapOverlay(map);
-		overlay.setController(overlayController);
+		overlay.setController(getController());
 		overlay.startDrop(pieceType, pieceColor, isCancelAllowed);
 		overlay.showModal();
 	}
@@ -63,88 +57,6 @@ public class MapView extends PanelView implements IMapView
 	public void RefreshView() {
 		map.repaint();
 	}
-	
-	private IMapController overlayController = new IMapController() {
-		
-		@Override
-		public IView getView()
-		{
-			assert false;
-			return null;
-		}
-
-		@Override
-		public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
-		{
-			return getController().CanPlaceRoad(p1, p2, color);
-		}
-
-		@Override
-		public boolean CanPlaceSettlement(Coordinate point)
-		{
-			return getController().CanPlaceSettlement(point);
-		}
-
-		@Override
-		public boolean CanPlaceCity(Coordinate point, CatanColor color)
-		{
-			return getController().CanPlaceCity(point, color);
-		}
-
-		@Override
-		public boolean CanPlaceRobber(Coordinate point) 
-		{
-			return getController().CanPlaceRobber(point);
-		}
-
-		@Override
-		public Iterator<Hex> GetHexes()
-		{
-			return getController().GetHexes();
-		}
-
-		@Override
-		public Iterator<Edge> GetEdges()
-		{
-			return getController().GetEdges();
-		}
-
-		@Override
-		public Iterator<Vertex> GetVertices()
-		{
-			return getController().GetVertices();
-		}
-
-		@Override
-		public Iterator<Entry<Edge, Hex>> GetPorts()
-		{
-			return getController().GetPorts();
-		}
-
-		@Override
-		public Iterator<Entry<Integer, List<Hex>>> GetPips()
-		{
-			return getController().GetPips();
-		}
-
-		@Override
-		public Hex GetRobberPlacement() throws MapException
-		{
-			return getController().GetRobberPlacement();
-		}
-
-		@Override
-		public void StartMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void CancelMove() {
-			// TODO Auto-generated method stub
-			
-		}
-	};
 	
 	private static class MapOverlay extends OverlayView
 	{
@@ -188,7 +100,8 @@ public class MapView extends PanelView implements IMapView
 											 LABEL_TEXT_SIZE);
 			label.setFont(labelFont);
 			
-			map = mainMap.copy();
+			//TODO Figure out why this is needed
+			//map = mainMap.copy();
 			map.setController(getController());
 			
 			int prefWidth = (int)(mainMap.getScale() * mainMap.getPreferredSize()
@@ -213,7 +126,8 @@ public class MapView extends PanelView implements IMapView
 				this.add(cancelButton, BorderLayout.SOUTH);
 			}
 			
-			map.startDrop(pieceType, pieceColor);
+			//TODO Figure out what this is.
+			//map.startDrop(pieceType, pieceColor);
 		}
 		
 		private ActionListener cancelButtonListener = new ActionListener() {
@@ -244,10 +158,5 @@ public class MapView extends PanelView implements IMapView
 		}
 	}
 
-	@Override
-	public void SetModel(MapModel model) {
-		// TODO Auto-generated method stub
-		
-	}
 }
 

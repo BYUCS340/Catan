@@ -2,6 +2,7 @@ package client.map.view.helpers;
 
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import client.utils.ImageUtils;
@@ -21,13 +22,29 @@ public class ImageHandler
 	private BufferedImage ROBBER_IMAGE;
 	private BufferedImage DISALLOW_IMAGE;
 	
+	private int AVERAGE_WIDTH = 0;
+	private int AVERAGE_HEIGHT = 0;
+	
 	private ImageHandler()
 	{
 		//Load hex images
 		HEX_IMAGES = new HashMap<HexType, BufferedImage>();
 		
+		int count = 0;
 		for (HexType hexType : HexType.values())
-			HEX_IMAGES.put(hexType, loadHexImage(hexType));
+		{
+			BufferedImage hexImage = loadHexImage(hexType);
+			HEX_IMAGES.put(hexType, hexImage);
+			
+			AVERAGE_WIDTH += hexImage.getWidth();
+			AVERAGE_HEIGHT += hexImage.getHeight();
+		}
+		
+		if (count != 0)
+		{
+			AVERAGE_WIDTH /= count;
+			AVERAGE_HEIGHT /= count;
+		}
 		
 		//Load ports
 		PORT_IMAGES = new HashMap<PortType, BufferedImage>();
@@ -60,6 +77,16 @@ public class ImageHandler
 			handler = new ImageHandler();
 		
 		return handler;
+	}
+	
+	public static int GetAverageHexWidth()
+	{
+		return GetHandler().AVERAGE_WIDTH;
+	}
+	
+	public static int GetAverageHexHeight()
+	{
+		return GetHandler().AVERAGE_HEIGHT;
 	}
 	
 	/**
