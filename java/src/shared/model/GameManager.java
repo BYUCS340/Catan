@@ -8,12 +8,12 @@ import java.util.List;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
+import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
 import shared.model.map.Transaction;
 import shared.model.chat.ChatBox;
-import shared.networking.transport.NetGameModel;
 
 /**
  * The game manager class acts as a facade between the player/game objects and the ServerProxy/UI
@@ -97,16 +97,29 @@ public class GameManager implements ModelSubject
 	//========================================================================================
 	//Notification Center
 
-	@Override
+	/**
+	 * Starts listening to all changes 
+	 */
 	public boolean startListening(ModelObserver listener)
 	{
 		notifyCenter.add(listener);
 		return true;
 	}
+	/**
+	 * starts listening for a specific type of change
+	 */
+	public boolean startListening(ModelObserver listener, ModelNotification type)
+	{
+		notifyCenter.add(listener,type);
+		return true;
+	}
 	
-	@Override
+	/**
+	 * Stops listening on a model observer
+	 */
 	public boolean stopListening(ModelObserver listener)
 	{
+		notifyCenter.remove(listener);
 		return true;
 	}
 	
@@ -912,4 +925,6 @@ public class GameManager implements ModelSubject
 	{
 		return victoryPointManager;
 	}
+
+	
 }
