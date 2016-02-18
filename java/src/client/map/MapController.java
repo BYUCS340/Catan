@@ -20,8 +20,7 @@ import client.model.ClientGame;
  * any object on the map.
  */
 public class MapController extends Controller implements IMapController
-{	
-	private MapModel model;
+{
 	private DropObject dropObject;
 	
 	/**
@@ -29,11 +28,9 @@ public class MapController extends Controller implements IMapController
 	 * @param view The MapView object.
 	 * @param robView The RobberView object.
 	 */
-	public MapController(IMapView view, MapModel model)
+	public MapController(IMapView view)
 	{
 		super(view);
-		
-		this.model = model;
 		
 		this.dropObject = new NoDrop();
 	}
@@ -46,66 +43,77 @@ public class MapController extends Controller implements IMapController
 	@Override
 	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
 	{
+		IMapModel model = ClientGame.getGame().GetMapModel();
 		return model.CanPlaceRoad(p1, p2, color);
 	}
 
 	@Override
 	public boolean CanPlaceSettlement(Coordinate point)
 	{
+		IMapModel model = ClientGame.getGame().GetMapModel();
 		return model.CanPlaceSettlement(point);
 	}
 
 	@Override
 	public boolean CanPlaceCity(Coordinate point, CatanColor color)
 	{
+		IMapModel model = ClientGame.getGame().GetMapModel();
 		return model.CanPlaceCity(point, color);
 	}
 
 	@Override
 	public boolean CanPlaceRobber(Coordinate point)
 	{
+		IMapModel model = ClientGame.getGame().GetMapModel();
 		return model.CanPlaceRobber(point);
 	}
 
 	@Override
 	public Iterator<Hex> GetHexes()
 	{
+		IMapModel model = ClientGame.getGame().GetMapModel();
 		return model.GetHexes();
 	}
 
 	@Override
 	public Iterator<Edge> GetEdges()
 	{
+		IMapModel model = ClientGame.getGame().GetMapModel();
 		return model.GetEdges();
 	}
 
 	@Override
 	public Iterator<Vertex> GetVertices()
 	{
+		IMapModel model = ClientGame.getGame().GetMapModel();
 		return model.GetVertices();
 	}
 
 	@Override
 	public Iterator<Entry<Edge, Hex>> GetPorts()
 	{
+		IMapModel model = ClientGame.getGame().GetMapModel();
 		return model.GetPorts();
 	}
 
 	@Override
 	public Iterator<Entry<Integer, List<Hex>>> GetPips()
 	{
+		IMapModel model = ClientGame.getGame().GetMapModel();
 		return model.GetPips();
 	}
 
 	@Override
 	public Hex GetRobberPlacement() throws MapException
 	{
+		IMapModel model = ClientGame.getGame().GetMapModel();
 		return model.GetRobberLocation();
 	}
 	
 	@Override
 	public boolean IsRobberInitialized()
 	{
+		IMapModel model = ClientGame.getGame().GetMapModel();
 		return model.IsRobberInitialized();
 	}
 	
@@ -187,7 +195,7 @@ public class MapController extends Controller implements IMapController
 	@Override
 	public IMapModel GetModel()
 	{
-		return model;
+		return ClientGame.getGame().GetMapModel();
 	}
 }
 

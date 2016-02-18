@@ -29,10 +29,7 @@ public class MidPanel extends JPanel
 		mapOverlayView = new MapOverlayView();
 		robView = new RobView();
 		
-		MapModel model = new MapModel();
-		MapGenerator.BeginnerMap(model);
-		
-		mapController = new MapController(mapView, model);
+		mapController = new MapController(mapView);
 		//Give the game the right map controller
 		mapView.setController(mapController);
 		mapOverlayView.setController(mapController);

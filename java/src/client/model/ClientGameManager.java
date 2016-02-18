@@ -9,7 +9,7 @@ import shared.definitions.ResourceType;
 import shared.model.GameManager;
 import shared.model.ModelException;
 import shared.model.Translate;
-import shared.model.map.Coordinate;
+import shared.model.map.*;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 
@@ -259,5 +259,10 @@ public class ClientGameManager extends GameManager
 		}
 		this.refreshCount++;
 		
+	}
+	
+	public IMapModel GetMapModel()
+	{
+		return new UnmodifiableMapModel(map);
 	}
 }
