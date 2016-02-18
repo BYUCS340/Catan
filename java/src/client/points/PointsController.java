@@ -2,12 +2,13 @@ package client.points;
 
 import client.base.*;
 import client.model.ClientGame;
+import shared.model.ModelObserver;
 
 
 /**
  * Implementation for the points controller
  */
-public class PointsController extends Controller implements IPointsController
+public class PointsController extends Controller implements IPointsController, ModelObserver
 {
 
 	private IGameFinishedView finishedView;
@@ -45,6 +46,12 @@ public class PointsController extends Controller implements IPointsController
 	{
 		int points = ClientGame.getGame().PlayerPoints();
 		getPointsView().setPoints(points);
+	}
+
+	@Override
+	public void alert()
+	{
+		initFromModel();
 	}
 	
 }
