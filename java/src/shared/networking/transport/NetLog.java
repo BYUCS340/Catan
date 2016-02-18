@@ -33,6 +33,15 @@ public class NetLog
 	{
 		return lines;
 	}
+	
+	/**
+	 * Returns the number of lines
+	 * @return
+	 */
+	public int size()
+	{
+		return lines.size();
+	}
 
 	/**
 	 * @param the log to set
