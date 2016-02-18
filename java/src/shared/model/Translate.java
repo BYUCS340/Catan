@@ -351,7 +351,9 @@ public class Translate
 		} 
 		catch (ModelException e)
 		{
-			System.err.println("An Error has occured while populating the player bank in the Translate class");
+			e.printStackTrace();
+			System.err.println(e.getMessage());
+			System.err.println("An Error has occured while populating the player bank in the Translate class.");
 		}
 		
 		return null;

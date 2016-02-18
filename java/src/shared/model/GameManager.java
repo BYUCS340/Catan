@@ -162,6 +162,7 @@ public class GameManager implements ModelSubject
 		for (int i=0; i< players.size(); i++)
 		{
 			Player p = players.get(i);
+			System.out.println(p);
 			this.players.add(p);
 			playerColors[p.color.ordinal()] = p.playerIndex();
 		}
