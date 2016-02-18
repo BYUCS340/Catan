@@ -155,8 +155,28 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	@Override
 	public void startJoinGame(GameInfo game) {
 		lastGameSelected = game;
+		List<PlayerInfo> players = game.getPlayers();
+		CatanColor mycolor = null;
+		for (int i=0;i<players.size(); i++)
+		{
+			PlayerInfo play = players.get(i);
+			getSelectColorView().setColorEnabled(play.getColor(), false);
+			if (play.getId() == ClientGame.getCurrentProxy().getUserId())
+			{
+				mycolor = play.getColor();
+			}
+		}
 		
-		getSelectColorView().showModal();
+		//If we are rejoining a game
+		if (mycolor != null)
+		{
+			getSelectColorView().showModal();
+			joinGame(mycolor);
+		}
+		else
+		{
+			getSelectColorView().showModal();
+		}
 	}
 
 	@Override

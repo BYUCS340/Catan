@@ -154,6 +154,7 @@ public class ClientGameManager extends GameManager
 				this.myPlayerIndex = players.size();
 			}
 			this.SetPlayers(newplayers);
+			ClientGame.startPolling();
 			//If we can't joining a game then an exception will be thrown
 			
 		} catch (ServerProxyException e) {
@@ -270,12 +271,14 @@ public class ClientGameManager extends GameManager
 	 */
 	public void reloadGame(NetGameModel model) throws ModelException
 	{
-		if (model.getVersion() == this.version)
+		
+		if (model.getVersion() == this.version && model.getNetPlayers().size() == this.getNumberPlayers())
 			return;
+		System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
 		this.version = model.getVersion();
 		//TODO All of this
 		
-		System.out.println("Reloading the game");
+		
 		
 		Translate trans = new Translate();
 		if (model.getNetPlayers().size() != this.getNumberPlayers())
@@ -322,14 +325,15 @@ public class ClientGameManager extends GameManager
 			NetGameModel model = proxy.getGameModel();
 			if (model == null) {
 				System.err.println("Model was null from the server");
-				return;
+				throw new ModelException("Model was null from server");
 			}
+			//Refresh teh game
 			this.reloadGame(model);
 		} catch (ServerProxyException e) {
 			// TODO Auto-generated catch block
 			System.err.println("Wasn't able to update");
-			//e.printStackTrace();
-			//throw new ModelException();
+			e.printStackTrace();
+			throw new ModelException("Server proxy wasn't able to update");
 		}
 		this.refreshCount++;
 		

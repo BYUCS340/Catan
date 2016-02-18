@@ -1,5 +1,6 @@
 package client.model;
 
+import client.networking.Poller;
 import client.networking.RealServerProxy;
 import client.networking.ServerProxy;
 import shared.model.GameManager;
@@ -8,6 +9,7 @@ import shared.model.ModelException;
 public class ClientGame {
 	static private ClientGameManager game;
 	static private RealServerProxy proxy;
+	static private Poller poller;
 	
 	/**
 	 * Gets the current game manager
@@ -28,6 +30,7 @@ public class ClientGame {
 	{
 		ClientGame.proxy = proxy;
 		ClientGame.game = new ClientGameManager(proxy);
+		ClientGame.poller = new Poller();
 	}
 	
 	/**
@@ -37,10 +40,27 @@ public class ClientGame {
 	static public void startGameWithProxy(ServerProxy proxy)
 	{
 		ClientGame.game = new ClientGameManager(proxy);
+		ClientGame.poller = new Poller();
 	}
 	
 	static public RealServerProxy getCurrentProxy()
 	{
 		return ClientGame.proxy;
+	}
+	
+	/**
+	 * Starts Polling
+	 */
+	static public void startPolling()
+	{
+		poller.beginPolling();
+	}
+	
+	/**
+	 * Stops Polling
+	 */
+	static public void stopPolling()
+	{
+		poller.stopPolling();
 	}
 }

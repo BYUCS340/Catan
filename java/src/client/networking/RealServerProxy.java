@@ -270,6 +270,7 @@ public class RealServerProxy implements ServerProxy
 //		}
 //		
 		//get the userIndex
+		System.out.println(result);
 	}
 
 	/* (non-Javadoc)
