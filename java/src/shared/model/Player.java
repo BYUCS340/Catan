@@ -12,6 +12,7 @@ public class Player
 	public CatanColor color;
 	public Bank playerBank;
 	private int playerIndex;
+	private int playerID;
 	private boolean isRobot = false;
 	
 	/**
@@ -28,6 +29,12 @@ public class Player
 		this.playerBank = new Bank();
 		this.playerIndex = index;
 		this.color = playerColor;
+		this.playerID = -1;
+	}
+	public Player(String name, int index, CatanColor playerColor, boolean isHuman, int ID)
+	{
+		this(name, index, playerColor, isHuman);
+		this.playerID = ID;
 	}
 	
 	/**
@@ -49,11 +56,20 @@ public class Player
 	}
 	
 	/**
+	 * Returns the player ID
+	 * @return
+	 */
+	public int playerID()
+	{
+		return playerID;
+	}
+	
+	/**
 	 * 
 	 */
 	public String toString()
 	{
-		return name + ":"+ color.name();
+		return name + ":"+ color.name()+" "+playerID+"-"+playerIndex;
 		
 	}
 }

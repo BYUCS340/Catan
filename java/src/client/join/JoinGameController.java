@@ -3,7 +3,12 @@ package client.join;
 import shared.definitions.CatanColor;
 import shared.networking.transport.NetGame;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.swing.Timer;
 
 import client.base.*;
 import client.data.*;
@@ -15,12 +20,14 @@ import client.networking.ServerProxyException;
 /**
  * Implementation for the join game controller
  */
-public class JoinGameController extends Controller implements IJoinGameController {
+public class JoinGameController extends Controller implements IJoinGameController, ActionListener  {
 
 	private INewGameView newGameView;
 	private ISelectColorView selectColorView;
 	private IMessageView messageView;
 	private IAction joinAction;
+	private Timer timer;
+	
 	
 	/**
 	 * JoinGameController constructor
@@ -38,7 +45,11 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		setNewGameView(newGameView);
 		setSelectColorView(selectColorView);
 		setMessageView(messageView);
+		
+		timer = new Timer(3500, this);
+		
 	}
+	
 	
 	public IJoinGameView getJoinGameView() {
 		
@@ -97,42 +108,58 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void start() {
 		refreshGameList();
 		getJoinGameView().showModal();
+		timer.start();
 	}
 	
 	/**
 	 * Refreshes the view's game list from the proxy
 	 */
+	private int gameCount = 0;
+	private int joinedPlayerCount = 0;
 	private void refreshGameList()
 	{
 		try 
 		{
 			List<NetGame> allGames = ClientGame.getCurrentProxy().listGames();
+			
+			//Get the number of players currently joined to a game
+			int currentPlayerCount = 0;
+			Iterator<NetGame> gameIter = allGames.iterator();
+			while (gameIter.hasNext()) 
+				currentPlayerCount += gameIter.next().getNetPlayers().size();
+			//If there is no need to update, don't
+			if (allGames.size() <= gameCount && joinedPlayerCount != currentPlayerCount) return;
+			
+			//Get the games
 			GameInfo[] games = new GameInfo[allGames.size()];
 			for (int i=0; i< allGames.size(); i++)
 			{
 				games[i] = ClientDataTranslator.convertGame(allGames.get(i));
 			}
+			//Create the current player
 			PlayerInfo localPlayer = new PlayerInfo();
 			localPlayer.setName(ClientGame.getCurrentProxy().getUserName());
 			localPlayer.setId(ClientGame.getCurrentProxy().getUserId());
 			getJoinGameView().setGames(games, localPlayer);
+			//update the game count and player count
+			gameCount = games.length;
+			joinedPlayerCount = currentPlayerCount;
 		} 
 		catch (ServerProxyException e)
 		{
 			// TODO Auto-generated catch block
+			System.err.println("UNABLE TO GET GAME LIST "+e);
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void startCreateNewGame() {
-		
 		getNewGameView().showModal();
 	}
 
 	@Override
 	public void cancelCreateNewGame() {
-		
 		getNewGameView().closeModal();
 	}
 
@@ -150,13 +177,35 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		}
 		this.refreshGameList();
 		getNewGameView().closeModal();
+		
 	}
 	private GameInfo lastGameSelected = null;
 	@Override
 	public void startJoinGame(GameInfo game) {
-		lastGameSelected = game;
 		
-		getSelectColorView().showModal();
+		lastGameSelected = game;
+		List<PlayerInfo> players = game.getPlayers();
+		CatanColor mycolor = null;
+		for (int i=0;i<players.size(); i++)
+		{
+			PlayerInfo play = players.get(i);
+			getSelectColorView().setColorEnabled(play.getColor(), false);
+			if (play.getId() == ClientGame.getCurrentProxy().getUserId())
+			{
+				mycolor = play.getColor();
+			}
+		}
+		
+		//If we are rejoining a game
+		if (mycolor != null)
+		{
+			getSelectColorView().showModal();
+			joinGame(mycolor);
+		}
+		else
+		{
+			getSelectColorView().showModal();
+		}
 	}
 
 	@Override
@@ -178,10 +227,26 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		System.out.println("joining game "+lastGameSelected);
 		this.refreshGameList();
 		// If join succeeded
+		
 		getSelectColorView().closeModal();
 		getJoinGameView().closeModal();
+		timer.stop();
 		joinAction.execute();
 	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		boolean showing = this.getJoinGameView().isModalShowing() && !this.getNewGameView().isModalShowing() && !this.getSelectColorView().isModalShowing();
+		if (showing)
+			this.getJoinGameView().closeModal();
+		this.refreshGameList();
+		if (showing)
+			this.getJoinGameView().showModal();
+		
+	}
+
 
 }
 

@@ -188,7 +188,7 @@ public class Bank
 	 */
 	public void giveResource(ResourceType type, int amount) throws ModelException
 	{
-		if (amount <= 0 ) throw new ModelException();
+		if (amount < 0 ) throw new ModelException("Negative Amount");
 		this.resources[type.ordinal()] += amount;
 	}
 	
