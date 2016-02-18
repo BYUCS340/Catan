@@ -99,6 +99,9 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		getJoinGameView().showModal();
 	}
 	
+	/**
+	 * Refreshes the view's game list from the proxy
+	 */
 	private void refreshGameList()
 	{
 		try 
@@ -107,10 +110,11 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			GameInfo[] games = new GameInfo[allGames.size()];
 			for (int i=0; i< allGames.size(); i++)
 			{
-				games[i] = ClientDataTranslator.convert(allGames.get(i));
+				games[i] = ClientDataTranslator.convertGame(allGames.get(i));
 			}
-//			ClientGame.getCurrentProxy().
 			PlayerInfo localPlayer = new PlayerInfo();
+			localPlayer.setName(ClientGame.getCurrentProxy().getUserName());
+			localPlayer.setId(ClientGame.getCurrentProxy().getUserId());
 			getJoinGameView().setGames(games, localPlayer);
 		} 
 		catch (ServerProxyException e)

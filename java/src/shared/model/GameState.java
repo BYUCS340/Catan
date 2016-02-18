@@ -77,6 +77,18 @@ public class GameState
 		state = GameRound.PLAYING;
 		return true;
 	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean stopRolling()
+	{
+		if (state != GameRound.ROLLING) return false;
+		state = GameRound.PLAYING;
+		return true;
+	}
 	/**
 	 * Sets the game state to finished
 	 * @return successful or not (almost always is true)

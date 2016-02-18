@@ -51,6 +51,7 @@ public class RealServerProxy implements ServerProxy
 	private Serializer serializer;
 	private Deserializer deserializer;
 	private int userIndex;
+	private String userName;
 	
 	/**
 	 * Default constructor. Sets up connection with the server with default
@@ -66,6 +67,7 @@ public class RealServerProxy implements ServerProxy
 		userCookie = null;
 		gameID = -1;
 		userIndex = -1;
+		userName = null;
 	}
 	
 	/**
@@ -75,14 +77,10 @@ public class RealServerProxy implements ServerProxy
 	 */
 	public RealServerProxy(String server_host, int server_port)
 	{
-		serializer = new JSONSerializer();
-		deserializer = new JSONDeserializer();
+		this();
 		SERVER_HOST = server_host;
 		SERVER_PORT = server_port;
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
-		userCookie = null;
-		gameID = -1;
-		userIndex = -1;
 	}
 	
 	
@@ -93,6 +91,28 @@ public class RealServerProxy implements ServerProxy
 	public int getUserIndex()
 	{
 		return userIndex;
+	}
+	
+	/**
+	 * Gets the player ID
+	 * @return
+	 */
+	public int getUserId()
+	{
+		return this.userCookie.getPlayerID();
+	}
+	
+	/**
+	 * Gets the current user's name
+	 * @return
+	 * @throws ServerProxyException if not logged in
+	 */
+	public String getUserName() throws ServerProxyException 
+	{		
+		if (this.userName == null) 
+			throw new ServerProxyException("Not loggged in");
+		else
+			return this.userName;
 	}
 
 	/* (non-Javadoc)
@@ -110,7 +130,6 @@ public class RealServerProxy implements ServerProxy
 			throw new ServerProxyException(e1.getMessage(), e1.getCause());
 		}
 		String urlPath = "/user/login";
-		
 		try{
 			doJSONPost(urlPath, postData, true, false);
 		}
@@ -121,6 +140,8 @@ public class RealServerProxy implements ServerProxy
 			else
 				throw e;
 		}
+		
+		this.userName = username;
 		
 		return true;
 
@@ -1257,7 +1278,6 @@ public class RealServerProxy implements ServerProxy
 		
 		return sb.toString();
 	}
-	
 	
 	
 

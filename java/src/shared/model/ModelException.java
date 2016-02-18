@@ -14,5 +14,12 @@ public class ModelException extends Exception
 	 */
 	private static final long serialVersionUID = -6690703880332646229L;
 	
+	public ModelException(){
+		this("Unknown exception");
+	}
+	
+	public ModelException(String message){
+		super(message);
+	}
 
 }
