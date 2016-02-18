@@ -52,7 +52,11 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	private void refreshPlayersWaiting()
 	{
 		PlayerInfo[] players = ClientGame.getGame().allCurrentPlayers();
+		boolean currOpen = getView().isModalShowing();
+		
+		if (currOpen) getView().closeModal();
 		getView().setPlayers(players);
+		if (currOpen) getView().showModal();
 		
 		if (players.length == 4)
 		{

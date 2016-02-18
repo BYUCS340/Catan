@@ -7,8 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import javax.swing.Timer;
 
 import client.base.*;
 import client.data.*;
@@ -20,7 +19,7 @@ import client.networking.ServerProxyException;
 /**
  * Implementation for the join game controller
  */
-public class JoinGameController extends Controller implements IJoinGameController  {
+public class JoinGameController extends Controller implements IJoinGameController, ActionListener  {
 
 	private INewGameView newGameView;
 	private ISelectColorView selectColorView;
@@ -28,26 +27,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private IAction joinAction;
 	private Timer timer;
 	
-	/**
-	 * Handles the refreshing updates
-	 * @author matthewcarlson
-	 *
-	 */
-	private class RefreshListener extends TimerTask 
-	{
-		private JoinGameController controller;
-		public RefreshListener(JoinGameController cont){
-			controller = cont;
-		}
-		
-		@Override
-		public void run()
-		{
-			controller.refreshGameList();
-		}
-	}
 	
-	private RefreshListener refresher;
 	/**
 	 * JoinGameController constructor
 	 * 
@@ -65,20 +45,10 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		setSelectColorView(selectColorView);
 		setMessageView(messageView);
 		
-		refresher = new RefreshListener(this);
+		timer = new Timer(3500, this);
 		
-		//Setup an internal poller on the join game controller
-		timer = new Timer();
-
 	}
 	
-	/**
-	 * 
-	 */
-	private void startTimer()
-	{
-		timer.schedule(refresher, 500, 5000);
-	}
 	
 	public IJoinGameView getJoinGameView() {
 		
@@ -136,21 +106,22 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	@Override
 	public void start() {
 		refreshGameList();
-		this.startTimer();
 		getJoinGameView().showModal();
+		timer.start();
 	}
 	
 	/**
 	 * Refreshes the view's game list from the proxy
 	 */
 	private int gameCount = 0;
-	public void refreshGameList()
+	private void refreshGameList()
 	{
 		try 
 		{
 			List<NetGame> allGames = ClientGame.getCurrentProxy().listGames();
 			//If there is no need to update, don't
 			if (allGames.size() <= gameCount) return;
+			//TODO check if the number of playars in each game is the same 
 			GameInfo[] games = new GameInfo[allGames.size()];
 			for (int i=0; i< allGames.size(); i++)
 			{
@@ -166,6 +137,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		catch (ServerProxyException e)
 		{
 			// TODO Auto-generated catch block
+			System.err.println("UNABLE TO GET GAME LIST "+e);
 			e.printStackTrace();
 		}
 		System.out.println("Refreshed the game list");
@@ -245,10 +217,24 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		System.out.println("joining game "+lastGameSelected);
 		this.refreshGameList();
 		// If join succeeded
-		timer.cancel();
+		
 		getSelectColorView().closeModal();
 		getJoinGameView().closeModal();
+		timer.stop();
 		joinAction.execute();
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		boolean showing = this.getJoinGameView().isModalShowing() && !this.getNewGameView().isModalShowing() && !this.getSelectColorView().isModalShowing();
+		if (showing)
+			this.getJoinGameView().closeModal();
+		this.refreshGameList();
+		if (showing)
+			this.getJoinGameView().showModal();
+		
 	}
 
 
