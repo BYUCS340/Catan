@@ -35,7 +35,7 @@ public class GameManager implements ModelSubject
 	protected int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;
-	private NotificationCenter notifyCenter;
+	protected NotificationCenter notifyCenter;
 	
 	
 	/**
@@ -145,6 +145,8 @@ public class GameManager implements ModelSubject
 		Player newPlayer = new Player(name, newIndex, color, isHuman);
 		players.add(newPlayer);
 		
+		this.notifyCenter.notify(ModelNotification.PLAYERS);
+		
 		playerColors[color.ordinal()] = newIndex;
 		return newIndex;
 	}
@@ -160,9 +162,15 @@ public class GameManager implements ModelSubject
 		for (int i=0; i< players.size(); i++)
 		{
 			Player p = players.get(i);
+			if (p == null){
+				System.err.println("Player at "+i+" is null");
+				continue;
+			}
+			System.out.println(p);
 			this.players.add(p);
 			playerColors[p.color.ordinal()] = p.playerIndex();
 		}
+		this.notifyCenter.notify(ModelNotification.PLAYERS);
 		
 	}
 	

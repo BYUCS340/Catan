@@ -270,6 +270,7 @@ public class RealServerProxy implements ServerProxy
 //		}
 //		
 		//get the userIndex
+		System.out.println(result);
 	}
 
 	/* (non-Javadoc)
@@ -347,7 +348,8 @@ public class RealServerProxy implements ServerProxy
 		try
 		{
 			postData = serializer.sAddAIReq(aiType);
-		} catch (Exception e)
+		} 
+		catch (Exception e)
 		{
 			throw new ServerProxyException(e.getMessage(), e.getCause());
 		}

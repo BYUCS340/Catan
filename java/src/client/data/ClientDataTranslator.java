@@ -32,7 +32,7 @@ public class ClientDataTranslator {
 	static public PlayerInfo convertPlayerInfo(Player player){
 		PlayerInfo pi = new PlayerInfo();
 		pi.setName(player.name);
-		//pi.setId(player.);
+		pi.setId(player.playerIndex());
 		pi.setPlayerIndex(player.playerIndex());
 		pi.setColor(player.color);
 		return pi;
@@ -46,7 +46,7 @@ public class ClientDataTranslator {
 	 */
 	static public Player convertPlayerInfo(PlayerInfo player){
 		//String name, int index, CatanColor playerColor, boolean isHuman)
-		return new Player(player.getName(), player.getPlayerIndex(), player.getColor(), true);		
+		return new Player(player.getName(), player.getPlayerIndex(), player.getColor(), true, player.getId());		
 	}
 	
 	/**

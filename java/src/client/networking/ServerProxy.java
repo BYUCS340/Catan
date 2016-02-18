@@ -38,6 +38,20 @@ public interface ServerProxy
 	 */
 	public List<NetGame> listGames() throws ServerProxyException;
 	
+	
+	/**
+	 * Gets the current user's name
+	 * @return
+	 * @throws ServerProxyException if not logged in
+	 */
+	public String getUserName() throws ServerProxyException;
+	
+	/**
+	 * Gets the player ID
+	 * @return
+	 */
+	public int getUserId();
+	
 	/**
 	 * Creates a game on the server
 	 * @param randomTiles Whether the server should place random tiles
