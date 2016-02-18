@@ -29,7 +29,7 @@ public class SettlementDropObject extends DropObject
 		if (vertex == null)
 			return false;
 		
-		return controller.GetModel().VertexExists(vertex);
+		return controller.GetModel().ContainsVertex(vertex);
 	}
 	
 	@Override
@@ -47,7 +47,7 @@ public class SettlementDropObject extends DropObject
 		IMapModel model = controller.GetModel();
 		
 		Coordinate closestHex = GetClosestHexCoordinate(point);
-		if (!model.HexExists(closestHex))
+		if (!model.ContainsHex(closestHex))
 			return;
 		
 		try

@@ -27,21 +27,21 @@ public interface IMapModel
 	 * @param p2 The end of the edge.
 	 * @return True if yes, else false.
 	 */
-	public boolean EdgeExists(Coordinate p1, Coordinate p2);
+	public boolean ContainsEdge(Coordinate p1, Coordinate p2);
 	
 	/**
 	 * Returns if a vertex exists.
 	 * @param point The vertex to check.
 	 * @return True if yes, else false.
 	 */
-	public boolean VertexExists(Coordinate point);
+	public boolean ContainsVertex(Coordinate point);
 	
 	/**
 	 * Returns if a hex exists.
 	 * @param point The hex to check.
 	 * @return True if yes, else false.
 	 */
-	public boolean HexExists(Coordinate point);
+	public boolean ContainsHex(Coordinate point);
 	
 	/**
 	 * Returns if a road can be placed.

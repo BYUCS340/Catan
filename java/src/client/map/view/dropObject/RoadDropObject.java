@@ -32,7 +32,7 @@ public class RoadDropObject extends DropObject
 		if (p1 == null || p2 == null)
 			return false;
 		
-		return controller.GetModel().EdgeExists(p1, p2);
+		return controller.GetModel().ContainsEdge(p1, p2);
 	}
 	
 	@Override
@@ -50,7 +50,7 @@ public class RoadDropObject extends DropObject
 		IMapModel model = controller.GetModel();
 		
 		Coordinate closestHex = GetClosestHexCoordinate(point);
-		if (!model.HexExists(closestHex))
+		if (!model.ContainsHex(closestHex))
 			return;
 		
 		try

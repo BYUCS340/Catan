@@ -65,19 +65,19 @@ public class MapModel implements IMapModel {
 	}
 	
 	@Override
-	public boolean EdgeExists(Coordinate p1, Coordinate p2)
+	public boolean ContainsEdge(Coordinate p1, Coordinate p2)
 	{
 		return edges.ContainsEdge(p1, p2);
 	}
 
 	@Override
-	public boolean VertexExists(Coordinate point)
+	public boolean ContainsVertex(Coordinate point)
 	{
 		return vertices.ContainsVertex(point);
 	}
 	
 	@Override
-	public boolean HexExists(Coordinate point)
+	public boolean ContainsHex(Coordinate point)
 	{
 		return hexes.ContainsHex(point);
 	}

@@ -27,7 +27,7 @@ public class RobberDropObject extends DropObject
 		if (hexPoint == null)
 			return false;
 		
-		return controller.GetModel().HexExists(hexPoint);
+		return controller.GetModel().ContainsHex(hexPoint);
 	}
 	
 	@Override
