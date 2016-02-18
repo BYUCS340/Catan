@@ -26,14 +26,14 @@ public class Translate
 	{
 		GameModel gameModel = new GameModel();
 		
-		gameModel.gameState = fromNetTurnTracker(netGameModel.getNetTurnTracker());  //FINISHED? -- but NetGameModel doesn't return a GameStatus
-		gameModel.gameBank = fromNetBank(netGameModel.getNetBank());  //FINISHED? -- but only has resource cards (no dev cards)
-		gameModel.players = fromNetPlayers(netGameModel.getNetPlayers());  //FINISHED?
-		gameModel.victoryPointManager = fromNetVPManager(netGameModel.getNetTurnTracker(), netGameModel.getNetPlayers());  //UNFINISHED
-		gameModel.waterCooler = fromNetChat(netGameModel.getNetChat());  //FINISHED? -- but only posts as player 0
-		gameModel.log = fromNetLog(netGameModel.getNetGameLog());  //FINISHED? -- but only logs as player 0
-		gameModel.version = netGameModel.getVersion();  //FINISHED
-		gameModel.mapModel = fromNetMap(netGameModel.getNetMap(), netGameModel.getNetPlayers());  //FINISHED -- I think ...
+		gameModel.gameState = fromNetTurnTracker(netGameModel.getNetTurnTracker());  //NetGameModel doesn't return a GameStatus
+		gameModel.gameBank = fromNetBank(netGameModel.getNetBank(), netGameModel.getNetDeck());
+		gameModel.players = fromNetPlayers(netGameModel.getNetPlayers());
+		gameModel.victoryPointManager = fromNetVPManager(netGameModel.getNetTurnTracker(), netGameModel.getNetPlayers());
+		gameModel.waterCooler = fromNetChat(netGameModel.getNetChat(), netGameModel.getNetPlayers());
+		gameModel.log = fromNetLog(netGameModel.getNetGameLog(), netGameModel.getNetPlayers());
+		gameModel.version = netGameModel.getVersion();
+		gameModel.mapModel = fromNetMap(netGameModel.getNetMap(), netGameModel.getNetPlayers());
 
 		return gameModel;
 	}
@@ -363,17 +363,40 @@ public class Translate
 	 * @param netBank
 	 * @return Bank
 	 */
-	public Bank fromNetBank(NetBank netBank)
+	public Bank fromNetBank(NetBank netBank, NetDevCardList netDevCardList)
 	{
 		Bank gameBank = new Bank();
 		
 		try
 		{
+			//RESOURCES
 			gameBank.giveResource(ResourceType.BRICK, netBank.getNumBrick());
 			gameBank.giveResource(ResourceType.ORE, netBank.getNumOre());
 			gameBank.giveResource(ResourceType.SHEEP, netBank.getNumSheep());
 			gameBank.giveResource(ResourceType.WHEAT, netBank.getNumWheat());
 			gameBank.giveResource(ResourceType.WOOD, netBank.getNumWood());
+			
+			//DEV CARDS
+			for (int i = 0; i < netDevCardList.getNumMonopoly(); i++)
+			{
+				gameBank.giveDevCard(DevCardType.MONOPOLY);
+			}
+			for (int i = 0; i < netDevCardList.getNumMonument(); i++)
+			{
+				gameBank.giveDevCard(DevCardType.MONUMENT);
+			}
+			for (int i = 0; i < netDevCardList.getNumRoadBuilding(); i++)
+			{
+				gameBank.giveDevCard(DevCardType.ROAD_BUILD);
+			}
+			for (int i = 0; i < netDevCardList.getNumSoldier(); i++)
+			{
+				gameBank.giveDevCard(DevCardType.SOLDIER);
+			}
+			for (int i = 0; i < netDevCardList.getNumYearOfPlenty(); i++)
+			{
+				gameBank.giveDevCard(DevCardType.YEAR_OF_PLENTY);
+			}
 		}
 		catch (ModelException e)
 		{
@@ -489,13 +512,13 @@ public class Translate
 	 * @param netChat
 	 * @return ChatBox
 	 */
-	public ChatBox fromNetChat(NetChat netChat)
+	public ChatBox fromNetChat(NetChat netChat, List<NetPlayer> netPlayers)
 	{
 		ChatBox chatBox = new ChatBox();
 		for (int i = 0; i < netChat.getLines().size(); i++)
 		{
-			//always posts as player 0 (because I don't have a good way of determining playerID from message source yet)
-			chatBox.put(netChat.getLines().get(i).getMessage(), 0);
+			int playerIndex = playerIDToPlayerIndex(netPlayers, Integer.parseInt(netChat.getLines().get(i).getSource()));
+			chatBox.put(netChat.getLines().get(i).getMessage(), playerIndex);
 		}
 		return chatBox;
 	}
@@ -505,14 +528,31 @@ public class Translate
 	 * @param netLog
 	 * @return GameActionLog
 	 */
-	public GameActionLog fromNetLog(NetLog netLog)
+	public GameActionLog fromNetLog(NetLog netLog, List<NetPlayer> netPlayers)
 	{
 		GameActionLog gameActionLog = new GameActionLog();
 		for (int i = 0; i < netLog.getLines().size(); i++)
 		{
-			//always logs as player 0 (because I don't have a good way of determining playerID from message source yet)
-			gameActionLog.logAction(0, netLog.getLines().get(i).getMessage());
+			int playerIndex = playerIDToPlayerIndex(netPlayers, Integer.parseInt(netLog.getLines().get(i).getSource()));
+			gameActionLog.logAction(playerIndex, netLog.getLines().get(i).getMessage());
 		}
 		return gameActionLog;
+	}
+	
+	public int playerIDToPlayerIndex(List<NetPlayer> netPlayers, int playerID)
+	{
+		int playerIndex = -1;
+		for (int i = 0; i < netPlayers.size(); i++)
+		{
+			if (netPlayers.get(i).getPlayerID() == playerID)
+			{
+				playerIndex = netPlayers.get(i).getPlayerIndex();
+			}
+		}
+		if (playerIndex == -1)
+		{
+			System.err.println("Player ID does not match any player in the game.");
+		}
+		return playerIndex;
 	}
 }
