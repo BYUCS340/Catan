@@ -13,9 +13,7 @@ import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
-import shared.model.map.Coordinate;
-import shared.model.map.IMapController;
-import shared.model.map.Transaction;
+import shared.model.map.*;
 import shared.model.chat.ChatBox;
 import shared.networking.transport.NetGameModel;
 
@@ -26,7 +24,6 @@ import shared.networking.transport.NetGameModel;
  */
 public class GameManager
 {
-	//public  MapController mapController; 
 	public int gameID;
 	public String gameTitle;
 	protected GameState gameState;
@@ -35,7 +32,7 @@ public class GameManager
 	protected VictoryPointManager victoryPointManager;
 	protected ChatBox waterCooler;
 	protected GameActionLog log;
-	public IMapController map; //this is exposed for easier access
+	protected MapModel map;
 	protected int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;
@@ -54,7 +51,7 @@ public class GameManager
 		players = new ArrayList<>();
 		gameBank = new Bank();
 		gameState = new GameState();
-		//mapController = new MapController();
+		map = new MapModel();
 		victoryPointManager = new VictoryPointManager();
 		playerColors = new int[10];
 		//fill the array with -1 by default
@@ -75,7 +72,7 @@ public class GameManager
 		players = new ArrayList<>();
 		gameBank = new Bank();
 		gameState = new GameState();
-		//mapController = new MapController();
+		map = new MapModel();
 		victoryPointManager = new VictoryPointManager();
 		playerColors = new int[10];
 		//fill the array with -1 by default
@@ -229,7 +226,7 @@ public class GameManager
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
 		
 		//Call map to update the get the transacations
-		Iterator<Transaction> transList = map.GetVillages(diceRoll);
+		Iterator<Transaction> transList = map.GetTransactions(diceRoll);
 		//Go through each trasaction
 		while (transList.hasNext())
 		{
@@ -274,13 +271,20 @@ public class GameManager
 	 */
 	public void BuildRoad(int playerID,Coordinate start, Coordinate end) throws ModelException
 	{
-		//check to see if player has resources
-		if (!this.CanBuildRoad(playerID, start,end))
-			throw new ModelException();
-		GetPlayer(playerID).playerBank.buildRoad();
-		CatanColor color = this.getPlayerColorByIndex(playerID);
-		map.placeRoad(start,end, color);
-		victoryPointManager.playerBuiltRoad(playerID);
+		try
+		{
+			//check to see if player has resources
+			if (!this.CanBuildRoad(playerID, start,end))
+				throw new ModelException();
+			GetPlayer(playerID).playerBank.buildRoad();
+			CatanColor color = this.getPlayerColorByIndex(playerID);
+			map.PlaceRoad(start,end, color);
+			victoryPointManager.playerBuiltRoad(playerID);
+		}
+		catch (MapException e)
+		{
+			throw new ModelException("Can't place road.", e);
+		}
 	}
 	
 	/**
@@ -290,30 +294,44 @@ public class GameManager
 	 */
 	public void BuildSettlement(int playerID,Coordinate location) throws ModelException
 	{
-		//check to see if player has resources
-		if (!this.CanBuildSettlement(playerID, location))
-			throw new ModelException();
-		GetPlayer(playerID).playerBank.buildSettlement();
-		CatanColor color = this.getPlayerColorByIndex(playerID);
-		map.placeSettlement(location, color);
-		victoryPointManager.playerBuiltSettlement(playerID);
-		
+		try
+		{
+			//check to see if player has resources
+			if (!this.CanBuildSettlement(playerID, location))
+				throw new ModelException();
+			GetPlayer(playerID).playerBank.buildSettlement();
+			CatanColor color = this.getPlayerColorByIndex(playerID);
+			map.PlaceSettlement(location, color);
+			victoryPointManager.playerBuiltSettlement(playerID);
+		}
+		catch (MapException e)
+		{
+			throw new ModelException("Can't place settlement.", e);
+		}
 	}
 	
 	/**
 	 * Attempts to build a road
 	 * @param playerID
 	 * @throws ModelException if the player doesn't have the resources
+	 * @throws MapException if the Location doesn't exist
 	 */
 	public void BuildCity(int playerID,Coordinate location) throws ModelException
 	{
-		//check to see if player has resources
-		if (!this.CanBuildSettlement(playerID, location))
-			throw new ModelException();
-		GetPlayer(playerID).playerBank.buildRoad();
-		CatanColor color = this.getPlayerColorByIndex(playerID);
-		map.placeCity(location,color);
-		victoryPointManager.playerBuiltCity(playerID);
+		try
+		{
+			//check to see if player has resources
+			if (!this.CanBuildSettlement(playerID, location))
+				throw new ModelException();
+			GetPlayer(playerID).playerBank.buildRoad();
+			CatanColor color = this.getPlayerColorByIndex(playerID);
+			map.PlaceCity(location,color);
+			victoryPointManager.playerBuiltCity(playerID);
+		}
+		catch (MapException e)
+		{
+			throw new ModelException("Can't place city.", e);
+		}
 	}
 	
 	/**
@@ -371,10 +389,17 @@ public class GameManager
 	 */
 	public void placeRobber(int playerID, Coordinate location) throws ModelException
 	{
-		if (!this.CanPlaceRobber(playerID)) throw new ModelException();
-		map.placeRobber(location);
-		//mark that the robber has been moved
-		this.playerCanMoveRobber = -1;
+		try
+		{
+			if (!this.CanPlaceRobber(playerID)) throw new ModelException();
+			map.PlaceRobber(location);
+			//mark that the robber has been moved
+			this.playerCanMoveRobber = -1;
+		}
+		catch (MapException e)
+		{
+			throw new ModelException("Can't place robber", e);
+		}
 	}
 	
 	//--------------------------------------------------------------------------
@@ -447,7 +472,7 @@ public class GameManager
 				return false;
 			//check map
 			CatanColor color = getPlayerColorByIndex(playerID);
-			if (!map.canPlaceRoad(start, end, color))
+			if (!map.CanPlaceRoad(start, end, color))
 				return false;
 		}
 		catch (ModelException e)
@@ -475,7 +500,7 @@ public class GameManager
 			if (!GetPlayer(playerID).playerBank.canBuildRoad())
 				return false;
 			//ask the map
-			if (!map.canPlaceSettlement(location))
+			if (!map.CanPlaceSettlement(location))
 				return false;
 		}
 		catch (ModelException e)
@@ -503,7 +528,7 @@ public class GameManager
 			if (!GetPlayer(playerID).playerBank.canBuildCity())
 				return false;
 			//ask the map
-			if (!map.canPlaceCity(location,this.getPlayerColorByIndex(playerID)))
+			if (!map.CanPlaceCity(location,this.getPlayerColorByIndex(playerID)))
 				return false;
 		}
 		catch (ModelException e)

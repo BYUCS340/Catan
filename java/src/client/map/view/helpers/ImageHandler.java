@@ -2,6 +2,7 @@ package client.map.view.helpers;
 
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import client.utils.ImageUtils;
@@ -27,7 +28,10 @@ public class ImageHandler
 		HEX_IMAGES = new HashMap<HexType, BufferedImage>();
 		
 		for (HexType hexType : HexType.values())
-			HEX_IMAGES.put(hexType, loadHexImage(hexType));
+		{
+			BufferedImage hexImage = loadHexImage(hexType);
+			HEX_IMAGES.put(hexType, hexImage);
+		}
 		
 		//Load ports
 		PORT_IMAGES = new HashMap<PortType, BufferedImage>();

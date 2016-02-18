@@ -1,11 +1,16 @@
-package shared.model.map;
+package client.map;
 
+import java.awt.geom.Point2D;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 import client.base.*;
+import client.map.view.dropObject.DropObject;
 import shared.definitions.*;
+import shared.model.map.Coordinate;
+import shared.model.map.IMapModel;
+import shared.model.map.MapException;
 import shared.model.map.objects.*;
 
 /**
@@ -95,8 +100,26 @@ public interface IMapController extends IController
 	 */
 	Hex GetRobberPlacement() throws MapException;
 	
-	void StartMove(PieceType pieceType, boolean isFree, boolean allowDisconnected);
+	boolean IsRobberInitialized();
+	
+	DropObject GetDropObject();
+	
+	void PlaceRoad(Coordinate p1, Coordinate p2);
+	
+	void PlaceSettlement(Coordinate point);
+	
+	void PlaceCity(Coordinate point);
+	
+	void PlaceRobber(Coordinate point);
+	
+	void StartMove(PieceType pieceType, CatanColor color, boolean allowDisconnected);
 	
 	void CancelMove();
+	
+	void MouseMove(Point2D worldPoint);
+	
+	void MouseClick();
+	
+	IMapModel GetModel();
 }
 

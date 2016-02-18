@@ -6,7 +6,6 @@ import java.util.List;
 import shared.definitions.*;
 import shared.model.chat.*;
 import shared.model.map.*;
-import shared.model.map.objects.*;
 import shared.networking.transport.*;
 
 /**
@@ -61,12 +60,10 @@ public class Translate
 			
 			try
 			{
-				model.SetHex(hexType, point);
-				
-				Hex hexFromModel = model.GetHex(point);
+				model.PlaceHex(hexType, point);
 				
 				int value = hex.getNumberChit();
-				model.SetPip(value, hexFromModel);
+				model.PlacePip(value, point);
 			}
 			catch (MapException e)
 			{
@@ -91,7 +88,7 @@ public class Translate
 			
 			try
 			{
-				model.SetSettlement(vertex, color);
+				model.PlaceSettlement(vertex, color);
 			}
 			catch (MapException e)
 			{
@@ -116,7 +113,7 @@ public class Translate
 			
 			try
 			{
-				model.SetCity(vertex, color);
+				model.PlaceCity(vertex, color);
 			}
 			catch (MapException e)
 			{
@@ -141,7 +138,7 @@ public class Translate
 			
 			try
 			{
-				model.SetRoad(edgeCoordinates.get(0), edgeCoordinates.get(1), color);
+				model.PlaceRoad(edgeCoordinates.get(0), edgeCoordinates.get(1), color);
 			}
 			catch (MapException e)
 			{
@@ -160,16 +157,14 @@ public class Translate
 				int x = hexLocation.getX();
 				int y = hexLocation.getY();
 				
-				Coordinate hexCoordinate = GetHexCoordinate(x, y);
-				Hex hex = model.GetHex(hexCoordinate);
+				Coordinate hex = GetHexCoordinate(x, y);
 				
 				Direction edgeDirection = port.getDirection();
-				List<Coordinate> edgeCoordinates = GetEdgeCoordinates(hexCoordinate, edgeDirection);
-				Edge edge = model.GetEdge(edgeCoordinates.get(0), edgeCoordinates.get(1));
+				List<Coordinate> edgeCoordinates = GetEdgeCoordinates(hex, edgeDirection);
 				
 				PortType type = GetPortType(port.getRatio(), port.getResource());
 				
-				model.SetPort(type, edge, hex);
+				model.PlacePort(type, hex, edgeCoordinates.get(0), edgeCoordinates.get(1));
 			}
 			catch (MapException e)
 			{
@@ -186,8 +181,7 @@ public class Translate
 		try
 		{
 			Coordinate hexPoint = GetHexCoordinate(x, y);
-			Hex hex = model.GetHex(hexPoint);
-			model.SetRobber(hex);
+			model.PlaceRobber(hexPoint);
 		}
 		catch (MapException e) 
 		{

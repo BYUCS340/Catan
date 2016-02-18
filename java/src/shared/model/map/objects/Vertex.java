@@ -15,8 +15,6 @@ public class Vertex {
 	private PieceType type;
 	private CatanColor color;
 	
-	private PortType portType;
-	
 	/**
 	 * Creates a vertex object.
 	 * @param x X coordinate
@@ -28,8 +26,6 @@ public class Vertex {
 		this.color = null;
 		
 		this.point = point;
-		
-		portType = PortType.NONE;
 	}
 	
 	/**
@@ -52,35 +48,30 @@ public class Vertex {
 		this.color = null;
 	}
 
-	public Coordinate getPoint() {
+	public Coordinate getPoint()
+	{
 		return point;
 	}
 
 	/**
 	 * @return the type
 	 */
-	public PieceType getType() {
+	public PieceType getType()
+	{
 		return type;
 	}
 
 	/**
 	 * @return the color
 	 */
-	public CatanColor getColor() {
+	public CatanColor getColor() 
+	{
 		return color;
 	}
 
-	/**
-	 * @return the portType
-	 */
-	public PortType getPortType() {
-		return portType;
-	}
-
-	/**
-	 * @param portType the portType to set
-	 */
-	public void setPortType(PortType portType) {
-		this.portType = portType;
-	}
+	@Override
+	public String toString()
+	{
+		return "Vertex-" + point.toString();
+	}	
 }

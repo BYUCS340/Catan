@@ -4,13 +4,15 @@ import shared.definitions.*;
 import shared.model.map.*;
 import shared.model.map.objects.*;
 
-import java.util.ArrayList;
+import java.awt.geom.Point2D;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import client.base.*;
-import client.data.*;
 import client.map.view.IMapView;
+import client.map.view.dropObject.*;
+import client.model.ClientGame;
 
 
 /**
@@ -20,289 +22,172 @@ import client.map.view.IMapView;
 public class MapController extends Controller implements IMapController
 {	
 	private MapModel model;
-	private IRobView robView;
+	private DropObject dropObject;
 	
 	/**
 	 * Creates a MapController object.
 	 * @param view The MapView object.
 	 * @param robView The RobberView object.
 	 */
-	public MapController(IMapView view, IRobView robView, MapModel model)
+	public MapController(IMapView view, MapModel model)
 	{
 		super(view);
 		
 		this.model = model;
-		view.SetModel(model);
 		
-		setRobView(robView);
+		this.dropObject = new NoDrop();
 	}
 	
 	public IMapView getView()
 	{	
 		return (IMapView)super.getView();
 	}
+
+	@Override
+	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
+	{
+		return model.CanPlaceRoad(p1, p2, color);
+	}
+
+	@Override
+	public boolean CanPlaceSettlement(Coordinate point)
+	{
+		return model.CanPlaceSettlement(point);
+	}
+
+	@Override
+	public boolean CanPlaceCity(Coordinate point, CatanColor color)
+	{
+		return model.CanPlaceCity(point, color);
+	}
+
+	@Override
+	public boolean CanPlaceRobber(Coordinate point)
+	{
+		return model.CanPlaceRobber(point);
+	}
+
+	@Override
+	public Iterator<Hex> GetHexes()
+	{
+		return model.GetHexes();
+	}
+
+	@Override
+	public Iterator<Edge> GetEdges()
+	{
+		return model.GetEdges();
+	}
+
+	@Override
+	public Iterator<Vertex> GetVertices()
+	{
+		return model.GetVertices();
+	}
+
+	@Override
+	public Iterator<Entry<Edge, Hex>> GetPorts()
+	{
+		return model.GetPorts();
+	}
+
+	@Override
+	public Iterator<Entry<Integer, List<Hex>>> GetPips()
+	{
+		return model.GetPips();
+	}
+
+	@Override
+	public Hex GetRobberPlacement() throws MapException
+	{
+		return model.GetRobberLocation();
+	}
 	
-	private IRobView getRobView()
+	@Override
+	public boolean IsRobberInitialized()
 	{
-		return robView;
-	}
-	private void setRobView(IRobView robView)
-	{
-		this.robView = robView;
-	}
-
-	public boolean canPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
-	{	
-		if (!model.ContainsEdge(p1, p2))
-			return false;
-		
-		try
-		{
-			Edge edge = model.GetEdge(p1, p2);
-			
-			if (edge.doesRoadExists())
-				return false;
-			
-			if (VillagesSatisfyRoadPlacement(edge, color))
-				return true;
-			
-			return RoadsSatisfyRoadPlacement(edge, color);
-		} 
-		catch (MapException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
+		return model.IsRobberInitialized();
 	}
 	
-	public boolean canPlaceSettlement(Coordinate point)
+	@Override
+	public DropObject GetDropObject()
 	{
-		if (!model.ContainsVertex(point))
-			return false;
-		
-		try
-		{
-			Vertex vertex = model.GetVertex(point);
-			
-			if (vertex.getType() != PieceType.NONE)
-				return false;
-			
-			Iterator<Vertex> neighbors = model.GetVerticies(vertex);
-			
-			while(neighbors.hasNext())
-			{
-				Vertex neighbor = neighbors.next();
-				
-				if (neighbor.getType() != PieceType.NONE)
-					return false;
-			}
-			
-			return true;
-		} 
-		catch (MapException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
+		return dropObject;
 	}
-
-	public boolean canPlaceCity(Coordinate point, CatanColor color)
-	{	
-		if (!model.ContainsVertex(point))
-			return false;
-		
-		try
-		{
-			Vertex vertex = model.GetVertex(point);
-			
-			return vertex.getType() == PieceType.SETTLEMENT && 
-					vertex.getColor() == color;
-		}
-		catch (MapException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public boolean canPlaceRobber(Coordinate point)
-	{	
-		if (!model.ContainsHex(point))
-			return false;
-		
-		try
-		{
-			Hex hex = model.GetHex(point);
-			
-			return hex.getType() != HexType.WATER;
-		}
-		catch (MapException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public Iterator<Transaction> GetVillages(int role)
+	
+	@Override
+	public void PlaceRoad(Coordinate p1, Coordinate p2)
 	{
-		List<Transaction> transactions = new ArrayList<Transaction>();
-		
-		try
-		{
-			Iterator<Hex> hexes = model.GetHex(role);
-			while (hexes.hasNext())
-			{
-				Hex hex = hexes.next();
-				
-				Iterator<Vertex> vertices = model.GetVerticies(hex);
-				while (vertices.hasNext())
-				{
-					Vertex vertex = vertices.next();
-					
-					if (vertex.getType() == PieceType.NONE)
-						continue;
-					
-					HexType hexType = hex.getType();
-					PieceType pieceType = vertex.getType();
-					CatanColor color = vertex.getColor();
-					Transaction transaction = new Transaction(hexType, pieceType, color);
-					
-					transactions.add(transaction);
-				}
-			}
-		}
-		catch (MapException e)
-		{
-			//Don't need to do anything.
-			//Simply means the role didn't exist, so we don't form any
-			//transactions.
-		}
-		
-		return java.util.Collections.unmodifiableList(transactions).iterator();
+		ClientGame.getGame().BuildRoad(p1, p2);
 	}
 
-	public void placeRoad(Coordinate p1, Coordinate p2, CatanColor color)
-	{	
-		try
+	@Override
+	public void PlaceSettlement(Coordinate point)
+	{
+		//TODO Add appropriate call		
+	}
+
+	@Override
+	public void PlaceCity(Coordinate point)
+	{
+		//TODO Add appropriate call
+	}
+
+	@Override
+	public void PlaceRobber(Coordinate point)
+	{
+		//TODO Add appropriate call
+	}
+
+	@Override
+	public void StartMove(PieceType pieceType, CatanColor color, boolean allowDisconnected)
+	{
+		switch(pieceType)
 		{
-			model.SetRoad(p1, p2, color);
-			getView().RefreshView();
-		}
-		catch (MapException e)
-		{
-			e.printStackTrace();
+		case ROAD:
+			dropObject = new RoadDropObject(this, color);
+			break;
+		case SETTLEMENT:
+			dropObject = new SettlementDropObject(this, color);
+			break;
+		case CITY:
+			dropObject = new CityDropObject(this, color);
+			break;
+		case ROBBER:
+			dropObject = new RobberDropObject(this, color);
+			break;
+		default:
+			dropObject = new NoDrop();
+			break;
 		}
 	}
 
-	public void placeSettlement(Coordinate point, CatanColor color)
+	@Override
+	public void CancelMove() 
 	{
-		try
-		{
-			model.SetSettlement(point, color);
-			getView().RefreshView();
-		} 
-		catch (MapException e) 
-		{
-			e.printStackTrace();
-		}
+		dropObject = new NoDrop();
 	}
 
-	public void placeCity(Coordinate point, CatanColor color)
+	@Override
+	public void MouseMove(Point2D worldPoint)
 	{
-		try 
-		{
-			model.SetCity(point, color);
-			getView().RefreshView();
-		}
-		catch (MapException e)
-		{
-			e.printStackTrace();
-		}
+		dropObject.Handle(worldPoint);
 	}
 
-	public void placeRobber(Coordinate point)
+	@Override
+	public void MouseClick()
 	{
-		try 
+		if (dropObject.IsAllowed())
 		{
-			Hex hex = model.GetHex(point);
-			model.SetRobber(hex);
-		} 
-		catch (MapException e) 
-		{
-			e.printStackTrace();
+			dropObject.Click();
+			dropObject = new NoDrop();
 		}
-	}
-	
-	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) 
-	{		
-		//TODO Implement
-		//getView().startDrop(pieceType, null, true);
-	}
-	
-	public void cancelMove() {
-		//TODO Implement
-	}
-	
-	public void playSoldierCard() {	
-		//TODO Implement		
-	}
-	
-	public void playRoadBuildingCard() {	
-		//TODO Implement		
-	}
-	
-	public void robPlayer(RobPlayerInfo victim) {	
-		//TODO Implement		
-	}
-	
+	}	
 
-	/**
-	 * This gets the list of ports that a player is connected to
-	 * @param color the player color
-	 * @return the list - possibly empty
-	 */
-	public List<PortType> playerPorts(CatanColor color)
+	@Override
+	public IMapModel GetModel()
 	{
-		//TODO implement
-		
-		//for now we return an empty list
-		return new ArrayList<>();
-	}
-	
-	private boolean VillagesSatisfyRoadPlacement(Edge edge, CatanColor color) throws MapException
-	{
-		Vertex vStart = model.GetVertex(edge.getStart());
-		if (vStart.getType() != PieceType.NONE && vStart.getColor() == color)
-			return true;
-		
-		Vertex vEnd = model.GetVertex(edge.getEnd());
-		if (vEnd.getType() != PieceType.NONE && vEnd.getColor() == color)
-			return true;
-		
-		return false;
-	}
-	
-	private boolean RoadsSatisfyRoadPlacement(Edge edge, CatanColor color) throws MapException
-	{
-		Vertex vStart = model.GetVertex(edge.getStart());
-		Iterator<Edge> startEdges = model.GetEdges(vStart);
-		while(startEdges.hasNext())
-		{
-			Edge edgeToCheck = startEdges.next();
-			if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
-				return true;
-		}
-		
-		Vertex vEnd = model.GetVertex(edge.getEnd());
-		Iterator<Edge> endEdges = model.GetEdges(vEnd);
-		while(endEdges.hasNext())
-		{
-			Edge edgeToCheck = endEdges.next();
-			if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
-				return true;
-		}
-		
-		return false;
+		return model;
 	}
 }
 

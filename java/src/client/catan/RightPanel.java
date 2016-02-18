@@ -3,7 +3,6 @@ package client.catan;
 import javax.swing.*;
 
 import shared.definitions.PieceType;
-import shared.model.map.IMapController;
 import client.points.*;
 import client.resources.*;
 import client.base.*;
@@ -36,14 +35,16 @@ public class RightPanel extends JPanel
 			@Override
 			public void execute()
 			{
-				mapController.playSoldierCard();
+				//TODO Handle. Likely don't want this going through the map.
+				//mapController.playSoldierCard();
 			}
 		};
 		IAction roadAction = new IAction() {
 			@Override
 			public void execute()
 			{
-				mapController.playRoadBuildingCard();
+				//TODO Handle. Likely don't want this going through the map.
+				//mapController.playRoadBuildingCard();
 			}
 		};
 		devCardController = new DevCardController(playCardView, buyCardView,
@@ -104,7 +105,9 @@ public class RightPanel extends JPanel
 			{
 				boolean isFree = false;
 				boolean allowDisconnected = false;
-				mapController.startMove(pieceType, isFree, allowDisconnected);
+				boolean temp = isFree;
+				//TODO Put this back in.
+				//mapController.StartMove(pieceType, isFree, allowDisconnected);
 			}
 		};
 	}
