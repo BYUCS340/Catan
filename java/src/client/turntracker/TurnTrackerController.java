@@ -2,6 +2,7 @@ package client.turntracker;
 
 import client.base.Controller;
 import client.model.ClientGame;
+import client.model.ClientGameManager;
 import shared.definitions.CatanColor;
 import shared.model.ModelObserver;
 import shared.model.VictoryPointManager;
@@ -31,10 +32,44 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	}
 	
 	private void initFromModel() {
+		ClientGameManager game = ClientGame.getGame();
+		int myIndex = game.myPlayerID();
+		VictoryPointManager vp = game.getVictoryPointManager();
 		
 		//<temp>
 		getView().setLocalPlayerColor(CatanColor.RED);
 		//</temp>
+		
+		//set views for each player
+		for(int i = 0; i < 3; i++)
+		{
+			
+			//0. See if it is this player's turn and highlight if it is
+			
+			
+
+			//1. if the current player has the longest road or the largest army, 
+			//display icon on turn tracker
+			
+			boolean largestArmy = false;
+			boolean longestRoad = false;
+			if(vp.getCurrentLargestArmyPlayer() == i)
+			{
+				largestArmy = true;
+			}
+			
+			if(vp.getCurrentLongestRoadPlayer() == i)
+			{
+				longestRoad = true;
+			}
+
+		}
+		
+		//2. Enable finish turn button on "playing" state and not "discarding" or "rolling"
+		//3. update points display with amount of points the player has		
+
+		
+		
 	}
 
 	@Override
