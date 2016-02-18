@@ -1,9 +1,6 @@
 package client.map.view;
 
 import java.awt.*;
-import java.awt.event.*;
-
-import javax.swing.*;
 
 import client.base.*;
 import client.map.IMapController;
@@ -15,9 +12,7 @@ import shared.definitions.*;
 @SuppressWarnings("serial")
 public class MapView extends PanelView implements IMapView
 {
-	
 	private MapComponent map;
-	private MapOverlay overlay;
 	
 	public MapView()
 	{
@@ -46,117 +41,13 @@ public class MapView extends PanelView implements IMapView
 	public void startDrop(PieceType pieceType, CatanColor pieceColor,
 						  boolean isCancelAllowed)
 	{
-		
-		overlay = new MapOverlay(map);
-		overlay.setController(getController());
-		overlay.startDrop(pieceType, pieceColor, isCancelAllowed);
-		overlay.showModal();
+		assert(false);
 	}
 	
 	@Override
-	public void RefreshView() {
+	public void RefreshView()
+	{
 		map.repaint();
 	}
-	
-	private static class MapOverlay extends OverlayView
-	{
-		
-		private final int LABEL_TEXT_SIZE = 40;
-		private final int BUTTON_TEXT_SIZE = 28;
-		private final int BORDER_WIDTH = 10;
-		
-		private MapComponent mainMap;
-		private JLabel label;
-		private MapComponent map;
-		private JButton cancelButton;
-		
-		public MapOverlay(MapComponent mainMap)
-		{
-			
-			super();
-			
-			this.mainMap = mainMap;
-		}
-		
-		@Override
-		public IMapController getController()
-		{
-			return (IMapController)super.getController();
-		}
-		
-		public void startDrop(PieceType pieceType, CatanColor pieceColor,
-							  boolean isCancelAllowed)
-		{
-			this.setOpaque(false);
-			this.setLayout(new BorderLayout());
-			this.setBorder(BorderFactory.createLineBorder(Color.black,
-														  BORDER_WIDTH));
-			
-			label = new JLabel(getLabelText(pieceType), JLabel.CENTER);
-			label.setOpaque(true);
-			label.setBackground(Color.white);
-			Font labelFont = label.getFont();
-			labelFont = labelFont.deriveFont(labelFont.getStyle(),
-											 LABEL_TEXT_SIZE);
-			label.setFont(labelFont);
-			
-			//TODO Figure out why this is needed
-			//map = mainMap.copy();
-			map.setController(getController());
-			
-			int prefWidth = (int)(mainMap.getScale() * mainMap.getPreferredSize()
-															  .getWidth());
-			int prefHeight = (int)(mainMap.getScale() * mainMap.getPreferredSize()
-															   .getHeight());
-			Dimension prefSize = new Dimension(prefWidth, prefHeight);
-			map.setPreferredSize(prefSize);
-			
-			this.add(label, BorderLayout.NORTH);
-			this.add(map, BorderLayout.CENTER);
-			
-			if(isCancelAllowed)
-			{
-				
-				cancelButton = new JButton("Cancel");
-				Font buttonFont = cancelButton.getFont();
-				buttonFont = buttonFont.deriveFont(buttonFont.getStyle(),
-												   BUTTON_TEXT_SIZE);
-				cancelButton.setFont(buttonFont);
-				cancelButton.addActionListener(cancelButtonListener);
-				this.add(cancelButton, BorderLayout.SOUTH);
-			}
-			
-			//TODO Figure out what this is.
-			//map.startDrop(pieceType, pieceColor);
-		}
-		
-		private ActionListener cancelButtonListener = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				getController().CancelMove();
-			}
-		};
-		
-		private String getLabelText(PieceType pieceType)
-		{
-			switch (pieceType)
-			{
-				case ROAD:
-					return "Place a Road!";
-				case SETTLEMENT:
-					return "Place a Settlement!";
-				case CITY:
-					return "Place a City!";
-				case ROBBER:
-					return "Move the Robber!";
-				default:
-					assert false;
-					return "";
-			}
-		}
-	}
-
 }
 

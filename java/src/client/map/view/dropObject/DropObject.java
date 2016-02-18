@@ -37,22 +37,27 @@ public abstract class DropObject
 	
 	protected Coordinate GetClosestHexCoordinate(Point2D point)
 	{
-		//TODO Evaluate this logic
-		//Likely need to get x, then handle y.
 		int worldHeight = Dimensions.WORLD_HEIGHT;
 		int wCenterY = worldHeight / 2;
 		
 		double wX = point.getX();
 		double wY = point.getY();
 		
-		int hexWidth = Dimensions.HEX_IMAGE_HEIGHT;
-		int hexHeight = Dimensions.HEX_IMAGE_WIDTH;
+		double hexWidth = Dimensions.HEX_IMAGE_WIDTH;
+		double hexHeight = Dimensions.HEX_IMAGE_HEIGHT;
 		
-		double hX = ((4.0 * wX / hexWidth) - 2) / 3.0;
-		double hY = (2 * (wY - wCenterY)) / hexHeight;
+		double hX = (((4.0 * wX) / hexWidth) - 2) / 3.0;
+		double hY = (-2.0 * (wY - wCenterY)) / hexHeight;
 		
 		int iX = (int)Math.round(hX);
-		int iY = (int)Math.round(hY);
+		
+		//X position is consecutive where Y is not.
+		//Whether Y is odd or even depends on its X location.
+		int iY = (int)Math.ceil(hY);
+		if (iX % 2 != 0 && iY % 2 != 0)
+			iY = (int)Math.floor(hY);
+		else if (iX % 2 == 0 && iY % 2 == 0)
+			iY = (int)Math.floor(hY);
 		
 		return new Coordinate (iX, iY);
 	}
@@ -96,7 +101,7 @@ public abstract class DropObject
 			x = hexWidth / 4.0;
 		
 		x += point.getX() * 0.75 * hexWidth;
-		y = wCenterY + point.getY() * hexHeight / 2.0;
+		y = wCenterY - point.getY() * hexHeight / 2.0;
 		
 		return new Point2D.Double(x, y);
 	}

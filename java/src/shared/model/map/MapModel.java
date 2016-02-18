@@ -347,16 +347,21 @@ public class MapModel implements IMapModel {
 		
 		try
 		{
-			verticiesAlongHex.add(vertices.GetVertex(hex.getTopLeftCoordinate()));
-			verticiesAlongHex.add(vertices.GetVertex(hex.getLeftCoordinate()));
-			verticiesAlongHex.add(vertices.GetVertex(hex.getBottomLeftCoordinate()));
-			verticiesAlongHex.add(vertices.GetVertex(hex.getTopRightCoordinate()));
-			verticiesAlongHex.add(vertices.GetVertex(hex.getRightCoordinate()));
-			verticiesAlongHex.add(vertices.GetVertex(hex.getBottomRightCoordinate()));
+			if (vertices.ContainsVertex(hex.getTopLeftCoordinate()))
+				verticiesAlongHex.add(vertices.GetVertex(hex.getTopLeftCoordinate()));
+			if (vertices.ContainsVertex(hex.getLeftCoordinate()))
+				verticiesAlongHex.add(vertices.GetVertex(hex.getLeftCoordinate()));
+			if (vertices.ContainsVertex(hex.getBottomLeftCoordinate()))
+				verticiesAlongHex.add(vertices.GetVertex(hex.getBottomLeftCoordinate()));
+			if (vertices.ContainsVertex(hex.getBottomRightCoordinate()))
+				verticiesAlongHex.add(vertices.GetVertex(hex.getBottomRightCoordinate()));
+			if (vertices.ContainsVertex(hex.getRightCoordinate()))
+				verticiesAlongHex.add(vertices.GetVertex(hex.getRightCoordinate()));
+			if (vertices.ContainsVertex(hex.getTopRightCoordinate()))
+				verticiesAlongHex.add(vertices.GetVertex(hex.getTopRightCoordinate()));
 		}
-		catch (MapException e) {
-			//This would only trigger if we pass in a piece that is water.
-			//Otherwise, it implies the map hasn't been initialized.
+		catch (MapException e)
+		{
 			e.printStackTrace();
 		}
 		

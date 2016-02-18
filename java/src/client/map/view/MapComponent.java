@@ -500,7 +500,7 @@ public class MapComponent extends JComponent
 		double hY = hex.getPoint().getY();
 		
 		int wX = (int)(((3 * hX + 2) * HEX_IMAGE_WIDTH) / 4.0);
-		int wY = wCenterY + (int)(hY * HEX_IMAGE_HEIGHT / 2.0);
+		int wY = wCenterY - (int)(hY * HEX_IMAGE_HEIGHT / 2.0);
 		
 		return new Point2D.Double(wX, wY);
 	}
@@ -596,7 +596,7 @@ public class MapComponent extends JComponent
 			x = HEX_IMAGE_WIDTH / 4.0;
 		
 		x += point.getX() * 0.75 * HEX_IMAGE_WIDTH;
-		y = wCenterY + point.getY() * HEX_IMAGE_HEIGHT / 2.0;
+		y = wCenterY - point.getY() * HEX_IMAGE_HEIGHT / 2.0;
 		
 		return new Point2D.Double(x, y);
 	}

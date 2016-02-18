@@ -2,9 +2,7 @@ package client.map;
 
 import shared.definitions.*;
 import shared.model.map.*;
-import shared.model.map.objects.Edge;
-import shared.model.map.objects.Hex;
-import shared.model.map.objects.Vertex;
+import shared.model.map.objects.*;
 
 import java.awt.geom.Point2D;
 import java.util.Iterator;
@@ -31,7 +29,7 @@ public class MapController extends Controller implements IMapController
 	 * @param view The MapView object.
 	 * @param robView The RobberView object.
 	 */
-	public MapController(IMapView view, IRobView robView, MapModel model)
+	public MapController(IMapView view, MapModel model)
 	{
 		super(view);
 		
