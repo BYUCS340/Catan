@@ -126,6 +126,19 @@ public class ClientGameManager extends GameManager
 	}
 	
 	/**
+	 * 
+	 * @param playerIndex
+	 */
+	public String getPlayerNameByIndex(int playerIndex)
+	{
+		if(playerIndex > 3 || playerIndex < 0)
+			return null;
+		
+		
+		return null;
+	}
+	
+	/**
 	 * Joins a game
 	 * @param gameID
 	 * @param color

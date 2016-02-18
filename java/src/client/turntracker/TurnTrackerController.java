@@ -12,11 +12,13 @@ import shared.model.VictoryPointManager;
  * Implementation for the turn tracker controller
  */
 public class TurnTrackerController extends Controller implements ITurnTrackerController, ModelObserver {
+	
+	private boolean isInitialized;
 
 	public TurnTrackerController(ITurnTrackerView view) {
-		
 		super(view);
 		
+		isInitialized = false;
 		initFromModel();
 	}
 	
@@ -31,23 +33,43 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		ClientGame.getGame().endTurn();
 	}
 	
+	private void initializeTurns()
+	{
+		ClientGameManager game = ClientGame.getGame();
+		int myIndex = game.myPlayerID();
+		CatanColor myColor = game.getPlayerColorByIndex(myIndex);
+		
+		for(int i = 0; i < 3; i++)
+		{
+			getView().initializePlayer(i, game.getPlayerNameByIndex(i), game.getPlayerColorByIndex(i));
+		}
+
+		getView().setLocalPlayerColor(myColor);
+	}
+	
 	private void initFromModel() {
 		ClientGameManager game = ClientGame.getGame();
 		int myIndex = game.myPlayerID();
 		VictoryPointManager vp = game.getVictoryPointManager();
 		
-		//<temp>
-		getView().setLocalPlayerColor(CatanColor.RED);
-		//</temp>
+		int currPlayerIndex = game.CurrentPlayersTurn();
 		
-		//set views for each player
+		if(!isInitialized)
+		{
+			initializeTurns();
+			isInitialized = true;
+		}
+		
+		//update view for each player
 		for(int i = 0; i < 3; i++)
 		{
-			
+			boolean highlight = false;
 			//0. See if it is this player's turn and highlight if it is
+			if(currPlayerIndex == i)
+			{
+				highlight = true;
+			}
 			
-			
-
 			//1. if the current player has the longest road or the largest army, 
 			//display icon on turn tracker
 			
@@ -62,7 +84,9 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			{
 				longestRoad = true;
 			}
-
+			
+			int points = vp.getVictoryPoints(i);
+			getView().updatePlayer(i, points, highlight, largestArmy, longestRoad);
 		}
 		
 		//2. Enable finish turn button on "playing" state and not "discarding" or "rolling"
