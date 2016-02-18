@@ -17,9 +17,8 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 
 	public TurnTrackerController(ITurnTrackerView view) {
 		super(view);
-		
+		ClientGame.getGame().startListening(this);
 		isInitialized = false;
-		initFromModel();
 	}
 	
 	@Override
@@ -39,7 +38,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		int myIndex = game.myPlayerID();
 		CatanColor myColor = game.getPlayerColorByIndex(myIndex);
 		
-		for(int i = 0; i < 3; i++)
+		for(int i = 0; i < 4; i++)
 		{
 			getView().initializePlayer(i, game.getPlayerNameByIndex(i), game.getPlayerColorByIndex(i));
 		}
@@ -47,7 +46,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		getView().setLocalPlayerColor(myColor);
 	}
 	
-	private void initFromModel() {
+	private void updateFromModel() {
 		ClientGameManager game = ClientGame.getGame();
 		int myIndex = game.myPlayerID();
 		VictoryPointManager vp = game.getVictoryPointManager();
@@ -61,7 +60,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		}
 		
 		//update view for each player
-		for(int i = 0; i < 3; i++)
+		for(int i = 0; i < 4; i++)
 		{
 			boolean highlight = false;
 			//0. See if it is this player's turn and highlight if it is
@@ -88,20 +87,22 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			int points = vp.getVictoryPoints(i);
 			getView().updatePlayer(i, points, highlight, largestArmy, longestRoad);
 		}
-		
-		//2. Enable finish turn button on "playing" state and not "discarding" or "rolling"
-		//3. update points display with amount of points the player has		
 
-		
+		//TODO enable or disable button
 		
 	}
 
 	@Override
 	public void alert()
 	{
-		// TODO Auto-generated method stub
-		VictoryPointManager vp = ClientGame.getGame().getVictoryPointManager();
+		ClientGameManager game = ClientGame.getGame();
 		
+		//OJO if the version number wraps around to -1, THIS WILL NOT WORK
+		if(game.GetVersion() != -1 && game.hasGameStarted())
+		{
+			this.updateFromModel();
+		}
+
 	}
 
 }

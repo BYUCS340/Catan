@@ -134,8 +134,7 @@ public class ClientGameManager extends GameManager
 		if(playerIndex > 3 || playerIndex < 0)
 			return null;
 		
-		
-		return null;
+		return players.get(playerIndex).name;
 	}
 	
 	/**
