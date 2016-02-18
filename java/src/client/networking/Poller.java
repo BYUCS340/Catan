@@ -15,7 +15,8 @@ import shared.model.ModelException;
  */
 public class Poller implements ActionListener 
 {
-	private final int delay = 1000;
+	//Refresh every second and half
+	private final static int delay = 1500;
 	private Timer timer;
 	
 	/**
@@ -26,16 +27,15 @@ public class Poller implements ActionListener
 	 */
 	public Poller()
 	{
-		timer = new javax.swing.Timer(this.delay,(ActionListener) this);
-		//timer.addActionListener((ActionListener) this);
-		timer.setRepeats(true);
+		this(delay);
 		
 	}
 	public Poller(int delay)
 	{
 		timer = new javax.swing.Timer(delay,(ActionListener) this);
-		//timer.addActionListener((ActionListener) this);
+		timer.addActionListener((ActionListener) this);
 		timer.setRepeats(true);
+		
 	}
 	
 	/**
@@ -54,9 +54,11 @@ public class Poller implements ActionListener
 		timer.stop();
 	}
 	
-	private void pollServer()
-	{
-		//System.out.println("POLLED THE SERVER");
+
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		// TODO Auto-generated method stub
+		//System.out.println("Poller has fired");
 		try {
 			ClientGame.getGame().RefreshFromServer();
 		} catch (ModelException e) {
@@ -64,12 +66,6 @@ public class Poller implements ActionListener
 			System.err.println("Unable to poll server");
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		this.pollServer();
 	}
 
 }

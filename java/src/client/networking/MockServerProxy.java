@@ -1041,4 +1041,16 @@ public class MockServerProxy implements ServerProxy
 	private ArrayList<String[]> loginCredentials;
 	private boolean userLoggedIn;
 	private boolean userJoinedGame;
+	@Override
+	public String getUserName() throws ServerProxyException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getUserId() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
 }

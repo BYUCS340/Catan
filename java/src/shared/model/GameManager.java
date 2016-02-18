@@ -5,26 +5,23 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import client.map.MapController;
-import client.networking.ServerProxy;
-import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
+import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.map.*;
 import shared.model.chat.ChatBox;
-import shared.networking.transport.NetGameModel;
 
 /**
  * The game manager class acts as a facade between the player/game objects and the ServerProxy/UI
  * @author matthewcarlson, garrettegan
  *
  */
-public class GameManager
+public class GameManager implements ModelSubject
 {
-	public int gameID;
+	protected int gameID;
 	public String gameTitle;
 	protected GameState gameState;
 	protected Bank gameBank;
@@ -36,16 +33,28 @@ public class GameManager
 	protected int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;
+	protected NotificationCenter notifyCenter;
 	
 	
 	/**
 	 * Constructor for the game manager
 	 * @post all players
 	 */
-	public GameManager()
+	public GameManager(){
+		this("Default",0);
+	}
+	
+	/**
+	 * Creates a game manager with the specified id
+	 * @param name the title of the game
+	 * @param id
+	 */
+	public GameManager(String name,int id)
 	{
 		//version is by default -1 before it is connected to a server
 		version = -1;
+		this.gameID = id;
+		this.gameTitle = name;
 		waterCooler = new ChatBox();
 		log = new GameActionLog();
 		players = new ArrayList<>();
@@ -53,6 +62,7 @@ public class GameManager
 		gameState = new GameState();
 		map = new MapModel();
 		victoryPointManager = new VictoryPointManager();
+		notifyCenter = new NotificationCenter();
 		playerColors = new int[10];
 		//fill the array with -1 by default
 		Arrays.fill(playerColors,-1);
@@ -82,6 +92,36 @@ public class GameManager
 	}
 	
 	
+	//========================================================================================
+	//Notification Center
+
+	/**
+	 * Starts listening to all changes 
+	 */
+	public boolean startListening(ModelObserver listener)
+	{
+		notifyCenter.add(listener);
+		return true;
+	}
+	/**
+	 * starts listening for a specific type of change
+	 */
+	public boolean startListening(ModelObserver listener, ModelNotification type)
+	{
+		notifyCenter.add(listener,type);
+		return true;
+	}
+	
+	/**
+	 * Stops listening on a model observer
+	 */
+	public boolean stopListening(ModelObserver listener)
+	{
+		notifyCenter.remove(listener);
+		return true;
+	}
+	
+	
 	
 	/**
 	 * Adds a player to the game
@@ -98,10 +138,12 @@ public class GameManager
 		int newIndex = players.size();
 		if (newIndex > 3)
 		{
-			throw new ModelException();
+			throw new ModelException("Too many players already to add another");
 		}
 		Player newPlayer = new Player(name, newIndex, color, isHuman);
 		players.add(newPlayer);
+		
+		this.notifyCenter.notify(ModelNotification.PLAYERS);
 		
 		playerColors[color.ordinal()] = newIndex;
 		return newIndex;
@@ -118,10 +160,25 @@ public class GameManager
 		for (int i=0; i< players.size(); i++)
 		{
 			Player p = players.get(i);
-			this.players.set(i, p);
+			if (p == null){
+				System.err.println("Player at "+i+" is null");
+				continue;
+			}
+			System.out.println(p);
+			this.players.add(p);
 			playerColors[p.color.ordinal()] = p.playerIndex();
 		}
+		this.notifyCenter.notify(ModelNotification.PLAYERS);
 		
+	}
+	
+	/**
+	 * Gets the current number of players
+	 * @return
+	 */
+	public int getNumberPlayers()
+	{
+		return players.size();
 	}
 	
 	/**
@@ -134,53 +191,53 @@ public class GameManager
 		return playerColors[color.ordinal()];
 	}
 	
-	public CatanColor getPlayerColorByIndex(int playerID)
+	public CatanColor getPlayerColorByIndex(int playerIndex)
 	{
-		return players.get(playerID).color;
+		return players.get(playerIndex).color;
 	}
 	
 	
 	/**
 	 * Gets the number of resources for the player
-	 * @param playerID
+	 * @param playerIndex
 	 * @param type
 	 * @return
 	 */
-	public int playerResourceCount(int playerID, ResourceType type)
+	public int playerResourceCount(int playerIndex, ResourceType type)
 	{
-		return this.players.get(playerID).playerBank.getResourceCount(type);
+		return this.players.get(playerIndex).playerBank.getResourceCount(type);
 	}
 	
 	/**
 	 * Gets the number of devCards for the current player
-	 * @param playerID
+	 * @param playerIndex
 	 * @param type
 	 * @return
 	 */
-	public int playerDevCardCount(int playerID,DevCardType type)
+	public int playerDevCardCount(int playerIndex,DevCardType type)
 	{
-		return this.players.get(playerID).playerBank.getDevCardCount(type);
+		return this.players.get(playerIndex).playerBank.getDevCardCount(type);
 	}
 	/**
 	 * Gets the total number of dev cards for a player
-	 * @param playerID
+	 * @param playerIndex
 	 * @return
 	 */
-	public int playerDevCardCount(int playerID)
+	public int playerDevCardCount(int playerIndex)
 	{
-		return this.players.get(playerID).playerBank.getDevCardCount();
+		return this.players.get(playerIndex).playerBank.getDevCardCount();
 	}
 	
 	/**
 	 * Gets the number of devCards for the current player
-	 * @param playerID
+	 * @param playerIndex
 	 * @param type
 	 * @return
 	 */
-	public int playerPieceCount(int playerID,PieceType type)
+	public int playerPieceCount(int playerIndex,PieceType type)
 	{
 		try {
-			return this.players.get(playerID).playerBank.getPieceCount(type);
+			return this.players.get(playerIndex).playerBank.getPieceCount(type);
 		} catch (ModelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -215,13 +272,21 @@ public class GameManager
 	 */
 	public int RollDice() throws ModelException
 	{
-		if (gameState.state != GameRound.ROLLING) throw new ModelException();
-		gameState.startBuildPhase();
-		int diceRoll = 4;
+		if (gameState.state != GameRound.ROLLING) 
+			throw new ModelException("Game isn't in rolling state");
+		
+		//Correctly rolls the dice
+		int diceRoll = (int) ((Math.random() * 5) + (Math.random() * 5) + 2);
+		
 		//check if we can move the robber
 		if (diceRoll == 7 )
 		{
 			this.playerCanMoveRobber = this.CurrentPlayersTurn();
+			gameState.startRobbing();
+		}
+		else
+		{
+			gameState.stopRolling();
 		}
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
 		
@@ -232,10 +297,10 @@ public class GameManager
 		{
 			Transaction trans = transList.next();
 			//Get the player ID
-			int playerID = this.getPlayerIndexByColor(trans.getColor());
+			int playerIndex = this.getPlayerIndexByColor(trans.getColor());
 			try {
 				//Get the player
-				Player player = this.GetPlayer(playerID);
+				Player player = this.GetPlayer(playerIndex);
 				//The piece type
 				PieceType harvester = trans.getPieceType();
 				int amount = 0;
@@ -266,10 +331,10 @@ public class GameManager
 	
 	/**
 	 * Attempts to build a road
-	 * @param playerID
+	 * @param playerIndex
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuildRoad(int playerID,Coordinate start, Coordinate end) throws ModelException
+	public void BuildRoad(int playerIndex, Coordinate start, Coordinate end) throws ModelException
 	{
 		try
 		{
@@ -289,10 +354,10 @@ public class GameManager
 	
 	/**
 	 * Attempts to build a road
-	 * @param playerID
+	 * @param playerIndex
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuildSettlement(int playerID,Coordinate location) throws ModelException
+	public void BuildSettlement(int playerIndex, Coordinate location) throws ModelException
 	{
 		try
 		{
@@ -312,11 +377,11 @@ public class GameManager
 	
 	/**
 	 * Attempts to build a road
-	 * @param playerID
+	 * @param playerIndex
 	 * @throws ModelException if the player doesn't have the resources
 	 * @throws MapException if the Location doesn't exist
 	 */
-	public void BuildCity(int playerID,Coordinate location) throws ModelException
+	public void BuildCity(int playerIndex,Coordinate location) throws ModelException
 	{
 		try
 		{
@@ -336,44 +401,44 @@ public class GameManager
 	
 	/**
 	 * Attempts to buy a dev card
-	 * @param playerID 0 to 3
+	 * @param playerIndex 0 to 3
 	 * @throws ModelException if the player doesn't have the resources
 	 * @returns the dev card type bought (hopefully somewhat random)
 	 */
-	public DevCardType BuyDevCard(int playerID) throws ModelException
+	public DevCardType BuyDevCard(int playerIndex) throws ModelException
 	{
-		if (!this.CanBuyDevCard(playerID)) throw new ModelException();
-		Bank playerBank = GetPlayer(playerID).playerBank;
+		if (!this.CanBuyDevCard(playerIndex)) throw new ModelException("Player can't buy dev card");
+		Bank playerBank = GetPlayer(playerIndex).playerBank;
 		playerBank.buyDevCard();
 		DevCardType devcard = gameBank.getDevCard();
 		playerBank.giveDevCard(devcard);
-		victoryPointManager.playerGotDevCard(playerID, devcard);
+		victoryPointManager.playerGotDevCard(playerIndex, devcard);
 		return devcard;
 	}
 	
 	/**
 	 * Plays a dev card
-	 * @param playerID
+	 * @param playerIndex
 	 * @param type
 	 * @throws ModelException 
 	 */
-	public void playDevCard(int playerID, DevCardType type) throws ModelException
+	public void playDevCard(int playerIndex, DevCardType type) throws ModelException
 	{
-		if (players.get(playerID).playerBank.getDevCardCount(type) < 1) throw new ModelException();
+		if (players.get(playerIndex).playerBank.getDevCardCount(type) < 1) throw new ModelException("Player doesn't have a dev card of that type to play");
 		if (type == DevCardType.SOLDIER)
 		{
-			this.playerCanMoveRobber = playerID;
+			this.playerCanMoveRobber = playerIndex;
 			
 		}
-		players.get(playerID).playerBank.getDevCard(type);
+		players.get(playerIndex).playerBank.getDevCard(type);
 	}
 	
 	/**
 	 * Gets the trade ratio for a given resource for a player
-	 * @param playerID
+	 * @param playerIndex
 	 * @return never more than 4 or less than 2
 	 */
-	public int getTradeRatio(int playerID, ResourceType type)
+	public int getTradeRatio(int playerIndex, ResourceType type)
 	{
 		//Check the Map to see if they're connected to a port
 		//map.getTradeRatio?
@@ -383,11 +448,11 @@ public class GameManager
 	
 	/**
 	 * Places the robber
-	 * @param playerID
+	 * @param playerIndex
 	 * @param location
 	 * @throws ModelException 
 	 */
-	public void placeRobber(int playerID, Coordinate location) throws ModelException
+	public void placeRobber(int playerIndex) throws ModelException
 	{
 		try
 		{
@@ -400,6 +465,7 @@ public class GameManager
 		{
 			throw new ModelException("Can't place robber", e);
 		}
+		gameState.startBuildPhase();
 	}
 	
 	//--------------------------------------------------------------------------
@@ -407,13 +473,13 @@ public class GameManager
 	
 	/**
 	 * Checks to see if it's a player's turn
-	 * @param playerID 0 to 3
+	 * @param playerIndex 0 to 3
 	 * @return if possible
 	 */
-	public boolean CanPlayerPlay(int playerID)
+	public boolean CanPlayerPlay(int playerIndex)
 	{
 		//If we aren't in the building phase and this player isn't their turn
-		if (this.gameState.activePlayerIndex != playerID)
+		if (this.gameState.activePlayerIndex != playerIndex)
 		{
 			return false;
 		}
@@ -428,13 +494,13 @@ public class GameManager
 	}
 	/**
 	 * See if a player can discard cards
-	 * @param playerID 0 to 3
+	 * @param playerIndex 0 to 3
 	 * @param type the type of the resource
 	 * @param amount number to discard
 	 * @todo: how do we implement this?
 	 * @return
 	 */
-	public boolean CanDiscardCards(int playerID,ResourceType type, int amount)
+	public boolean CanDiscardCards(int playerIndex,ResourceType type, int amount)
 	{
 		
 		return false;
@@ -442,12 +508,12 @@ public class GameManager
 	
 	/**
 	 * Checks to see if a player can roll their number
-	 * @param playerID
+	 * @param playerIndex
 	 * @return
 	 */
-	public boolean CanRollNumber(int playerID)
+	public boolean CanRollNumber(int playerIndex)
 	{
-		if (this.CurrentPlayersTurn() != playerID)
+		if (this.CurrentPlayersTurn() != playerIndex)
 			return false;
 		if (CurrentState() == GameRound.ROLLING)
 			return true;
@@ -457,21 +523,21 @@ public class GameManager
 	
 	/**
 	 * Checks to see if a player can build a road at a location
-	 * @param playerID 0-3
+	 * @param playerIndex 0-3
 	 * @param location the edge's location
 	 * @param end 
 	 * @return true if possible
 	 */
-	public boolean CanBuildRoad(int playerID,Coordinate start, Coordinate end)
+	public boolean CanBuildRoad(int playerIndex,Coordinate start, Coordinate end)
 	{
-		if (!CanPlayerPlay(playerID))
+		if (!CanPlayerPlay(playerIndex))
 			return false;
 		try 
 		{
-			if (!GetPlayer(playerID).playerBank.canBuildRoad())
+			if (!GetPlayer(playerIndex).playerBank.canBuildRoad())
 				return false;
 			//check map
-			CatanColor color = getPlayerColorByIndex(playerID);
+			CatanColor color = getPlayerColorByIndex(playerIndex);
 			if (!map.CanPlaceRoad(start, end, color))
 				return false;
 		}
@@ -486,18 +552,18 @@ public class GameManager
 	
 	/**
 	 * checks to see if a player can build a settlement
-	 * @param playerID
+	 * @param playerIndex
 	 * @param location the vertex
 	 * @return
 	 */
-	public boolean CanBuildSettlement(int playerID, Coordinate location)
+	public boolean CanBuildSettlement(int playerIndex, Coordinate location)
 	{
-		if (!CanPlayerPlay(playerID))
+		if (!CanPlayerPlay(playerIndex))
 			return false;
 		try 
 		{
 			//check if they have the resources needed
-			if (!GetPlayer(playerID).playerBank.canBuildRoad())
+			if (!GetPlayer(playerIndex).playerBank.canBuildRoad())
 				return false;
 			//ask the map
 			if (!map.CanPlaceSettlement(location))
@@ -515,17 +581,17 @@ public class GameManager
 	
 	/**
 	 * Checks to see if a player can build a city 
-	 * @param playerID 0 to 3
+	 * @param playerIndex 0 to 3
 	 * @param location the vertex
 	 * @return
 	 */
-	public boolean CanBuildCity (int playerID, Coordinate location)
+	public boolean CanBuildCity (int playerIndex, Coordinate location)
 	{
-		if (!CanPlayerPlay(playerID))
+		if (!CanPlayerPlay(playerIndex))
 			return false;
 		try 
 		{
-			if (!GetPlayer(playerID).playerBank.canBuildCity())
+			if (!GetPlayer(playerIndex).playerBank.canBuildCity())
 				return false;
 			//ask the map
 			if (!map.CanPlaceCity(location,this.getPlayerColorByIndex(playerID)))
@@ -540,13 +606,13 @@ public class GameManager
 		return true;
 	}
 	
-	public boolean CanOfferTrade (int playerID)
+	public boolean CanOfferTrade (int playerIndex)
 	{
-		if (!CanPlayerPlay(playerID))
+		if (!CanPlayerPlay(playerIndex))
 			return false;
 		try 
 		{
-			GetPlayer(playerID).playerBank.canBuildCity();
+			GetPlayer(playerIndex).playerBank.canBuildCity();
 		}
 		catch (ModelException e)
 		{
@@ -560,10 +626,10 @@ public class GameManager
 	/**
 	 * Can do method for whether a player can accept an article
 	 * @todo need to figure out what this does
-	 * @param playerID
+	 * @param playerIndex
 	 * @return
 	 */
-	public boolean canAcceptTrade(int playerID)
+	public boolean canAcceptTrade(int playerIndex)
 	{
 		return false;
 	}
@@ -592,23 +658,23 @@ public class GameManager
 	
 	/**
 	 * Can do method for determinign wheter a player can martitime trade
-	 * @param playerID
+	 * @param playerIndex
 	 * @return
 	 */
-	public boolean CanMaritimeTrade (int playerID)
+	public boolean CanMaritimeTrade (int playerIndex)
 	{
-		return !CanPlayerPlay(playerID);
+		return !CanPlayerPlay(playerIndex);
 	}
 	
 	/**
 	 * Checks whether a player can finish their turn
-	 * @param playerID
+	 * @param playerIndex
 	 * @return
 	 */
-	public boolean CanFinishTurn (int playerID)
+	public boolean CanFinishTurn (int playerIndex)
 	{
 		//TODO check to make sure they've built their settlements during the first round
-		if (this.CurrentPlayersTurn() != playerID) return false;
+		if (this.CurrentPlayersTurn() != playerIndex) return false;
 		if (this.CurrentState() == GameRound.PLAYING || this.CurrentState() == GameRound.FIRSTROUND || this.CurrentState() == GameRound.SECONDROUND) return true;
 		return false;
 	}
@@ -624,17 +690,17 @@ public class GameManager
 	
 	/**
 	 * Checks to see if a player can buy a dev card
-	 * @param playerID 0 to 3
+	 * @param playerIndex 0 to 3
 	 * @return true if possible, always false if not the players turn
 	 */
-	public boolean CanBuyDevCard (int playerID)
+	public boolean CanBuyDevCard (int playerIndex)
 	{
-		if (!this.CanPlayerPlay(playerID)) 
+		if (!this.CanPlayerPlay(playerIndex)) 
 			return false;
 		//This is a total message chain but eh
 		try 
 		{
-			return this.GetPlayer(playerID).playerBank.canBuyDevCard();
+			return this.GetPlayer(playerIndex).playerBank.canBuyDevCard();
 		} 
 		catch (ModelException e) 
 		{
@@ -645,26 +711,26 @@ public class GameManager
 	
 	/**
 	 * Check if player can chat
-	 * @param playerID
+	 * @param playerIndex
 	 * @return always true?
 	 */
-	public boolean canChat(int playerID)
+	public boolean canChat(int playerIndex)
 	{
 		return true;
 	}
 	
 	/**
 	 * Checks if a player has at least one dev card of the type
-	 * @param playerID
+	 * @param playerIndex
 	 * @param type
 	 * @return
 	 */
-	private boolean PlayerHasADevCard(int playerID, DevCardType type)
+	private boolean PlayerHasADevCard(int playerIndex, DevCardType type)
 	{
 		//This is a total message chain but eh
 		try 
 		{
-			int count = this.GetPlayer(playerID).playerBank.getDevCardCount(type);
+			int count = this.GetPlayer(playerIndex).playerBank.getDevCardCount(type);
 			if (count > 0)
 				return true;
 			else
@@ -679,83 +745,83 @@ public class GameManager
 	
 	/**
 	 * Checks to see if the player can use a year of plenty picture
-	 * @param playerID
+	 * @param playerIndex
 	 * @return
 	 */
-	public boolean CanUseYearOfPlenty (int playerID)
+	public boolean CanUseYearOfPlenty (int playerIndex)
 	{
-		if (!this.CanPlayerPlay(playerID)) 
+		if (!this.CanPlayerPlay(playerIndex)) 
 			return false;
-		return this.PlayerHasADevCard(playerID, DevCardType.YEAR_OF_PLENTY);
+		return this.PlayerHasADevCard(playerIndex, DevCardType.YEAR_OF_PLENTY);
 	}
 	
 	/**
 	 * Checks if a player can use the road builder?
 	 * @todo figure out what this function does
-	 * @param playerID
+	 * @param playerIndex
 	 * @return
 	 */
-	public boolean CanUseRoadBuilder (int playerID)
+	public boolean CanUseRoadBuilder (int playerIndex)
 	{
-		if (!this.CanPlayerPlay(playerID)) 
+		if (!this.CanPlayerPlay(playerIndex)) 
 			return false;
-		return this.PlayerHasADevCard(playerID, DevCardType.ROAD_BUILD);
+		return this.PlayerHasADevCard(playerIndex, DevCardType.ROAD_BUILD);
 	}
 	
 	/**
 	 * Checks if a player can play a solider card
-	 * @param playerID
+	 * @param playerIndex
 	 * @return
 	 */
-	public boolean CanUseSoldier (int playerID)
+	public boolean CanUseSoldier (int playerIndex)
 	{
-		if (!this.CanPlayerPlay(playerID)) 
+		if (!this.CanPlayerPlay(playerIndex)) 
 			return false;
-		return this.PlayerHasADevCard(playerID, DevCardType.SOLDIER);
+		return this.PlayerHasADevCard(playerIndex, DevCardType.SOLDIER);
 
 	}
 	
 	/**
 	 * Checks to see if a player can play a monopoly card
-	 * @param playerID
+	 * @param playerIndex
 	 * @return
 	 */
-	public boolean CanUseMonopoly (int playerID)
+	public boolean CanUseMonopoly (int playerIndex)
 	{
-		if (!this.CanPlayerPlay(playerID)) 
+		if (!this.CanPlayerPlay(playerIndex)) 
 			return false;
-		return this.PlayerHasADevCard(playerID, DevCardType.MONOPOLY);
+		return this.PlayerHasADevCard(playerIndex, DevCardType.MONOPOLY);
 		
 	}
 	
 	/**
 	 * Check to see if they have the momument card
-	 * @param playerID
+	 * @param playerIndex
 	 * @return
 	 */
-	public boolean CanUseMonument (int playerID)
+	public boolean CanUseMonument (int playerIndex)
 	{
-		if (!this.CanPlayerPlay(playerID)) 
+		if (!this.CanPlayerPlay(playerIndex)) 
 			return false;
-		return this.PlayerHasADevCard(playerID, DevCardType.MONUMENT);
+		return this.PlayerHasADevCard(playerIndex, DevCardType.MONUMENT);
 
 	}
 	
 	/**
 	 * Determines whenter player can play card
-	 * @param playerID
+	 * @param playerIndex
 	 * @param type
 	 * @return
 	 */
-	public boolean CanPlayDevCard(int playerID, DevCardType type)
+	public boolean CanPlayDevCard(int playerIndex, DevCardType type)
 	{
 		switch (type)
 		{
-		case MONOPOLY:  return this.CanUseMonopoly(playerID);
-		case MONUMENT:  return this.CanUseMonument(playerID);
-		case ROAD_BUILD:return this.CanUseRoadBuilder(playerID);
-		case SOLDIER:   return this.CanUseSoldier(playerID);
-		case YEAR_OF_PLENTY: return this.CanUseYearOfPlenty(playerID);
+		case MONOPOLY:  return this.CanUseMonopoly(playerIndex);
+		case MONUMENT:  return this.CanUseMonument(playerIndex);
+		case ROAD_BUILD:return this.CanUseRoadBuilder(playerIndex);
+		case SOLDIER:   return this.CanUseSoldier(playerIndex);
+		case YEAR_OF_PLENTY: return this.CanUseYearOfPlenty(playerIndex);
 		default:
 			return false;
 			
@@ -764,12 +830,12 @@ public class GameManager
 	
 	/**
 	 * Checks to see if a player can place the robber
-	 * @param playerID
+	 * @param playerIndex
 	 * @return
 	 */
-	public boolean CanPlaceRobber (int playerID)
+	public boolean CanPlaceRobber (int playerIndex)
 	{
-		return this.CurrentState() == GameRound.ROBBING || this.playerCanMoveRobber == playerID;
+		return this.CurrentState() == GameRound.ROBBING || this.playerCanMoveRobber == playerIndex;
 	}
 	
 	
@@ -786,12 +852,12 @@ public class GameManager
 	
 	/**
 	 * Chats for the specified player
-	 * @param playerId 0-3
+	 * @param playerIndex 0-3
 	 * @param message
 	 */
-	public void PlayerChat(int playerId, String message)
+	public void PlayerChat(int playerIndex, String message)
 	{
-		waterCooler.put(message, playerId);
+		waterCooler.put(message, playerIndex);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -811,7 +877,7 @@ public class GameManager
 	 */
 	public void FinishTurn() throws ModelException
 	{
-		if (!this.CanFinishTurn() || !gameState.nextTurn()) throw new ModelException();
+		if (!this.CanFinishTurn() || !gameState.nextTurn()) throw new ModelException("Player can't finish turn right now");
 	}
 	
 	/**
@@ -825,18 +891,18 @@ public class GameManager
 	
 	/**
 	 * Gets the specified player
-	 * @param playerId 0 to 3
+	 * @param playerIndex 0 to 3
 	 * @return
 	 */
-	private Player GetPlayer(int playerId) throws ModelException
+	private Player GetPlayer(int playerIndex) throws ModelException
 	{
-		if (playerId >= 0 && playerId < 4)
+		if (playerIndex >= 0 && playerIndex < 4 && playerIndex < players.size())
 		{
-			return this.players.get(playerId);
+			return this.players.get(playerIndex);
 		}
 		else
 		{
-			throw new ModelException();
+			throw new ModelException("Invalid player ID");
 		}
 	}
 	
@@ -857,4 +923,43 @@ public class GameManager
 	{
 		return gameState.state;
 	}
+	
+	/**
+	 * Check whether the game has started
+	 * @return
+	 */
+	public boolean hasGameStarted()
+	{
+		return gameState.state != GameRound.WAITING;
+	}
+	
+    /**
+	 * Returns the log 
+	 * @return the log
+	 */
+	public GameActionLog getGameActionLog()
+	{
+		return log;
+
+	}
+	
+	/**
+	 * Returns the chat
+	 * @return the chat
+	 */
+	public ChatBox getChat()
+	{
+		return waterCooler;
+	}
+	
+	/**
+	 * Returns the VictoryPointManager
+	 * @return the VictoryPointManager
+	 */
+	public VictoryPointManager getVictoryPointManager()
+	{
+		return victoryPointManager;
+	}
+
+	
 }

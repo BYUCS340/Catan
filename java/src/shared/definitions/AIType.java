@@ -20,6 +20,8 @@ public enum AIType
 			case "LARGEST_ARMY": return AIType.LARGEST_ARMY;
 		}
 		
-		return null;
+		return AIType.LARGEST_ARMY;
 	}
+	
+	
 }

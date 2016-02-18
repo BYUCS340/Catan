@@ -77,7 +77,15 @@ public class TestGameManager {
 		try{
 			assertFalse(gm.CanBuyDevCard(gm.CurrentPlayersTurn()));
 			int roll = gm.RollDice();
+			//If we roll a 7 then we're robbing
+			if (roll ==7)
+			{
+				assertEquals(GameRound.ROBBING,gm.CurrentState());
+				gm.placeRobber(gm.CurrentPlayersTurn());
+			}
+			
 			assertEquals(GameRound.PLAYING,gm.CurrentState());
+			
 		}
 		catch (Exception e){
 			fail("exceptions trying to roll the dice!");
@@ -116,7 +124,13 @@ public class TestGameManager {
 			assertEquals(GameRound.ROLLING,gm.CurrentState());
 			assertEquals(gm.CurrentPlayersTurn(),1);
 			int roll = gm.RollDice();
+			if (roll ==7)
+			{
+				assertEquals(GameRound.ROBBING,gm.CurrentState());
+				gm.placeRobber(gm.CurrentPlayersTurn());
+			}
 			assertEquals(GameRound.PLAYING,gm.CurrentState());
+			
 		}
 		catch (Exception e){
 			fail("Shouldn't have failed on second player turn");

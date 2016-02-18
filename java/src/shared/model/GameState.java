@@ -9,7 +9,7 @@ import shared.definitions.GameRound;
  */
 public class GameState
 {
-	public GameRound state = GameRound.FIRSTROUND;
+	public GameRound state = GameRound.WAITING;
 	public int activePlayerIndex = 0;  //This keeps track of which player's turn it is
 	
 	/**
@@ -74,6 +74,18 @@ public class GameState
 	{
 		//SWIPER NOT SWIPING
 		if (state != GameRound.ROBBING) return false;
+		state = GameRound.PLAYING;
+		return true;
+	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean stopRolling()
+	{
+		if (state != GameRound.ROLLING) return false;
 		state = GameRound.PLAYING;
 		return true;
 	}

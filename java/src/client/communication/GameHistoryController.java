@@ -1,10 +1,13 @@
 package client.communication;
 
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
-import client.base.*;
-import shared.definitions.*;
+import client.base.Controller;
+import client.model.ClientGame;
+import client.model.ClientGameManager;
+import shared.definitions.CatanColor;
+import shared.model.GameActionLog;
 
 
 /**
@@ -28,6 +31,10 @@ public class GameHistoryController extends Controller implements IGameHistoryCon
 	private void initFromModel() {
 		
 		//<temp>
+		
+		ClientGameManager game = ClientGame.getGame();
+		GameActionLog log = game.getGameActionLog();
+		
 		
 		List<LogEntry> entries = new ArrayList<LogEntry>();
 		entries.add(new LogEntry(CatanColor.BROWN, "This is a brown message"));
