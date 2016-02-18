@@ -287,6 +287,11 @@ public class ClientGameManager extends GameManager
 			this.SetPlayers(trans.fromNetPlayers(model.getNetPlayers()));
 		}
 		
+		if (model.getNetChat().size() > this.waterCooler.size()){
+			this.waterCooler = trans.fromNetChat(model.getNetChat());
+			this.notifyCenter.notify(ModelNotification.CHAT);
+		}
+		
 		//throw new ModelException();
 	}
 	

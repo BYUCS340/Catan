@@ -303,15 +303,16 @@ public class Translate
 		List<Player> players = new ArrayList<Player>();
 		for (int i=0; i < netPlayers.size(); i++)
 		{
-			players.add(fromNetPlayer(netPlayers.get(i)));
+			Player p = fromNetPlayer(netPlayers.get(i));
+			players.add(p);
 		}
 		return players;
 	}
 	
 	public Player fromNetPlayer(NetPlayer netPlayer)
 	{
-		Player player = new Player(netPlayer.getName(), netPlayer.getPlayerIndex(), netPlayer.getColor(), true);
-		
+		Player player = new Player(netPlayer.getName(), netPlayer.getPlayerIndex(), netPlayer.getColor(), true, netPlayer.getPlayerID());
+		System.out.println(player);
 		//Setup the Bank
 		try
 		{
@@ -356,7 +357,7 @@ public class Translate
 			System.err.println("An Error has occured while populating the player bank in the Translate class.");
 		}
 		
-		return null;
+		return player;
 	}
 	
 	public VictoryPointManager fromNetVPManager(NetTurnTracker netTurnTracker, List<NetPlayer> netPlayers)

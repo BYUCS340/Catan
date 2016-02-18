@@ -8,6 +8,7 @@ import client.model.ClientGame;
 import client.networking.ServerProxyException;
 import shared.definitions.AIType;
 import shared.definitions.ModelNotification;
+import shared.model.ModelException;
 import shared.model.ModelObserver;
 
 /**
@@ -51,23 +52,39 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	private void refreshPlayersWaiting()
 	{
 		PlayerInfo[] players = ClientGame.getGame().allCurrentPlayers();
-		
 		getView().setPlayers(players);
+		
+		if (players.length == 4)
+		{
+			//Start the game
+			ClientGame.getGame().StartGame();
+			getView().closeModal();
+		}
 	}
 
 	@Override
 	public void addAI() {
 		String ai = getView().getSelectedAI();
 		AIType aiType = AIType.fromString(ai);
+		//System.out.println(aiType);
+		//System.out.println(ai);
+		if (aiType == null)
+			return;
 		try {
 			ClientGame.getCurrentProxy().addAI(aiType);
-		} catch (ServerProxyException e) {
+			ClientGame.getGame().RefreshFromServer();
+		} 
+		catch (ServerProxyException e) 
+		{
+			//System.err.println(e.toString());
+			//System.err.println(e.getMessage());
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			return;
+		} catch (ModelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return;
 		}
-		// TEMPORARY
-		getView().closeModal();
 	}
 
 	@Override
