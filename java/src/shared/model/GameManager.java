@@ -433,12 +433,12 @@ public class GameManager implements ModelSubject
 	 * @param location
 	 * @throws ModelException 
 	 */
-	public void placeRobber(int playerIndex, Coordinate location) throws ModelException
+	public void placeRobber(int playerIndex) throws ModelException
 	{
 		if (!this.CanPlaceRobber(playerIndex)) throw new ModelException("Player can't place robber right now");
-		map.placeRobber(location);
 		//mark that the robber has been moved
 		this.playerCanMoveRobber = -1;
+		gameState.startBuildPhase();
 	}
 	
 	//--------------------------------------------------------------------------
