@@ -5,6 +5,7 @@ import shared.networking.transport.NetGame;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.Timer;
@@ -114,25 +115,35 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	 * Refreshes the view's game list from the proxy
 	 */
 	private int gameCount = 0;
+	private int joinedPlayerCount = 0;
 	private void refreshGameList()
 	{
 		try 
 		{
 			List<NetGame> allGames = ClientGame.getCurrentProxy().listGames();
+			
+			//Get the number of players currently joined to a game
+			int currentPlayerCount = 0;
+			Iterator<NetGame> gameIter = allGames.iterator();
+			while (gameIter.hasNext()) 
+				currentPlayerCount += gameIter.next().getNetPlayers().size();
 			//If there is no need to update, don't
-			if (allGames.size() <= gameCount) return;
-			//TODO check if the number of playars in each game is the same 
+			if (allGames.size() <= gameCount && joinedPlayerCount != currentPlayerCount) return;
+			
+			//Get the games
 			GameInfo[] games = new GameInfo[allGames.size()];
 			for (int i=0; i< allGames.size(); i++)
 			{
 				games[i] = ClientDataTranslator.convertGame(allGames.get(i));
-				System.out.println(games[i]);
 			}
+			//Create the current player
 			PlayerInfo localPlayer = new PlayerInfo();
 			localPlayer.setName(ClientGame.getCurrentProxy().getUserName());
 			localPlayer.setId(ClientGame.getCurrentProxy().getUserId());
 			getJoinGameView().setGames(games, localPlayer);
+			//update the game count and player count
 			gameCount = games.length;
+			joinedPlayerCount = currentPlayerCount;
 		} 
 		catch (ServerProxyException e)
 		{
@@ -140,7 +151,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			System.err.println("UNABLE TO GET GAME LIST "+e);
 			e.printStackTrace();
 		}
-		System.out.println("Refreshed the game list");
 	}
 
 	@Override
