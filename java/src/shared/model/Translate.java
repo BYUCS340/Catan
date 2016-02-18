@@ -16,6 +16,12 @@ import shared.networking.transport.*;
  */
 public class Translate
 {
+	/**
+	 * Main function -- this translates a netGameModel (from server) into a GameModel (for model)
+	 * All of the other functions in this class are sub-functions of this main function
+	 * @param netGameModel
+	 * @return GameModel
+	 */
 	public GameModel fromNetGameModel(NetGameModel netGameModel)
 	{
 		GameModel gameModel = new GameModel();
@@ -32,6 +38,12 @@ public class Translate
 		return gameModel;
 	}
 	
+	/**
+	 * Translates a NetMap into a MapModel
+	 * @param netMap the map returned by the server
+	 * @param players the list of players returned by the server
+	 * @return MapModel
+	 */
 	public MapModel fromNetMap(NetMap netMap, List<NetPlayer> players)
 	{
 		MapModel model = new MapModel();
@@ -46,6 +58,11 @@ public class Translate
 		return model;
 	}
 	
+	/**
+	 * Helper function for fromNetMap function
+	 * @param model
+	 * @param hexes
+	 */
 	private void SetHexes(MapModel model, List<NetHex> hexes)
 	{
 		for (NetHex hex : hexes)
@@ -75,6 +92,12 @@ public class Translate
 		}
 	}
 	
+	/**
+	 * Helper function for fromNetMap function
+	 * @param model
+	 * @param settlements
+	 * @param players
+	 */
 	private void SetSettlements(MapModel model, List<NetSettlement> settlements, List<NetPlayer> players)
 	{
 		for (NetSettlement settlement : settlements)
@@ -100,6 +123,12 @@ public class Translate
 		}
 	}
 	
+	/**
+	 * Helper function for fromNetMap function
+	 * @param model
+	 * @param cities
+	 * @param players
+	 */
 	private void SetCities(MapModel model, List<NetCity> cities, List<NetPlayer> players)
 	{
 		for (NetCity city : cities)
@@ -125,6 +154,12 @@ public class Translate
 		}
 	}
 	
+	/**
+	 * Helper function for fromNetMap function
+	 * @param model
+	 * @param roads
+	 * @param players
+	 */
 	private void SetRoads(MapModel model, List<NetRoad> roads, List<NetPlayer> players)
 	{
 		for (NetRoad road : roads)
@@ -150,6 +185,11 @@ public class Translate
 		}
 	}
 	
+	/**
+	 * Helper function for fromNetMap function
+	 * @param model
+	 * @param ports
+	 */
 	private void SetPorts(MapModel model, List<NetPort> ports)
 	{
 		for (NetPort port : ports)
@@ -178,6 +218,11 @@ public class Translate
 		}
 	}
 	
+	/**
+	 * Helper function for fromNetMap function
+	 * @param model
+	 * @param robberLocation
+	 */
 	private void SetRobber(MapModel model, NetHexLocation robberLocation)
 	{
 		int x = robberLocation.getX();
@@ -195,11 +240,23 @@ public class Translate
 		}
 	}
 	
+	/**
+	 * Helper function for fromNetMap function
+	 * @param x
+	 * @param y
+	 * @return Coordinate
+	 */
 	private Coordinate GetHexCoordinate(int x, int y)
 	{
 		return new Coordinate (x + 3, -2 * y - x);
 	}
 	
+	/**
+	 * Helper function for fromNetMap function
+	 * @param owner
+	 * @param players
+	 * @return CatanColor
+	 */
 	private CatanColor GetColorFromOwnerInt(int owner, List<NetPlayer> players)
 	{
 		for (NetPlayer player : players)
@@ -211,6 +268,12 @@ public class Translate
 		return null;
 	}
 	
+	/**
+	 * Helper function for fromNetMap function
+	 * @param hex
+	 * @param direction
+	 * @return Coordinate
+	 */
 	private Coordinate GetVertexCoordinate(Coordinate hex, Direction direction) //Needs vertex direction
 	{
 		switch (direction)
@@ -225,6 +288,12 @@ public class Translate
 		}
 	}
 	
+	/**
+	 * Helper function for fromNetMap function
+	 * @param hex
+	 * @param direction
+	 * @return List<Coordinate>
+	 */
 	private List<Coordinate> GetEdgeCoordinates(Coordinate hex, Direction direction)
 	{
 		List<Coordinate> coordinates = new ArrayList<Coordinate>(2);
@@ -262,6 +331,12 @@ public class Translate
 		return null;
 	}
 	
+	/**
+	 * Helper function for fromNetMap function
+	 * @param ratio
+	 * @param type
+	 * @return PortType
+	 */
 	private PortType GetPortType(int ratio, ResourceType type)
 	{
 		if (ratio == 3)
@@ -270,14 +345,24 @@ public class Translate
 			return PortType.GetFromResource(type);
 	}
 	
+	/**
+	 * Translates NetTurnTracker into GameState
+	 * @param netTurnTracker
+	 * @return GameState
+	 */
 	public GameState fromNetTurnTracker(NetTurnTracker netTurnTracker)
 	{
 		GameState gameState = new GameState();
 		gameState.state = netTurnTracker.getRound();
 		gameState.activePlayerIndex = netTurnTracker.getCurrentTurn();
-		return null;
+		return gameState;
 	}
 	
+	/**
+	 * Translates NetBank into Bank
+	 * @param netBank
+	 * @return Bank
+	 */
 	public Bank fromNetBank(NetBank netBank)
 	{
 		Bank gameBank = new Bank();
@@ -298,6 +383,11 @@ public class Translate
 		return gameBank;
 	}
 	
+	/**
+	 * Translates list of NetPlayer into list of Player
+	 * @param netPlayers
+	 * @return List<Player>
+	 */
 	public List<Player> fromNetPlayers(List<NetPlayer> netPlayers)
 	{
 		List<Player> players = new ArrayList<Player>();
@@ -309,6 +399,11 @@ public class Translate
 		return players;
 	}
 	
+	/**
+	 * Translates NetPlayer into Player
+	 * @param netPlayer
+	 * @return Player
+	 */
 	public Player fromNetPlayer(NetPlayer netPlayer)
 	{
 		Player player = new Player(netPlayer.getName(), netPlayer.getPlayerIndex(), netPlayer.getColor(), true, netPlayer.getPlayerID());
@@ -360,6 +455,12 @@ public class Translate
 		return player;
 	}
 	
+	/**
+	 * Translates NetTurnTracker into VictoryPointManager
+	 * @param netTurnTracker
+	 * @param netPlayers
+	 * @return VictoryPointManager
+	 */
 	public VictoryPointManager fromNetVPManager(NetTurnTracker netTurnTracker, List<NetPlayer> netPlayers)
 	{
 		int p1Points = netPlayers.get(0).getNumVictoryPoints();
@@ -386,6 +487,11 @@ public class Translate
 		return victoryPointManager;
 	}
 	
+	/**
+	 * Translates NetChat into ChatBox
+	 * @param netChat
+	 * @return ChatBox
+	 */
 	public ChatBox fromNetChat(NetChat netChat)
 	{
 		ChatBox chatBox = new ChatBox();
@@ -397,6 +503,11 @@ public class Translate
 		return chatBox;
 	}
 	
+	/**
+	 * Translates NetLog into GameActionLog
+	 * @param netLog
+	 * @return GameActionLog
+	 */
 	public GameActionLog fromNetLog(NetLog netLog)
 	{
 		GameActionLog gameActionLog = new GameActionLog();
