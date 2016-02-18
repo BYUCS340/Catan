@@ -206,7 +206,10 @@ public class MapModel implements IMapModel {
 	@Override
 	public void PlaceRoad(Coordinate p1, Coordinate p2, CatanColor color) throws MapException
 	{	
-		edges.AddRoad(p1, p2, color);
+		if (CanPlaceRoad(p1, p2, color))
+			edges.AddRoad(p1, p2, color);
+		else
+			throw new MapException("Attempt to place road where not allowed");
 		
 		Set<Edge> handledEdges = new HashSet<Edge>();
 		Set<Edge> allHandledEdges = new HashSet<Edge>();
@@ -241,13 +244,19 @@ public class MapModel implements IMapModel {
 	@Override
 	public void PlaceSettlement(Coordinate point, CatanColor color) throws MapException
 	{
-		vertices.SetSettlement(point, color);
+		if (CanPlaceSettlement(point))
+			vertices.SetSettlement(point, color);
+		else
+			throw new MapException("Attempt to place settlement where not allowed");
 	}
 	
 	@Override
 	public void PlaceCity(Coordinate point, CatanColor color) throws MapException
 	{
-		vertices.SetCity(point, color);
+		if (CanPlaceCity(point, color))
+			vertices.SetCity(point, color);
+		else
+			throw new MapException("Attempt to place city where not allowed");
 	}
 	
 	@Override
@@ -271,6 +280,9 @@ public class MapModel implements IMapModel {
 	public void PlaceRobber(Coordinate point) throws MapException
 	{
 		Hex hex = hexes.GetHex(point);
+		
+		if (hex.getType() == HexType.WATER)
+			throw new MapException("Don't drown Trogdor!");
 		
 		if (robber == null)
 			robber = new Robber(hex);
