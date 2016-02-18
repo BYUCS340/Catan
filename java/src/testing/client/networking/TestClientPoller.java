@@ -15,7 +15,7 @@ public class TestClientPoller {
 	Poller poller;
 	@Before
 	public void setUp() throws Exception {
-		ClientGame.startGameWithProxy(new MockServerProxy());
+		ClientGame.startGameWithProxy(null);
 		poller = new Poller(1);
 	}
 
