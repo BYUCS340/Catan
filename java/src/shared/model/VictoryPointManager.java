@@ -198,7 +198,7 @@ public class VictoryPointManager
 	}
 
 	/**
-	 * @return the currentLongestRoadPlayer
+	 * @return the current Longest Road Player's index
 	 */
 	public int getCurrentLongestRoadPlayer()
 	{
@@ -206,7 +206,7 @@ public class VictoryPointManager
 	}
 
 	/**
-	 * @return the currentLargestArmyPlayer
+	 * @return the current Largest Army Player's index
 	 */
 	public int getCurrentLargestArmyPlayer()
 	{
