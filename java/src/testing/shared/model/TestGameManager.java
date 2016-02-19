@@ -90,7 +90,7 @@ public class TestGameManager {
 				gm.placeRobber(gm.CurrentPlayersTurn());
 			}
 			
-			assertTrue(GameRound.PLAYING==gm.CurrentState() || GameRound.ROBBING==gm.CurrentState());
+			assertEquals(GameRound.PLAYING,gm.CurrentState());
 			
 		}
 		catch (Exception e){
