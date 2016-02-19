@@ -20,8 +20,8 @@ public class GameHistoryController extends Controller implements IGameHistoryCon
 	public GameHistoryController(IGameHistoryView view) {
 		
 		super(view);
-		
-		initFromModel();
+		ClientGame.getGame().startListening(this);
+		updateFromModel();
 	}
 	
 	@Override
@@ -30,7 +30,7 @@ public class GameHistoryController extends Controller implements IGameHistoryCon
 		return (IGameHistoryView)super.getView();
 	}
 	
-	private void initFromModel() 
+	private void updateFromModel() 
 	{
 		//get needed objects
 		ClientGameManager game = ClientGame.getGame();
@@ -54,7 +54,8 @@ public class GameHistoryController extends Controller implements IGameHistoryCon
 	@Override
 	public void alert()
 	{
-		this.initFromModel();
+		System.out.println("Refreshing game history...");
+		this.updateFromModel();
 	}
 	
 }

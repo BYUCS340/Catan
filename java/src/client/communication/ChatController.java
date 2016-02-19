@@ -5,6 +5,7 @@ import java.util.List;
 
 import client.base.Controller;
 import client.model.ClientGame;
+import client.model.ClientGameManager;
 import shared.definitions.CatanColor;
 import shared.model.GameManager;
 import shared.model.ModelObserver;
@@ -19,8 +20,8 @@ import shared.model.chat.ChatMessage;
 public class ChatController extends Controller implements IChatController, ModelObserver {
 
 	public ChatController(IChatView view) {
-		
 		super(view);
+		ClientGame.getGame().startListening(this);
 	}
 
 	@Override
@@ -33,7 +34,7 @@ public class ChatController extends Controller implements IChatController, Model
 		ClientGame.getGame().SendChat(message);
 	}
 	
-	private void initFromModel()
+	private void updateFromModel()
 	{
 		//get needed objects
 		GameManager mng = ClientGame.getGame();
@@ -59,7 +60,10 @@ public class ChatController extends Controller implements IChatController, Model
 	@Override
 	public void alert()
 	{
-		this.initFromModel();
+		ClientGameManager game = ClientGame.getGame();
+		if(game.GetVersion() != -1)
+			System.out.println("Refreshing chat...");
+			this.updateFromModel();
 	}
 
 }

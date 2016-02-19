@@ -315,7 +315,7 @@ public class ClientGameManager extends GameManager
 	 */
 	public void reloadGame(NetGameModel model) throws ModelException
 	{
-		
+			
 		if (model.getVersion() == this.version && model.getNetPlayers().size() == this.getNumberPlayers())
 			return;
 		System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
@@ -323,17 +323,17 @@ public class ClientGameManager extends GameManager
 		//TODO All of this
 		//TODO update turn status
 		
-		
-		
-		Translate trans = new Translate();
+		Translate trans = new Translate();	
 		if (model.getNetPlayers().size() != this.getNumberPlayers())
 		{
 			System.out.println("Updated number of players");
 			this.SetPlayers(trans.fromNetPlayers(model.getNetPlayers()));
 		}
 		
+		System.out.println("New chat size: " + model.getNetChat().size());
 		if (model.getNetChat().size() > this.waterCooler.size()){
 			this.waterCooler = trans.fromNetChat(model.getNetChat());
+			System.out.println("New watercooler size: " + waterCooler.size());
 			this.notifyCenter.notify(ModelNotification.CHAT);
 		}
 		
