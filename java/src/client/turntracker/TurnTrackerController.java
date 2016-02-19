@@ -94,6 +94,10 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		{
 			this.getView().updateGameState("Finish Turn", true);
 		}		
+		else
+		{
+			this.getView().updateGameState("Waiting for other players", false);
+		}
 	}
 
 	@Override
