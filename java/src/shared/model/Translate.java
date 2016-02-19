@@ -3,11 +3,34 @@ package shared.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import shared.definitions.*;
-import shared.model.chat.*;
-import shared.model.map.*;
-import shared.model.map.objects.*;
-import shared.networking.transport.*;
+import shared.definitions.CatanColor;
+import shared.definitions.DevCardType;
+import shared.definitions.Direction;
+import shared.definitions.HexType;
+import shared.definitions.PieceType;
+import shared.definitions.PortType;
+import shared.definitions.ResourceType;
+import shared.model.chat.ChatBox;
+import shared.model.map.Coordinate;
+import shared.model.map.MapException;
+import shared.model.map.MapModel;
+import shared.model.map.objects.Edge;
+import shared.model.map.objects.Hex;
+import shared.networking.transport.NetBank;
+import shared.networking.transport.NetChat;
+import shared.networking.transport.NetCity;
+import shared.networking.transport.NetDirectionalLocation;
+import shared.networking.transport.NetGameModel;
+import shared.networking.transport.NetHex;
+import shared.networking.transport.NetHexLocation;
+import shared.networking.transport.NetLog;
+import shared.networking.transport.NetMap;
+import shared.networking.transport.NetPlayer;
+import shared.networking.transport.NetPort;
+import shared.networking.transport.NetRoad;
+import shared.networking.transport.NetSettlement;
+import shared.networking.transport.NetTurnTracker;
+
 
 /**
  * The Translate class changes game objects into net game objects, and vice versa

@@ -196,4 +196,20 @@ public class VictoryPointManager
 		}
 		return -1;
 	}
+
+	/**
+	 * @return the current Longest Road Player's index
+	 */
+	public int getCurrentLongestRoadPlayer()
+	{
+		return currentLongestRoadPlayer;
+	}
+
+	/**
+	 * @return the current Largest Army Player's index
+	 */
+	public int getCurrentLargestArmyPlayer()
+	{
+		return currentLargestArmyPlayer;
+	}
 }
