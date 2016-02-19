@@ -193,15 +193,19 @@ public class ClientGameManager extends GameManager
 	 */
 	public boolean createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
 	{
-		try {
+		try 
+		{
 			NetGame game = proxy.createGame(randomTiles, randomNumbers, randomPorts, name);
 			this.LoadGame(game);
-		} catch (ServerProxyException e) {
+		}
+		catch (ServerProxyException e) 
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
-		} catch (ModelException e) {
-			// TODO Auto-generated catch block
+		}
+		catch (ModelException e) 
+		{
 			e.printStackTrace();
 			return false;
 		}
@@ -215,10 +219,13 @@ public class ClientGameManager extends GameManager
 	public int RollDice()
 	{
 		int roll = 0;
-		try {
+		try 
+		{
 			roll = super.RollDice();
-			proxy.rollNumber(roll);
-		} catch (ServerProxyException|ModelException e) {
+			NetGameModel model = proxy.rollNumber(roll);
+			this.reloadGame(model,true);
+		}
+		catch (ServerProxyException|ModelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -232,39 +239,54 @@ public class ClientGameManager extends GameManager
 	 */
 	public void BuildRoad(Coordinate start, Coordinate end)
 	{
-		try {
+		try 
+		{
 			this.BuildRoad(myPlayerIndex, start, end);
 			//proxy.buildRoad(edgeLocation, false);
-		} catch (ModelException e) {
+		}
+		catch (ModelException e) 
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	}
 	
+	/**
+	 * Ends the current player's turn
+	 */
 	public void endTurn()
 	{
 		
-		try{
-			proxy.finishTurn();
+		try
+		{
+			if (!gameState.nextTurn())
+				throw new ModelException("Unable to finish turn");
+			NetGameModel newmodel = proxy.finishTurn();
+			//Our observes will be updated when we reload the game
+			this.reloadGame(newmodel,true);
+			
 		}
-		catch(ServerProxyException e){
+		catch(ServerProxyException | ModelException e)
+		{
 			e.printStackTrace();
 		}
 	}
 	
 	
 	/**
-	 * Discards the cards specified by the resourceList list
+	 * Discards the cards specified by the resourceList list for the current player
 	 * @param resourceList the list of resources to discard
 	 */
 	public void DiscardCards(List<Integer> resourceList)
 	{
 		try
 		{
-			proxy.discardCards(resourceList);
+			//Check to make sure we can discard cards
+			NetGameModel newmodel = proxy.discardCards(resourceList);
+			this.reloadGame(newmodel,true);
 		}
-		catch(ServerProxyException e)
+		catch(ServerProxyException | ModelException e)
 		{
 			e.printStackTrace();
 		}
@@ -276,24 +298,19 @@ public class ClientGameManager extends GameManager
 	 */
 	public void SendChat(String message)
 	{
-		this.PlayerChat(myPlayerIndex, message);
-	}
-	
-
-	@Override
-	/**
-	 * Over rides player chat to talk to the server
-	 */
-	public void PlayerChat(int playerID, String message)
-	{
-		super.PlayerChat(playerID, message);
-		try {
-			proxy.sendChat(message);
-		} catch (ServerProxyException e) {
+		super.PlayerChat(myPlayerIndex, message);
+		try 
+		{
+			NetGameModel newModel = proxy.sendChat(message);
+			this.reloadGame(newModel, true);
+		}
+		catch (ServerProxyException | ModelException e) 
+		{
 			// TODO Auto-generated catch block
 			System.err.println("Unable to send chat!");
 			e.printStackTrace();
 		}
+		
 	}
 	
 	/**
@@ -313,29 +330,48 @@ public class ClientGameManager extends GameManager
 	 * @param model the model to be loaded in
 	 * @throws ModelException if model is incorrect
 	 */
-	public void reloadGame(NetGameModel model) throws ModelException
+	private void reloadGame(NetGameModel model) throws ModelException
 	{
-			
-		if (model.getVersion() == this.version && model.getNetPlayers().size() == this.getNumberPlayers())
-			return;
+		//reload the game but don't force it
+		this.reloadGame(model, false);
+	}
+	
+	/**
+	 * Reloads the game
+	 * @param model the model to reload
+	 * @param forced if true, the version number won't be checked
+	 * @throws ModelException
+	 */
+	private void reloadGame(NetGameModel model, boolean forced) throws ModelException
+	{
+		if (forced == true)
+		{
+			if (model.getVersion() == this.version && model.getNetPlayers().size() == this.getNumberPlayers())
+				return;
+		}
+
 		System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
 		this.version = model.getVersion();
 		//TODO All of this
+		
 		//TODO update turn status
 		
-		Translate trans = new Translate();	
-		if (model.getNetPlayers().size() != this.getNumberPlayers())
+		//Add new players if needed
+		Translate trans = new Translate();
+		//If there are new players or the number of resources have changed
+		if (model.getNetPlayers().size() != this.getNumberPlayers() || model.getVersion() != this.version)
 		{
 			System.out.println("Updated number of players");
 			this.SetPlayers(trans.fromNetPlayers(model.getNetPlayers()));
 		}
 		
-		System.out.println("New chat size: " + model.getNetChat().size());
+		//Update our chat
 		if (model.getNetChat().size() > this.waterCooler.size()){
 			this.waterCooler = trans.fromNetChat(model.getNetChat());
 			System.out.println("New watercooler size: " + waterCooler.size());
 			this.notifyCenter.notify(ModelNotification.CHAT);
 		}
+		
 		
 		//throw new ModelException();
 	}
@@ -348,7 +384,7 @@ public class ClientGameManager extends GameManager
 		this.gameID = model.getId();
 		this.gameTitle = model.getTitle();
 		
-		//make sure I assign the colors correctly
+		//TODO  make sure I assign the colors correctly
 	}
 	
 	/**
@@ -377,10 +413,9 @@ public class ClientGameManager extends GameManager
 				System.err.println("Model was null from the server");
 				throw new ModelException("Model was null from server");
 			}
-			//Refresh teh game
+			//Refresh the game
 			this.reloadGame(model);
 		} catch (ServerProxyException e) {
-			// TODO Auto-generated catch block
 			System.err.println("Wasn't able to update");
 			e.printStackTrace();
 			throw new ModelException("Server proxy wasn't able to update");
