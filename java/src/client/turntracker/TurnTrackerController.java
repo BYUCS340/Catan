@@ -4,6 +4,7 @@ import client.base.Controller;
 import client.model.ClientGame;
 import client.model.ClientGameManager;
 import shared.definitions.CatanColor;
+import shared.definitions.GameRound;
 import shared.model.ModelObserver;
 import shared.model.VictoryPointManager;
 
@@ -88,8 +89,11 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			getView().updatePlayer(i, points, highlight, largestArmy, longestRoad);
 		}
 
-		//TODO enable or disable button
-		
+
+		if(game.CanFinishTurn())
+		{
+			this.getView().updateGameState("Finish Turn", true);
+		}		
 	}
 
 	@Override
