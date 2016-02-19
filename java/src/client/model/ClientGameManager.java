@@ -14,6 +14,7 @@ import shared.definitions.DevCardType;
 import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
+import shared.definitions.TurnState;
 import shared.model.GameManager;
 import shared.model.ModelException;
 import shared.model.Player;
@@ -26,6 +27,7 @@ public class ClientGameManager extends GameManager
 {
 	private ServerProxy proxy;
 	private int myPlayerIndex;
+	private TurnState turnState;
 	
 	private int refreshCount = 0;
 	private CatanColor myPlayerColor;
@@ -37,6 +39,7 @@ public class ClientGameManager extends GameManager
 	{
 		super();		
 		this.proxy = clientProxy;
+		turnState = null;
 	}
 	
 	/**
@@ -48,6 +51,7 @@ public class ClientGameManager extends GameManager
 	{
 		this(clientProxy);
 		this.myPlayerIndex = myPlayerID;
+		turnState = null;
 	}
 	
 	
@@ -119,6 +123,18 @@ public class ClientGameManager extends GameManager
 		}
 		
 		return allplayers;
+	}
+	
+	/**
+	 * 
+	 * @param playerIndex
+	 */
+	public String getPlayerNameByIndex(int playerIndex)
+	{
+		if(playerIndex > 3 || playerIndex < 0)
+			return null;
+		
+		return players.get(playerIndex).name;
 	}
 	
 	/**
@@ -226,6 +242,34 @@ public class ClientGameManager extends GameManager
 		
 	}
 	
+	public void endTurn()
+	{
+		
+		try{
+			proxy.finishTurn();
+		}
+		catch(ServerProxyException e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * Discards the cards specified by the resourceList list
+	 * @param resourceList the list of resources to discard
+	 */
+	public void DiscardCards(List<Integer> resourceList)
+	{
+		try
+		{
+			proxy.discardCards(resourceList);
+		}
+		catch(ServerProxyException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Sends a chat message for the current player
 	 * @param message
@@ -271,24 +315,25 @@ public class ClientGameManager extends GameManager
 	 */
 	public void reloadGame(NetGameModel model) throws ModelException
 	{
-		
+			
 		if (model.getVersion() == this.version && model.getNetPlayers().size() == this.getNumberPlayers())
 			return;
 		System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
 		this.version = model.getVersion();
 		//TODO All of this
+		//TODO update turn status
 		
-		
-		
-		Translate trans = new Translate();
+		Translate trans = new Translate();	
 		if (model.getNetPlayers().size() != this.getNumberPlayers())
 		{
 			System.out.println("Updated number of players");
 			this.SetPlayers(trans.fromNetPlayers(model.getNetPlayers()));
 		}
 		
+		System.out.println("New chat size: " + model.getNetChat().size());
 		if (model.getNetChat().size() > this.waterCooler.size()){
 			this.waterCooler = trans.fromNetChat(model.getNetChat());
+			System.out.println("New watercooler size: " + waterCooler.size());
 			this.notifyCenter.notify(ModelNotification.CHAT);
 		}
 		
@@ -342,6 +387,15 @@ public class ClientGameManager extends GameManager
 		}
 		this.refreshCount++;
 		
+	}
+	
+	/**
+	 * Gets the current TurnState
+	 * @return the TurnState
+	 */
+	public TurnState getTurnState()
+	{
+		return turnState;
 	}
 	
 	public IMapModel GetMapModel()

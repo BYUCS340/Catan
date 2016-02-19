@@ -282,17 +282,17 @@ public class GameManager implements ModelSubject
 		if (diceRoll == 7 )
 		{
 			this.playerCanMoveRobber = this.CurrentPlayersTurn();
-			gameState.startRobbing();
+			if (!gameState.startRobbing()) throw new ModelException("Unable to stop rolling after 7");
 		}
 		else
 		{
-			gameState.stopRolling();
+			if (!gameState.stopRolling()) throw new ModelException("Unable to stop rolling after a non 7");
 		}
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
 		
-		//Call map to update the get the transacations
+		//Call map to update the get the transactions
 		Iterator<Transaction> transList = map.GetTransactions(diceRoll);
-		//Go through each trasaction
+		//Go through each transaction
 		while (transList.hasNext())
 		{
 			Transaction trans = transList.next();
@@ -458,7 +458,7 @@ public class GameManager implements ModelSubject
 			throw new ModelException("Player can't place robber right now");
 		//mark that the robber has been moved
 		this.playerCanMoveRobber = -1;
-		gameState.startBuildPhase();
+		if (!gameState.stopRobbing()) throw new ModelException("Can't stop robbing.");
 	}
 	
 	//--------------------------------------------------------------------------
@@ -705,10 +705,12 @@ public class GameManager implements ModelSubject
 	/**
 	 * Check if player can chat
 	 * @param playerIndex
-	 * @return always true?
+	 * @return true if we aren't waiting for players
 	 */
 	public boolean canChat(int playerIndex)
 	{
+		if (gameState.state == GameRound.WAITING) 
+			return false;
 		return true;
 	}
 	
@@ -851,6 +853,7 @@ public class GameManager implements ModelSubject
 	public void PlayerChat(int playerIndex, String message)
 	{
 		waterCooler.put(message, playerIndex);
+		notifyCenter.notify(ModelNotification.CHAT);
 	}
 	
 	//--------------------------------------------------------------------------

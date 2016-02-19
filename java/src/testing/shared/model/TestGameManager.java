@@ -88,6 +88,7 @@ public class TestGameManager {
 			
 		}
 		catch (Exception e){
+			System.err.println(e);
 			fail("exceptions trying to roll the dice!");
 		}
 		

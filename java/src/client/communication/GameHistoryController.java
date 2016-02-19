@@ -8,18 +8,20 @@ import client.model.ClientGame;
 import client.model.ClientGameManager;
 import shared.definitions.CatanColor;
 import shared.model.GameActionLog;
+import shared.model.ModelObserver;
 
 
 /**
  * Game history controller implementation
+ * @author parkerridd
  */
-public class GameHistoryController extends Controller implements IGameHistoryController {
+public class GameHistoryController extends Controller implements IGameHistoryController, ModelObserver {
 
 	public GameHistoryController(IGameHistoryView view) {
 		
 		super(view);
-		
-		initFromModel();
+		ClientGame.getGame().startListening(this);
+		updateFromModel();
 	}
 	
 	@Override
@@ -28,27 +30,32 @@ public class GameHistoryController extends Controller implements IGameHistoryCon
 		return (IGameHistoryView)super.getView();
 	}
 	
-	private void initFromModel() {
-		
-		//<temp>
-		
+	private void updateFromModel() 
+	{
+		//get needed objects
 		ClientGameManager game = ClientGame.getGame();
 		GameActionLog log = game.getGameActionLog();
 		
-		
+		//populate the list of LogEntries
 		List<LogEntry> entries = new ArrayList<LogEntry>();
-		entries.add(new LogEntry(CatanColor.BROWN, "This is a brown message"));
-		entries.add(new LogEntry(CatanColor.ORANGE, "This is an orange message ss x y z w.  This is an orange message.  This is an orange message.  This is an orange message."));
-		entries.add(new LogEntry(CatanColor.BROWN, "This is a brown message"));
-		entries.add(new LogEntry(CatanColor.ORANGE, "This is an orange message ss x y z w.  This is an orange message.  This is an orange message.  This is an orange message."));
-		entries.add(new LogEntry(CatanColor.BROWN, "This is a brown message"));
-		entries.add(new LogEntry(CatanColor.ORANGE, "This is an orange message ss x y z w.  This is an orange message.  This is an orange message.  This is an orange message."));
-		entries.add(new LogEntry(CatanColor.BROWN, "This is a brown message"));
-		entries.add(new LogEntry(CatanColor.ORANGE, "This is an orange message ss x y z w.  This is an orange message.  This is an orange message.  This is an orange message."));
+		int numEntries = log.size();
 		
+		for(int i = 0; i < numEntries; i++)
+		{
+			int playerIndex = log.getPlayerIndex(i);
+			CatanColor col = game.getPlayerColorByIndex(playerIndex);
+			LogEntry tempEntry = new LogEntry(col, log.getAction(i));
+			entries.add(tempEntry);
+		}
+			
 		getView().setEntries(entries);
-	
-		//</temp>
+	}
+
+	@Override
+	public void alert()
+	{
+		System.out.println("Refreshing game history...");
+		this.updateFromModel();
 	}
 	
 }
