@@ -833,6 +833,7 @@ public class GameManager implements ModelSubject
 	public void PlayerChat(int playerIndex, String message)
 	{
 		waterCooler.put(message, playerIndex);
+		notifyCenter.notify(ModelNotification.CHAT);
 	}
 	
 	//--------------------------------------------------------------------------
