@@ -11,6 +11,7 @@ import client.networking.ServerProxy;
 import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
+import shared.definitions.GameRound;
 import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
@@ -359,17 +360,41 @@ public class ClientGameManager extends GameManager
 		//Add new players if needed
 		Translate trans = new Translate();
 		//If there are new players or the number of resources have changed
-		if (model.getNetPlayers().size() != this.getNumberPlayers() || model.getVersion() != this.version)
+		if (model.getNetPlayers().size() != this.getNumberPlayers())
 		{
+			
 			System.out.println("Updated number of players");
-			this.SetPlayers(trans.fromNetPlayers(model.getNetPlayers()));
+			List<Player> newplayers = trans.fromNetPlayers(model.getNetPlayers());
+			this.SetPlayers(newplayers);
+			
+		}
+		
+		//Check if we need to update the resources
+		if (model.getVersion() != this.version)
+		{
+			
+			List<Player> newplayers = trans.fromNetPlayers(model.getNetPlayers());
+			int oldresources = ClientDataTranslator.totalPlayerResouces(newplayers);
+			int newresources = ClientDataTranslator.totalPlayerResouces(this.players);
+			if (version != model.getVersion() && oldresources != newresources)
+			{
+				this.SetPlayers(newplayers);
+				this.notifyCenter.notify(ModelNotification.RESOURCES);
+			}
 		}
 		
 		//Update our chat
-		if (model.getNetChat().size() > this.waterCooler.size()){
+		if (model.getNetChat().size() > this.waterCooler.size())
+		{
 			this.waterCooler = trans.fromNetChat(model.getNetChat());
 			System.out.println("New watercooler size: " + waterCooler.size());
 			this.notifyCenter.notify(ModelNotification.CHAT);
+		}
+		
+		GameRound newround = model.getNetTurnTracker().getRound();
+		if (newround != gameState.state)
+		{
+			this.notifyCenter.notify(ModelNotification.STATE);
 		}
 		
 		
