@@ -4,7 +4,7 @@ import java.awt.*;
 
 import client.base.*;
 import client.map.IMapController;
-import shared.definitions.*;
+import client.map.MapObserver;
 
 /**
  * Implementation for the map view
@@ -19,7 +19,6 @@ public class MapView extends PanelView implements IMapView
 		this.setLayout(new BorderLayout());
 		
 		map = new MapComponent();
-		
 		this.add(map, BorderLayout.CENTER);
 	}
 	
@@ -35,13 +34,7 @@ public class MapView extends PanelView implements IMapView
 		super.setController(controller);
 		
 		map.setController(controller);
-	}
-	
-	@Override
-	public void startDrop(PieceType pieceType, CatanColor pieceColor,
-						  boolean isCancelAllowed)
-	{
-		assert(false);
+		getController().AddMapObserver(mapObserver);
 	}
 	
 	@Override
@@ -49,5 +42,26 @@ public class MapView extends PanelView implements IMapView
 	{
 		map.repaint();
 	}
+
+	private MapObserver mapObserver = new MapObserver()
+	{
+		@Override
+		public void StartDrag(boolean cancelAllowed)
+		{
+			return;
+		}
+
+		@Override
+		public void EndDrag()
+		{
+			return;
+		}
+		
+		@Override
+		public void Refresh()
+		{
+			RefreshView();
+		}
+	};
 }
 

@@ -26,6 +26,7 @@ public interface IMapController extends IController
 	 * 
 	 * @param p1 The beginning of the road piece
 	 * @param p2 The end of the road piece (it's the end of the road, get it? Never mind...)
+	 * @param color The color of the road being placed
 	 * @return true if the road can be placed at edgeLoc, false otherwise
 	 */
 	boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color);
@@ -37,9 +38,10 @@ public interface IMapController extends IController
 	 * be placed at the specified location.
 	 * 
 	 * @param point the location of the vertex
+	 * @param color the color of the piece being placed
 	 * @return true if the settlement can be placed at vertLoc, false otherwise
 	 */
-	boolean CanPlaceSettlement(Coordinate point);
+	boolean CanPlaceSettlement(Coordinate point, CatanColor color);
 	
 	/**
 	 * This method is called whenever the user is trying to place a city on the
@@ -112,8 +114,6 @@ public interface IMapController extends IController
 	
 	void PlaceRobber(Coordinate point);
 	
-	void StartMove(PieceType pieceType, CatanColor color, boolean allowDisconnected);
-	
 	void CancelMove();
 	
 	void MouseMove(Point2D worldPoint);
@@ -121,5 +121,7 @@ public interface IMapController extends IController
 	void MouseClick();
 	
 	IMapModel GetModel();
+	
+	void AddMapObserver(MapObserver listener);
 }
 

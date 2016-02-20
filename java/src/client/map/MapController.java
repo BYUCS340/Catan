@@ -1,10 +1,12 @@
 package client.map;
 
 import shared.definitions.*;
+import shared.model.ModelObserver;
 import shared.model.map.*;
 import shared.model.map.objects.*;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -21,7 +23,9 @@ import client.model.ClientGame;
  */
 public class MapController extends Controller implements IMapController
 {
+	private List<MapObserver> observers;
 	private DropObject dropObject;
+	private boolean setup;
 	
 	/**
 	 * Creates a MapController object.
@@ -32,7 +36,11 @@ public class MapController extends Controller implements IMapController
 	{
 		super(view);
 		
+		this.observers = new ArrayList<MapObserver>(3);
 		this.dropObject = new NoDrop();
+		this.setup = false;
+		
+		ClientGame.getGame().startListening(modelObserver, ModelNotification.MAP);
 	}
 	
 	public IMapView getView()
@@ -44,14 +52,14 @@ public class MapController extends Controller implements IMapController
 	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
 	{
 		IMapModel model = ClientGame.getGame().GetMapModel();
-		return model.CanPlaceRoad(p1, p2, color);
+		return model.CanPlaceRoad(p1, p2, color, setup);
 	}
 
 	@Override
-	public boolean CanPlaceSettlement(Coordinate point)
+	public boolean CanPlaceSettlement(Coordinate point, CatanColor color)
 	{
 		IMapModel model = ClientGame.getGame().GetMapModel();
-		return model.CanPlaceSettlement(point);
+		return model.CanPlaceSettlement(point, color, setup);
 	}
 
 	@Override
@@ -148,7 +156,46 @@ public class MapController extends Controller implements IMapController
 	}
 
 	@Override
-	public void StartMove(PieceType pieceType, CatanColor color, boolean allowDisconnected)
+	public void MouseMove(Point2D worldPoint)
+	{
+		dropObject.Handle(worldPoint);
+	}
+
+	@Override
+	public void MouseClick()
+	{
+		if (dropObject.IsAllowed())
+		{
+			dropObject.Click();
+			dropObject = new NoDrop();
+		}
+	}	
+
+	@Override
+	public IMapModel GetModel()
+	{
+		return ClientGame.getGame().GetMapModel();
+	}
+	
+	@Override 
+	public void AddMapObserver(MapObserver listener)
+	{
+		observers.add(listener);
+	}
+	
+	@Override
+	public void CancelMove() 
+	{
+		dropObject = new NoDrop();
+	}
+	
+	private void Refresh()
+	{
+		for (MapObserver observer : observers)
+			observer.Refresh();
+	}
+	
+	private void StartMove(PieceType pieceType, CatanColor color, boolean initialPlacement)
 	{
 		switch(pieceType)
 		{
@@ -170,32 +217,29 @@ public class MapController extends Controller implements IMapController
 		}
 	}
 
-	@Override
-	public void CancelMove() 
+	private ModelObserver modelObserver = new ModelObserver()
 	{
-		dropObject = new NoDrop();
-	}
-
-	@Override
-	public void MouseMove(Point2D worldPoint)
-	{
-		dropObject.Handle(worldPoint);
-	}
-
-	@Override
-	public void MouseClick()
-	{
-		if (dropObject.IsAllowed())
+		@Override
+		public void alert()
 		{
-			dropObject.Click();
-			dropObject = new NoDrop();
+			TurnState state = ClientGame.getGame().getTurnState();
+			CatanColor color = ClientGame.getGame().myPlayerColor();
+			
+			switch (state)
+			{
+			case PLACING_PIECE:
+				break;
+			case FIRST_ROUND_MY_TURN:
+				setup = true;
+				break;
+			case SECOND_ROUND_MY_TURN:
+				setup = true;
+				break;
+			default:
+				setup = false;
+				Refresh();	
+			}
 		}
-	}	
-
-	@Override
-	public IMapModel GetModel()
-	{
-		return ClientGame.getGame().GetMapModel();
-	}
+	};
 }
 

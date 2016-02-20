@@ -50,14 +50,17 @@ public interface IMapModel
 	 * @param color The color of the road.
 	 * @return True if yes, else false.
 	 */
-	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color);
+	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color, boolean setup);
 	
 	/**
 	 * Returns if a Settlement can be placed at the specified location.
 	 * @param point The point of placement.
+	 * @param color The color of the piece being placed.
+	 * @param setup If true, the settlement must be connected to a road. For normal
+	 * game play, this is true. If false, the settlement can't be placed on a road.
 	 * @return True if yes, else false.
 	 */
-	public boolean CanPlaceSettlement(Coordinate point);
+	public boolean CanPlaceSettlement(Coordinate point, CatanColor color, boolean setup);
 	
 	/**
 	 * Returns if a city can be placed.

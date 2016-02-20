@@ -529,10 +529,7 @@ public class GameManager implements ModelSubject
 		{
 			if (!GetPlayer(playerIndex).playerBank.canBuildRoad())
 				return false;
-			//check map
-			CatanColor color = getPlayerColorByIndex(playerIndex);
-			if (!map.CanPlaceRoad(start, end, color))
-				return false;
+			//Map has already been checked by map
 		}
 		catch (ModelException e)
 		{
@@ -555,12 +552,13 @@ public class GameManager implements ModelSubject
 			return false;
 		try 
 		{
+			Player player = GetPlayer(playerIndex);
+			
 			//check if they have the resources needed
-			if (!GetPlayer(playerIndex).playerBank.canBuildRoad())
+			if (!player.playerBank.canBuildRoad())
 				return false;
-			//ask the map
-			if (!map.CanPlaceSettlement(location))
-				return false;
+			
+			//Map has already been checked by map
 		}
 		catch (ModelException e)
 		{

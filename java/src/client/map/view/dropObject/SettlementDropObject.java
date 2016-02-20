@@ -38,7 +38,7 @@ public class SettlementDropObject extends DropObject
 		if (!IsValid())
 			return false;
 		
-		return controller.CanPlaceSettlement(vertex);
+		return controller.CanPlaceSettlement(vertex, color);
 	}
 
 	@Override

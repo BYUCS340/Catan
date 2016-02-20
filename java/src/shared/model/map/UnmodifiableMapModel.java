@@ -45,17 +45,17 @@ public class UnmodifiableMapModel implements IMapModel
 	{
 		return model.ContainsHex(point);
 	}
-
+	
 	@Override
-	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
+	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color, boolean setup)
 	{
-		return model.CanPlaceRoad(p1, p2, color);
+		return model.CanPlaceRoad(p1, p2, color, setup);
 	}
 
 	@Override
-	public boolean CanPlaceSettlement(Coordinate point)
+	public boolean CanPlaceSettlement(Coordinate point, CatanColor color, boolean setup)
 	{
-		return model.CanPlaceSettlement(point);
+		return model.CanPlaceSettlement(point, color, setup);
 	}
 
 	@Override

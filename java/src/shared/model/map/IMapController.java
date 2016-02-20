@@ -32,9 +32,11 @@ public interface IMapController extends IController
 	 * be placed at the specified location.
 	 * 
 	 * @param point the location of the vertex
+	 * @param color the color of the settlement being placed
+	 * @param onRoad if the settlement should be placed on the road or not
 	 * @return true if the settlement can be placed at vertLoc, false otherwise
 	 */
-	boolean CanPlaceSettlement(Coordinate point);
+	boolean CanPlaceSettlement(Coordinate point, CatanColor color, boolean onRoad);
 	
 	/**
 	 * This method is called whenever the user is trying to place a city on the

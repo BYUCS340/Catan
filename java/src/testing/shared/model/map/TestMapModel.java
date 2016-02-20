@@ -183,8 +183,8 @@ public class TestMapModel
 		Coordinate p1 = new Coordinate(2, 0);
 		Coordinate p2 = new Coordinate(3, 0);
 		
-		assertFalse(model.CanPlaceRoad(p1, p2, CatanColor.GREEN));
-		assertFalse(model.CanPlaceRoad(p2, p1, CatanColor.GREEN));
+		assertFalse(model.CanPlaceRoad(p1, p2, CatanColor.GREEN, false));
+		assertFalse(model.CanPlaceRoad(p2, p1, CatanColor.GREEN, false));
 	}
 	
 	/**
@@ -201,10 +201,10 @@ public class TestMapModel
 		
 		model.PlaceSettlement(p1, CatanColor.GREEN);
 		model.PlaceRoad(p1, p2, CatanColor.GREEN);
-		assertFalse(model.CanPlaceRoad(p1, p2, CatanColor.GREEN));
-		assertFalse(model.CanPlaceRoad(p2, p1, CatanColor.GREEN));
-		assertFalse(model.CanPlaceRoad(p1, p2, CatanColor.BLUE));
-		assertFalse(model.CanPlaceRoad(p2, p1, CatanColor.BLUE));
+		assertFalse(model.CanPlaceRoad(p1, p2, CatanColor.GREEN, false));
+		assertFalse(model.CanPlaceRoad(p2, p1, CatanColor.GREEN, false));
+		assertFalse(model.CanPlaceRoad(p1, p2, CatanColor.BLUE, false));
+		assertFalse(model.CanPlaceRoad(p2, p1, CatanColor.BLUE, false));
 	}
 	
 	/**
@@ -222,13 +222,13 @@ public class TestMapModel
 		
 		//Ensure village satisfies end condition
 		model.PlaceSettlement(p1, CatanColor.GREEN);
-		assertTrue(model.CanPlaceRoad(p1, p2, CatanColor.GREEN));
-		assertTrue(model.CanPlaceRoad(p2, p1, CatanColor.GREEN));
+		assertTrue(model.CanPlaceRoad(p1, p2, CatanColor.GREEN, false));
+		assertTrue(model.CanPlaceRoad(p2, p1, CatanColor.GREEN, false));
 		
 		//Ensure city satisfies end condition
 		model.PlaceCity(p1, CatanColor.GREEN);
-		assertTrue(model.CanPlaceRoad(p1, p2, CatanColor.GREEN));
-		assertTrue(model.CanPlaceRoad(p2, p1, CatanColor.GREEN));
+		assertTrue(model.CanPlaceRoad(p1, p2, CatanColor.GREEN, false));
+		assertTrue(model.CanPlaceRoad(p2, p1, CatanColor.GREEN, false));
 	}
 	
 	/**
@@ -246,8 +246,8 @@ public class TestMapModel
 		model.PlaceSettlement(p1, CatanColor.GREEN);
 		model.PlaceRoad(p1, p2, CatanColor.GREEN);
 		
-		assertTrue(model.CanPlaceRoad(p2, p3, CatanColor.GREEN));
-		assertTrue(model.CanPlaceRoad(p3, p2, CatanColor.GREEN));
+		assertTrue(model.CanPlaceRoad(p2, p3, CatanColor.GREEN, false));
+		assertTrue(model.CanPlaceRoad(p3, p2, CatanColor.GREEN, false));
 	}
 
 	/**
@@ -261,11 +261,11 @@ public class TestMapModel
 		
 		//Test with settlement
 		model.PlaceSettlement(p1, CatanColor.BLUE);
-		assertFalse(model.CanPlaceSettlement(p1));
+		assertFalse(model.CanPlaceSettlement(p1, CatanColor.BLUE, false));
 		
-		//Ttest with city
+		//Test with city
 		model.PlaceCity(p1, CatanColor.BLUE);
-		assertFalse(model.CanPlaceSettlement(p1));
+		assertFalse(model.CanPlaceSettlement(p1, CatanColor.BLUE, false));
 	}
 	
 	/**
@@ -281,11 +281,11 @@ public class TestMapModel
 		
 		//Test with settlement
 		model.PlaceSettlement(p1, CatanColor.BLUE);
-		assertFalse(model.CanPlaceSettlement(p2));
+		assertFalse(model.CanPlaceSettlement(p2, CatanColor.BLUE, false));
 		
 		//Test with city
 		model.PlaceCity(p1, CatanColor.BLUE);
-		assertFalse(model.CanPlaceSettlement(p2));
+		assertFalse(model.CanPlaceSettlement(p2, CatanColor.BLUE, false));
 	}
 	
 	/**
@@ -296,7 +296,7 @@ public class TestMapModel
 	{
 		Coordinate p1 = new Coordinate(0,0);
 		
-		assertFalse(model.CanPlaceSettlement(p1));
+		assertFalse(model.CanPlaceSettlement(p1, CatanColor.BLUE, false));
 	}
 	
 	/**
@@ -304,11 +304,11 @@ public class TestMapModel
 	 * are on the board to restrict it.
 	 */
 	@Test
-	public void testCanPlaceSettlement_True()
+	public void testCanPlaceSettlementInitial_True()
 	{
 		Coordinate p1 = new Coordinate(2,0);
 		
-		assertTrue(model.CanPlaceSettlement(p1));
+		assertTrue(model.CanPlaceSettlement(p1, CatanColor.BLUE, true));
 	}
 	
 	/**

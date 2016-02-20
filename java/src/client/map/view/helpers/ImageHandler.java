@@ -2,7 +2,6 @@ package client.map.view.helpers;
 
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import client.utils.ImageUtils;

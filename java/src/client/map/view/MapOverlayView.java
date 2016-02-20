@@ -6,21 +6,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
 import client.base.*;
-import client.map.IMapController;
-import client.map.view.dropObject.DropObject;
-import shared.definitions.*;
-import shared.model.map.*;
-import shared.model.map.objects.*;
+import client.map.*;
+import client.map.view.dropObject.*;
 
 @SuppressWarnings("serial")
 public class MapOverlayView extends OverlayView
@@ -75,7 +68,8 @@ public class MapOverlayView extends OverlayView
 	{
 		super.setController(controller);
 		
-		map.setController(new OverlayController());
+		map.setController(controller);
+		getController().AddMapObserver(mapObserver);
 	}
 	
 	@Override
@@ -84,182 +78,56 @@ public class MapOverlayView extends OverlayView
 		return (IMapController)super.getController();
 	}
 	
-	public void startDrop(PieceType pieceType, CatanColor pieceColor,
-			  boolean isCancelAllowed)
+	private String getLabelText(DropObject pieceType)
 	{
-		label.setText(getLabelText(pieceType));
-		
-		cancelButton.setVisible(isCancelAllowed);
-		
-		getController().StartMove(pieceType, pieceColor, true);
-		
-		showModal();
+		if (pieceType.getClass() == RoadDropObject.class)
+			return "Place a Road!";
+		else if (pieceType.getClass() == SettlementDropObject.class)
+			return "Place a Settlement!";
+		else if (pieceType.getClass() == CityDropObject.class)
+			return "Place a City!";
+		else if (pieceType.getClass() == RobberDropObject.class)
+			return "Move the Robber!";
+		else
+			return "";
 	}
 	
-	private String getLabelText(PieceType pieceType)
+	private void Repaint()
 	{
-		switch (pieceType)
-		{
-			case ROAD:
-				return "Place a Road!";
-			case SETTLEMENT:
-				return "Place a Settlement!";
-			case CITY:
-				return "Place a City!";
-			case ROBBER:
-				return "Move the Robber!";
-			default:
-				assert false;
-				return "";
-		}
+		if (isModalShowing())
+			map.repaint();
 	}
 	
-	private class OverlayController implements IMapController
+	private MapObserver mapObserver = new MapObserver()
 	{
 		@Override
-		public IView getView()
+		public void StartDrag(boolean isCancelAllowed)
 		{
-			return getView();
+			label.setText(getLabelText(getController().GetDropObject()));
+			cancelButton.setVisible(isCancelAllowed);
+			
+			showModal();
+			Repaint();
 		}
 
 		@Override
-		public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
-		{
-			return getController().CanPlaceRoad(p1, p2, color);
-		}
-
-		@Override
-		public boolean CanPlaceSettlement(Coordinate point)
-		{
-			return getController().CanPlaceSettlement(point);
-		}
-
-		@Override
-		public boolean CanPlaceCity(Coordinate point, CatanColor color)
-		{
-			return getController().CanPlaceCity(point, color);
-		}
-
-		@Override
-		public boolean CanPlaceRobber(Coordinate point)
-		{
-			return getController().CanPlaceRobber(point);
-		}
-
-		@Override
-		public Iterator<Hex> GetHexes()
-		{
-			return getController().GetHexes();
-		}
-
-		@Override
-		public Iterator<Edge> GetEdges()
-		{
-			return getController().GetEdges();
-		}
-
-		@Override
-		public Iterator<Vertex> GetVertices()
-		{
-			return getController().GetVertices();
-		}
-
-		@Override
-		public Iterator<Entry<Edge, Hex>> GetPorts()
-		{
-			return getController().GetPorts();
-		}
-
-		@Override
-		public Iterator<Entry<Integer, List<Hex>>> GetPips()
-		{
-			return getController().GetPips();
-		}
-
-		@Override
-		public Hex GetRobberPlacement() throws MapException
-		{
-			return getController().GetRobberPlacement();
-		}
-
-		@Override
-		public boolean IsRobberInitialized()
-		{
-			return getController().IsRobberInitialized();
-		}
-
-		@Override
-		public DropObject GetDropObject()
-		{
-			return getController().GetDropObject();
-		}
-
-		@Override
-		public void PlaceRoad(Coordinate p1, Coordinate p2)
+		public void EndDrag()
 		{
 			closeModal();
-			getController().PlaceRoad(p1, p2);
 		}
-
+		
 		@Override
-		public void PlaceSettlement(Coordinate point)
+		public void Refresh()
 		{
-			closeModal();
-			getController().PlaceSettlement(point);
+			Repaint();
 		}
-
-		@Override
-		public void PlaceCity(Coordinate point)
-		{
-			closeModal();
-			getController().PlaceCity(point);
-		}
-
-		@Override
-		public void PlaceRobber(Coordinate point)
-		{
-			closeModal();
-			getController().PlaceRobber(point);
-		}
-
-		@Override
-		public void StartMove(PieceType pieceType, CatanColor color, boolean allowDisconnected)
-		{
-			assert(false);
-		}
-
-		@Override
-		public void CancelMove()
-		{
-			closeModal();
-			getController().CancelMove();
-		}
-
-		@Override
-		public void MouseMove(Point2D worldPoint)
-		{
-			getController().MouseMove(worldPoint);
-		}
-
-		@Override
-		public void MouseClick()
-		{
-			getController().MouseClick();
-		}
-
-		@Override
-		public IMapModel GetModel()
-		{
-			return getController().GetModel();
-		}
-	}
+	};
 
 	private ActionListener cancelButtonListener = new ActionListener()
 	{	
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			closeModal();
 			getController().CancelMove();
 		}
 	};

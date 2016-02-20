@@ -83,21 +83,28 @@ public class MapModel implements IMapModel {
 	}
 	
 	@Override
-	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
+	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color, boolean setup)
 	{	
-		if (!edges.ContainsEdge(p1, p2))
-			return false;
-		
 		try
 		{
+			//Edge doesn't exist
+			if (!edges.ContainsEdge(p1, p2))
+				return false;
+			
 			Edge edge = edges.GetEdge(p1, p2);
 			
+			//Road already placed
 			if (edge.doesRoadExists())
 				return false;
 			
+			//Village satisfies end
 			if (VillagesSatisfyRoadPlacement(edge, color))
 				return true;
 			
+			if (setup)
+				return false;
+			
+			//Road satisfies end
 			return RoadsSatisfyRoadPlacement(edge, color);
 		} 
 		catch (MapException e)
@@ -108,29 +115,44 @@ public class MapModel implements IMapModel {
 	}
 	
 	@Override
-	public boolean CanPlaceSettlement(Coordinate point)
+	public boolean CanPlaceSettlement(Coordinate point, CatanColor color, boolean setup)
 	{
-		if (!vertices.ContainsVertex(point))
-			return false;
-		
 		try
 		{
+			//Invalid vertex
+			if (!vertices.ContainsVertex(point))
+				return false;
+			
 			Vertex vertex = vertices.GetVertex(point);
 			
+			//Vertex contains a piece already
 			if (vertex.getType() != PieceType.NONE)
 				return false;
 			
 			Iterator<Vertex> neighbors = GetVertices(vertex);
 			
+			boolean roadSatisfied = false;
 			while(neighbors.hasNext())
 			{
 				Vertex neighbor = neighbors.next();
 				
+				//Vertex has a neighbor
 				if (neighbor.getType() != PieceType.NONE)
+					return false;
+				
+				Edge edge = edges.GetEdge(point, neighbor.getPoint());
+				
+				//Marks if the settlement is on a road.
+				if (!setup && edge.doesRoadExists() && edge.getColor() == color)
+					roadSatisfied = true;
+				//The settlement is not supposed to be on a road, yet it is.
+				else if (setup && edge.doesRoadExists())
 					return false;
 			}
 			
-			return true;
+			//The method won't get to this point if other conditions aren't satisfied.
+			//The final factor is if the road is satisfied.
+			return roadSatisfied || setup;
 		} 
 		catch (MapException e)
 		{
@@ -206,7 +228,7 @@ public class MapModel implements IMapModel {
 	@Override
 	public void PlaceRoad(Coordinate p1, Coordinate p2, CatanColor color) throws MapException
 	{	
-		if (CanPlaceRoad(p1, p2, color))
+		if (CanPlaceRoad(p1, p2, color, false))
 			edges.AddRoad(p1, p2, color);
 		else
 			throw new MapException("Attempt to place road where not allowed");
@@ -244,7 +266,7 @@ public class MapModel implements IMapModel {
 	@Override
 	public void PlaceSettlement(Coordinate point, CatanColor color) throws MapException
 	{
-		if (CanPlaceSettlement(point))
+		if (CanPlaceSettlement(point, color))
 			vertices.SetSettlement(point, color);
 		else
 			throw new MapException("Attempt to place settlement where not allowed");
@@ -596,5 +618,45 @@ public class MapModel implements IMapModel {
 			return true;
 		
 		return false;
+	}
+	
+	/**
+	 * Used for settlement to check the things that don't rely on state.
+	 * @param point The coordinate of the vertex.
+	 * @param color The color of the piece to be placed.
+	 * @return True if valid, else false.
+	 */
+	private boolean CanPlaceSettlement(Coordinate point, CatanColor color)
+	{
+		try
+		{
+			//Invalid vertex
+			if (!vertices.ContainsVertex(point))
+				return false;
+			
+			Vertex vertex = vertices.GetVertex(point);
+			
+			//Vertex contains a piece already
+			if (vertex.getType() != PieceType.NONE)
+				return false;
+			
+			Iterator<Vertex> neighbors = GetVertices(vertex);
+			
+			while(neighbors.hasNext())
+			{
+				Vertex neighbor = neighbors.next();
+				
+				//Vertex has a neighbor
+				if (neighbor.getType() != PieceType.NONE)
+					return false;
+			}
+			
+			return true;
+		} 
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 }
