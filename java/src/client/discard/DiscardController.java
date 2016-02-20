@@ -31,7 +31,8 @@ public class DiscardController extends Controller implements IDiscardController,
 		super(view);
 		this.waitView = waitView;
 		this.initResourceList();
-		ClientGame.getGame().startListening(this, ModelNotification.STATE);
+		//TODO change this to STATE only
+		ClientGame.getGame().startListening(this, ModelNotification.ALL);
 	}
 
 	public IDiscardView getDiscardView() {
@@ -121,6 +122,8 @@ public class DiscardController extends Controller implements IDiscardController,
 		updateDiscardStatus();
 	}
 	
+
+	
 	private void updateDiscardStatus()
 	{
 		int total = 0;
@@ -129,11 +132,7 @@ public class DiscardController extends Controller implements IDiscardController,
 			total += i;
 		}
 		
-		int discardAmt = (ClientGame.getGame().playerResourceCount(ResourceType.BRICK) + 
-				ClientGame.getGame().playerResourceCount(ResourceType.ORE) + 
-				ClientGame.getGame().playerResourceCount(ResourceType.SHEEP) + 
-				ClientGame.getGame().playerResourceCount(ResourceType.WHEAT) + 
-				ClientGame.getGame().playerResourceCount(ResourceType.WOOD)) / 2;
+		int discardAmt = this.getNumResourceCards() / 2;
 		
 		getDiscardView().setStateMessage("" + total + "/" + discardAmt);
 		getDiscardView().setDiscardButtonEnabled(total == discardAmt);
@@ -152,11 +151,58 @@ public class DiscardController extends Controller implements IDiscardController,
 	public void alert()
 	{
 		ClientGameManager game = ClientGame.getGame();
-		if(game.CurrentState() == GameRound.ROBBING)
+		if(game.CurrentState() == GameRound.DISCARDING)
 		{
-			
+			if(this.getNumResourceCards() > 7)
+			{
+				//at this point, we know that we have more than 7 cards and need to 
+				//discard some
+				initDiscardView();
+				this.getDiscardView().showModal();
+			}
+			else
+			{
+				this.getWaitView().showModal();
+			}
 		}
+		else
+			this.getWaitView().closeModal();
 		
+	}
+	
+	private void initDiscardView()
+	{
+		IDiscardView discardView = this.getDiscardView();
+		ClientGameManager game = ClientGame.getGame();
+	    int numWood = game.playerResourceCount(ResourceType.WOOD);
+		int numBrick = game.playerResourceCount(ResourceType.BRICK);
+		int numSheep = game.playerResourceCount(ResourceType.SHEEP);
+		int numWheat = game.playerResourceCount(ResourceType.WHEAT);
+		int numOre = game.playerResourceCount(ResourceType.ORE);
+		
+		discardView.setResourceMaxAmount(ResourceType.WOOD, numWood);
+		discardView.setResourceMaxAmount(ResourceType.BRICK, numBrick);
+		discardView.setResourceMaxAmount(ResourceType.SHEEP, numSheep);
+		discardView.setResourceMaxAmount(ResourceType.WHEAT, numWheat);
+		discardView.setResourceMaxAmount(ResourceType.ORE, numOre);
+		
+		discardView.setResourceAmountChangeEnabled(ResourceType.WOOD, numWood > 0, false);
+		discardView.setResourceAmountChangeEnabled(ResourceType.BRICK, numBrick > 0, false);
+		discardView.setResourceAmountChangeEnabled(ResourceType.SHEEP, numSheep > 0, false);
+		discardView.setResourceAmountChangeEnabled(ResourceType.WHEAT, numWheat > 0, false);
+		discardView.setResourceAmountChangeEnabled(ResourceType.ORE, numOre > 0, false);
+		
+		discardView.setStateMessage("0/" + this.getNumResourceCards()/2);
+		discardView.setDiscardButtonEnabled(false);
+	}
+	
+	private int getNumResourceCards()
+	{
+		 return (ClientGame.getGame().playerResourceCount(ResourceType.BRICK) + 
+				ClientGame.getGame().playerResourceCount(ResourceType.ORE) + 
+				ClientGame.getGame().playerResourceCount(ResourceType.SHEEP) + 
+				ClientGame.getGame().playerResourceCount(ResourceType.WHEAT) + 
+				ClientGame.getGame().playerResourceCount(ResourceType.WOOD));
 	}
 	
 	private void initResourceList()
