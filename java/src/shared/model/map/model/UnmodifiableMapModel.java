@@ -1,10 +1,13 @@
-package shared.model.map;
+package shared.model.map.model;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 import shared.definitions.*;
+import shared.model.map.Coordinate;
+import shared.model.map.MapException;
+import shared.model.map.Transaction;
 import shared.model.map.objects.*;
 
 public class UnmodifiableMapModel implements IMapModel

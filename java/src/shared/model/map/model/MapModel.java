@@ -1,4 +1,4 @@
-package shared.model.map;
+package shared.model.map.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +10,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import shared.definitions.*;
+import shared.model.map.Coordinate;
+import shared.model.map.MapException;
+import shared.model.map.Transaction;
 import shared.model.map.handlers.*;
 import shared.model.map.objects.*;
 

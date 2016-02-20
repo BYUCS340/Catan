@@ -7,6 +7,7 @@ import java.util.List;
 import shared.definitions.HexType;
 import shared.definitions.PortType;
 import shared.model.map.handlers.HexHandler;
+import shared.model.map.model.MapModel;
 
 public class MapGenerator {
 

@@ -12,6 +12,7 @@ import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.map.*;
+import shared.model.map.model.MapModel;
 import shared.model.chat.ChatBox;
 
 /**

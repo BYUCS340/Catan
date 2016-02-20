@@ -20,6 +20,8 @@ import shared.model.ModelException;
 import shared.model.Player;
 import shared.model.Translate;
 import shared.model.map.*;
+import shared.model.map.model.IMapModel;
+import shared.model.map.model.UnmodifiableMapModel;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 

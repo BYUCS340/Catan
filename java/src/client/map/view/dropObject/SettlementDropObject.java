@@ -7,6 +7,7 @@ import java.util.Map;
 import client.map.IMapController;
 import shared.definitions.CatanColor;
 import shared.model.map.*;
+import shared.model.map.model.IMapModel;
 import shared.model.map.objects.*;
 
 public class SettlementDropObject extends DropObject 

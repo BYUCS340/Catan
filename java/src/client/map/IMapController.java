@@ -9,8 +9,8 @@ import client.base.*;
 import client.map.view.dropObject.DropObject;
 import shared.definitions.*;
 import shared.model.map.Coordinate;
-import shared.model.map.IMapModel;
 import shared.model.map.MapException;
+import shared.model.map.model.IMapModel;
 import shared.model.map.objects.*;
 
 /**

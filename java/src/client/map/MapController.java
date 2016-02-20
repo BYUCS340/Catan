@@ -3,6 +3,7 @@ package client.map;
 import shared.definitions.*;
 import shared.model.ModelObserver;
 import shared.model.map.*;
+import shared.model.map.model.IMapModel;
 import shared.model.map.objects.*;
 
 import java.awt.geom.Point2D;

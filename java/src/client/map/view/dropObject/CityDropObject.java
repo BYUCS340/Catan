@@ -7,8 +7,8 @@ import java.util.Map;
 import client.map.IMapController;
 import shared.definitions.CatanColor;
 import shared.model.map.Coordinate;
-import shared.model.map.IMapModel;
 import shared.model.map.MapException;
+import shared.model.map.model.IMapModel;
 import shared.model.map.objects.Hex;
 import shared.model.map.objects.Vertex;
 

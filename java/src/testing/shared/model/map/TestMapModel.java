@@ -15,6 +15,7 @@ import shared.definitions.HexType;
 import shared.definitions.PieceType;
 import shared.definitions.PortType;
 import shared.model.map.*;
+import shared.model.map.model.MapModel;
 import shared.model.map.objects.*;
 
 public class TestMapModel
