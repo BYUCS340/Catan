@@ -9,6 +9,20 @@ import client.data.PlayerInfo;
 import client.networking.RealServerProxy;
 import client.networking.ServerProxy;
 import client.networking.ServerProxyException;
+
+import shared.definitions.CatanColor;
+import shared.definitions.DevCardType;
+import shared.definitions.GameRound;
+import shared.definitions.ModelNotification;
+import shared.definitions.PieceType;
+import shared.definitions.ResourceType;
+import shared.definitions.TurnState;
+import shared.model.GameManager;
+import shared.model.ModelException;
+import shared.model.Player;
+import shared.model.Translate;
+import shared.model.map.Coordinate;
+
 import shared.definitions.*;
 import shared.locations.*;
 import shared.model.*;
@@ -23,7 +37,7 @@ public class ClientGameManager extends GameManager
 	private ServerProxy proxy;
 	private int myPlayerIndex;
 	private TurnState turnState;
-	
+
 	private int refreshCount = 0;
 	private CatanColor myPlayerColor;
 	/**
@@ -32,11 +46,11 @@ public class ClientGameManager extends GameManager
 	 */
 	public ClientGameManager(ServerProxy clientProxy)
 	{
-		super();		
+		super();
 		this.proxy = clientProxy;
 		turnState = null;
 	}
-	
+
 	/**
 	 * Gets a client proxy
 	 * @param clientProxy
@@ -47,8 +61,8 @@ public class ClientGameManager extends GameManager
 		this(clientProxy);
 		this.myPlayerIndex = myPlayerID;
 	}
-	
-	
+
+
 	/**
 	 * Get the ID of the current player client
 	 * @return
@@ -57,8 +71,8 @@ public class ClientGameManager extends GameManager
 	{
 		return this.myPlayerIndex;
 	}
-	
-	
+
+
 	/**
 	 * The current player's color
 	 * @return the current player color
@@ -67,7 +81,7 @@ public class ClientGameManager extends GameManager
 	{
 		return this.myPlayerColor;
 	}
-	
+
 	/**
 	 * Gets the number of resources for the player
 	 * @param type
@@ -77,7 +91,7 @@ public class ClientGameManager extends GameManager
 	{
 		return this.players.get(this.myPlayerIndex).playerBank.getResourceCount(type);
 	}
-	
+
 	/**
 	 * Gets the number of devCards for the current player
 	 * @param type
@@ -87,7 +101,7 @@ public class ClientGameManager extends GameManager
 	{
 		return this.players.get(this.myPlayerIndex).playerBank.getDevCardCount(type);
 	}
-	
+
 	/**
 	 * Gets the number of devCards for the current player
 	 * @param type
@@ -103,9 +117,9 @@ public class ClientGameManager extends GameManager
 			return 0;
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public PlayerInfo[] allCurrentPlayers()
@@ -115,22 +129,22 @@ public class ClientGameManager extends GameManager
 		{
 			allplayers[i] = ClientDataTranslator.convertPlayerInfo(players.get(i));
 		}
-		
+
 		return allplayers;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param playerIndex
 	 */
 	public String getPlayerNameByIndex(int playerIndex)
 	{
 		if(playerIndex > 3 || playerIndex < 0)
 			return null;
-		
+
 		return players.get(playerIndex).name;
 	}
-	
+
 	/**
 	 * Joins a game
 	 * @param gameID
@@ -147,15 +161,15 @@ public class ClientGameManager extends GameManager
 			boolean rejoining = false;
 			List<Player> newplayers = new ArrayList<>();
 			for (int i=0; i< game.getPlayers().size(); i++)
-			{	
+			{
 				PlayerInfo newplay = game.getPlayers().get(i);
 				if (newplay.getId() == proxy.getUserId())
 					rejoining = true;
 				Player play = ClientDataTranslator.convertPlayerInfo(newplay);
 				System.out.println(play);
-				
+
 				newplayers.add(play);
-				
+
 			}
 			//If we are rejoining then don't add ourselves
 			if (!rejoining)
@@ -166,17 +180,17 @@ public class ClientGameManager extends GameManager
 			this.SetPlayers(newplayers);
 			ClientGame.startPolling();
 			//If we can't joining a game then an exception will be thrown
-			
+
 		} catch (ServerProxyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		return true;
-		
+
 	}
-	
+
 	/**
 	 * Joins a game
 	 * @param randomTiles
@@ -187,19 +201,23 @@ public class ClientGameManager extends GameManager
 	 */
 	public boolean createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
 	{
-		try {
+		try
+		{
 			NetGame game = proxy.createGame(randomTiles, randomNumbers, randomPorts, name);
 			this.LoadGame(game);
-		} catch (ServerProxyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		} catch (ModelException e) {
+		}
+		catch (ServerProxyException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
-		
+		catch (ModelException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+
 		return true;
 	}
 	/**
@@ -209,16 +227,19 @@ public class ClientGameManager extends GameManager
 	public int RollDice()
 	{
 		int roll = 0;
-		try {
+		try
+		{
 			roll = super.RollDice();
-			proxy.rollNumber(roll);
-		} catch (ServerProxyException|ModelException e) {
+			NetGameModel model = proxy.rollNumber(roll);
+			this.reloadGame(model,true);
+		}
+		catch (ServerProxyException|ModelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return roll;
 	}
-	
+
 	/**
 	 * Builds a road for the current player
 	 * @param start
@@ -226,15 +247,16 @@ public class ClientGameManager extends GameManager
 	 */
 	public void BuildRoad(Coordinate start, Coordinate end)
 	{
+
 		try
 		{
 			this.BuildRoad(myPlayerIndex, start, end);
-			
+
 			EdgeLocation location = Translate.GetEdgeLocation(start, end);
 			//TODO Sometimes this is free, 'cause 'Merica.
 			proxy.buildRoad(location, false);
-			
-		} 
+
+		}
 		catch (ModelException e)
 		{
 			e.printStackTrace();
@@ -245,13 +267,13 @@ public class ClientGameManager extends GameManager
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void BuildSettlement(Coordinate point)
 	{
 		try
 		{
 			this.BuildSettlement(myPlayerIndex, point);
-			
+
 			VertexLocation location = Translate.GetVertexLocation(point);
 			//TODO This can't always be free, although we are American...
 			proxy.buildSettlement(location, false);
@@ -266,13 +288,13 @@ public class ClientGameManager extends GameManager
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void BuildCity(Coordinate point)
 	{
 		try
 		{
 			this.BuildCity(myPlayerIndex, point);
-			
+
 			VertexLocation location = Translate.GetVertexLocation(point);
 
 			proxy.buildCity(location);
@@ -287,62 +309,68 @@ public class ClientGameManager extends GameManager
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Ends the current player's turn
+	 */
 	public void endTurn()
 	{
+
 		try
 		{
-			proxy.finishTurn();
+			if (!gameState.nextTurn())
+				throw new ModelException("Unable to finish turn");
+			NetGameModel newmodel = proxy.finishTurn();
+			//Our observes will be updated when we reload the game
+			this.reloadGame(newmodel,true);
+
 		}
-		catch(ServerProxyException e)
+		catch(ServerProxyException | ModelException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	/**
-	 * Discards the cards specified by the resourceList list
+	 * Discards the cards specified by the resourceList list for the current player
 	 * @param resourceList the list of resources to discard
 	 */
 	public void DiscardCards(List<Integer> resourceList)
 	{
 		try
 		{
-			proxy.discardCards(resourceList);
+			//Check to make sure we can discard cards
+			NetGameModel newmodel = proxy.discardCards(resourceList);
+			this.reloadGame(newmodel,true);
 		}
-		catch(ServerProxyException e)
+		catch(ServerProxyException | ModelException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Sends a chat message for the current player
 	 * @param message
 	 */
 	public void SendChat(String message)
 	{
-		this.PlayerChat(myPlayerIndex, message);
-	}
-	
-
-	@Override
-	/**
-	 * Over rides player chat to talk to the server
-	 */
-	public void PlayerChat(int playerID, String message)
-	{
-		super.PlayerChat(playerID, message);
-		try {
-			proxy.sendChat(message);
-		} catch (ServerProxyException e) {
+		super.PlayerChat(myPlayerIndex, message);
+		try
+		{
+			NetGameModel newModel = proxy.sendChat(message);
+			this.reloadGame(newModel, true);
+		}
+		catch (ServerProxyException | ModelException e)
+		{
 			// TODO Auto-generated catch block
 			System.err.println("Unable to send chat!");
 			e.printStackTrace();
 		}
+
 	}
-	
+
 	/**
 	 * Gets the points of the current player
 	 * @return
@@ -351,42 +379,85 @@ public class ClientGameManager extends GameManager
 	{
 		return this.victoryPointManager.getVictoryPoints(this.myPlayerIndex);
 	}
-	
+
 	//--------------------------------------------------------------------------
 	//Networking methods
-	
+
 	/**
-	 * Loads in a game 
+	 * Loads in a game
 	 * @param model the model to be loaded in
 	 * @throws ModelException if model is incorrect
 	 */
-	public void reloadGame(NetGameModel model) throws ModelException
+	private void reloadGame(NetGameModel model) throws ModelException
 	{
-			
-		if (model.getVersion() == this.version && model.getNetPlayers().size() == this.getNumberPlayers())
-			return;
+		//reload the game but don't force it
+		this.reloadGame(model, false);
+	}
+
+	/**
+	 * Reloads the game
+	 * @param model the model to reload
+	 * @param forced if true, the version number won't be checked
+	 * @throws ModelException
+	 */
+	private void reloadGame(NetGameModel model, boolean forced) throws ModelException
+	{
+		if (forced == true)
+		{
+			if (model.getVersion() == this.version && model.getNetPlayers().size() == this.getNumberPlayers())
+				return;
+		}
+
 		System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
 		this.version = model.getVersion();
 		//TODO All of this
+
 		//TODO update turn status
-		
-		Translate trans = new Translate();	
+
+		//Add new players if needed
+		Translate trans = new Translate();
+		//If there are new players or the number of resources have changed
 		if (model.getNetPlayers().size() != this.getNumberPlayers())
 		{
+
 			System.out.println("Updated number of players");
-			this.SetPlayers(trans.fromNetPlayers(model.getNetPlayers()));
+			List<Player> newplayers = trans.fromNetPlayers(model.getNetPlayers());
+			this.SetPlayers(newplayers);
+
 		}
-		
-		System.out.println("New chat size: " + model.getNetChat().size());
-		if (model.getNetChat().size() > this.waterCooler.size()){
+
+		//Check if we need to update the resources
+		if (model.getVersion() != this.version)
+		{
+
+			List<Player> newplayers = trans.fromNetPlayers(model.getNetPlayers());
+			int oldresources = ClientDataTranslator.totalPlayerResouces(newplayers);
+			int newresources = ClientDataTranslator.totalPlayerResouces(this.players);
+			if (version != model.getVersion() && oldresources != newresources)
+			{
+				this.SetPlayers(newplayers);
+				this.notifyCenter.notify(ModelNotification.RESOURCES);
+			}
+		}
+
+		//Update our chat
+		if (model.getNetChat().size() > this.waterCooler.size())
+		{
 			this.waterCooler = trans.fromNetChat(model.getNetChat());
 			System.out.println("New watercooler size: " + waterCooler.size());
 			this.notifyCenter.notify(ModelNotification.CHAT);
 		}
-		
+
+		GameRound newround = model.getNetTurnTracker().getRound();
+		if (newround != gameState.state)
+		{
+			this.notifyCenter.notify(ModelNotification.STATE);
+		}
+
+
 		//throw new ModelException();
 	}
-	
+
 	public void LoadGame(NetGame model) throws ModelException
 	{
 		this.reset();
@@ -394,10 +465,10 @@ public class ClientGameManager extends GameManager
 		this.SetPlayers(trans.fromNetPlayers(model.getNetPlayers()));
 		this.gameID = model.getId();
 		this.gameTitle = model.getTitle();
-		
-		//make sure I assign the colors correctly
+
+		//TODO  make sure I assign the colors correctly
 	}
-	
+
 	/**
 	 * The number of times the server has refreshed itself- used to test the poller
 	 * @return
@@ -412,9 +483,9 @@ public class ClientGameManager extends GameManager
 	 */
 	public void RefreshFromServer() throws ModelException
 	{
-		
+
 		try {
-			if (proxy == null) 
+			if (proxy == null)
 			{
 				System.err.println("Proxy was null");
 				return;
@@ -424,18 +495,17 @@ public class ClientGameManager extends GameManager
 				System.err.println("Model was null from the server");
 				throw new ModelException("Model was null from server");
 			}
-			//Refresh teh game
+			//Refresh the game
 			this.reloadGame(model);
 		} catch (ServerProxyException e) {
-			// TODO Auto-generated catch block
 			System.err.println("Wasn't able to update");
 			e.printStackTrace();
 			throw new ModelException("Server proxy wasn't able to update");
 		}
 		this.refreshCount++;
-		
+
 	}
-	
+
 	/**
 	 * Gets the current TurnState
 	 * @return the TurnState
@@ -444,7 +514,7 @@ public class ClientGameManager extends GameManager
 	{
 		return turnState;
 	}
-	
+
 	public IMapModel GetMapModel()
 	{
 		return new UnmodifiableMapModel(map);
