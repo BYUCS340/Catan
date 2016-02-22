@@ -46,7 +46,6 @@ public class ClientGameManager extends GameManager
 	{
 		this(clientProxy);
 		this.myPlayerIndex = myPlayerID;
-		turnState = null;
 	}
 	
 	
