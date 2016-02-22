@@ -109,10 +109,12 @@ public class ClientGameManager extends GameManager
 	 */
 	public int playerPieceCount(PieceType type)
 	{
-		try {
+		try 
+		{
 			return this.players.get(this.myPlayerIndex).playerBank.getPieceCount(type);
-		} catch (ModelException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (ModelException e) 
+		{
 			e.printStackTrace();
 			return 0;
 		}
@@ -153,7 +155,8 @@ public class ClientGameManager extends GameManager
 	 */
 	public boolean joinGame(GameInfo game, CatanColor color)
 	{
-		try {
+		try
+		{
 			proxy.joinGame(game.getId(), color);
 			this.gameID = game.getId();
 			this.gameTitle = game.getTitle();
@@ -181,8 +184,9 @@ public class ClientGameManager extends GameManager
 			ClientGame.startPolling();
 			//If we can't joining a game then an exception will be thrown
 
-		} catch (ServerProxyException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (ServerProxyException e)
+		{
 			e.printStackTrace();
 			return false;
 		}
@@ -208,7 +212,6 @@ public class ClientGameManager extends GameManager
 		}
 		catch (ServerProxyException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -233,8 +236,8 @@ public class ClientGameManager extends GameManager
 			NetGameModel model = proxy.rollNumber(roll);
 			this.reloadGame(model,true);
 		}
-		catch (ServerProxyException|ModelException e) {
-			// TODO Auto-generated catch block
+		catch (ServerProxyException|ModelException e)
+		{
 			e.printStackTrace();
 		}
 		return roll;
@@ -364,7 +367,6 @@ public class ClientGameManager extends GameManager
 		}
 		catch (ServerProxyException | ModelException e)
 		{
-			// TODO Auto-generated catch block
 			System.err.println("Unable to send chat!");
 			e.printStackTrace();
 		}

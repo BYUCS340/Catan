@@ -11,8 +11,6 @@ import shared.definitions.*;
 import client.base.*;
 import client.utils.ImageUtils;
 
-//TODO Craig: I think one thing that could help layout is to simply add .preferedSize() to the createGet/GivePane
-// Also, I'm not sure if you have moved the folder for the images, but that is just in the starting variables.  :D
 /**
  * Implementation for the maritime trade overlay, which lets the user make a maritime trade
  */

@@ -147,24 +147,26 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		} 
 		catch (ServerProxyException e)
 		{
-			// TODO Auto-generated catch block
-			System.err.println("UNABLE TO GET GAME LIST "+e);
+			System.err.println("UNABLE TO GET GAME LIST " + e);
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void startCreateNewGame() {
+	public void startCreateNewGame()
+	{
 		getNewGameView().showModal();
 	}
 
 	@Override
-	public void cancelCreateNewGame() {
+	public void cancelCreateNewGame() 
+	{
 		getNewGameView().closeModal();
 	}
 
 	@Override
-	public void createNewGame() {
+	public void createNewGame() 
+	{
 		String name = getNewGameView().getTitle();
 		boolean randomTiles = getNewGameView().getRandomlyPlaceHexes();
 		boolean randomNumbers = getNewGameView().getRandomlyPlaceNumbers();
@@ -177,14 +179,15 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		}
 		this.refreshGameList();
 		getNewGameView().closeModal();
+		
 		//Open the games list
 		getJoinGameView().showModal();
-		
-		
 	}
+	
 	private GameInfo lastGameSelected = null;
 	@Override
-	public void startJoinGame(GameInfo game) {
+	public void startJoinGame(GameInfo game) 
+	{
 		getJoinGameView().closeModal();
 		lastGameSelected = game;
 		List<PlayerInfo> players = game.getPlayers();
@@ -212,13 +215,15 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	}
 
 	@Override
-	public void cancelJoinGame() {
+	public void cancelJoinGame() 
+	{
 		lastGameSelected = null;
 		getJoinGameView().closeModal();
 	}
 
 	@Override
-	public void joinGame(CatanColor color) {
+	public void joinGame(CatanColor color) 
+	{
 		if (lastGameSelected == null) return;
 		
 		if (!ClientGame.getGame().joinGame(lastGameSelected, color))
@@ -241,8 +246,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	 * This is the handler to respond to the timer by refreshing the game list
 	 */
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent e)
+	{
 		boolean showing = this.getJoinGameView().isModalShowing() && !this.getNewGameView().isModalShowing() && !this.getSelectColorView().isModalShowing();
 		if (showing)
 			this.getJoinGameView().closeModal();
@@ -252,7 +257,5 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			this.getJoinGameView().showModal();
 		
 	}
-
-
 }
 

@@ -237,10 +237,11 @@ public class GameManager implements ModelSubject
 	 */
 	public int playerPieceCount(int playerIndex,PieceType type)
 	{
-		try {
+		try
+		{
 			return this.players.get(playerIndex).playerBank.getPieceCount(type);
-		} catch (ModelException e) {
-			// TODO Auto-generated catch block
+		} catch (ModelException e)
+		{
 			e.printStackTrace();
 			return 0;
 		}
@@ -299,7 +300,8 @@ public class GameManager implements ModelSubject
 			Transaction trans = transList.next();
 			//Get the player ID
 			int playerIndex = this.getPlayerIndexByColor(trans.getColor());
-			try {
+			try 
+			{
 				//Get the player
 				Player player = this.GetPlayer(playerIndex);
 				//The piece type
@@ -314,13 +316,12 @@ public class GameManager implements ModelSubject
 				//TODO get the resources from the game bank and give them to the player
 				player.playerBank.giveResource(resource, amount);
 				//player.playerBank
-			} catch (ModelException e) {
-				// TODO Auto-generated catch block
+			} 
+			catch (ModelException e) 
+			{
 				System.err.println("No player with the color specified by transaction found");
 				System.err.println(trans.getColor());
-				//e.printStackTrace();
 			}
-			
 		}
 		return diceRoll; // chosen by fair dice roll
 						// guaranteed to be random
@@ -534,7 +535,6 @@ public class GameManager implements ModelSubject
 		}
 		catch (ModelException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -563,7 +563,6 @@ public class GameManager implements ModelSubject
 		}
 		catch (ModelException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -591,7 +590,6 @@ public class GameManager implements ModelSubject
 		}
 		catch (ModelException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -602,13 +600,13 @@ public class GameManager implements ModelSubject
 	{
 		if (!CanPlayerPlay(playerIndex))
 			return false;
+		
 		try 
 		{
 			GetPlayer(playerIndex).playerBank.canBuildCity();
 		}
 		catch (ModelException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -634,14 +632,16 @@ public class GameManager implements ModelSubject
 		//TODO remove
 		for (int i=0;i < this.NumberActivePlayers(); i++)
 		{
-			try {
+			try
+			{
 				players.get(i).playerBank.giveResource(ResourceType.BRICK, 5);
 				players.get(i).playerBank.giveResource(ResourceType.ORE, 5);
 				players.get(i).playerBank.giveResource(ResourceType.SHEEP, 5);
 				players.get(i).playerBank.giveResource(ResourceType.WOOD, 5);
 				players.get(i).playerBank.giveResource(ResourceType.WHEAT, 5);
-			} catch (ModelException e) {
-				// TODO Auto-generated catch block
+			} 
+			catch (ModelException e) 
+			{
 				e.printStackTrace();
 			}
 		}
