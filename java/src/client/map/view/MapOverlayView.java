@@ -103,23 +103,27 @@ public class MapOverlayView extends OverlayView
 		@Override
 		public void StartDrag(boolean isCancelAllowed)
 		{
+			DropObject dropObject = getController().GetDropObject();
+			
+			if (dropObject.getClass() == NoDrop.class)
+			{
+				EndDrag();
+				return;
+			}
+			
 			label.setText(getLabelText(getController().GetDropObject()));
 			cancelButton.setVisible(isCancelAllowed);
 			
-			showModal();
+			if (!isModalShowing())
+				showModal();
 			Repaint();
 		}
 
 		@Override
 		public void EndDrag()
 		{
-			closeModal();
-		}
-		
-		@Override
-		public void Refresh()
-		{
-			Repaint();
+			if (isModalShowing())
+				closeModal();
 		}
 	};
 

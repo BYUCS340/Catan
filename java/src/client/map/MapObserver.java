@@ -3,7 +3,7 @@ package client.map;
 public interface MapObserver
 {
 	/**
-	 * Called when the drag state has begun.
+	 * Called when the drag state has begun. Also refreshes the view.
 	 */
 	public void StartDrag(boolean cancelAllowed);
 	
@@ -11,9 +11,4 @@ public interface MapObserver
 	 * Called when the drag state has ended.
 	 */
 	public void EndDrag();
-	
-	/**
-	 * Called to refresh views.
-	 */
-	public void Refresh();
 }

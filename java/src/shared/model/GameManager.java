@@ -559,7 +559,7 @@ public class GameManager implements ModelSubject
 			if (!player.playerBank.canBuildRoad())
 				return false;
 			
-			//Map has already been checked by map
+			//Map has been/will be checked by map
 		}
 		catch (ModelException e)
 		{

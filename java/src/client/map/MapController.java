@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import client.base.*;
 import client.map.view.IMapView;
 import client.map.view.dropObject.*;
+import client.map.view.mapState.*;
 import client.model.ClientGame;
 
 
@@ -26,7 +27,7 @@ public class MapController extends Controller implements IMapController
 {
 	private List<MapObserver> observers;
 	private DropObject dropObject;
-	private boolean setup;
+	private IMapState state;
 	
 	/**
 	 * Creates a MapController object.
@@ -39,7 +40,7 @@ public class MapController extends Controller implements IMapController
 		
 		this.observers = new ArrayList<MapObserver>(3);
 		this.dropObject = new NoDrop();
-		this.setup = false;
+		this.state = new NormalState(PieceType.NONE);
 		
 		ClientGame.getGame().startListening(modelObserver, ModelNotification.MAP);
 	}
@@ -53,14 +54,14 @@ public class MapController extends Controller implements IMapController
 	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
 	{
 		IMapModel model = ClientGame.getGame().GetMapModel();
-		return model.CanPlaceRoad(p1, p2, color, setup);
+		return model.CanPlaceRoad(p1, p2, color, state.IsSetup());
 	}
 
 	@Override
 	public boolean CanPlaceSettlement(Coordinate point, CatanColor color)
 	{
 		IMapModel model = ClientGame.getGame().GetMapModel();
-		return model.CanPlaceSettlement(point, color, setup);
+		return model.CanPlaceSettlement(point, color, state.IsSetup());
 	}
 
 	@Override
@@ -141,13 +142,13 @@ public class MapController extends Controller implements IMapController
 	@Override
 	public void PlaceSettlement(Coordinate point)
 	{
-		//TODO Add appropriate call		
+		ClientGame.getGame().BuildSettlement(point);
 	}
 
 	@Override
 	public void PlaceCity(Coordinate point)
 	{
-		//TODO Add appropriate call
+		ClientGame.getGame().BuildCity(point);
 	}
 
 	@Override
@@ -168,7 +169,15 @@ public class MapController extends Controller implements IMapController
 		if (dropObject.IsAllowed())
 		{
 			dropObject.Click();
-			dropObject = new NoDrop();
+			
+			boolean wasSetup = state.IsSetup();
+			state = state.GetNextMapState();
+			boolean isSetup = state.IsSetup();
+			
+			StartMove(state.GetPieceType());
+			
+			if (wasSetup != isSetup)
+				ClientGame.getGame().endTurn();
 		}
 	}	
 
@@ -188,16 +197,26 @@ public class MapController extends Controller implements IMapController
 	public void CancelMove() 
 	{
 		dropObject = new NoDrop();
+		
+		EndDrag();
 	}
 	
-	private void Refresh()
+	private void StartDrag(boolean allowCancel)
 	{
 		for (MapObserver observer : observers)
-			observer.Refresh();
+			observer.StartDrag(allowCancel);
 	}
 	
-	private void StartMove(PieceType pieceType, CatanColor color, boolean initialPlacement)
+	private void EndDrag()
 	{
+		for (MapObserver observer : observers)
+			observer.EndDrag();
+	}
+	
+	private void StartMove(PieceType pieceType)
+	{
+		CatanColor color = ClientGame.getGame().myPlayerColor();
+		
 		switch(pieceType)
 		{
 		case ROAD:
@@ -223,23 +242,25 @@ public class MapController extends Controller implements IMapController
 		@Override
 		public void alert()
 		{
-			TurnState state = ClientGame.getGame().getTurnState();
-			CatanColor color = ClientGame.getGame().myPlayerColor();
+			TurnState gameState = ClientGame.getGame().getTurnState();
 			
-			switch (state)
+			switch (gameState)
 			{
 			case PLACING_PIECE:
+				//TODO Need way of figuring out what piece is being placed.
 				break;
 			case FIRST_ROUND_MY_TURN:
-				setup = true;
+				state = new SettlementSetupState();
 				break;
 			case SECOND_ROUND_MY_TURN:
-				setup = true;
+				state = new SettlementSetupState();
 				break;
 			default:
-				setup = false;
-				Refresh();	
+				state = new NormalState(PieceType.NONE);
+				break;
 			}
+			
+			StartDrag(!state.IsSetup());
 		}
 	};
 }

@@ -9,16 +9,9 @@ import client.data.PlayerInfo;
 import client.networking.RealServerProxy;
 import client.networking.ServerProxy;
 import client.networking.ServerProxyException;
-import shared.definitions.CatanColor;
-import shared.definitions.DevCardType;
-import shared.definitions.ModelNotification;
-import shared.definitions.PieceType;
-import shared.definitions.ResourceType;
-import shared.definitions.TurnState;
-import shared.model.GameManager;
-import shared.model.ModelException;
-import shared.model.Player;
-import shared.model.Translate;
+import shared.definitions.*;
+import shared.locations.*;
+import shared.model.*;
 import shared.model.map.*;
 import shared.model.map.model.IMapModel;
 import shared.model.map.model.UnmodifiableMapModel;
@@ -234,23 +227,76 @@ public class ClientGameManager extends GameManager
 	 */
 	public void BuildRoad(Coordinate start, Coordinate end)
 	{
-		try {
+		try
+		{
 			this.BuildRoad(myPlayerIndex, start, end);
-			//proxy.buildRoad(edgeLocation, false);
-		} catch (ModelException e) {
-			// TODO Auto-generated catch block
+			
+			EdgeLocation location = Translate.GetEdgeLocation(start, end);
+			//TODO Sometimes this is free, 'cause 'Merica.
+			proxy.buildRoad(location, false);
+			
+		} 
+		catch (ModelException e)
+		{
 			e.printStackTrace();
 		}
-		
+		catch (ServerProxyException e)
+		{
+			// TODO I don't know how this should be handled, but probably shouldn't be thrown.
+			e.printStackTrace();
+		}
+	}
+	
+	public void BuildSettlement(Coordinate point)
+	{
+		try
+		{
+			this.BuildSettlement(myPlayerIndex, point);
+			
+			VertexLocation location = Translate.GetVertexLocation(point);
+			//TODO This can't always be free, although we are American...
+			proxy.buildSettlement(location, false);
+		}
+		catch (ModelException e)
+		{
+			e.printStackTrace();
+		}
+		catch (ServerProxyException e)
+		{
+			//TODO How should this be handled?
+			e.printStackTrace();
+		}
+	}
+	
+	public void BuildCity(Coordinate point)
+	{
+		try
+		{
+			this.BuildCity(myPlayerIndex, point);
+			
+			VertexLocation location = Translate.GetVertexLocation(point);
+
+			proxy.buildCity(location);
+		}
+		catch (ModelException e)
+		{
+			e.printStackTrace();
+		}
+		catch (ServerProxyException e)
+		{
+			//TODO How should this be handled?
+			e.printStackTrace();
+		}
 	}
 	
 	public void endTurn()
 	{
-		
-		try{
+		try
+		{
 			proxy.finishTurn();
 		}
-		catch(ServerProxyException e){
+		catch(ServerProxyException e)
+		{
 			e.printStackTrace();
 		}
 	}

@@ -48,17 +48,11 @@ public class MapView extends PanelView implements IMapView
 		@Override
 		public void StartDrag(boolean cancelAllowed)
 		{
-			return;
+			RefreshView();
 		}
 
 		@Override
 		public void EndDrag()
-		{
-			return;
-		}
-		
-		@Override
-		public void Refresh()
 		{
 			RefreshView();
 		}
