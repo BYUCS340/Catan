@@ -138,4 +138,10 @@ public class Hex {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString()
+	{
+		return type.toString() + "-" + point.toString(); 
+	}
 }
