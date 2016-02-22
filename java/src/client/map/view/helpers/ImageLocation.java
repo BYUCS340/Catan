@@ -93,7 +93,7 @@ public class ImageLocation
 	 */
 	public static String getRobberImageFile()
 	{
-		return "images/misc/robber.gif";
+		return "images/misc/trogdor_icon.png";
 	}
 	
 	/**
