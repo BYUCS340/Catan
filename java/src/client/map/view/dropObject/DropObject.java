@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import client.map.*;
+import client.map.view.helpers.Dimensions;
 import shared.definitions.CatanColor;
 import shared.model.map.Coordinate;
 import shared.model.map.objects.*;

@@ -1,4 +1,4 @@
-package client.map;
+package client.map.view.helpers;
 
 public class Dimensions
 {
@@ -8,6 +8,9 @@ public class Dimensions
 	public static final int WORLD_WIDTH = HEX_IMAGE_WIDTH * 5
 										   + HEX_IMAGE_WIDTH / 2;
 	public static final int WORLD_HEIGHT = HEX_IMAGE_HEIGHT * 7;
+	
+	public static final int ROBBER_WIDTH = 200;
+	public static final int ROBBER_HEIGHT = 200;
 	
 	public static final int ROAD_HEIGHT = (int)(HEX_IMAGE_WIDTH * 0.11);
 	public static final int ROAD_WIDTH = (int)(HEX_IMAGE_WIDTH * 0.4);

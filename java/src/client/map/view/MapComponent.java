@@ -10,9 +10,9 @@ import java.awt.image.*;
 import javax.swing.*;
 
 import client.base.*;
-import client.map.*;
 import client.map.IMapController;
 import client.map.view.dropObject.*;
+import client.map.view.helpers.Dimensions;
 import client.map.view.helpers.ImageHandler;
 import shared.definitions.*;
 import shared.model.map.*;
@@ -281,12 +281,26 @@ public class MapComponent extends JComponent
 		{
 			Point2D hexPoint = getHexCenterPoint(controller.GetRobberPlacement());
 			BufferedImage robberImage = ImageHandler.getRobberImage();
-			drawImage(g2, robberImage, hexPoint);
+			drawRobber(g2, robberImage, hexPoint);
 		}
 		catch (MapException e)
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	private void drawRobber(Graphics2D g2, BufferedImage image, Point2D location)
+	{
+		int width = Dimensions.ROBBER_WIDTH;
+		int height = Dimensions.ROBBER_HEIGHT;
+		
+		int centerX = width / 2;
+		int centerY = height / 2;
+		
+		int x = (int)location.getX() - centerX;
+		int y = (int)location.getY() - centerY;
+		
+		g2.drawImage(image, x, y, width, height, null);
 	}
 	
 	private void drawRoads(Graphics2D g2)
@@ -459,8 +473,7 @@ public class MapComponent extends JComponent
 		drawImage(g2, op.filter(image, null), location);
 	}
 	
-	private void
-			drawImage(Graphics2D g2, BufferedImage image, Point2D location)
+	private void drawImage(Graphics2D g2, BufferedImage image, Point2D location)
 	{
 		
 		int centerX = image.getWidth() / 2;
