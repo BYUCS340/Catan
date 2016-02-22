@@ -402,10 +402,9 @@ public class ClientGameManager extends GameManager
 	 */
 	private void reloadGame(NetGameModel model, boolean forced) throws ModelException
 	{
-		if (forced == true)
+		if (forced == false && model.getVersion() == this.version && this.version > 0 )
 		{
-			if (model.getVersion() == this.version && model.getNetPlayers().size() == this.getNumberPlayers())
-				return;
+			return;
 		}
 
 		System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());

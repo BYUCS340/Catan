@@ -200,14 +200,10 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		}
 		
 		//If we are rejoining a game
+		getSelectColorView().showModal();
 		if (mycolor != null)
-		{
-			getSelectColorView().showModal();
+		{	
 			joinGame(mycolor);
-		}
-		else
-		{
-			getSelectColorView().showModal();
 		}
 	}
 
@@ -228,9 +224,9 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			return;
 		}
 		System.out.println("joining game "+lastGameSelected);
-		this.refreshGameList();
-		// If join succeeded
+		//this.refreshGameList();
 		
+		// If join succeeded
 		getSelectColorView().closeModal();
 		//getJoinGameView().closeModal();
 		timer.stop();
