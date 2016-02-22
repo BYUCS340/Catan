@@ -260,6 +260,7 @@ public class MapController extends Controller implements IMapController
 				break;
 			}
 			
+			StartMove(state.GetPieceType());
 			StartDrag(!state.IsSetup());
 		}
 	};
