@@ -165,7 +165,7 @@ public class DiscardController extends Controller implements IDiscardController,
 				this.getWaitView().showModal();
 			}
 		}
-		else
+		else if (this.getWaitView().isModalShowing())
 			this.getWaitView().closeModal();
 		
 	}

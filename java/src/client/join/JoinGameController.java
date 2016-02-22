@@ -177,12 +177,15 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		}
 		this.refreshGameList();
 		getNewGameView().closeModal();
+		//Open the games list
+		getJoinGameView().showModal();
+		
 		
 	}
 	private GameInfo lastGameSelected = null;
 	@Override
 	public void startJoinGame(GameInfo game) {
-		
+		getJoinGameView().closeModal();
 		lastGameSelected = game;
 		List<PlayerInfo> players = game.getPlayers();
 		CatanColor mycolor = null;
@@ -229,18 +232,21 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		// If join succeeded
 		
 		getSelectColorView().closeModal();
-		getJoinGameView().closeModal();
+		//getJoinGameView().closeModal();
 		timer.stop();
 		joinAction.execute();
 	}
 
-
+	/**
+	 * This is the handler to respond to the timer by refreshing the game list
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		boolean showing = this.getJoinGameView().isModalShowing() && !this.getNewGameView().isModalShowing() && !this.getSelectColorView().isModalShowing();
 		if (showing)
 			this.getJoinGameView().closeModal();
+		
 		this.refreshGameList();
 		if (showing)
 			this.getJoinGameView().showModal();

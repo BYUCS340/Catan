@@ -67,8 +67,9 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		if (players.length == 4)
 		{
 			//Start the game
-			ClientGame.getGame().StartGame();
 			getView().closeModal();
+			ClientGame.getGame().StartGame();
+			
 		}
 	}
 
