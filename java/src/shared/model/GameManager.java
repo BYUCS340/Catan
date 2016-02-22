@@ -41,7 +41,8 @@ public class GameManager implements ModelSubject
 	 * Constructor for the game manager
 	 * @post all players
 	 */
-	public GameManager(){
+	public GameManager()
+	{
 		this("Default",0);
 	}
 	
@@ -61,7 +62,6 @@ public class GameManager implements ModelSubject
 		players = new ArrayList<>();
 		gameBank = new Bank();
 		gameState = new GameState();
-		map = new MapModel();
 		victoryPointManager = new VictoryPointManager();
 		notifyCenter = new NotificationCenter();
 		playerColors = new int[10];
@@ -69,6 +69,10 @@ public class GameManager implements ModelSubject
 		Arrays.fill(playerColors,-1);
 		playerCanMoveRobber = -1;
 		gameBank.resetToBankDefaults();
+		
+		//Create map and fill with default data.
+		map = new MapModel();
+		MapGenerator.BeginnerMap(map);
 	}
 	
 	/**
