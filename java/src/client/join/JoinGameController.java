@@ -177,6 +177,9 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		}
 		this.refreshGameList();
 		getNewGameView().closeModal();
+		//Open the games list
+		getJoinGameView().showModal();
+		
 		
 	}
 	private GameInfo lastGameSelected = null;
