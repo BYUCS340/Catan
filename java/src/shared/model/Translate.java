@@ -3,35 +3,12 @@ package shared.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import shared.definitions.*;
-import shared.model.chat.*;
 import shared.model.map.*;
 import shared.model.map.model.MapModel;
-import shared.networking.transport.*;
-import shared.definitions.CatanColor;
-import shared.definitions.DevCardType;
-import shared.definitions.Direction;
-import shared.definitions.HexType;
-import shared.definitions.PieceType;
-import shared.definitions.PortType;
-import shared.definitions.ResourceType;
+import shared.definitions.*;
+import shared.locations.*;
 import shared.model.chat.ChatBox;
-import shared.model.map.objects.Edge;
-import shared.model.map.objects.Hex;
-import shared.networking.transport.NetBank;
-import shared.networking.transport.NetChat;
-import shared.networking.transport.NetCity;
-import shared.networking.transport.NetDirectionalLocation;
-import shared.networking.transport.NetGameModel;
-import shared.networking.transport.NetHex;
-import shared.networking.transport.NetHexLocation;
-import shared.networking.transport.NetLog;
-import shared.networking.transport.NetMap;
-import shared.networking.transport.NetPlayer;
-import shared.networking.transport.NetPort;
-import shared.networking.transport.NetRoad;
-import shared.networking.transport.NetSettlement;
-import shared.networking.transport.NetTurnTracker;
+import shared.networking.transport.*;
 
 
 /**
@@ -61,6 +38,180 @@ public class Translate
 		gameModel.mapModel = fromNetMap(netGameModel.getNetMap(), netGameModel.getNetPlayers());  //FINISHED -- I think ...
 
 		return gameModel;
+	}
+	
+	/**
+	 * Translates NetTurnTracker into GameState
+	 * @param netTurnTracker
+	 * @return GameState
+	 */
+	public GameState fromNetTurnTracker(NetTurnTracker netTurnTracker)
+	{
+		GameState gameState = new GameState();
+		gameState.state = netTurnTracker.getRound();
+		gameState.activePlayerIndex = netTurnTracker.getCurrentTurn();
+		return gameState;
+	}
+	
+	/**
+	 * Translates NetBank into Bank
+	 * @param netBank
+	 * @return Bank
+	 */
+	public Bank fromNetBank(NetBank netBank)
+	{
+		Bank gameBank = new Bank();
+		
+		try
+		{
+			gameBank.giveResource(ResourceType.BRICK, netBank.getNumBrick());
+			gameBank.giveResource(ResourceType.ORE, netBank.getNumOre());
+			gameBank.giveResource(ResourceType.SHEEP, netBank.getNumSheep());
+			gameBank.giveResource(ResourceType.WHEAT, netBank.getNumWheat());
+			gameBank.giveResource(ResourceType.WOOD, netBank.getNumWood());
+		}
+		catch (ModelException e)
+		{
+			System.err.println("An Error has occured while populating the game bank in the Translate class");
+		}
+		
+		return gameBank;
+	}
+	
+	/**
+	 * Translates list of NetPlayer into list of Player
+	 * @param netPlayers
+	 * @return List<Player>
+	 */
+	public List<Player> fromNetPlayers(List<NetPlayer> netPlayers)
+	{
+		List<Player> players = new ArrayList<Player>();
+		for (int i=0; i < netPlayers.size(); i++)
+		{
+			Player p = fromNetPlayer(netPlayers.get(i));
+			players.add(p);
+		}
+		return players;
+	}
+	
+	/**
+	 * Translates NetPlayer into Player
+	 * @param netPlayer
+	 * @return Player
+	 */
+	public Player fromNetPlayer(NetPlayer netPlayer)
+	{
+		Player player = new Player(netPlayer.getName(), netPlayer.getPlayerIndex(), netPlayer.getColor(), true, netPlayer.getPlayerID());
+		System.out.println(player);
+		//Setup the Bank
+		try
+		{
+			//PIECES
+			player.playerBank.givePiece(PieceType.CITY, netPlayer.getNumCities());
+			player.playerBank.givePiece(PieceType.ROAD, netPlayer.getNumRoads());
+			player.playerBank.givePiece(PieceType.SETTLEMENT, netPlayer.getNumMonuments());
+			
+			//RESOURCES
+			player.playerBank.giveResource(ResourceType.BRICK, netPlayer.getNetResourceList().getNumBrick());
+			player.playerBank.giveResource(ResourceType.ORE, netPlayer.getNetResourceList().getNumOre());
+			player.playerBank.giveResource(ResourceType.SHEEP, netPlayer.getNetResourceList().getNumSheep());
+			player.playerBank.giveResource(ResourceType.WHEAT, netPlayer.getNetResourceList().getNumWheat());
+			player.playerBank.giveResource(ResourceType.WOOD, netPlayer.getNetResourceList().getNumWood());
+			
+			//DEV CARDS
+			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumMonopoly(); i++)
+			{
+				player.playerBank.giveDevCard(DevCardType.MONOPOLY);
+			}
+			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumMonument(); i++)
+			{
+				player.playerBank.giveDevCard(DevCardType.MONUMENT);
+			}
+			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumRoadBuilding(); i++)
+			{
+				player.playerBank.giveDevCard(DevCardType.ROAD_BUILD);
+			}
+			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumSoldier(); i++)
+			{
+				player.playerBank.giveDevCard(DevCardType.SOLDIER);
+			}
+			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumYearOfPlenty(); i++)
+			{
+				player.playerBank.giveDevCard(DevCardType.YEAR_OF_PLENTY);
+			}
+		} 
+		catch (ModelException e)
+		{
+			e.printStackTrace();
+			System.err.println(e.getMessage());
+			System.err.println("An Error has occured while populating the player bank in the Translate class.");
+		}
+		
+		return player;
+	}
+	
+	/**
+	 * Translates NetTurnTracker into VictoryPointManager
+	 * @param netTurnTracker
+	 * @param netPlayers
+	 * @return VictoryPointManager
+	 */
+	public VictoryPointManager fromNetVPManager(NetTurnTracker netTurnTracker, List<NetPlayer> netPlayers)
+	{
+		int p1Points = netPlayers.get(0).getNumVictoryPoints();
+		int p2Points = netPlayers.get(1).getNumVictoryPoints();
+		int p3Points = netPlayers.get(2).getNumVictoryPoints();
+		int p4Points = netPlayers.get(3).getNumVictoryPoints();
+		
+		int longRoad = netTurnTracker.getLongestRoad();
+		int largeArmy = netTurnTracker.getLargestArmy();
+		
+		int armySize = 0;
+		int soliders = 0;
+		
+		//Figure out the largest army
+		for (int i=0; i< netPlayers.size(); i++)
+		{
+			soliders = netPlayers.get(i).getNumSoldiers();
+			if (soliders > armySize)
+				armySize = soliders;
+		}
+		
+		VictoryPointManager victoryPointManager = new VictoryPointManager(p1Points, p2Points, p3Points, p4Points, longRoad, largeArmy,armySize);
+		
+		return victoryPointManager;
+	}
+	
+	/**
+	 * Translates NetChat into ChatBox
+	 * @param netChat
+	 * @return ChatBox
+	 */
+	public ChatBox fromNetChat(NetChat netChat)
+	{
+		ChatBox chatBox = new ChatBox();
+		for (int i = 0; i < netChat.getLines().size(); i++)
+		{
+			//always posts as player 0 (because I don't have a good way of determining playerID from message source yet)
+			chatBox.put(netChat.getLines().get(i).getMessage(), 0);
+		}
+		return chatBox;
+	}
+	
+	/**
+	 * Translates NetLog into GameActionLog
+	 * @param netLog
+	 * @return GameActionLog
+	 */
+	public GameActionLog fromNetLog(NetLog netLog)
+	{
+		GameActionLog gameActionLog = new GameActionLog();
+		for (int i = 0; i < netLog.getLines().size(); i++)
+		{
+			//always logs as player 0 (because I don't have a good way of determining playerID from message source yet)
+			gameActionLog.logAction(0, netLog.getLines().get(i).getMessage());
+		}
+		return gameActionLog;
 	}
 	
 	/**
@@ -266,7 +417,7 @@ public class Translate
 	 * @param y
 	 * @return Coordinate
 	 */
-	private Coordinate GetHexCoordinate(int x, int y)
+	private static Coordinate GetHexCoordinate(int x, int y)
 	{
 		return new Coordinate (x + 3, -2 * y - x);
 	}
@@ -365,177 +516,138 @@ public class Translate
 			return PortType.GetFromResource(type);
 	}
 	
-	/**
-	 * Translates NetTurnTracker into GameState
-	 * @param netTurnTracker
-	 * @return GameState
-	 */
-	public GameState fromNetTurnTracker(NetTurnTracker netTurnTracker)
+	public static EdgeLocation GetEdgeLocation(Coordinate p1, Coordinate p2)
 	{
-		GameState gameState = new GameState();
-		gameState.state = netTurnTracker.getRound();
-		gameState.activePlayerIndex = netTurnTracker.getCurrentTurn();
-		return gameState;
-	}
-	
-	/**
-	 * Translates NetBank into Bank
-	 * @param netBank
-	 * @return Bank
-	 */
-	public Bank fromNetBank(NetBank netBank)
-	{
-		Bank gameBank = new Bank();
+		HexLocation hexLocation = GetHexLocation(p1, p2);
+		Coordinate hex = GetHexCoordinate(hexLocation.getX(), hexLocation.getY());
 		
-		try
-		{
-			gameBank.giveResource(ResourceType.BRICK, netBank.getNumBrick());
-			gameBank.giveResource(ResourceType.ORE, netBank.getNumOre());
-			gameBank.giveResource(ResourceType.SHEEP, netBank.getNumSheep());
-			gameBank.giveResource(ResourceType.WHEAT, netBank.getNumWheat());
-			gameBank.giveResource(ResourceType.WOOD, netBank.getNumWood());
-		}
-		catch (ModelException e)
-		{
-			System.err.println("An Error has occured while populating the game bank in the Translate class");
-		}
+		EdgeDirection direction = GetEdgeDirection(hex, p1, p2);
 		
-		return gameBank;
+		return new EdgeLocation(hexLocation, direction); 
 	}
 	
-	/**
-	 * Translates list of NetPlayer into list of Player
-	 * @param netPlayers
-	 * @return List<Player>
-	 */
-	public List<Player> fromNetPlayers(List<NetPlayer> netPlayers)
+	public static VertexLocation GetVertexLocation(Coordinate point)
 	{
-		List<Player> players = new ArrayList<Player>();
-		for (int i=0; i < netPlayers.size(); i++)
-		{
-			Player p = fromNetPlayer(netPlayers.get(i));
-			players.add(p);
-		}
-		return players;
+		HexLocation hexLocation = null;
+		if (point.isLeftHandCoordinate() && point.getX() <= 5)
+			hexLocation = GetHexLocation(point);
+		else if (point.isLeftHandCoordinate() && point.getY() > 0)
+			hexLocation = GetHexLocation(point.GetSouthWest());
+		else if (point.isLeftHandCoordinate())
+			hexLocation = GetHexLocation(point.GetNorthWest());
+		else
+			hexLocation = GetHexLocation(point.GetWest());
+		
+		Coordinate hex = GetHexCoordinate(hexLocation.getX(), hexLocation.getY());
+		
+		VertexDirection direction = GetVertexDirection(hex, point);
+		
+		return new VertexLocation(hexLocation, direction);
 	}
 	
-	/**
-	 * Translates NetPlayer into Player
-	 * @param netPlayer
-	 * @return Player
-	 */
-	public Player fromNetPlayer(NetPlayer netPlayer)
+	public static HexLocation GetHexLocation(Coordinate point)
 	{
-		Player player = new Player(netPlayer.getName(), netPlayer.getPlayerIndex(), netPlayer.getColor(), true, netPlayer.getPlayerID());
-		System.out.println(player);
-		//Setup the Bank
-		try
+		int x = point.getX();
+		int y = point.getY();
+		
+		//Our y location that should return 0 for theirs
+		int yZero = 3 - x;
+		
+		//yZero - y should always be a multiple of 2
+		return new HexLocation(x - 3, (yZero - y) / 2);
+	}
+	
+	private static HexLocation GetHexLocation(Coordinate p1, Coordinate p2)
+	{
+		Coordinate primary = null;
+		
+		//Horizontal edges
+		if (p1.getY() == p2.getY())
 		{
-			//PIECES
-			player.playerBank.givePiece(PieceType.CITY, netPlayer.getNumCities());
-			player.playerBank.givePiece(PieceType.ROAD, netPlayer.getNumRoads());
-			player.playerBank.givePiece(PieceType.SETTLEMENT, netPlayer.getNumMonuments());
+			//Grab the edge closest to critical vertex (hex coordinate based on left)
+			if (p1.getX() < p2.getX())
+				primary = p1;
+			else
+				primary = p2;
 			
-			//RESOURCES
-			player.playerBank.giveResource(ResourceType.BRICK, netPlayer.getNetResourceList().getNumBrick());
-			player.playerBank.giveResource(ResourceType.ORE, netPlayer.getNetResourceList().getNumOre());
-			player.playerBank.giveResource(ResourceType.SHEEP, netPlayer.getNetResourceList().getNumSheep());
-			player.playerBank.giveResource(ResourceType.WHEAT, netPlayer.getNetResourceList().getNumWheat());
-			player.playerBank.giveResource(ResourceType.WOOD, netPlayer.getNetResourceList().getNumWood());
+			//If below zero, we need the point above, else point below critical
+			if (primary.getY() <= 0)
+				return GetHexLocation(primary.GetNorth());
+			else
+				return GetHexLocation(primary.GetSouth());
+		}
+		//Diagonal edges
+		else
+		{
+			//Grab the point that is closest to zero
+			if (Math.abs(p1.getY()) < Math.abs(p2.getY()))
+				primary = p1;
+			else
+				primary = p2;
 			
-			//DEV CARDS
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumMonopoly(); i++)
-			{
-				player.playerBank.giveDevCard(DevCardType.MONOPOLY);
-			}
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumMonument(); i++)
-			{
-				player.playerBank.giveDevCard(DevCardType.MONUMENT);
-			}
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumRoadBuilding(); i++)
-			{
-				player.playerBank.giveDevCard(DevCardType.ROAD_BUILD);
-			}
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumSoldier(); i++)
-			{
-				player.playerBank.giveDevCard(DevCardType.SOLDIER);
-			}
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumYearOfPlenty(); i++)
-			{
-				player.playerBank.giveDevCard(DevCardType.YEAR_OF_PLENTY);
-			}
-		} 
-		catch (ModelException e)
-		{
-			e.printStackTrace();
-			System.err.println(e.getMessage());
-			System.err.println("An Error has occured while populating the player bank in the Translate class.");
+			//If left, we have critical, else we need west edge
+			if (primary.isLeftHandCoordinate())
+				return GetHexLocation(primary);
+			else
+				return GetHexLocation(primary.GetWest());
 		}
-		
-		return player;
 	}
 	
-	/**
-	 * Translates NetTurnTracker into VictoryPointManager
-	 * @param netTurnTracker
-	 * @param netPlayers
-	 * @return VictoryPointManager
-	 */
-	public VictoryPointManager fromNetVPManager(NetTurnTracker netTurnTracker, List<NetPlayer> netPlayers)
+	private static EdgeDirection GetEdgeDirection(Coordinate hex, Coordinate p1, Coordinate p2)
 	{
-		int p1Points = netPlayers.get(0).getNumVictoryPoints();
-		int p2Points = netPlayers.get(1).getNumVictoryPoints();
-		int p3Points = netPlayers.get(2).getNumVictoryPoints();
-		int p4Points = netPlayers.get(3).getNumVictoryPoints();
-		
-		int longRoad = netTurnTracker.getLongestRoad();
-		int largeArmy = netTurnTracker.getLargestArmy();
-		
-		int armySize = 0;
-		int soliders = 0;
-		
-		//Figure out the largest army
-		for (int i=0; i< netPlayers.size(); i++)
-		{
-			soliders = netPlayers.get(i).getNumSoldiers();
-			if (soliders > armySize)
-				armySize = soliders;
+		//Horizontal edges
+		if (p1.getY() == p2.getY())
+		{			
+			//If below, we grabbed the bottom, else the top.
+			if (p1.getY() <= 0)
+				return EdgeDirection.South;
+			else
+				return EdgeDirection.North;
 		}
-		
-		VictoryPointManager victoryPointManager = new VictoryPointManager(p1Points, p2Points, p3Points, p4Points, longRoad, largeArmy,armySize);
-		
-		return victoryPointManager;
+		//Diagonal edges
+		else
+		{	
+			//p1 is left or right vertex
+			if (hex.getY() == p1.getY())
+			{
+				if (p1.getY() < p2.getY())
+					return EdgeDirection.NorthEast;
+				else
+					return EdgeDirection.SouthWest;
+			}
+			//p2 is left or right vertex
+			else
+			{
+				if (p2.getY() < p1.getY())
+					return EdgeDirection.NorthWest;
+				else
+					return EdgeDirection.SouthEast;
+			}
+		}
 	}
 	
-	/**
-	 * Translates NetChat into ChatBox
-	 * @param netChat
-	 * @return ChatBox
-	 */
-	public ChatBox fromNetChat(NetChat netChat)
+	private static VertexDirection GetVertexDirection(Coordinate hex, Coordinate point)
 	{
-		ChatBox chatBox = new ChatBox();
-		for (int i = 0; i < netChat.getLines().size(); i++)
+		if (hex.getY() == point.getY())
 		{
-			//always posts as player 0 (because I don't have a good way of determining playerID from message source yet)
-			chatBox.put(netChat.getLines().get(i).getMessage(), 0);
+			if (hex.getX() == point.getX())
+				return VertexDirection.West;
+			else
+				return VertexDirection.East;
 		}
-		return chatBox;
-	}
-	
-	/**
-	 * Translates NetLog into GameActionLog
-	 * @param netLog
-	 * @return GameActionLog
-	 */
-	public GameActionLog fromNetLog(NetLog netLog)
-	{
-		GameActionLog gameActionLog = new GameActionLog();
-		for (int i = 0; i < netLog.getLines().size(); i++)
+		else if (hex.getY() < point.getY())
 		{
-			//always logs as player 0 (because I don't have a good way of determining playerID from message source yet)
-			gameActionLog.logAction(0, netLog.getLines().get(i).getMessage());
+			if (hex.getX() == point.getX())
+				return VertexDirection.NorthWest;
+			else
+				return VertexDirection.NorthEast;
 		}
-		return gameActionLog;
+		else
+		{
+			if (hex.getX() == point.getX())
+				return VertexDirection.SouthWest;
+			else
+				return VertexDirection.SouthEast;
+		}
 	}
 }
