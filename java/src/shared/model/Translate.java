@@ -225,10 +225,10 @@ public class Translate
 		MapModel model = new MapModel();
 		
 		SetHexes(model, netMap.getNetHexes());
+		SetPorts(model, netMap.getNetPorts());
 		SetSettlements(model, netMap.getNetSettlements(), players);
 		SetCities(model, netMap.getNetCities(), players);
 		SetRoads(model, netMap.getNetRoads(), players);
-		SetPorts(model, netMap.getNetPorts());
 		SetRobber(model, netMap.getRobberLocation());
 		
 		return model;
@@ -319,6 +319,8 @@ public class Translate
 			
 			try
 			{
+				//Place settlement first so the city placement doesn't get mad.
+				model.PlaceSettlement(vertex, color);
 				model.PlaceCity(vertex, color);
 			}
 			catch (MapException e)

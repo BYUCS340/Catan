@@ -175,6 +175,12 @@ public class UnmodifiableMapModel implements IMapModel
 	{
 		return model.GetPorts();
 	}
+	
+	@Override
+	public Iterator<PortType> GetPorts(CatanColor color)
+	{
+		return model.GetPorts(color);
+	}
 
 	@Override
 	public Hex GetRobberLocation()

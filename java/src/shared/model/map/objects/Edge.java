@@ -8,8 +8,8 @@ import shared.model.map.Coordinate;
  * @author Jonathan Sadler
  *
  */
-public class Edge {
-
+public class Edge
+{
 	private Coordinate start;
 	private Coordinate end;
 	
@@ -50,33 +50,38 @@ public class Edge {
 	/**
 	 * @return the roadExists
 	 */
-	public boolean doesRoadExists() {
+	public boolean doesRoadExists()
+	{
 		return roadExists;
 	}
 
 	/**
 	 * @return the start
 	 */
-	public Coordinate getStart() {
+	public Coordinate getStart()
+	{
 		return start;
 	}
 
 	/**
 	 * @return the end
 	 */
-	public Coordinate getEnd() {
+	public Coordinate getEnd()
+	{
 		return end;
 	}
 
 	/**
 	 * @return the color
 	 */
-	public CatanColor getColor() {
+	public CatanColor getColor() 
+	{
 		return color;
 	}
 	
 	@Override
-	public int hashCode() {
+	public int hashCode() 
+	{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
@@ -87,7 +92,8 @@ public class Edge {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj) 
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -99,19 +105,23 @@ public class Edge {
 		if (color != other.color)
 			return false;
 		
-		if (end == null) {
+		if (end == null) 
+		{
 			if (other.end != null)
 				return false;
-		} else if (!end.equals(other.end))
+		} 
+		else if (!end.equals(other.end))
 			return false;
 		
 		if (roadExists != other.roadExists)
 			return false;
 		
-		if (start == null) {
+		if (start == null) 
+		{
 			if (other.start != null)
 				return false;
-		} else if (!start.equals(other.start))
+		} 
+		else if (!start.equals(other.start))
 			return false;
 		
 		return true;
