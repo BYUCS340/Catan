@@ -168,10 +168,11 @@ public class ClientGameManager extends GameManager
 			{
 				PlayerInfo newplay = game.getPlayers().get(i);
 				if (newplay.getId() == proxy.getUserId())
+				{
+					this.myPlayerIndex = i;
 					rejoining = true;
+				}
 				Player play = ClientDataTranslator.convertPlayerInfo(newplay);
-				System.out.println(play);
-
 				newplayers.add(play);
 
 			}

@@ -28,7 +28,7 @@ public class Translate
 	public GameModel fromNetGameModel(NetGameModel netGameModel)
 	{
 		GameModel gameModel = new GameModel();
-		
+
 		gameModel.gameState = fromNetTurnTracker(netGameModel.getNetTurnTracker());  //FINISHED? -- but NetGameModel doesn't return a GameStatus
 		gameModel.gameBank = fromNetBank(netGameModel.getNetBank());  //FINISHED? -- but only has resource cards (no dev cards)
 		gameModel.players = fromNetPlayers(netGameModel.getNetPlayers());  //FINISHED?
@@ -40,7 +40,7 @@ public class Translate
 
 		return gameModel;
 	}
-	
+
 	/**
 	 * Translates NetTurnTracker into GameState
 	 * @param netTurnTracker
@@ -53,7 +53,7 @@ public class Translate
 		gameState.activePlayerIndex = netTurnTracker.getCurrentTurn();
 		return gameState;
 	}
-	
+
 	/**
 	 * Translates NetBank into Bank
 	 * @param netBank
@@ -62,7 +62,7 @@ public class Translate
 	public Bank fromNetBank(NetBank netBank)
 	{
 		Bank gameBank = new Bank();
-		
+
 		try
 		{
 			gameBank.giveResource(ResourceType.BRICK, netBank.getNumBrick());
@@ -75,10 +75,10 @@ public class Translate
 		{
 			System.err.println("An Error has occured while populating the game bank in the Translate class");
 		}
-		
+
 		return gameBank;
 	}
-	
+
 	/**
 	 * Translates list of NetPlayer into list of Player
 	 * @param netPlayers
@@ -94,7 +94,7 @@ public class Translate
 		}
 		return players;
 	}
-	
+
 	/**
 	 * Translates NetPlayer into Player
 	 * @param netPlayer
@@ -111,14 +111,14 @@ public class Translate
 			player.playerBank.givePiece(PieceType.CITY, netPlayer.getNumCities());
 			player.playerBank.givePiece(PieceType.ROAD, netPlayer.getNumRoads());
 			player.playerBank.givePiece(PieceType.SETTLEMENT, netPlayer.getNumMonuments());
-			
+
 			//RESOURCES
 			player.playerBank.giveResource(ResourceType.BRICK, netPlayer.getNetResourceList().getNumBrick());
 			player.playerBank.giveResource(ResourceType.ORE, netPlayer.getNetResourceList().getNumOre());
 			player.playerBank.giveResource(ResourceType.SHEEP, netPlayer.getNetResourceList().getNumSheep());
 			player.playerBank.giveResource(ResourceType.WHEAT, netPlayer.getNetResourceList().getNumWheat());
 			player.playerBank.giveResource(ResourceType.WOOD, netPlayer.getNetResourceList().getNumWood());
-			
+
 			//DEV CARDS
 			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumMonopoly(); i++)
 			{
@@ -140,17 +140,17 @@ public class Translate
 			{
 				player.playerBank.giveDevCard(DevCardType.YEAR_OF_PLENTY);
 			}
-		} 
+		}
 		catch (ModelException e)
 		{
 			e.printStackTrace();
 			System.err.println(e.getMessage());
 			System.err.println("An Error has occured while populating the player bank in the Translate class.");
 		}
-		
+
 		return player;
 	}
-	
+
 	/**
 	 * Translates NetTurnTracker into VictoryPointManager
 	 * @param netTurnTracker
@@ -165,14 +165,14 @@ public class Translate
 		{
 			points[i] = netPlayers.get(i).getNumVictoryPoints();
 		}
-		
-		
+
+
 		int longRoad = netTurnTracker.getLongestRoad();
 		int largeArmy = netTurnTracker.getLargestArmy();
-		
+
 		int armySize = 0;
 		int soliders = 0;
-		
+
 		//Figure out the largest army
 		for (int i=0; i< netPlayers.size(); i++)
 		{
@@ -180,12 +180,12 @@ public class Translate
 			if (soliders > armySize)
 				armySize = soliders;
 		}
-		
+
 		VictoryPointManager victoryPointManager = new VictoryPointManager(points[0], points[1], points[2], points[2], longRoad, largeArmy,armySize);
-		
+
 		return victoryPointManager;
 	}
-	
+
 	/**
 	 * Translates NetChat into ChatBox
 	 * @param netChat
@@ -201,7 +201,7 @@ public class Translate
 		}
 		return chatBox;
 	}
-	
+
 	/**
 	 * Translates NetLog into GameActionLog
 	 * @param netLog
@@ -217,7 +217,7 @@ public class Translate
 		}
 		return gameActionLog;
 	}
-	
+
 	/**
 	 * Translates a NetMap into a MapModel
 	 * @param netMap the map returned by the server
@@ -228,17 +228,17 @@ public class Translate
 	{
 		MapModel model = new MapModel();
 		MapGenerator.WaterSetup(model);
-		
+
 		SetHexes(model, netMap.getNetHexes());
 		SetPorts(model, netMap.getNetPorts());
 		SetSettlements(model, netMap.getNetSettlements(), players);
 		SetCities(model, netMap.getNetCities(), players);
 		SetRoads(model, netMap.getNetRoads(), players);
 		SetRobber(model, netMap.getRobberLocation());
-		
+
 		return model;
 	}
-	
+
 	/**
 	 * Helper function for fromNetMap function
 	 * @param model
@@ -249,21 +249,21 @@ public class Translate
 		for (NetHex hex : hexes)
 		{
 			ResourceType resourceType = hex.getResourceType();
-		
+
 			HexType hexType = HexType.DESERT;
 			if (resourceType != null)
 				hexType = HexType.GetFromResource(resourceType);
-			
+
 			NetHexLocation location = hex.getNetHexLocation();
 			int x = location.getX();
 			int y = location.getY();
-			
+
 			Coordinate point = GetHexCoordinate(x, y);
-			
+
 			try
 			{
 				model.PlaceHex(hexType, point);
-				
+
 				int value = hex.getNumberChit();
 				model.PlacePip(value, point);
 			}
@@ -273,7 +273,7 @@ public class Translate
 			}
 		}
 	}
-	
+
 	/**
 	 * Helper function for fromNetMap function
 	 * @param model
@@ -287,13 +287,13 @@ public class Translate
 			NetDirectionalLocation location = settlement.getNetDirectionalLocation();
 			int x = location.getX();
 			int y = location.getY();
-			
+
 			Coordinate hex = GetHexCoordinate(x, y);
 			Coordinate vertex = GetVertexCoordinate(hex, location.getDirection());
-			
+
 			int owner = settlement.getOwner();
 			CatanColor color = GetColorFromOwnerInt(owner, players);
-			
+
 			try
 			{
 				model.PlaceSettlement(vertex, color);
@@ -304,7 +304,7 @@ public class Translate
 			}
 		}
 	}
-	
+
 	/**
 	 * Helper function for fromNetMap function
 	 * @param model
@@ -318,13 +318,13 @@ public class Translate
 			NetDirectionalLocation location = city.getNetDirectionalLocation();
 			int x = location.getX();
 			int y = location.getY();
-			
+
 			Coordinate hex = GetHexCoordinate(x, y);
 			Coordinate vertex = GetVertexCoordinate(hex, location.getDirection());
-			
+
 			int owner = city.getOwner();
 			CatanColor color = GetColorFromOwnerInt(owner, players);
-			
+
 			try
 			{
 				//Place settlement first so the city placement doesn't get mad.
@@ -337,7 +337,7 @@ public class Translate
 			}
 		}
 	}
-	
+
 	/**
 	 * Helper function for fromNetMap function
 	 * @param model
@@ -351,13 +351,13 @@ public class Translate
 			NetDirectionalLocation location = road.getNetEdgeLocation();
 			int x = location.getX();
 			int y = location.getY();
-			
+
 			Coordinate hex = GetHexCoordinate(x, y);
 			List<Coordinate> edgeCoordinates = GetEdgeCoordinates(hex, location.getDirection());
-			
+
 			int owner = road.getOwnerID();
 			CatanColor color = GetColorFromOwnerInt(owner, players);
-			
+
 			try
 			{
 				model.PlaceRoad(edgeCoordinates.get(0), edgeCoordinates.get(1), color);
@@ -368,7 +368,7 @@ public class Translate
 			}
 		}
 	}
-	
+
 	/**
 	 * Helper function for fromNetMap function
 	 * @param model
@@ -383,7 +383,7 @@ public class Translate
 		Coordinate invalidBottomRight = new Coordinate(6, -3);
 		Coordinate invalidBottom = new Coordinate(3, -6);
 		Coordinate invalidBottomLeft = new Coordinate(0, -3);
-		
+
 		for (NetPort port : ports)
 		{
 			try
@@ -391,10 +391,12 @@ public class Translate
 				NetHexLocation hexLocation = port.getNetHexLocation();
 				int x = hexLocation.getX();
 				int y = hexLocation.getY();
-				
+
 				Coordinate hex = GetHexCoordinate(x, y);
-				
+				System.out.println("Port:"+port);
+				System.out.println("Hex coord:"+hex);
 				Direction edgeDirection = port.getDirection();
+
 				if (edgeDirection == null)
 				{
 					if (hex.equals(invalidTopRight))
@@ -417,11 +419,11 @@ public class Translate
 						continue;
 					}
 				}
-				
+
 				List<Coordinate> edgeCoordinates = GetEdgeCoordinates(hex, edgeDirection);
-				
+
 				PortType type = GetPortType(port.getRatio(), port.getResource());
-				
+
 				model.PlacePort(type, hex, edgeCoordinates.get(0), edgeCoordinates.get(1));
 			}
 			catch (MapException e)
@@ -430,7 +432,7 @@ public class Translate
 			}
 		}
 	}
-	
+
 	/**
 	 * Helper function for fromNetMap function
 	 * @param model
@@ -440,18 +442,18 @@ public class Translate
 	{
 		int x = robberLocation.getX();
 		int y = robberLocation.getY();
-		
+
 		try
 		{
 			Coordinate hexPoint = GetHexCoordinate(x, y);
 			model.PlaceRobber(hexPoint);
 		}
-		catch (MapException e) 
+		catch (MapException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Helper function for fromNetMap function
 	 * @param x
@@ -462,7 +464,7 @@ public class Translate
 	{
 		return new Coordinate (x + 3, -2 * y - x);
 	}
-	
+
 	/**
 	 * Helper function for fromNetMap function
 	 * @param owner
@@ -476,10 +478,10 @@ public class Translate
 			if (player.getPlayerIndex() == owner)
 				return player.getColor();
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Helper function for fromNetMap function
 	 * @param hex
@@ -499,7 +501,7 @@ public class Translate
 			default: return null;
 		}
 	}
-	
+
 	/**
 	 * Helper function for fromNetMap function
 	 * @param hex
@@ -509,7 +511,7 @@ public class Translate
 	private List<Coordinate> GetEdgeCoordinates(Coordinate hex, Direction direction)
 	{
 		List<Coordinate> coordinates = new ArrayList<Coordinate>(2);
-		
+
 		switch (direction)
 		{
 		case N:
@@ -539,10 +541,10 @@ public class Translate
 		default:
 			break;
 		}
-		
+
 		return coordinates;
 	}
-	
+
 	/**
 	 * Helper function for fromNetMap function
 	 * @param ratio
@@ -556,17 +558,17 @@ public class Translate
 		else
 			return PortType.GetFromResource(type);
 	}
-	
+
 	public static EdgeLocation GetEdgeLocation(Coordinate p1, Coordinate p2)
 	{
 		HexLocation hexLocation = GetHexLocation(p1, p2);
 		Coordinate hex = GetHexCoordinate(hexLocation.getX(), hexLocation.getY());
-		
+
 		EdgeDirection direction = GetEdgeDirection(hex, p1, p2);
-		
-		return new EdgeLocation(hexLocation, direction); 
+
+		return new EdgeLocation(hexLocation, direction);
 	}
-	
+
 	public static VertexLocation GetVertexLocation(Coordinate point)
 	{
 		HexLocation hexLocation = null;
@@ -578,30 +580,30 @@ public class Translate
 			hexLocation = GetHexLocation(point.GetNorthWest());
 		else
 			hexLocation = GetHexLocation(point.GetWest());
-		
+
 		Coordinate hex = GetHexCoordinate(hexLocation.getX(), hexLocation.getY());
-		
+
 		VertexDirection direction = GetVertexDirection(hex, point);
-		
+
 		return new VertexLocation(hexLocation, direction);
 	}
-	
+
 	public static HexLocation GetHexLocation(Coordinate point)
 	{
 		int x = point.getX();
 		int y = point.getY();
-		
+
 		//Our y location that should return 0 for theirs
 		int yZero = 3 - x;
-		
+
 		//yZero - y should always be a multiple of 2
 		return new HexLocation(x - 3, (yZero - y) / 2);
 	}
-	
+
 	private static HexLocation GetHexLocation(Coordinate p1, Coordinate p2)
 	{
 		Coordinate primary = null;
-		
+
 		//Horizontal edges
 		if (p1.getY() == p2.getY())
 		{
@@ -610,7 +612,7 @@ public class Translate
 				primary = p1;
 			else
 				primary = p2;
-			
+
 			//If below zero, we need the point above, else point below critical
 			if (primary.getY() <= 0)
 				return GetHexLocation(primary.GetNorth());
@@ -625,7 +627,7 @@ public class Translate
 				primary = p1;
 			else
 				primary = p2;
-			
+
 			//If left, we have critical, else we need west edge
 			if (primary.isLeftHandCoordinate())
 				return GetHexLocation(primary);
@@ -633,12 +635,12 @@ public class Translate
 				return GetHexLocation(primary.GetWest());
 		}
 	}
-	
+
 	private static EdgeDirection GetEdgeDirection(Coordinate hex, Coordinate p1, Coordinate p2)
 	{
 		//Horizontal edges
 		if (p1.getY() == p2.getY())
-		{			
+		{
 			//If below, we grabbed the bottom, else the top.
 			if (p1.getY() <= 0)
 				return EdgeDirection.South;
@@ -647,7 +649,7 @@ public class Translate
 		}
 		//Diagonal edges
 		else
-		{	
+		{
 			//p1 is left or right vertex
 			if (hex.getY() == p1.getY())
 			{
@@ -666,7 +668,7 @@ public class Translate
 			}
 		}
 	}
-	
+
 	private static VertexDirection GetVertexDirection(Coordinate hex, Coordinate point)
 	{
 		if (hex.getY() == point.getY())
