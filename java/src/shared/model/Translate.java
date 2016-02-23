@@ -6,6 +6,7 @@ import java.util.List;
 
 import shared.model.map.*;
 import shared.model.map.model.MapModel;
+import shared.model.map.objects.Edge;
 import shared.definitions.*;
 import shared.locations.*;
 import shared.model.chat.ChatBox;
@@ -638,6 +639,7 @@ public class Translate
 
 	private static EdgeDirection GetEdgeDirection(Coordinate hex, Coordinate p1, Coordinate p2)
 	{
+		/*`
 		//Horizontal edges
 		if (p1.getY() == p2.getY())
 		{
@@ -666,6 +668,27 @@ public class Translate
 				else
 					return EdgeDirection.SouthEast;
 			}
+		}
+		*/
+		int rotation = Edge.GetRotation(hex, p1, p2);
+
+		switch(rotation)
+		{
+		case 0:
+			return EdgeDirection.South;
+		case 60:
+			return EdgeDirection.SouthEast;
+		case 120:
+			return EdgeDirection.NorthEast;
+		case 180:
+			return EdgeDirection.North;
+		case 240:
+			return EdgeDirection.NorthWest;
+		case 300:
+			return EdgeDirection.SouthWest;
+		default:
+			assert false;
+			return null;
 		}
 	}
 

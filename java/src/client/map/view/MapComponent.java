@@ -26,7 +26,6 @@ import shared.model.map.objects.*;
 @SuppressWarnings("serial")
 public class MapComponent extends JComponent
 {
-	//TODO Verify this doesn't slow down load times.
 	public static final int HEX_IMAGE_WIDTH = Dimensions.HEX_IMAGE_WIDTH;
 	public static final int HEX_IMAGE_HEIGHT = Dimensions.HEX_IMAGE_HEIGHT;
 	
@@ -66,10 +65,8 @@ public class MapComponent extends JComponent
 		SETTLEMENT.add(new Point2D.Double(-SETTLEMENT_WIDTH / 2,
 										  -SETTLEMENT_WALL_HEIGHT / 2));
 		Point2D sMidBase = average(SETTLEMENT.get(1), SETTLEMENT.get(2));
-		Point2D sHighPoint = new Point2D.Double(
-												sMidBase.getX(),
-												sMidBase.getY()
-														- SETTLEMENT_ROOF_HEIGHT);
+		Point2D sHighPoint = new Point2D.Double(sMidBase.getX(),
+												sMidBase.getY()	- SETTLEMENT_ROOF_HEIGHT);
 		SETTLEMENT.add(sHighPoint);
 		
 		CITY = new ArrayList<Point2D>();
@@ -198,7 +195,6 @@ public class MapComponent extends JComponent
 		{
 			getController().MouseClick();
 		}
-		
 	};
 	
 	@Override
@@ -281,26 +277,12 @@ public class MapComponent extends JComponent
 		{
 			Point2D hexPoint = getHexCenterPoint(controller.GetRobberPlacement());
 			BufferedImage robberImage = ImageHandler.getRobberImage();
-			drawRobber(g2, robberImage, hexPoint);
+			drawImage(g2, robberImage, hexPoint, Dimensions.ROBBER_WIDTH, Dimensions.ROBBER_HEIGHT);
 		}
 		catch (MapException e)
 		{
 			e.printStackTrace();
 		}
-	}
-	
-	private void drawRobber(Graphics2D g2, BufferedImage image, Point2D location)
-	{
-		int width = Dimensions.ROBBER_WIDTH;
-		int height = Dimensions.ROBBER_HEIGHT;
-		
-		int centerX = width / 2;
-		int centerY = height / 2;
-		
-		int x = (int)location.getX() - centerX;
-		int y = (int)location.getY() - centerY;
-		
-		g2.drawImage(image, x, y, width, height, null);
 	}
 	
 	private void drawRoads(Graphics2D g2)
@@ -374,11 +356,13 @@ public class MapComponent extends JComponent
 			Hex hex = port.getValue();
 			
 			Point2D hexCenter = getHexCenterPoint(hex);
-			Point2D edgeCenter = getEdgeCenterPoint(edge);
 			
-			double angle = getPortRotation(edgeCenter, hexCenter);
-			BufferedImage portImage = ImageHandler.getPortImage(hex.getPort());
-			drawRotatedImage(g2, portImage, hexCenter, angle);
+			int angle = getPortRotation(hex, edge);
+			BufferedImage portImage = ImageHandler.getPortImage(angle);
+			drawImage(g2, portImage, hexCenter);
+			
+			BufferedImage portResourceImage = ImageHandler.getPortResourceImage(hex.getPort());
+			drawImage(g2, portResourceImage, hexCenter, Dimensions.PORT_WIDTH, Dimensions.PORT_HEIGHT);
 		}
 	}
 	
@@ -457,22 +441,6 @@ public class MapComponent extends JComponent
 		}
 	}
 	
-	private void drawRotatedImage(Graphics2D g2, BufferedImage image,
-								  Point2D location, double radians)
-	{
-		
-		int centerX = image.getWidth() / 2;
-		int centerY = image.getHeight() / 2;
-		
-		AffineTransform tx = AffineTransform.getRotateInstance(radians,
-															   centerX, centerY);
-		AffineTransformOp op = new AffineTransformOp(
-													 tx,
-													 AffineTransformOp.TYPE_BILINEAR);
-		
-		drawImage(g2, op.filter(image, null), location);
-	}
-	
 	private void drawImage(Graphics2D g2, BufferedImage image, Point2D location)
 	{
 		
@@ -483,26 +451,21 @@ public class MapComponent extends JComponent
 					 (int)location.getY() - centerY, null);
 	}
 	
-	private double getPortRotation(Point2D edge, Point2D hex)
+	private void drawImage(Graphics2D g2, BufferedImage image, Point2D location, 
+			int width, int height)
 	{
-		if (Math.abs(edge.getX() - hex.getX()) < 0.1)
-		{
-			if (edge.getY() > hex.getY())
-				return 0;
-			else
-				return Math.PI;
-		}
-		else
-		{
-			double slope = (edge.getY() - hex.getY()) /
-					(edge.getX() - hex.getX());
-			
-			//This ensures things are flipped the right way.
-			if (edge.getX() > hex.getX())
-				return Math.atan(slope) + Math.PI * 3.0 / 2.0;
-			else
-				return Math.atan(slope) + Math.PI / 2.0;
-		}
+		int centerX = width / 2;
+		int centerY = height / 2;
+		
+		int x = (int)location.getX() - centerX;
+		int y = (int)location.getY() - centerY;
+		
+		g2.drawImage(image, x, y, width, height, null);
+	}
+	
+	private int getPortRotation(Hex hex, Edge edge)
+	{
+		return edge.GetRotation(hex);
 	}
 	
 	private static Point2D getHexCenterPoint(Hex hex)
