@@ -315,6 +315,11 @@ public class MapModel implements IMapModel {
 	@Override
 	public void PlacePip(int value, Coordinate point) throws MapException
 	{
+		//Ignore any invalid roles. The provided server gives us -1 for the
+		//desert hex.
+		if (value < 2 || value > 12)
+			return;
+		
 		Hex hex = hexes.GetHex(point);
 		
 		if (values.containsKey(value))

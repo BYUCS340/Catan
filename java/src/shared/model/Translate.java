@@ -227,6 +227,7 @@ public class Translate
 	public MapModel fromNetMap(NetMap netMap, List<NetPlayer> players)
 	{
 		MapModel model = new MapModel();
+		MapGenerator.WaterSetup(model);
 		
 		SetHexes(model, netMap.getNetHexes());
 		SetPorts(model, netMap.getNetPorts());
@@ -247,13 +248,11 @@ public class Translate
 	{
 		for (NetHex hex : hexes)
 		{
-			
-			
 			ResourceType resourceType = hex.getResourceType();
 		
 			HexType hexType = HexType.DESERT;
 			if (resourceType != null)
-				HexType.GetFromResource(resourceType);
+				hexType = HexType.GetFromResource(resourceType);
 			
 			NetHexLocation location = hex.getNetHexLocation();
 			int x = location.getX();
@@ -377,6 +376,14 @@ public class Translate
 	 */
 	private void SetPorts(MapModel model, List<NetPort> ports)
 	{
+		//These points we can determine the edge, which is good as it isn't always given.
+		Coordinate invalidTopRight = new Coordinate(6, 3);
+		Coordinate invalidTop = new Coordinate(3, 6);
+		Coordinate invalidTopLeft = new Coordinate(0, 3);
+		Coordinate invalidBottomRight = new Coordinate(6, -3);
+		Coordinate invalidBottom = new Coordinate(3, -6);
+		Coordinate invalidBottomLeft = new Coordinate(0, -3);
+		
 		for (NetPort port : ports)
 		{
 			try
@@ -388,6 +395,29 @@ public class Translate
 				Coordinate hex = GetHexCoordinate(x, y);
 				
 				Direction edgeDirection = port.getDirection();
+				if (edgeDirection == null)
+				{
+					if (hex.equals(invalidTopRight))
+						edgeDirection = Direction.SW;
+					else if (hex.equals(invalidTop))
+						edgeDirection = Direction.S;
+					else if (hex.equals(invalidTopLeft))
+						edgeDirection = Direction.SE;
+					else if (hex.equals(invalidBottomRight))
+						edgeDirection = Direction.NW;
+					else if (hex.equals(invalidBottom))
+						edgeDirection = Direction.N;
+					else if (hex.equals(invalidBottomLeft))
+						edgeDirection = Direction.NE;
+					else
+					{
+						Exception e = new ModelException("Port edge direction not provided and unable to infer");
+						e.printStackTrace();
+						//Since we can't get the port information, we are going to continue without it.
+						continue;
+					}
+				}
+				
 				List<Coordinate> edgeCoordinates = GetEdgeCoordinates(hex, edgeDirection);
 				
 				PortType type = GetPortType(port.getRatio(), port.getResource());
