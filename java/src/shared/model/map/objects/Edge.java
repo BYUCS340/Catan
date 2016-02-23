@@ -79,6 +79,56 @@ public class Edge
 		return color;
 	}
 	
+	public int GetRotation(Hex hex)
+	{
+		Coordinate hexPoint = hex.getPoint();
+		
+		return GetRotation(hexPoint, start, end);
+	}
+	
+	public static int GetRotation(Coordinate hex, Coordinate start, Coordinate end)
+	{
+		//Edge is horizontal
+		if (start.getY() == end.getY())
+		{
+			if (start.getY() > hex.getY())
+				return 180;
+			else
+				return 0;
+		}
+		//Edge is diagonal
+		else
+		{
+			Coordinate primary = null;
+			Coordinate secondary = null;
+			if (start.getY() == hex.getY())
+			{
+				primary = start;
+				secondary = end;
+			}
+			else
+			{
+				primary = end;
+				secondary = start;
+			}
+			
+			if (primary.getX() == hex.getX())
+			{
+				if (primary.getY() < secondary.getY())
+					return 240;
+				else
+					return 300;
+			}
+			else
+			{
+				if (primary.getY() < secondary.getY())
+					return 120;
+				else
+					return 60;
+			}
+		}
+	}
+	
 	@Override
 	public int hashCode() 
 	{

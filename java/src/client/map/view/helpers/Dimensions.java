@@ -12,6 +12,9 @@ public class Dimensions
 	public static final int ROBBER_WIDTH = 200;
 	public static final int ROBBER_HEIGHT = 200;
 	
+	public static final int PORT_WIDTH = 200;
+	public static final int PORT_HEIGHT = 200;
+	
 	public static final int ROAD_HEIGHT = (int)(HEX_IMAGE_WIDTH * 0.11);
 	public static final int ROAD_WIDTH = (int)(HEX_IMAGE_WIDTH * 0.4);
 	

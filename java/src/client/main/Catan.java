@@ -7,9 +7,7 @@ import client.login.*;
 import client.join.*;
 import client.misc.*;
 import client.model.ClientGame;
-import client.networking.MockServerProxy;
 import client.networking.RealServerProxy;
-import client.networking.ServerProxy;
 import client.base.*;
 
 /**
