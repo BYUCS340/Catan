@@ -243,8 +243,13 @@ public class Translate
 	{
 		for (NetHex hex : hexes)
 		{
+			
+			
 			ResourceType resourceType = hex.getResourceType();
-			HexType hexType = HexType.GetFromResource(resourceType);
+		
+			HexType hexType = HexType.WATER;
+			if (resourceType != null)
+				HexType.GetFromResource(resourceType);
 			
 			NetHexLocation location = hex.getNetHexLocation();
 			int x = location.getX();
@@ -501,7 +506,7 @@ public class Translate
 			break;
 		}
 		
-		return null;
+		return coordinates;
 	}
 	
 	/**

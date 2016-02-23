@@ -410,18 +410,19 @@ public class ClientGameManager extends GameManager
 			return;
 		}
 
-		System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
-		this.version = model.getVersion();
-		//TODO All of this
-
-		//TODO update turn status
+		if (forced)
+			System.out.println("Updating game");
+		else
+			System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
+		
 
 		//Add new players if needed
 		Translate trans = new Translate();
+		GameModel game = trans.fromNetGameModel(model);
 		//If there are new players or the number of resources have changed
 
 		System.out.println("Updated number of players");
-		List<Player> newplayers = trans.fromNetPlayers(model.getNetPlayers());
+		List<Player> newplayers = game.players;
 		List<Player> oldplayers = this.players;
 		this.SetPlayers(newplayers);
 		
@@ -442,29 +443,48 @@ public class ClientGameManager extends GameManager
 		
 
 		//Update our chat
-		if (model.getNetChat().size() > this.waterCooler.size())
+		if (game.waterCooler.size() > this.waterCooler.size())
 		{
-			this.waterCooler = trans.fromNetChat(model.getNetChat());
+			this.waterCooler = game.waterCooler;
 			System.out.println("New watercooler size: " + waterCooler.size());
 			this.notifyCenter.notify(ModelNotification.CHAT);
 		}
 
-		GameRound newround = model.getNetTurnTracker().getRound();
-		if (newround != gameState.state)
+		GameState newstate = game.gameState;
+		if (!this.gameState.equals(newstate) && newstate != null)
 		{
-			gameState.state = newround;
+			gameState = newstate;
 			//handle the logic from this
-			
+
 			this.notifyCenter.notify(ModelNotification.STATE);
 		}
 		
-		MapModel newmap = trans.fromNetMap(model.getNetMap(), model.getNetPlayers());
+		//Update the map model
+		MapModel newmap = game.mapModel;
 		
-		if (!newmap.equals(this.map))
+		if (!newmap.equals(this.map) && newmap != null)
 		{
 			this.map = newmap;
 			this.notifyCenter.notify(ModelNotification.MAP);
 		}
+		
+		//Victory point manager
+		VictoryPointManager newVPM = game.victoryPointManager;
+		if (!newVPM.equals(this.victoryPointManager) && newVPM != null)
+		{
+			this.victoryPointManager = newVPM;
+			this.notifyCenter.notify(ModelNotification.SCORE);
+		}
+		
+		//Game action log
+		GameActionLog newLog = game.log;
+		if (!newLog.equals(this.log) && newLog != null)
+		{
+			this.log = newLog;
+			this.notifyCenter.notify(ModelNotification.LOG);
+		}
+		
+		this.version = model.getVersion();
 
 		//throw new ModelException();
 	}
