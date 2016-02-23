@@ -13,8 +13,8 @@ import shared.model.map.objects.Vertex;
  * @author Jonathan Sadler
  *
  */
-public class VertexHandler {
-
+public class VertexHandler
+{
 	private static final int INITIAL_CAPACITY = 54;
 	private static final int Y_SHIFT = 5;
 	

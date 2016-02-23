@@ -9,8 +9,8 @@ import shared.model.map.*;
  * @author Jonathan Sadler
  *
  */
-public class Hex {
-
+public class Hex
+{
 	private HexType type;
 	private Coordinate point;
 	private PortType port;

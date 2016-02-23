@@ -8,8 +8,8 @@ import shared.model.map.Coordinate;
  * @author Jonathan Sadler
  *
  */
-public class Vertex {
-
+public class Vertex
+{
 	private Coordinate point;
 	
 	private PieceType type;
@@ -48,6 +48,10 @@ public class Vertex {
 		this.color = null;
 	}
 
+	/**
+	 * Gets the point for the vertex.
+	 * @return The point.
+	 */
 	public Coordinate getPoint()
 	{
 		return point;
@@ -67,6 +71,39 @@ public class Vertex {
 	public CatanColor getColor() 
 	{
 		return color;
+	}
+
+	@Override
+	public int hashCode() 
+	{
+		return point.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		
+		Vertex other = (Vertex) obj;
+		
+		if (color != other.color)
+			return false;
+		if (point == null) 
+		{
+			if (other.point != null)
+				return false;
+		} 
+		else if (!point.equals(other.point))
+			return false;
+		if (type != other.type)
+			return false;
+		
+		return true;
 	}
 
 	@Override

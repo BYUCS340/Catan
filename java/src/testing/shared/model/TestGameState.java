@@ -21,7 +21,8 @@ public class TestGameState {
 	}
 
 	@Test
-	public void test() {
+	public void test() 
+	{
 		assertTrue(gm.startGame());
 		assertEquals(gm.state, GameRound.FIRSTROUND);
 		

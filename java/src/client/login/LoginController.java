@@ -71,20 +71,22 @@ public class LoginController extends Controller implements ILoginController {
 	}
 
 	@Override
-	public void signIn() {
-		
+	public void signIn()
+	{	
 		// TODO: log in user
 		String username = getLoginView().getLoginUsername();
 		String password = getLoginView().getLoginPassword();
 		
-		try {
+		try 
+		{
 			if (!ClientGame.getCurrentProxy().loginUser(username, password))
 			{
 				this.showMessage("User/Password not found");
 				return;
 			}
-		} catch (ServerProxyException e) {
-			// TODO Auto-generated catch block
+		}
+		catch (ServerProxyException e) 
+		{
 			e.printStackTrace();
 			this.showMessage("Unable to connect to server");
 			return;
@@ -121,7 +123,8 @@ public class LoginController extends Controller implements ILoginController {
 			return;
 		}
 		
-		try {
+		try 
+		{
 			if (!ClientGame.getCurrentProxy().registerUser(username, password))
 			{
 				this.showMessage("Unable Register User");
@@ -132,8 +135,9 @@ public class LoginController extends Controller implements ILoginController {
 				this.showMessage("Unable Register User");
 				return;
 			}
-		} catch (ServerProxyException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (ServerProxyException e) 
+		{
 			this.showMessage("Unable to connect to server");
 			e.printStackTrace();
 			return;

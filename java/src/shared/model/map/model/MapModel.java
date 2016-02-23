@@ -34,7 +34,6 @@ public class MapModel implements IMapModel {
 	
 	private int longestRoadLength;
 	private CatanColor longestRoadColor;
-	private Map<CatanColor, List<PortType>> availablePorts;
 	
 	private Robber robber;
 	
@@ -436,7 +435,39 @@ public class MapModel implements IMapModel {
 	@Override
 	public Iterator<Entry<Edge, Hex>> GetPorts()
 	{
-		return ports.GetAllPorts();
+		return ports.GetPorts();
+	}
+	
+	@Override
+	public Iterator<PortType> GetPorts(CatanColor color)
+	{
+		List<PortType> portTypes = new ArrayList<PortType>(4);
+		
+		try
+		{
+			Iterator<Entry<Edge, Hex>> portList = ports.GetPorts();
+			
+			while (portList.hasNext())
+			{
+				Entry<Edge, Hex> port = portList.next();
+				
+				Edge edge = port.getKey();
+				Vertex v1 = vertices.GetVertex(edge.getStart());
+				Vertex v2 = vertices.GetVertex(edge.getEnd());
+				
+				if (v1.getType() != PieceType.NONE && v1.getColor() == color)
+					portTypes.add(port.getValue().getPort());
+				else if (v2.getType() != PieceType.NONE && v2.getColor() == color)
+					portTypes.add(port.getValue().getPort());
+			}
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			//Shouldn't occur
+		}
+		
+		return java.util.Collections.unmodifiableList(portTypes).iterator();
 	}
 	
 	@Override

@@ -12,8 +12,8 @@ import shared.model.map.objects.Hex;
  * @author Jonathan Sadler
  *
  */
-public class HexHandler {
-
+public class HexHandler
+{
 	private static final int MAX_SIZE = 37;
 	private static final int Y_SHIFT = 6;
 	

@@ -14,22 +14,22 @@ import shared.model.ModelObserver;
 /**
  * Implementation for the player waiting controller
  */
-public class PlayerWaitingController extends Controller implements IPlayerWaitingController,ModelObserver {
-
-	public PlayerWaitingController(IPlayerWaitingView view) {
-
+public class PlayerWaitingController extends Controller implements IPlayerWaitingController,ModelObserver
+{
+	public PlayerWaitingController(IPlayerWaitingView view) 
+	{
 		super(view);
-		
 	}
 
 	@Override
-	public IPlayerWaitingView getView() {
-		
+	public IPlayerWaitingView getView() 
+	{	
 		return (IPlayerWaitingView)super.getView();
 	}
 
 	@Override
-	public void start() {
+	public void start() 
+	{
 		//Set the AI choices
 		
 		//Get the ai types 
@@ -59,9 +59,11 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		//If it's open we need to close it before we update it
 		//I don't know why but it doesn't work if we don't 
 		//It's what the TA did when he took this class
-		if (currOpen) getView().closeModal();
+		if (currOpen) 
+			getView().closeModal();
 		getView().setPlayers(players);
-		if (currOpen) getView().showModal();
+		if (currOpen) 
+			getView().showModal();
 		
 		//If we have all the players needed to start the game
 		if (players.length == 4)
@@ -85,34 +87,30 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	public void addAI() {
 		String ai = getView().getSelectedAI();
 		AIType aiType = AIType.fromString(ai);
-		//System.out.println(aiType);
-		//System.out.println(ai);
+		
 		if (aiType == null)
 			return;
-		try {
+		
+		try 
+		{
 			ClientGame.getCurrentProxy().addAI(aiType);
 			ClientGame.getGame().RefreshFromServer();
 		} 
 		catch (ServerProxyException e) 
 		{
-			//System.err.println(e.toString());
-			//System.err.println(e.getMessage());
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			return;
-		} catch (ModelException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (ModelException e) 
+		{
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void alert() {
-		// TODO Auto-generated method stub
+	public void alert() 
+	{
 		System.out.println("Refresh player waiting");
-		refreshPlayersWaiting();
-		
+		refreshPlayersWaiting();	
 	}
-
 }
 

@@ -209,6 +209,13 @@ public interface IMapModel
 	public Iterator<Entry<Edge, Hex>> GetPorts();
 	
 	/**
+	 * Gets the ports available to a specific piece color.
+	 * @param color The piece color
+	 * @return An iterator for the available port
+	 */
+	public Iterator<PortType> GetPorts(CatanColor color);
+	
+	/**
 	 * Gets the location of the robber.
 	 * @return The robber location.
 	 */
