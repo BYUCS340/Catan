@@ -16,6 +16,8 @@ import shared.model.ModelObserver;
  */
 public class PlayerWaitingController extends Controller implements IPlayerWaitingController,ModelObserver
 {
+	private boolean joinedGame = false;
+	
 	public PlayerWaitingController(IPlayerWaitingView view) 
 	{
 		super(view);
@@ -68,7 +70,8 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		//If we have all the players needed to start the game
 		if (players.length == 4)
 		{
-			ClientGame.getGame().stopListening(this);
+			joinedGame = true;
+			//ClientGame.getGame().stopListening(this);
 			//Close the modal if it's open
 			if (currOpen) 
 				getView().closeModal();
@@ -105,8 +108,11 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	@Override
 	public void alert() 
 	{
-		System.out.println("Refresh player waiting");
-		refreshPlayersWaiting();	
+		if (!joinedGame)
+		{
+			System.out.println("Refresh player waiting");
+			refreshPlayersWaiting();
+		}
 	}
 }
 

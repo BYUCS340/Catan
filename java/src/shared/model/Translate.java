@@ -39,7 +39,7 @@ public class Translate
 		gameModel.version = netGameModel.getVersion();  //FINISHED
 		gameModel.mapModel = fromNetMap(netGameModel.getNetMap(), netGameModel.getNetPlayers());  //FINISHED -- I think ...
 		
-		if (gameModel.players.size() < 4)
+		if (gameModel.players.size() <= 3)
 		{
 			gameModel.gameState.state = GameRound.WAITING;
 			gameModel.gameState.activePlayerIndex = -1;
@@ -111,7 +111,7 @@ public class Translate
 	public Player fromNetPlayer(NetPlayer netPlayer)
 	{
 		Player player = new Player(netPlayer.getName(), netPlayer.getPlayerIndex(), netPlayer.getColor(), true, netPlayer.getPlayerID());
-		System.out.println(player);
+		//System.out.println(player);
 		//Setup the Bank
 		try
 		{
