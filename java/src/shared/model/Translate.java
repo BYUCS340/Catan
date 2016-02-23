@@ -1,6 +1,7 @@
 package shared.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import shared.model.map.*;
@@ -158,10 +159,13 @@ public class Translate
 	 */
 	public VictoryPointManager fromNetVPManager(NetTurnTracker netTurnTracker, List<NetPlayer> netPlayers)
 	{
-		int p1Points = netPlayers.get(0).getNumVictoryPoints();
-		int p2Points = netPlayers.get(1).getNumVictoryPoints();
-		int p3Points = netPlayers.get(2).getNumVictoryPoints();
-		int p4Points = netPlayers.get(3).getNumVictoryPoints();
+		int points[] = new int[4];
+		Arrays.fill(points, 0);
+		for (int i=0; i < netPlayers.size(); i++)
+		{
+			points[i] = netPlayers.get(i).getNumVictoryPoints();
+		}
+		
 		
 		int longRoad = netTurnTracker.getLongestRoad();
 		int largeArmy = netTurnTracker.getLargestArmy();
@@ -177,7 +181,7 @@ public class Translate
 				armySize = soliders;
 		}
 		
-		VictoryPointManager victoryPointManager = new VictoryPointManager(p1Points, p2Points, p3Points, p4Points, longRoad, largeArmy,armySize);
+		VictoryPointManager victoryPointManager = new VictoryPointManager(points[0], points[1], points[2], points[2], longRoad, largeArmy,armySize);
 		
 		return victoryPointManager;
 	}
