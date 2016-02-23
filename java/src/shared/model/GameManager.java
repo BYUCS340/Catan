@@ -173,7 +173,6 @@ public class GameManager implements ModelSubject
 			this.players.add(p);
 			playerColors[p.color.ordinal()] = p.playerIndex();
 		}
-		this.notifyCenter.notify(ModelNotification.PLAYERS);
 		
 	}
 	

@@ -28,6 +28,7 @@ import shared.locations.*;
 import shared.model.*;
 import shared.model.map.*;
 import shared.model.map.model.IMapModel;
+import shared.model.map.model.MapModel;
 import shared.model.map.model.UnmodifiableMapModel;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
@@ -418,28 +419,27 @@ public class ClientGameManager extends GameManager
 		//Add new players if needed
 		Translate trans = new Translate();
 		//If there are new players or the number of resources have changed
-		if (model.getNetPlayers().size() != this.getNumberPlayers())
+
+		System.out.println("Updated number of players");
+		List<Player> newplayers = trans.fromNetPlayers(model.getNetPlayers());
+		List<Player> oldplayers = this.players;
+		this.SetPlayers(newplayers);
+		
+		//Check if we have a different size
+		if (newplayers.size() != oldplayers.size())
 		{
-
-			System.out.println("Updated number of players");
-			List<Player> newplayers = trans.fromNetPlayers(model.getNetPlayers());
-			this.SetPlayers(newplayers);
-
+			this.notifyCenter.notify(ModelNotification.PLAYERS);
 		}
-
-		//Check if we need to update the resources
-		if (model.getVersion() != this.version)
+		
+		int oldresources = ClientDataTranslator.totalPlayerResouces(newplayers);
+		int newresources = ClientDataTranslator.totalPlayerResouces(oldplayers);
+		
+		//check if resources have changed
+		if (oldresources != newresources)
 		{
-
-			List<Player> newplayers = trans.fromNetPlayers(model.getNetPlayers());
-			int oldresources = ClientDataTranslator.totalPlayerResouces(newplayers);
-			int newresources = ClientDataTranslator.totalPlayerResouces(this.players);
-			if (version != model.getVersion() && oldresources != newresources)
-			{
-				this.SetPlayers(newplayers);
-				this.notifyCenter.notify(ModelNotification.RESOURCES);
-			}
+			this.notifyCenter.notify(ModelNotification.RESOURCES);
 		}
+		
 
 		//Update our chat
 		if (model.getNetChat().size() > this.waterCooler.size())
@@ -452,9 +452,19 @@ public class ClientGameManager extends GameManager
 		GameRound newround = model.getNetTurnTracker().getRound();
 		if (newround != gameState.state)
 		{
+			gameState.state = newround;
+			//handle the logic from this
+			
 			this.notifyCenter.notify(ModelNotification.STATE);
 		}
-
+		
+		MapModel newmap = trans.fromNetMap(model.getNetMap(), model.getNetPlayers());
+		
+		if (!newmap.equals(this.map))
+		{
+			this.map = newmap;
+			this.notifyCenter.notify(ModelNotification.MAP);
+		}
 
 		//throw new ModelException();
 	}
