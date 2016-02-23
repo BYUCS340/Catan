@@ -16,7 +16,7 @@ import shared.model.ModelException;
 public class Poller implements ActionListener 
 {
 	//Refresh every second and half
-	private final static int delay = 1500;
+	private final static int delay = 1700;
 	private Timer timer;
 	
 	/**
@@ -33,7 +33,6 @@ public class Poller implements ActionListener
 	public Poller(int delay)
 	{
 		timer = new javax.swing.Timer(delay,(ActionListener) this);
-		timer.addActionListener((ActionListener) this);
 		timer.setRepeats(true);
 		
 	}
@@ -58,9 +57,9 @@ public class Poller implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		//System.out.println("Poller has fired");
+		//System.out.println("Poller has fired :"+this.toString());
 		try
-		{
+		{	
 			ClientGame.getGame().RefreshFromServer();
 		} 
 		catch (ModelException e)

@@ -45,4 +45,37 @@ public class Robber {
 	{
 		return placedOn;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() 
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((placedOn == null) ? 0 : placedOn.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Robber))
+			return false;
+		Robber other = (Robber) obj;
+		if (placedOn == null) {
+			if (other.placedOn != null)
+				return false;
+		} else if (!placedOn.equals(other.placedOn))
+			return false;
+		return true;
+	}
 }

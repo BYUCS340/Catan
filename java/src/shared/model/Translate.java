@@ -38,6 +38,12 @@ public class Translate
 		gameModel.log = fromNetLog(netGameModel.getNetGameLog());  //FINISHED? -- but only logs as player 0
 		gameModel.version = netGameModel.getVersion();  //FINISHED
 		gameModel.mapModel = fromNetMap(netGameModel.getNetMap(), netGameModel.getNetPlayers());  //FINISHED -- I think ...
+		
+		if (gameModel.players.size() < 4)
+		{
+			gameModel.gameState.state = GameRound.WAITING;
+			gameModel.gameState.activePlayerIndex = -1;
+		}
 
 		return gameModel;
 	}
@@ -51,6 +57,7 @@ public class Translate
 	{
 		GameState gameState = new GameState();
 		gameState.state = netTurnTracker.getRound();
+		
 		gameState.activePlayerIndex = netTurnTracker.getCurrentTurn();
 		return gameState;
 	}
@@ -394,8 +401,8 @@ public class Translate
 				int y = hexLocation.getY();
 
 				Coordinate hex = GetHexCoordinate(x, y);
-				System.out.println("Port:"+port);
-				System.out.println("Hex coord:"+hex);
+				//System.out.println("Port:"+port);
+				//System.out.println("Hex coord:"+hex);
 				Direction edgeDirection = port.getDirection();
 
 				if (edgeDirection == null)

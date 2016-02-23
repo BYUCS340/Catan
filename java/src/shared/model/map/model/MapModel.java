@@ -696,4 +696,75 @@ public class MapModel implements IMapModel {
 			return false;
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() 
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((edges == null) ? 0 : edges.hashCode());
+		result = prime * result + ((hexes == null) ? 0 : hexes.hashCode());
+		result = prime * result + ((longestRoadColor == null) ? 0 : longestRoadColor.hashCode());
+		result = prime * result + longestRoadLength;
+		result = prime * result + ((ports == null) ? 0 : ports.hashCode());
+		result = prime * result + ((robber == null) ? 0 : robber.hashCode());
+		result = prime * result + ((values == null) ? 0 : values.hashCode());
+		result = prime * result + ((vertices == null) ? 0 : vertices.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof MapModel))
+			return false;
+		MapModel other = (MapModel) obj;
+		if (edges == null) {
+			if (other.edges != null)
+				return false;
+		} else if (!edges.equals(other.edges))
+			return false;
+		if (hexes == null) {
+			if (other.hexes != null)
+				return false;
+		} else if (!hexes.equals(other.hexes))
+			return false;
+		if (longestRoadColor != other.longestRoadColor)
+			return false;
+		if (longestRoadLength != other.longestRoadLength)
+			return false;
+		if (ports == null) {
+			if (other.ports != null)
+				return false;
+		} else if (!ports.equals(other.ports))
+			return false;
+		if (robber == null) {
+			if (other.robber != null)
+				return false;
+		} else if (!robber.equals(other.robber))
+			return false;
+		if (values == null) {
+			if (other.values != null)
+				return false;
+		} else if (!values.equals(other.values))
+			return false;
+		if (vertices == null) {
+			if (other.vertices != null)
+				return false;
+		} else if (!vertices.equals(other.vertices))
+			return false;
+		return true;
+	}
+	
+	
 }

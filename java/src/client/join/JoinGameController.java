@@ -206,6 +206,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		getSelectColorView().showModal();
 		if (mycolor != null)
 		{	
+			
 			joinGame(mycolor);
 		}
 	}
@@ -214,7 +215,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void cancelJoinGame() 
 	{
 		lastGameSelected = null;
-		getJoinGameView().closeModal();
+		getSelectColorView().closeModal();
 	}
 
 	@Override
@@ -228,13 +229,11 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			getMessageView().showModal();
 			return;
 		}
-		System.out.println("joining game "+lastGameSelected);
-		//this.refreshGameList();
-		
-		// If join succeeded
 		getSelectColorView().closeModal();
-		//getJoinGameView().closeModal();
 		timer.stop();
+		timer.setRepeats(false);
+		System.out.println("joining game "+lastGameSelected);
+		
 		joinAction.execute();
 	}
 

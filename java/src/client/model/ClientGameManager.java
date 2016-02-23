@@ -65,10 +65,10 @@ public class ClientGameManager extends GameManager
 
 
 	/**
-	 * Get the ID of the current player client
+	 * Get the Index of the current player client
 	 * @return
 	 */
-	public int myPlayerID()
+	public int myPlayerIndex()
 	{
 		return this.myPlayerIndex;
 	}
@@ -374,6 +374,14 @@ public class ClientGameManager extends GameManager
 		}
 
 	}
+	
+	
+	@Override
+	public void StartGame()
+	{
+		super.StartGame();
+		this.notifyCenter.notify(ModelNotification.ALL);
+	}
 
 	/**
 	 * Gets the points of the current player
@@ -410,26 +418,27 @@ public class ClientGameManager extends GameManager
 		{
 			return;
 		}
-
+		System.out.print("\n-----------------------------------------\nRefresh: "+this.refreshCount+":");
 		if (forced)
-			System.out.println("Updating game");
+			System.out.println("Forced update of game");
 		else
 			System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
+		
 		
 
 		//Add new players if needed
 		Translate trans = new Translate();
 		GameModel game = trans.fromNetGameModel(model);
+		
 		//If there are new players or the number of resources have changed
-
-		System.out.println("Updated number of players");
 		List<Player> newplayers = game.players;
 		List<Player> oldplayers = this.players;
-		this.SetPlayers(newplayers);
 		
 		//Check if we have a different size
-		if (newplayers.size() != oldplayers.size())
+		if (newplayers.size() != oldplayers.size() || !newplayers.equals(oldplayers))
 		{
+			System.out.println("Updated the players");
+			this.SetPlayers(newplayers);
 			this.notifyCenter.notify(ModelNotification.PLAYERS);
 		}
 		
@@ -456,14 +465,14 @@ public class ClientGameManager extends GameManager
 		{
 			gameState = newstate;
 			//handle the logic from this
-
+			System.out.println("Refreshed to "+newstate.state+" state");
 			this.notifyCenter.notify(ModelNotification.STATE);
 		}
 		
 		//Update the map model
 		MapModel newmap = game.mapModel;
 		
-		if (!newmap.equals(this.map) && newmap != null)
+		if (!this.map.equals(newmap) && newmap != null)
 		{
 			this.map = newmap;
 			this.notifyCenter.notify(ModelNotification.MAP);
@@ -471,7 +480,7 @@ public class ClientGameManager extends GameManager
 		
 		//Victory point manager
 		VictoryPointManager newVPM = game.victoryPointManager;
-		if (!newVPM.equals(this.victoryPointManager) && newVPM != null)
+		if (!victoryPointManager.equals(newVPM) && newVPM != null)
 		{
 			this.victoryPointManager = newVPM;
 			this.notifyCenter.notify(ModelNotification.SCORE);
@@ -485,8 +494,11 @@ public class ClientGameManager extends GameManager
 			this.notifyCenter.notify(ModelNotification.LOG);
 		}
 		
+		if (this.version == -1)
+			this.notifyCenter.notify(ModelNotification.ALL);
+		
 		this.version = model.getVersion();
-
+		System.out.println("Refresh finished");
 		//throw new ModelException();
 	}
 

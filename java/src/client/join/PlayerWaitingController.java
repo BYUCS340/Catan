@@ -68,18 +68,13 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		//If we have all the players needed to start the game
 		if (players.length == 4)
 		{
+			ClientGame.getGame().stopListening(this);
 			//Close the modal if it's open
 			if (currOpen) 
 				getView().closeModal();
+			System.out.println("Closing refresh players waiting modal");
 			//Start the game
-			try {
-				ClientGame.getGame().RefreshFromServer();
-			} catch (ModelException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			ClientGame.getGame().StartGame();
-			
+			ClientGame.getGame().StartGame();			
 		}
 	}
 
@@ -98,6 +93,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		} 
 		catch (ServerProxyException e) 
 		{
+			e.printStackTrace();
 			return;
 		} 
 		catch (ModelException e) 
