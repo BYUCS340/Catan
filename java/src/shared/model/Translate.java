@@ -639,37 +639,6 @@ public class Translate
 
 	private static EdgeDirection GetEdgeDirection(Coordinate hex, Coordinate p1, Coordinate p2)
 	{
-		/*`
-		//Horizontal edges
-		if (p1.getY() == p2.getY())
-		{
-			//If below, we grabbed the bottom, else the top.
-			if (p1.getY() <= 0)
-				return EdgeDirection.South;
-			else
-				return EdgeDirection.North;
-		}
-		//Diagonal edges
-		else
-		{
-			//p1 is left or right vertex
-			if (hex.getY() == p1.getY())
-			{
-				if (p1.getY() < p2.getY())
-					return EdgeDirection.NorthEast;
-				else
-					return EdgeDirection.SouthWest;
-			}
-			//p2 is left or right vertex
-			else
-			{
-				if (p2.getY() < p1.getY())
-					return EdgeDirection.NorthWest;
-				else
-					return EdgeDirection.SouthEast;
-			}
-		}
-		*/
 		int rotation = Edge.GetRotation(hex, p1, p2);
 
 		switch(rotation)
