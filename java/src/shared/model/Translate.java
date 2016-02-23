@@ -251,7 +251,7 @@ public class Translate
 			
 			ResourceType resourceType = hex.getResourceType();
 		
-			HexType hexType = HexType.WATER;
+			HexType hexType = HexType.DESERT;
 			if (resourceType != null)
 				HexType.GetFromResource(resourceType);
 			
