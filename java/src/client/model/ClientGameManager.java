@@ -172,7 +172,7 @@ public class ClientGameManager extends GameManager
 				if (newplay.getId() == proxy.getUserId())
 				{
 					System.out.println("Joined with player index:"+i);
-					this.myPlayerIndex = i;
+					this.myPlayerIndex = newplay.getPlayerIndex();
 					rejoining = true;
 				}
 				Player play = ClientDataTranslator.convertPlayerInfo(newplay);
