@@ -8,19 +8,20 @@ import client.base.*;
 /**
  * Implementation for the resource bar controller
  */
-public class ResourceBarController extends Controller implements IResourceBarController {
-
+public class ResourceBarController extends Controller implements IResourceBarController
+{
 	private Map<ResourceBarElement, IAction> elementActions;
 	
-	public ResourceBarController(IResourceBarView view) {
-
+	public ResourceBarController(IResourceBarView view)
+	{
 		super(view);
 		
 		elementActions = new HashMap<ResourceBarElement, IAction>();
 	}
 
 	@Override
-	public IResourceBarView getView() {
+	public IResourceBarView getView()
+	{
 		return (IResourceBarView)super.getView();
 	}
 
@@ -30,40 +31,45 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 	 * @param element The resource bar element with which the action is associated
 	 * @param action The action to be executed
 	 */
-	public void setElementAction(ResourceBarElement element, IAction action) {
-
+	public void setElementAction(ResourceBarElement element, IAction action)
+	{
 		elementActions.put(element, action);
 	}
 
 	@Override
-	public void buildRoad() {
+	public void buildRoad()
+	{
 		executeElementAction(ResourceBarElement.ROAD);
 	}
 
 	@Override
-	public void buildSettlement() {
+	public void buildSettlement()
+	{
 		executeElementAction(ResourceBarElement.SETTLEMENT);
 	}
 
 	@Override
-	public void buildCity() {
+	public void buildCity()
+	{
 		executeElementAction(ResourceBarElement.CITY);
 	}
 
 	@Override
-	public void buyCard() {
+	public void buyCard()
+	{
 		executeElementAction(ResourceBarElement.BUY_CARD);
 	}
 
 	@Override
-	public void playCard() {
+	public void playCard()
+	{
 		executeElementAction(ResourceBarElement.PLAY_CARD);
 	}
 	
-	private void executeElementAction(ResourceBarElement element) {
-		
-		if (elementActions.containsKey(element)) {
-			
+	private void executeElementAction(ResourceBarElement element)
+	{
+		if (elementActions.containsKey(element))
+		{
 			IAction action = elementActions.get(element);
 			action.execute();
 		}
