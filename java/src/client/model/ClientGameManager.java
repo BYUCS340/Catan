@@ -461,11 +461,12 @@ public class ClientGameManager extends GameManager
 		}
 
 		GameState newstate = game.gameState;
+		//System.out.println("STATE current:"+gameState.state+" new:"+newstate.state);
 		if (!this.gameState.equals(newstate) && newstate != null)
 		{
 			gameState = newstate;
 			//handle the logic from this
-			System.out.println("Refreshed to "+newstate.state+" state");
+			System.out.println("STATE Refreshed to "+newstate.state);
 			this.notifyCenter.notify(ModelNotification.STATE);
 		}
 		

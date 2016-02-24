@@ -41,6 +41,7 @@ public class Translate
 
 		if (gameModel.players.size() <= 3)
 		{
+			System.out.println("forcing game round to be waiting");
 			gameModel.gameState.state = GameRound.WAITING;
 			gameModel.gameState.activePlayerIndex = -1;
 		}

@@ -19,8 +19,8 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 
 	public TurnTrackerController(ITurnTrackerView view) {
 		super(view);
-		ClientGame.getGame().startListening(this, ModelNotification.PLAYERS);
-		ClientGame.getGame().startListening(this, ModelNotification.SCORE);
+		ClientGame.getGame().startListening(this);
+		//ClientGame.getGame().startListening(this, ModelNotification.SCORE);
 		isInitializedTo = 0;
 	}
 	
