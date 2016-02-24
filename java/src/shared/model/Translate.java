@@ -38,7 +38,7 @@ public class Translate
 		gameModel.log = fromNetLog(netGameModel.getNetGameLog());  //FINISHED? -- but only logs as player 0
 		gameModel.version = netGameModel.getVersion();  //FINISHED
 		gameModel.mapModel = fromNetMap(netGameModel.getNetMap(), netGameModel.getNetPlayers());  //FINISHED -- I think ...
-		
+
 		if (gameModel.players.size() <= 3)
 		{
 			gameModel.gameState.state = GameRound.WAITING;
@@ -57,7 +57,7 @@ public class Translate
 	{
 		GameState gameState = new GameState();
 		gameState.state = netTurnTracker.getRound();
-		
+
 		gameState.activePlayerIndex = netTurnTracker.getCurrentTurn();
 		return gameState;
 	}
