@@ -960,5 +960,62 @@ public class GameManager implements ModelSubject
 		return victoryPointManager;
 	}
 
+	/**
+	 * Returns the number of the requested type of resource held by the bank
+	 * @param resourceType
+	 * @return
+	 */
+	public int getBankResourceCount(ResourceType resourceType){
+		return gameBank.getResourceCount(resourceType);
+	}
+	
+	/**
+	 * Takes resource from the bank and gives them to the current player
+	 * @param type
+	 * @param count
+	 * @throws ModelException
+	 */
+	public void giveResourcesToCurrentPlayer(ResourceType type, int count) throws ModelException{
+		gameBank.getResource(type, count);
+		this.players.get(this.CurrentPlayersTurn()).playerBank.giveResource(type, count);
+	}
+	
+	/**
+	 * Takes resources from the current player and gives them to the bank
+	 * @param type
+	 * @param count
+	 * @throws ModelException
+	 */
+	public void takeResourcesFromCurrentPlayer(ResourceType type, int count) throws ModelException{
+		gameBank.giveResource(type, count);
+		this.players.get(this.CurrentPlayersTurn()).playerBank.getResource(type, count);
+	}
+	
+	
+	/**
+	 * Takes resources from the bank and gives them to the passed player index
+	 * @param playerIndex
+	 * @param type
+	 * @param count
+	 * @throws ModelException
+	 */
+	public void giveResourcesToPlayer(int playerIndex, ResourceType type, int count) throws ModelException{
+		gameBank.getResource(type, count);
+		this.players.get(playerIndex).playerBank.giveResource(type, count);
+	}
+	
+	/**
+	 * Takes resources from the passed player index and gives them to the bank
+	 * @param playerIndex
+	 * @param type
+	 * @param count
+	 * @throws ModelException
+	 */
+	public void takeResourcesFromPlayer(int playerIndex, ResourceType type, int count) throws ModelException{
+		gameBank.giveResource(type, count);
+		this.players.get(playerIndex).playerBank.getResource(type, count);
+	}
+
+	
 	
 }
