@@ -20,8 +20,8 @@ import client.networking.ServerProxyException;
 /**
  * Implementation for the join game controller
  */
-public class JoinGameController extends Controller implements IJoinGameController, ActionListener  {
-
+public class JoinGameController extends Controller implements IJoinGameController, ActionListener 
+{
 	private INewGameView newGameView;
 	private ISelectColorView selectColorView;
 	private IMessageView messageView;
@@ -38,8 +38,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	 * @param messageView Message view (used to display error messages that occur while the user is joining a game)
 	 */
 	public JoinGameController(IJoinGameView view, INewGameView newGameView, 
-								ISelectColorView selectColorView, IMessageView messageView) {
-
+								ISelectColorView selectColorView, IMessageView messageView) 
+	{
 		super(view);
 
 		setNewGameView(newGameView);
@@ -51,8 +51,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	}
 	
 	
-	public IJoinGameView getJoinGameView() {
-		
+	public IJoinGameView getJoinGameView() 
+	{	
 		return (IJoinGameView)super.getView();
 	}
 	
@@ -61,8 +61,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	 * 
 	 * @return The action to be executed when the user joins a game
 	 */
-	public IAction getJoinAction() {
-		
+	public IAction getJoinAction() 
+	{	
 		return joinAction;
 	}
 
@@ -71,41 +71,42 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	 * 
 	 * @param value The action to be executed when the user joins a game
 	 */
-	public void setJoinAction(IAction value) {	
-		
+	public void setJoinAction(IAction value)
+	{		
 		joinAction = value;
 	}
 	
-	public INewGameView getNewGameView() {
-		
+	public INewGameView getNewGameView()
+	{	
 		return newGameView;
 	}
 
-	public void setNewGameView(INewGameView newGameView) {
-		
+	public void setNewGameView(INewGameView newGameView)
+	{	
 		this.newGameView = newGameView;
 	}
 	
-	public ISelectColorView getSelectColorView() {
-		
+	public ISelectColorView getSelectColorView()
+	{	
 		return selectColorView;
 	}
-	public void setSelectColorView(ISelectColorView selectColorView) {
-		
+	public void setSelectColorView(ISelectColorView selectColorView)
+	{	
 		this.selectColorView = selectColorView;
 	}
 	
-	public IMessageView getMessageView() {
-		
+	public IMessageView getMessageView()
+	{	
 		return messageView;
 	}
-	public void setMessageView(IMessageView messageView) {
-		
+	public void setMessageView(IMessageView messageView)
+	{	
 		this.messageView = messageView;
 	}
 
 	@Override
-	public void start() {
+	public void start()
+	{
 		refreshGameList();
 		getJoinGameView().showModal();
 		timer.start();
@@ -237,7 +238,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		// If join succeeded
 		
 		getSelectColorView().closeModal();
-		//getJoinGameView().closeModal();
+		getJoinGameView().closeModal();
+		
 		timer.stop();
 		joinAction.execute();
 	}
