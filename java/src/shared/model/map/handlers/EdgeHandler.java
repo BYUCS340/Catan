@@ -150,4 +150,37 @@ public class EdgeHandler {
 		return 1000000 * p1.getX() + 10000 * (p1.getY() + Y_SHIFT)
 				+ 100 * p2.getX() + (p2.getY() + Y_SHIFT);
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() 
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((edges == null) ? 0 : edges.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof EdgeHandler))
+			return false;
+		EdgeHandler other = (EdgeHandler) obj;
+		if (edges == null) {
+			if (other.edges != null)
+				return false;
+		} else if (!edges.equals(other.edges))
+			return false;
+		return true;
+	}
 }

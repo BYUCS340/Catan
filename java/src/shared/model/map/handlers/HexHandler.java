@@ -118,4 +118,37 @@ public class HexHandler
 	{
 		return 100 * point.getX() + point.getY() + Y_SHIFT;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() 
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((hexes == null) ? 0 : hexes.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof HexHandler))
+			return false;
+		HexHandler other = (HexHandler) obj;
+		if (hexes == null) {
+			if (other.hexes != null)
+				return false;
+		} else if (!hexes.equals(other.hexes))
+			return false;
+		return true;
+	}
 }

@@ -244,6 +244,9 @@ public class MapController extends Controller implements IMapController
 		{
 			TurnState gameState = ClientGame.getGame().getTurnState();
 			
+			if (gameState == null)
+				gameState = TurnState.WAITING;
+			
 			switch (gameState)
 			{
 			case PLACING_PIECE:

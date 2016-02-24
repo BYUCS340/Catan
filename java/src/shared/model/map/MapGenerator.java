@@ -9,8 +9,8 @@ import shared.definitions.PortType;
 import shared.model.map.handlers.HexHandler;
 import shared.model.map.model.MapModel;
 
-public class MapGenerator {
-
+public class MapGenerator
+{
 	public static void BeginnerMap(MapModel model)
 	{
 		BeginnerLandSetup(model);
@@ -19,9 +19,14 @@ public class MapGenerator {
 		PlacePips(model);
 	}
 	
-	private void RandomSetup()
+//	private static void RandomSetup(MapModel model)
+//	{
+//		TODO Setup
+//	}
+	
+	public static void WaterSetup(MapModel model)
 	{
-		//Todo Setup
+		PlaceWater(model);
 	}
 	
 	private static void BeginnerLandSetup(MapModel model)

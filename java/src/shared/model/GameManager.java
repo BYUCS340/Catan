@@ -141,14 +141,12 @@ public class GameManager implements ModelSubject
 			throw new ModelException();
 		
 		int newIndex = players.size();
-		if (newIndex > 3)
+		if (newIndex > 3 || newIndex < 0)
 		{
 			throw new ModelException("Too many players already to add another");
 		}
 		Player newPlayer = new Player(name, newIndex, color, isHuman);
 		players.add(newPlayer);
-		
-		this.notifyCenter.notify(ModelNotification.PLAYERS);
 		
 		playerColors[color.ordinal()] = newIndex;
 		return newIndex;
@@ -169,11 +167,10 @@ public class GameManager implements ModelSubject
 				System.err.println("Player at "+i+" is null");
 				continue;
 			}
-			System.out.println(p);
+			//System.out.println(p);
 			this.players.add(p);
 			playerColors[p.color.ordinal()] = p.playerIndex();
 		}
-		this.notifyCenter.notify(ModelNotification.PLAYERS);
 		
 	}
 	

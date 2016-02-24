@@ -16,6 +16,8 @@ import shared.model.ModelObserver;
  */
 public class PlayerWaitingController extends Controller implements IPlayerWaitingController,ModelObserver
 {
+	private boolean joinedGame = false;
+	
 	public PlayerWaitingController(IPlayerWaitingView view) 
 	{
 		super(view);
@@ -41,9 +43,9 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		
 		
 		ClientGame.getGame().startListening(this,ModelNotification.PLAYERS);
-		refreshPlayersWaiting();
 		
 		getView().showModal();
+		refreshPlayersWaiting();
 	}
 	
 	/**
@@ -68,10 +70,14 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		//If we have all the players needed to start the game
 		if (players.length == 4)
 		{
+			joinedGame = true;
+			//ClientGame.getGame().stopListening(this);
+			//Close the modal if it's open
+			if (currOpen) 
+				getView().closeModal();
+			System.out.println("Closing refresh players waiting modal");
 			//Start the game
-			getView().closeModal();
-			ClientGame.getGame().StartGame();
-			
+			ClientGame.getGame().StartGame();			
 		}
 	}
 
@@ -90,6 +96,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		} 
 		catch (ServerProxyException e) 
 		{
+			e.printStackTrace();
 			return;
 		} 
 		catch (ModelException e) 
@@ -101,8 +108,11 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	@Override
 	public void alert() 
 	{
-		System.out.println("Refresh player waiting");
-		refreshPlayersWaiting();	
+		if (!joinedGame)
+		{
+			System.out.println("Refresh player waiting");
+			refreshPlayersWaiting();
+		}
 	}
 }
 

@@ -5,6 +5,7 @@ import client.model.ClientGame;
 import client.model.ClientGameManager;
 import shared.definitions.CatanColor;
 import shared.definitions.GameRound;
+import shared.definitions.ModelNotification;
 import shared.model.ModelObserver;
 import shared.model.VictoryPointManager;
 
@@ -14,12 +15,13 @@ import shared.model.VictoryPointManager;
  */
 public class TurnTrackerController extends Controller implements ITurnTrackerController, ModelObserver {
 	
-	private boolean isInitialized;
+	private int isInitializedTo;
 
 	public TurnTrackerController(ITurnTrackerView view) {
 		super(view);
 		ClientGame.getGame().startListening(this);
-		isInitialized = false;
+		//ClientGame.getGame().startListening(this, ModelNotification.SCORE);
+		isInitializedTo = 0;
 	}
 	
 	@Override
@@ -36,10 +38,10 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	private void initializeTurns()
 	{
 		ClientGameManager game = ClientGame.getGame();
-		int myIndex = game.myPlayerID();
+		int myIndex = game.myPlayerIndex();
 		CatanColor myColor = game.getPlayerColorByIndex(myIndex);
 		
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < game.getNumberPlayers(); i++)
 		{
 			getView().initializePlayer(i, game.getPlayerNameByIndex(i), game.getPlayerColorByIndex(i));
 		}
@@ -49,19 +51,21 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	
 	private void updateFromModel() {
 		ClientGameManager game = ClientGame.getGame();
-		int myIndex = game.myPlayerID();
+		int myIndex = game.myPlayerIndex();
 		VictoryPointManager vp = game.getVictoryPointManager();
 		
 		int currPlayerIndex = game.CurrentPlayersTurn();
+		int currNumPlayers = game.getNumberPlayers();
 		
-		if(!isInitialized)
+		if(isInitializedTo < currNumPlayers )
 		{
 			initializeTurns();
-			isInitialized = true;
+			isInitializedTo = currNumPlayers;
 		}
 		
-		//update view for each player
-		for(int i = 0; i < 4; i++)
+		//update view for each player; 
+
+		for(int i = 0; i < game.getNumberPlayers();i++)
 		{
 			boolean highlight = false;
 			//0. See if it is this player's turn and highlight if it is
@@ -106,7 +110,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		ClientGameManager game = ClientGame.getGame();
 		
 		//OJO if the version number wraps around to -1, THIS WILL NOT WORK
-		if(game.GetVersion() != -1 && game.hasGameStarted())
+		if(game.hasGameStarted())
 		{
 			this.updateFromModel();
 		}
