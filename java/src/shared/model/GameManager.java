@@ -976,6 +976,7 @@ public class GameManager implements ModelSubject
 	 * @throws ModelException
 	 */
 	public void giveResourcesToCurrentPlayer(ResourceType type, int count) throws ModelException{
+		System.out.println("In taking from bank: The bank has" + gameBank.getResourceCount(type) + " of " + type);
 		gameBank.getResource(type, count);
 		this.players.get(this.CurrentPlayersTurn()).playerBank.giveResource(type, count);
 	}
@@ -1014,6 +1015,32 @@ public class GameManager implements ModelSubject
 	public void takeResourcesFromPlayer(int playerIndex, ResourceType type, int count) throws ModelException{
 		gameBank.giveResource(type, count);
 		this.players.get(playerIndex).playerBank.getResource(type, count);
+	}
+	
+	public void initializeBankTempTesting(){
+		try {
+			gameBank.giveResource(ResourceType.BRICK, 60);
+			gameBank.giveResource(ResourceType.SHEEP, 60);
+			gameBank.giveResource(ResourceType.WHEAT, 60);
+			gameBank.giveResource(ResourceType.ORE, 60);
+			gameBank.giveResource(ResourceType.WOOD, 60);
+
+		} catch (ModelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ResourceType type = ResourceType.BRICK;
+		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+		type = ResourceType.SHEEP;
+		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+		 type = ResourceType.WHEAT;
+		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+		 type = ResourceType.ORE;
+		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+		 type = ResourceType.WOOD;
+		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+		
+
 	}
 
 	
