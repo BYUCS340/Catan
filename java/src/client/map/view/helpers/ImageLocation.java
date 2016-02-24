@@ -40,27 +40,54 @@ public class ImageLocation
 	}
 	
 	/**
+	 * Gets the port for a specified angle direction.
+	 * @param angle The desired angle.
+	 * @return The associated image.
+	 */
+	public static String getPortImageFile(int angle)
+	{
+		switch (angle)
+		{
+		case 0:
+			return "images/ports/Ports_000.png";
+		case 60:
+			return "images/ports/Ports_060.png";
+		case 120:
+			return "images/ports/Ports_120.png";
+		case 180:
+			return "images/ports/Ports_180.png";
+		case 240:
+			return "images/ports/Ports_240.png";
+		case 300:
+			return "images/ports/Ports_300.png";
+			default:
+				assert false;
+				return null;
+		}
+	}
+	
+	/**
 	 * Gets the relative location for port file images.
 	 * @param portType The type of port desired.
 	 * @return The relative file path as a string.
 	 */
-	public static String getPortImageFile(PortType portType)
+	public static String getPortResourceImageFile(PortType portType)
 	{
 		
 		switch (portType)
 		{
 			case WOOD:
-				return "images/ports/port_wood.png";
+				return "images/resources/wood.png";
 			case BRICK:
-				return "images/ports/port_brick.png";
+				return "images/resources/brick.png";
 			case SHEEP:
-				return "images/ports/port_sheep.png";
+				return "images/resources/sheep.png";
 			case WHEAT:
-				return "images/ports/port_wheat.png";
+				return "images/resources/wheat.png";
 			case ORE:
-				return "images/ports/port_ore.png";
+				return "images/resources/ore.png";
 			case THREE:
-				return "images/ports/port_three.png";
+				return "images/ports/three.png";
 			default:
 				assert false;
 				return null;
@@ -93,7 +120,7 @@ public class ImageLocation
 	 */
 	public static String getRobberImageFile()
 	{
-		return "images/misc/robber.gif";
+		return "images/misc/trogdor_icon.png";
 	}
 	
 	/**

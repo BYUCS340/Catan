@@ -3,7 +3,7 @@ package shared.model;
 import java.util.List;
 
 import shared.model.chat.ChatBox;
-import shared.model.map.MapModel;
+import shared.model.map.model.MapModel;
 
 /**
  * A simple data holder for communication between ServerProxy and GameManager

@@ -1,34 +1,22 @@
 package testing.shared.model;
 import static org.junit.Assert.*;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import client.map.MapController;
-import client.map.view.MapView;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
 import shared.model.GameManager;
 import shared.model.ModelException;
-import shared.model.Player;
-import shared.model.map.MapModel;
 
-public class TestGameManager {
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
+public class TestGameManager 
+{
 	@Test
-	public void testPlayerTurns(){
+	public void testPlayerTurns()
+	{
 		GameManager gm = new GameManager();
-		try {
+		try 
+		{
 			int index = gm.AddPlayer("Matt1", CatanColor.BLUE, false);
 			assertEquals(index,0);
 			index = gm.AddPlayer("Matt2", CatanColor.RED, false);
@@ -38,18 +26,18 @@ public class TestGameManager {
 			index = gm.AddPlayer("Matt4", CatanColor.YELLOW, false);
 			assertEquals(index,3);
 			
-		} catch (ModelException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (ModelException e) 
+		{
 			fail("Player wasn't able to add");
 			e.printStackTrace();
 		}
-		MapController controller = new MapController(new MapView(), null, new MapModel());
-		gm.map = controller;
 		
 		gm.StartGame();
 		
 		//Get through the first two rounds for each player
-		try{
+		try
+		{
 			assertEquals(GameRound.FIRSTROUND,gm.CurrentState());
 			assertEquals(gm.CurrentPlayersTurn(),0);
 			gm.FinishTurn();
@@ -74,13 +62,15 @@ public class TestGameManager {
 			assertEquals(GameRound.ROLLING,gm.CurrentState());
 			assertFalse(gm.CanFinishTurn());
 		}
-		catch (Exception e){
+		catch (Exception e)
+		{
 			fail("No exceptions here!");
 		}
 		
 		//Give everyone 5 of every resource
 		gm.payDayForDayz();
-		try{
+		try
+		{
 			assertFalse(gm.CanBuyDevCard(gm.CurrentPlayersTurn()));
 			int roll = gm.RollDice();
 			//If we roll a 7 then we're robbing
@@ -91,16 +81,17 @@ public class TestGameManager {
 			}
 			
 			assertEquals(GameRound.PLAYING,gm.CurrentState());
-			
 		}
-		catch (Exception e){
+		catch (Exception e)
+		{
 			System.err.println(e);
 			fail("exceptions trying to roll the dice!");
 		}
 		
 		//Make sure we can't roll the dice again
-		try{
-			int roll = gm.RollDice();
+		try
+		{
+			gm.RollDice();
 			fail("We should have got an exceptions rolling the dice!");
 		}
 		catch (Exception e){
@@ -150,45 +141,49 @@ public class TestGameManager {
 	public void testPlayerAdding()
 	{
 		GameManager gm = new GameManager();
-		try {
+		try 
+		{
 			int index = gm.AddPlayer("Matt1", CatanColor.BLUE, false);
 			assertEquals(index,0);
 			index = gm.AddPlayer("Matt2", CatanColor.RED, false);
 			assertEquals(index,1);
-		} catch (ModelException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (ModelException e) 
+		{
 			fail("Player wasn't able to add");
 			e.printStackTrace();
 		}
 		
 		//make sure we can't add the same color twice
-		try{
+		try
+		{
 			gm.AddPlayer("Matt1", CatanColor.BLUE, false);
 			fail("We can't add the same color twice");
-		} catch (ModelException e) {
+		} 
+		catch (ModelException e) 
+		{
 			//Good good
 		}
 		
-		try{
+		try
+		{
 			int index = gm.AddPlayer("Matt3", CatanColor.GREEN, false);
 			assertEquals(index,2);
 			index = gm.AddPlayer("Matt4", CatanColor.YELLOW, false);
 			assertEquals(index,3);
-			
-		} catch (ModelException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (ModelException e)
+		{
 			fail("Player wasn't able to add");
 			e.printStackTrace();
 		}
 		
-		try{
-			int index = gm.AddPlayer("Matt5", CatanColor.WHITE, false);
+		try
+		{
+			gm.AddPlayer("Matt5", CatanColor.WHITE, false);
 			fail("Can't add more players");
 		}
-		catch (ModelException e) {
-			
-			
-		}
+		catch (ModelException e) { }
 	}
 
 }

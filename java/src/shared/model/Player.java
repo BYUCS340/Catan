@@ -1,6 +1,7 @@
 package shared.model;
 
 import shared.definitions.CatanColor;
+import shared.definitions.ResourceType;
 /**
  * A player in the game. Can be an AI player or a human player
  * @author matthewcarlson, garrettegan
@@ -62,6 +63,17 @@ public class Player
 	public int playerID()
 	{
 		return playerID;
+	}
+	
+	public int totalResources()
+	{
+		int resources = 0;
+		resources += this.playerBank.getResourceCount(ResourceType.BRICK);
+		resources += this.playerBank.getResourceCount(ResourceType.ORE);
+		resources += this.playerBank.getResourceCount(ResourceType.SHEEP);
+		resources += this.playerBank.getResourceCount(ResourceType.WHEAT);
+		resources += this.playerBank.getResourceCount(ResourceType.WOOD);
+		return resources;
 	}
 	
 	/**

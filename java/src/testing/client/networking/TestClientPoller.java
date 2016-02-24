@@ -27,30 +27,23 @@ public class TestClientPoller {
 	
 	@Test
 
-	public void test() throws InterruptedException {
+	public void test() throws InterruptedException 
+	{
 		//poller.beginPolling();
 		//Not sure how to check if poller began polling
 		int i = 1;
 		assertEquals(ClientGame.getGame().GetRefreshCount(), 0);
-		//Thread.sleep(5);
-		try {
+		
+		try 
+		{
 			ClientGame.getGame().RefreshFromServer();
-		} catch (ModelException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+		} 
+		catch (ModelException e) 
+		{
 			System.err.println("Unable to refresh from server");
 		}
 		
-		//while(ClientGame.getGame().GetRefreshCount() == 0 && i != 0) {
-		//	i++;
-			//Thread.sleep(1);
-		//}
-		//System.out.println("Polled the server");
-		//poller.stopPolling();
-		//assertNotEquals(ClientGame.getGame().GetRefreshCount(), 0);
-		if (i == 0) fail("Timeout on poll");
-		
+		if (i == 0)
+			fail("Timeout on poll");
 	}
-	
-
 }

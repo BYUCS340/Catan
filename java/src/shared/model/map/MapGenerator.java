@@ -5,12 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import shared.definitions.HexType;
-import shared.definitions.PieceType;
 import shared.definitions.PortType;
-import shared.model.map.objects.Edge;
-import shared.model.map.objects.Hex;
-import shared.model.map.objects.Robber;
-import shared.model.map.objects.Vertex;
+import shared.model.map.handlers.HexHandler;
+import shared.model.map.model.MapModel;
 
 public class MapGenerator {
 
@@ -31,29 +28,29 @@ public class MapGenerator {
 	{
 		try
 		{
-			model.SetHex(HexType.ORE, new Coordinate(1, -2));
-			model.SetHex(HexType.SHEEP, new Coordinate(1, 0));
-			model.SetHex(HexType.WOOD, new Coordinate(1, 2));
+			model.PlaceHex(HexType.ORE, new Coordinate(1, -2));
+			model.PlaceHex(HexType.SHEEP, new Coordinate(1, 0));
+			model.PlaceHex(HexType.WOOD, new Coordinate(1, 2));
 			
-			model.SetHex(HexType.WHEAT, new Coordinate(2, -3));
-			model.SetHex(HexType.BRICK, new Coordinate(2, -1));
-			model.SetHex(HexType.SHEEP, new Coordinate(2, 1));
-			model.SetHex(HexType.BRICK, new Coordinate(2, 3));
+			model.PlaceHex(HexType.WHEAT, new Coordinate(2, -3));
+			model.PlaceHex(HexType.BRICK, new Coordinate(2, -1));
+			model.PlaceHex(HexType.SHEEP, new Coordinate(2, 1));
+			model.PlaceHex(HexType.BRICK, new Coordinate(2, 3));
 			
-			model.SetHex(HexType.WHEAT, new Coordinate(3, -4));
-			model.SetHex(HexType.WOOD, new Coordinate(3, -2));
-			model.SetHex(HexType.DESERT, new Coordinate(3, 0));
-			model.SetHex(HexType.WOOD, new Coordinate(3, 2));
-			model.SetHex(HexType.ORE, new Coordinate(3, 4));
+			model.PlaceHex(HexType.WHEAT, new Coordinate(3, -4));
+			model.PlaceHex(HexType.WOOD, new Coordinate(3, -2));
+			model.PlaceHex(HexType.DESERT, new Coordinate(3, 0));
+			model.PlaceHex(HexType.WOOD, new Coordinate(3, 2));
+			model.PlaceHex(HexType.ORE, new Coordinate(3, 4));
 			
-			model.SetHex(HexType.WOOD, new Coordinate(4, -3));
-			model.SetHex(HexType.ORE, new Coordinate(4, -1));
-			model.SetHex(HexType.WHEAT, new Coordinate(4, 1));
-			model.SetHex(HexType.SHEEP, new Coordinate(4, 3));
+			model.PlaceHex(HexType.WOOD, new Coordinate(4, -3));
+			model.PlaceHex(HexType.ORE, new Coordinate(4, -1));
+			model.PlaceHex(HexType.WHEAT, new Coordinate(4, 1));
+			model.PlaceHex(HexType.SHEEP, new Coordinate(4, 3));
 			
-			model.SetHex(HexType.BRICK, new Coordinate(5, -2));
-			model.SetHex(HexType.WHEAT, new Coordinate(5, 0));
-			model.SetHex(HexType.SHEEP, new Coordinate(5, 2));
+			model.PlaceHex(HexType.BRICK, new Coordinate(5, -2));
+			model.PlaceHex(HexType.WHEAT, new Coordinate(5, 0));
+			model.PlaceHex(HexType.SHEEP, new Coordinate(5, 2));
 		}
 		catch (MapException e)
 		{
@@ -62,7 +59,7 @@ public class MapGenerator {
 		}
 		
 		try {
-			model.SetRobber(model.GetHex(new Coordinate(3,0)));
+			model.PlaceRobber(new Coordinate(3,0));
 		}
 		catch (MapException e) {
 			e.printStackTrace();
@@ -74,24 +71,24 @@ public class MapGenerator {
 	{
 		try
 		{
-			model.SetHex(HexType.WATER, new Coordinate(0, -1));
-			model.SetHex(HexType.WATER, new Coordinate(0, -3));
-			model.SetHex(HexType.WATER, new Coordinate(1, -4));
-			model.SetHex(HexType.WATER, new Coordinate(2, -5));
-			model.SetHex(HexType.WATER, new Coordinate(3, -6));
-			model.SetHex(HexType.WATER, new Coordinate(4, -5));
-			model.SetHex(HexType.WATER, new Coordinate(5, -4));
-			model.SetHex(HexType.WATER, new Coordinate(6, -3));
-			model.SetHex(HexType.WATER, new Coordinate(6, -1));
-			model.SetHex(HexType.WATER, new Coordinate(6, 1));
-			model.SetHex(HexType.WATER, new Coordinate(6, 3));
-			model.SetHex(HexType.WATER, new Coordinate(5, 4));
-			model.SetHex(HexType.WATER, new Coordinate(4, 5));
-			model.SetHex(HexType.WATER, new Coordinate(3, 6));
-			model.SetHex(HexType.WATER, new Coordinate(2, 5));
-			model.SetHex(HexType.WATER, new Coordinate(1, 4));
-			model.SetHex(HexType.WATER, new Coordinate(0, 3));
-			model.SetHex(HexType.WATER, new Coordinate(0, 1));
+			model.PlaceHex(HexType.WATER, new Coordinate(0, -1));
+			model.PlaceHex(HexType.WATER, new Coordinate(0, -3));
+			model.PlaceHex(HexType.WATER, new Coordinate(1, -4));
+			model.PlaceHex(HexType.WATER, new Coordinate(2, -5));
+			model.PlaceHex(HexType.WATER, new Coordinate(3, -6));
+			model.PlaceHex(HexType.WATER, new Coordinate(4, -5));
+			model.PlaceHex(HexType.WATER, new Coordinate(5, -4));
+			model.PlaceHex(HexType.WATER, new Coordinate(6, -3));
+			model.PlaceHex(HexType.WATER, new Coordinate(6, -1));
+			model.PlaceHex(HexType.WATER, new Coordinate(6, 1));
+			model.PlaceHex(HexType.WATER, new Coordinate(6, 3));
+			model.PlaceHex(HexType.WATER, new Coordinate(5, 4));
+			model.PlaceHex(HexType.WATER, new Coordinate(4, 5));
+			model.PlaceHex(HexType.WATER, new Coordinate(3, 6));
+			model.PlaceHex(HexType.WATER, new Coordinate(2, 5));
+			model.PlaceHex(HexType.WATER, new Coordinate(1, 4));
+			model.PlaceHex(HexType.WATER, new Coordinate(0, 3));
+			model.PlaceHex(HexType.WATER, new Coordinate(0, 1));
 		}
 		catch (MapException e)
 		{
@@ -102,46 +99,56 @@ public class MapGenerator {
 	
 	private static void PlacePorts(MapModel model)
 	{
-		Hex hex;
-		Edge edge;
+		Coordinate hex;
+		Coordinate edgeStart;
+		Coordinate edgeEnd;
 		
 		try
 		{
-			hex = model.GetHex(new Coordinate(0,3));
-			edge = model.GetEdge(hex.getPoint().GetEast(), hex.getPoint().GetSouthEast());
-			model.SetPort(PortType.THREE, edge, hex);
+			hex = new Coordinate(0,3);
+			edgeStart = HexHandler.GetRight(hex);
+			edgeEnd = HexHandler.GetBottomRight(hex);
+			model.PlacePort(PortType.THREE, hex, edgeStart, edgeEnd);
 			
-			hex = model.GetHex(new Coordinate(2,5));
-			edge = model.GetEdge(hex.getPoint().GetSouth(), hex.getPoint().GetSouthEast());
-			model.SetPort(PortType.WHEAT, edge, hex);
+			hex = new Coordinate(2,5);
+			edgeStart = HexHandler.GetBottomLeft(hex);
+			edgeEnd = HexHandler.GetBottomRight(hex);
+			model.PlacePort(PortType.WHEAT, hex, edgeStart, edgeEnd);
 			
-			hex = model.GetHex(new Coordinate(4,5));
-			edge = model.GetEdge(hex.getPoint().GetSouth(), hex.getPoint().GetSouthEast());
-			model.SetPort(PortType.ORE, edge, hex);
+			hex = new Coordinate(4,5);
+			edgeStart = HexHandler.GetBottomLeft(hex);
+			edgeEnd = HexHandler.GetBottomRight(hex);
+			model.PlacePort(PortType.ORE, hex, edgeStart, edgeEnd);
 			
-			hex = model.GetHex(new Coordinate(6,3));
-			edge = model.GetEdge(hex.getPoint().GetSouth(), hex.getPoint());
-			model.SetPort(PortType.THREE, edge, hex);
+			hex = new Coordinate(6,3);
+			edgeStart = HexHandler.GetBottomLeft(hex);
+			edgeEnd = HexHandler.GetLeft(hex);
+			model.PlacePort(PortType.THREE, hex, edgeStart, edgeEnd);
 			
-			hex = model.GetHex(new Coordinate(6,-1));
-			edge = model.GetEdge(hex.getPoint().GetNorth(), hex.getPoint());
-			model.SetPort(PortType.SHEEP, edge, hex);
+			hex = new Coordinate(6,-1);
+			edgeStart = HexHandler.GetTopLeft(hex);
+			edgeEnd = HexHandler.GetLeft(hex);
+			model.PlacePort(PortType.SHEEP, hex, edgeStart, edgeEnd);
 			
-			hex = model.GetHex(new Coordinate(5,-4));
-			edge = model.GetEdge(hex.getPoint().GetNorth(), hex.getPoint());
-			model.SetPort(PortType.THREE, edge, hex);
+			hex = new Coordinate(5,-4);
+			edgeStart = HexHandler.GetTopLeft(hex);
+			edgeEnd = HexHandler.GetLeft(hex);
+			model.PlacePort(PortType.THREE, hex, edgeStart, edgeEnd);
 			
-			hex = model.GetHex(new Coordinate(3,-6));
-			edge = model.GetEdge(hex.getPoint().GetNorth(), hex.getPoint().GetNorthEast());
-			model.SetPort(PortType.THREE, edge, hex);
+			hex = new Coordinate(3,-6);
+			edgeStart = HexHandler.GetTopLeft(hex);
+			edgeEnd = HexHandler.GetTopRight(hex);
+			model.PlacePort(PortType.THREE, hex, edgeStart, edgeEnd);
 			
-			hex = model.GetHex(new Coordinate(1,-4));
-			edge = model.GetEdge(hex.getPoint().GetEast(), hex.getPoint().GetNorthEast());
-			model.SetPort(PortType.BRICK, edge, hex);
+			hex = new Coordinate(1,-4);
+			edgeStart = HexHandler.GetRight(hex);
+			edgeEnd = HexHandler.GetTopRight(hex);
+			model.PlacePort(PortType.BRICK, hex, edgeStart, edgeEnd);
 			
-			hex = model.GetHex(new Coordinate(0,-1));
-			edge = model.GetEdge(hex.getPoint().GetEast(), hex.getPoint().GetNorthEast());
-			model.SetPort(PortType.WOOD, edge, hex);
+			hex = new Coordinate(0,-1);
+			edgeStart = HexHandler.GetRight(hex);
+			edgeEnd = HexHandler.GetTopRight(hex);
+			model.PlacePort(PortType.WOOD, hex, edgeStart, edgeEnd);
 		}
 		catch (MapException e)
 		{
@@ -153,20 +160,27 @@ public class MapGenerator {
 	private static void PlacePips(MapModel model)
 	{
 		List<Integer> pipList = GetPipList();
-		List<Hex> hexList = GetHexList(model);
+		List<Coordinate> hexList = GetHexList(model);
 		
 		Iterator<Integer> pipIterator = pipList.iterator();
-		Iterator<Hex> hexIterator = hexList.iterator();
+		Iterator<Coordinate> hexIterator = hexList.iterator();
 		
 		while (pipIterator.hasNext())
 		{
 			int pip = pipIterator.next();
-			
-			Hex hex = hexIterator.next();
-			if (hex.getType() == HexType.DESERT)
+		
+			Coordinate hex = hexIterator.next();
+			if (!model.CanPlacePip(hex))
 				hex = hexIterator.next();
 			
-			model.SetPip(pip, hex);
+			try
+			{
+				model.PlacePip(pip, hex);
+			}
+			catch (MapException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -196,38 +210,29 @@ public class MapGenerator {
 		return pipList;
 	}
 
-	private static List<Hex> GetHexList(MapModel model)
+	private static List<Coordinate> GetHexList(MapModel model)
 	{
-		List<Hex> hexList = new ArrayList<Hex>(19);
+		List<Coordinate> hexList = new ArrayList<Coordinate>(19);
 		
-		try
-		{
-			hexList.add(model.GetHex(new Coordinate(1, -2)));
-			hexList.add(model.GetHex(new Coordinate(2, -3)));
-			hexList.add(model.GetHex(new Coordinate(3, -4)));
-			hexList.add(model.GetHex(new Coordinate(4, -3)));
-			hexList.add(model.GetHex(new Coordinate(5, -2)));
-			hexList.add(model.GetHex(new Coordinate(5, 0)));
-			hexList.add(model.GetHex(new Coordinate(5, 2)));
-			hexList.add(model.GetHex(new Coordinate(4, 3)));
-			hexList.add(model.GetHex(new Coordinate(3, 4)));
-			hexList.add(model.GetHex(new Coordinate(2, 3)));
-			hexList.add(model.GetHex(new Coordinate(1, 2)));
-			hexList.add(model.GetHex(new Coordinate(1, 0)));
-			hexList.add(model.GetHex(new Coordinate(2, -1)));
-			hexList.add(model.GetHex(new Coordinate(3, -2)));
-			hexList.add(model.GetHex(new Coordinate(4, -1)));
-			hexList.add(model.GetHex(new Coordinate(4, 1)));
-			hexList.add(model.GetHex(new Coordinate(3, 2)));
-			hexList.add(model.GetHex(new Coordinate(2, 1)));
-			hexList.add(model.GetHex(new Coordinate(3, 0)));
-		}
-		catch (MapException e)
-		{
-			e.printStackTrace();
-			//These are all standard coordinates. The only reason these wouldn't
-			//exist is if you haven't created the map yet.
-		}
+		hexList.add(new Coordinate(1, -2));
+		hexList.add(new Coordinate(2, -3));
+		hexList.add(new Coordinate(3, -4));
+		hexList.add(new Coordinate(4, -3));
+		hexList.add(new Coordinate(5, -2));
+		hexList.add(new Coordinate(5, 0));
+		hexList.add(new Coordinate(5, 2));
+		hexList.add(new Coordinate(4, 3));
+		hexList.add(new Coordinate(3, 4));
+		hexList.add(new Coordinate(2, 3));
+		hexList.add(new Coordinate(1, 2));
+		hexList.add(new Coordinate(1, 0));
+		hexList.add(new Coordinate(2, -1));
+		hexList.add(new Coordinate(3, -2));
+		hexList.add(new Coordinate(4, -1));
+		hexList.add(new Coordinate(4, 1));
+		hexList.add(new Coordinate(3, 2));
+		hexList.add(new Coordinate(2, 1));
+		hexList.add(new Coordinate(3, 0));
 		
 		return hexList;
 	}

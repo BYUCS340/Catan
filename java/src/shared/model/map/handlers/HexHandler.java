@@ -12,8 +12,8 @@ import shared.model.map.objects.Hex;
  * @author Jonathan Sadler
  *
  */
-public class HexHandler {
-
+public class HexHandler
+{
 	private static final int MAX_SIZE = 37;
 	private static final int Y_SHIFT = 6;
 	
@@ -77,6 +77,36 @@ public class HexHandler {
 	public Iterator<Hex> GetAllHexes()
 	{
 		return java.util.Collections.unmodifiableCollection(hexes.values()).iterator();
+	}
+	
+	public static Coordinate GetTopLeft(Coordinate point)
+	{
+		return point.GetNorth();
+	}
+	
+	public static Coordinate GetTopRight(Coordinate point)
+	{
+		return point.GetNorthEast();
+	}
+	
+	public static Coordinate GetRight(Coordinate point)
+	{
+		return point.GetEast();
+	}
+	
+	public static Coordinate GetBottomRight(Coordinate point)
+	{
+		return point.GetSouthEast();
+	}
+	
+	public static Coordinate GetBottomLeft(Coordinate point)
+	{
+		return point.GetSouth();
+	}
+	
+	public static Coordinate GetLeft(Coordinate point)
+	{
+		return new Coordinate(point.getX(), point.getY());
 	}
 	
 	private int GetKey(Hex hex)

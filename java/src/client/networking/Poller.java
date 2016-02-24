@@ -56,16 +56,17 @@ public class Poller implements ActionListener
 	
 
 	@Override
-	public void actionPerformed(ActionEvent event) {
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent event)
+	{
 		//System.out.println("Poller has fired");
-		try {
+		try
+		{
 			ClientGame.getGame().RefreshFromServer();
-		} catch (ModelException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (ModelException e)
+		{
 			System.err.println("Unable to poll server");
 			e.printStackTrace();
 		}
 	}
-
 }
