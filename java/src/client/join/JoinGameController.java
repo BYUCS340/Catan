@@ -193,6 +193,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		lastGameSelected = game;
 		List<PlayerInfo> players = game.getPlayers();
 		CatanColor mycolor = null;
+		int myIndex = -1;
 		for (int i=0;i<players.size(); i++)
 		{
 			PlayerInfo play = players.get(i);
@@ -200,6 +201,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			if (play.getId() == ClientGame.getCurrentProxy().getUserId())
 			{
 				mycolor = play.getColor();
+				myIndex = i;
 			}
 		}
 
@@ -207,7 +209,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		getSelectColorView().showModal();
 		if (mycolor != null)
 		{
-
 			joinGame(mycolor);
 		}
 	}

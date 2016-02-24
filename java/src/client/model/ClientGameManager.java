@@ -57,10 +57,10 @@ public class ClientGameManager extends GameManager
 	 * @param clientProxy
 	 * @param myPlayerID
 	 */
-	public ClientGameManager(RealServerProxy clientProxy, int myPlayerID)
+	public ClientGameManager(RealServerProxy clientProxy, int myPlayerIndex)
 	{
 		this(clientProxy);
-		this.myPlayerIndex = myPlayerID;
+		this.myPlayerIndex = myPlayerIndex;
 	}
 
 
@@ -167,8 +167,11 @@ public class ClientGameManager extends GameManager
 			for (int i=0; i< game.getPlayers().size(); i++)
 			{
 				PlayerInfo newplay = game.getPlayers().get(i);
+				System.out.println("My player ID"+proxy.getUserId());
+				System.out.println("Player at"+i+" id:"+proxy.getUserId());
 				if (newplay.getId() == proxy.getUserId())
 				{
+					System.out.println("Joined with player index:"+i);
 					this.myPlayerIndex = i;
 					rejoining = true;
 				}
@@ -460,15 +463,37 @@ public class ClientGameManager extends GameManager
 			this.notifyCenter.notify(ModelNotification.CHAT);
 		}
 
-		GameState newstate = game.gameState;
+		GameState newgamestate = game.gameState;
+		GameRound oldstate = game.gameState.state;
+		GameRound newstate = game.gameState.state;
 		//System.out.println("STATE current:"+gameState.state+" new:"+newstate.state);
-		if (!this.gameState.equals(newstate) && newstate != null)
+		if (!this.gameState.equals(newgamestate) && newstate != null)
 		{
-			gameState = newstate;
+			gameState = newgamestate;
 			//handle the logic from this
-			System.out.println("STATE Refreshed to "+newstate.state);
+			System.out.println("STATE Refreshed to "+newstate);
 			this.notifyCenter.notify(ModelNotification.STATE);
 		}
+		TurnState oldTurnState = this.turnState;
+		//Handle the new player state
+		switch (newstate){
+			case FIRSTROUND: 
+				if (newgamestate.activePlayerIndex == this.myPlayerIndex)
+					this.turnState = TurnState.FIRST_ROUND_MY_TURN;
+				else
+					this.turnState = TurnState.FIRST_ROUND_WAITING;
+				break;
+			default:
+				this.turnState = TurnState.WAITING;
+				break;
+		}
+		if (this.turnState != oldTurnState)
+		{
+			System.out.println("Old TS: "+oldTurnState+" New:"+this.turnState);
+			this.notifyCenter.notify(ModelNotification.STATE);
+		}
+		
+		
 		
 		//Update the map model
 		MapModel newmap = game.mapModel;
