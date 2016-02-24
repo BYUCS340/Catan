@@ -94,7 +94,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		}
 
 
-		if(game.CanFinishTurn())
+		if(game.CanFinishTurn() && currPlayerIndex == myIndex)
 		{
 			this.getView().updateGameState("Finish Turn", true);
 		}		
