@@ -26,6 +26,8 @@ import shared.model.map.objects.*;
 @SuppressWarnings("serial")
 public class MapComponent extends JComponent
 {
+	public boolean temp = false;
+	
 	public static final int HEX_IMAGE_WIDTH = Dimensions.HEX_IMAGE_WIDTH;
 	public static final int HEX_IMAGE_HEIGHT = Dimensions.HEX_IMAGE_HEIGHT;
 	

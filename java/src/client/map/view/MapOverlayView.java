@@ -34,27 +34,17 @@ public class MapOverlayView extends OverlayView
 		
 		this.setOpaque(false);
 		this.setLayout(new BorderLayout());
-		this.setBorder(BorderFactory.createLineBorder(Color.black,
-													  BORDER_WIDTH));
+		this.setBorder(BorderFactory.createLineBorder(Color.black, BORDER_WIDTH));
 		label = new JLabel("", JLabel.CENTER);
 		label.setOpaque(true);
 		label.setBackground(Color.white);
 		Font labelFont = label.getFont();
-		labelFont = labelFont.deriveFont(labelFont.getStyle(),
-										 LABEL_TEXT_SIZE);
+		labelFont = labelFont.deriveFont(labelFont.getStyle(), LABEL_TEXT_SIZE);
 		label.setFont(labelFont);
-		
-		int prefWidth = (int)(map.getScale() * map.getPreferredSize()
-														  .getWidth());
-		int prefHeight = (int)(map.getScale() * map.getPreferredSize()
-														   .getHeight());
-		Dimension prefSize = new Dimension(prefWidth, prefHeight);
-		map.setPreferredSize(prefSize);
 		
 		cancelButton = new JButton("Cancel");
 		Font buttonFont = cancelButton.getFont();
-		buttonFont = buttonFont.deriveFont(buttonFont.getStyle(),
-										   BUTTON_TEXT_SIZE);
+		buttonFont = buttonFont.deriveFont(buttonFont.getStyle(), BUTTON_TEXT_SIZE);
 		cancelButton.setFont(buttonFont);
 		cancelButton.addActionListener(cancelButtonListener);
 		
@@ -113,6 +103,8 @@ public class MapOverlayView extends OverlayView
 			
 			label.setText(getLabelText(getController().GetDropObject()));
 			cancelButton.setVisible(isCancelAllowed);
+			
+			map.temp = true;
 			
 			if (!isModalShowing())
 				showModal();

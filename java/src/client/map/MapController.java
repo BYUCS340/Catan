@@ -43,6 +43,7 @@ public class MapController extends Controller implements IMapController
 		this.state = new NormalState(PieceType.NONE);
 		
 		ClientGame.getGame().startListening(modelObserver, ModelNotification.MAP);
+		ClientGame.getGame().startListening(modelObserver, ModelNotification.STATE);
 	}
 	
 	public IMapView getView()
