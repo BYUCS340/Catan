@@ -529,6 +529,7 @@ public class ClientGameManager extends GameManager
 						this.turnState = TurnState.SECOND_ROUND_MY_TURN;
 					else
 						this.turnState = TurnState.SECOND_ROUND_WAITING;
+					break;
 				case ROLLING:
 					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
 						this.turnState = TurnState.ROLLING;
