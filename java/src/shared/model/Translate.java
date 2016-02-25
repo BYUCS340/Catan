@@ -581,20 +581,44 @@ public class Translate
 	public static VertexLocation GetVertexLocation(Coordinate point)
 	{
 		HexLocation hexLocation = null;
+		VertexDirection vertexDirection = null;
+		
 		if (point.isLeftHandCoordinate() && point.getX() <= 5)
+		{
 			hexLocation = GetHexLocation(point);
-		else if (point.isLeftHandCoordinate() && point.getY() > 0)
-			hexLocation = GetHexLocation(point.GetSouthWest());
-		else if (point.isLeftHandCoordinate())
-			hexLocation = GetHexLocation(point.GetNorthWest());
-		else
+			vertexDirection = VertexDirection.West;
+		}
+		else if (point.isRightHandCoordinate() && point.getX() > 1)
+		{
 			hexLocation = GetHexLocation(point.GetWest());
+			vertexDirection = VertexDirection.East;
+		}
+		else if (point.getX() > 5 && point.getY() >= 0)
+		{
+			hexLocation = GetHexLocation(point.GetSouthWest());
+			vertexDirection = VertexDirection.NorthEast;
+		}
+		else if (point.getX() > 5 && point.getY() < 0)
+		{
+			hexLocation = GetHexLocation(point.GetNorthWest());
+			vertexDirection = VertexDirection.SouthEast;
+		}
+		else if (point.getX() <= 1 && point.getY() >= 0)
+		{
+			hexLocation = GetHexLocation(point.GetSouth());
+			vertexDirection = VertexDirection.NorthWest;
+		}
+		else if (point.getX() <= 1 && point.getY() < 0)
+		{
+			hexLocation = GetHexLocation(point.GetNorth());
+			vertexDirection = VertexDirection.SouthWest;
+		}
+		else
+		{
+			assert false;
+		}
 
-		Coordinate hex = GetHexCoordinate(hexLocation.getX(), hexLocation.getY());
-
-		VertexDirection direction = GetVertexDirection(hex, point);
-
-		return new VertexLocation(hexLocation, direction);
+		return new VertexLocation(hexLocation, vertexDirection);
 	}
 
 	public static HexLocation GetHexLocation(Coordinate point)
@@ -666,31 +690,6 @@ public class Translate
 		default:
 			assert false;
 			return null;
-		}
-	}
-
-	private static VertexDirection GetVertexDirection(Coordinate hex, Coordinate point)
-	{
-		if (hex.getY() == point.getY())
-		{
-			if (hex.getX() == point.getX())
-				return VertexDirection.West;
-			else
-				return VertexDirection.East;
-		}
-		else if (hex.getY() < point.getY())
-		{
-			if (hex.getX() == point.getX())
-				return VertexDirection.NorthWest;
-			else
-				return VertexDirection.NorthEast;
-		}
-		else
-		{
-			if (hex.getX() == point.getX())
-				return VertexDirection.SouthWest;
-			else
-				return VertexDirection.SouthEast;
 		}
 	}
 }
