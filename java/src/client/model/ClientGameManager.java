@@ -503,20 +503,64 @@ public class ClientGameManager extends GameManager
 		}
 		TurnState oldTurnState = this.turnState;
 		//Handle the new player state
-		switch (newstate){
-			case FIRSTROUND: 
-				if (newgamestate.activePlayerIndex == this.myPlayerIndex)
-					this.turnState = TurnState.FIRST_ROUND_MY_TURN;
-				else
-					this.turnState = TurnState.FIRST_ROUND_WAITING;
-				break;
-			default:
-				this.turnState = TurnState.WAITING;
-				break;
+		if(this.version != -1 && players.size() < 4)
+		{
+			this.turnState = TurnState.WAITING_FOR_PLAYERS;
 		}
+		else if(this.getVictoryPointManager().anyWinner())
+		{
+			this.turnState = TurnState.GAME_OVER;
+		}
+		//TODO implement trade offer turnstate
+		//TODO implement placing piece turnstate
+		//TODO implement domestic_trade turnstate
+		//TODO implement maritime_trade turnstate
+		else
+		{
+			switch (newstate){
+				case FIRSTROUND: 
+					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
+						this.turnState = TurnState.FIRST_ROUND_MY_TURN;
+					else
+						this.turnState = TurnState.FIRST_ROUND_WAITING;
+					break;
+				case SECONDROUND:
+					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
+						this.turnState = TurnState.SECOND_ROUND_MY_TURN;
+					else
+						this.turnState = TurnState.SECOND_ROUND_WAITING;
+				case ROLLING:
+					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
+						this.turnState = TurnState.ROLLING;
+					else
+						this.turnState = TurnState.WAITING;
+					break;
+				case ROBBING:
+					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
+						this.turnState = TurnState.ROBBING;
+					else
+						this.turnState = TurnState.WAITING;
+					break;
+				case DISCARDING:
+					if(players.get(this.myPlayerIndex).totalResources() > 7)
+						this.turnState = TurnState.DISCARDING;
+					else
+						this.turnState = TurnState.DISCARDED_WAITING;
+					break;
+				case PLAYING:
+					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
+						this.turnState = TurnState.PLAYING;
+					else
+						this.turnState = TurnState.WAITING;
+				default:
+					this.turnState = TurnState.WAITING;
+					break;
+			}
+		}
+		
 		if (this.turnState != oldTurnState)
 		{
-			System.out.println("Old TS: "+oldTurnState+" New:"+this.turnState);
+			System.out.println("Old TS: "+oldTurnState+" New: "+this.turnState);
 			this.notifyCenter.notify(ModelNotification.STATE);
 		}
 		
