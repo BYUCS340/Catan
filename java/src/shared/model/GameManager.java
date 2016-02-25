@@ -979,6 +979,7 @@ public class GameManager implements ModelSubject
 		System.out.println("In taking from bank: The bank has" + gameBank.getResourceCount(type) + " of " + type);
 		gameBank.getResource(type, count);
 		this.players.get(this.CurrentPlayersTurn()).playerBank.giveResource(type, count);
+		this.notifyCenter.notify(ModelNotification.RESOURCES);
 	}
 	
 	/**
@@ -990,6 +991,7 @@ public class GameManager implements ModelSubject
 	public void takeResourcesFromCurrentPlayer(ResourceType type, int count) throws ModelException{
 		gameBank.giveResource(type, count);
 		this.players.get(this.CurrentPlayersTurn()).playerBank.getResource(type, count);
+		this.notifyCenter.notify(ModelNotification.RESOURCES);
 	}
 	
 	
@@ -1003,6 +1005,7 @@ public class GameManager implements ModelSubject
 	public void giveResourcesToPlayer(int playerIndex, ResourceType type, int count) throws ModelException{
 		gameBank.getResource(type, count);
 		this.players.get(playerIndex).playerBank.giveResource(type, count);
+		this.notifyCenter.notify(ModelNotification.RESOURCES);
 	}
 	
 	/**
@@ -1015,6 +1018,7 @@ public class GameManager implements ModelSubject
 	public void takeResourcesFromPlayer(int playerIndex, ResourceType type, int count) throws ModelException{
 		gameBank.giveResource(type, count);
 		this.players.get(playerIndex).playerBank.getResource(type, count);
+		this.notifyCenter.notify(ModelNotification.RESOURCES);
 	}
 	
 	public void initializeBankTempTesting(){
