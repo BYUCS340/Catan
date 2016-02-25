@@ -177,7 +177,7 @@ public class MapController extends Controller implements IMapController
 			
 			StartMove(state.GetPieceType());
 			
-			if (wasSetup != isSetup)
+			if (wasSetup && !isSetup)
 				ClientGame.getGame().endTurn();
 		}
 	}	
