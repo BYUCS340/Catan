@@ -259,11 +259,17 @@ public class ClientGameManager extends GameManager
 
 		try
 		{
-			this.BuildRoad(myPlayerIndex, start, end);
+			boolean free = false;
+			
+			//TODOD This logic will need added to
+			if (turnState == TurnState.FIRST_ROUND_MY_TURN || turnState == TurnState.SECOND_ROUND_MY_TURN)
+				free = true;
+			
+			this.BuildRoad(myPlayerIndex, start, end, free);
 
 			EdgeLocation location = Translate.GetEdgeLocation(start, end);
-			//TODO Sometimes this is free, 'cause 'Merica.
-			proxy.buildRoad(location, false);
+			
+			proxy.buildRoad(location, free);
 
 		}
 		catch (ModelException e)
@@ -281,11 +287,16 @@ public class ClientGameManager extends GameManager
 	{
 		try
 		{
-			this.BuildSettlement(myPlayerIndex, point);
+			boolean free = false;
+			
+			if (turnState == TurnState.FIRST_ROUND_MY_TURN || turnState == TurnState.SECOND_ROUND_MY_TURN)
+				free = true;
+			
+			this.BuildSettlement(myPlayerIndex, point, free);
 
 			VertexLocation location = Translate.GetVertexLocation(point);
-			//TODO This can't always be free, although we are American...
-			proxy.buildSettlement(location, false);
+
+			proxy.buildSettlement(location, free);
 		}
 		catch (ModelException e)
 		{
