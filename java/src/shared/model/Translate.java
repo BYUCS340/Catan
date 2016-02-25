@@ -2,6 +2,8 @@ package shared.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import shared.model.map.*;
@@ -35,7 +37,7 @@ public class Translate
 		gameModel.players = fromNetPlayers(netGameModel.getNetPlayers());  //FINISHED?
 		gameModel.victoryPointManager = fromNetVPManager(netGameModel.getNetTurnTracker(), netGameModel.getNetPlayers());  //UNFINISHED
 		gameModel.waterCooler = fromNetChat(netGameModel.getNetChat());  //FINISHED? -- but only posts as player 0
-		gameModel.log = fromNetLog(netGameModel.getNetGameLog());  //FINISHED? -- but only logs as player 0
+		gameModel.log = fromNetLog(netGameModel.getNetGameLog(), netGameModel.getNetPlayers());  //FINISHED? -- but only logs as player 0
 		gameModel.version = netGameModel.getVersion();  //FINISHED
 		gameModel.mapModel = fromNetMap(netGameModel.getNetMap(), netGameModel.getNetPlayers());  //FINISHED -- I think ...
 
@@ -191,7 +193,7 @@ public class Translate
 		}
 
 		VictoryPointManager victoryPointManager = new VictoryPointManager(points[0], points[1], points[2], points[2], longRoad, largeArmy,armySize);
-
+		//TODO - finish this
 		return victoryPointManager;
 	}
 
@@ -216,13 +218,29 @@ public class Translate
 	 * @param netLog
 	 * @return GameActionLog
 	 */
-	public GameActionLog fromNetLog(NetLog netLog)
+	public GameActionLog fromNetLog(NetLog netLog, List<NetPlayer> players)
 	{
 		GameActionLog gameActionLog = new GameActionLog();
+		
+		HashMap<String,Integer> playerNames = new HashMap<>();
+		
+		Iterator<NetPlayer> iter = players.iterator();
+		while (iter.hasNext())
+		{
+			NetPlayer p = iter.next();
+			playerNames.put(p.getName(), p.getPlayerIndex());
+		}
+		
 		for (int i = 0; i < netLog.getLines().size(); i++)
 		{
 			//always logs as player 0 (because I don't have a good way of determining playerID from message source yet)
-			gameActionLog.logAction(0, netLog.getLines().get(i).getMessage());
+			NetLine line = netLog.getLines().get(i);
+			int playerIndex = 0;
+			if (playerNames.containsKey(line.getSource()))
+			{
+				playerIndex = playerNames.get(line.getSource());
+			}
+			gameActionLog.logAction(playerIndex, netLog.getLines().get(i).getMessage());
 		}
 		return gameActionLog;
 	}
