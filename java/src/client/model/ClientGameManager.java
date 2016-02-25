@@ -553,6 +553,7 @@ public class ClientGameManager extends GameManager
 						this.turnState = TurnState.PLAYING;
 					else
 						this.turnState = TurnState.WAITING;
+					break;
 				default:
 					this.turnState = TurnState.WAITING;
 					break;
