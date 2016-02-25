@@ -149,15 +149,9 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 					//  something failed so start over gracefully
 					throw new ModelException("Maritime Trade: Error with trade rates");
 				}
-				//  TODO:  need to implement resource exchanges here :)
-				//  should be pretty easy with the gameManager updates I made!
-				
-				//  edit GameManager and add the methods I need for trading resources, probably want it to be more general so that I can use it for domestic trade!!
-				//  the game Manager will update the values locally then call the server to update it's model
 				
 				ClientGame.getGame().takeResourcesFromCurrentPlayer(giveResource, giveResourceRate);
 				ClientGame.getGame().giveResourcesToCurrentPlayer(getResource, 1);
-	
 
 				startTrade();
 			}else{
