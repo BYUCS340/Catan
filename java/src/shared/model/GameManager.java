@@ -342,14 +342,17 @@ public class GameManager implements ModelSubject
 	 * @param playerIndex
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuildRoad(int playerIndex, Coordinate start, Coordinate end) throws ModelException
+	public void BuildRoad(int playerIndex, Coordinate start, Coordinate end, boolean free) throws ModelException
 	{
 		try
 		{
-			//check to see if player has resources
-			if (!this.CanBuildRoad(playerIndex, start,end))
-				throw new ModelException();
-			GetPlayer(playerIndex).playerBank.buildRoad();
+			if (!free)
+			{
+				//check to see if player has resources
+				if (!this.CanBuildRoad(playerIndex, start,end))
+					throw new ModelException();
+				GetPlayer(playerIndex).playerBank.buildRoad();
+			}
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceRoad(start,end, color);
 			victoryPointManager.playerBuiltRoad(playerIndex);
@@ -365,14 +368,17 @@ public class GameManager implements ModelSubject
 	 * @param playerIndex
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuildSettlement(int playerIndex, Coordinate location) throws ModelException
+	public void BuildSettlement(int playerIndex, Coordinate location, boolean free) throws ModelException
 	{
 		try
 		{
-			//check to see if player has resources
-			if (!this.CanBuildSettlement(playerIndex, location))
-				throw new ModelException();
-			GetPlayer(playerIndex).playerBank.buildSettlement();
+			if (!free)
+			{
+				//check to see if player has resources
+				if (!this.CanBuildSettlement(playerIndex, location))
+					throw new ModelException();
+				GetPlayer(playerIndex).playerBank.buildSettlement();
+			}
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceSettlement(location, color);
 			victoryPointManager.playerBuiltSettlement(playerIndex);
