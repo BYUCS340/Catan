@@ -26,13 +26,21 @@ public class PlayerInfo
 	{
 		setId(-1);
 		setPlayerIndex(-1);
-		setName("");
+		setName("DEFAULT");
 		setColor(CatanColor.WHITE);
 	}
 	
 	public PlayerInfo(String name, CatanColor color, int index)
 	{
 		setId(-1);
+		setPlayerIndex(index);
+		setName(name);
+		setColor(color);
+	}
+	
+	public PlayerInfo(String name, CatanColor color, int index, int id)
+	{
+		setId(id);
 		setPlayerIndex(index);
 		setName(name);
 		setColor(color);

@@ -1,6 +1,7 @@
 package client.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import client.data.ClientDataTranslator;
@@ -36,7 +37,7 @@ import shared.networking.transport.NetGameModel;
 public class ClientGameManager extends GameManager
 {
 	private ServerProxy proxy;
-	private int myPlayerIndex;
+	private int myPlayerIndex = -1;
 	private TurnState turnState;
 
 	private int refreshCount = 0;
@@ -164,14 +165,14 @@ public class ClientGameManager extends GameManager
 			this.myPlayerColor = color;
 			boolean rejoining = false;
 			List<Player> newplayers = new ArrayList<>();
-			for (int i=0; i< game.getPlayers().size(); i++)
+			Iterator<PlayerInfo> iter = game.getPlayers().iterator();
+			while(iter.hasNext())
 			{
-				PlayerInfo newplay = game.getPlayers().get(i);
-				System.out.println("My player ID"+proxy.getUserId());
-				System.out.println("Player at"+i+" id:"+proxy.getUserId());
+				PlayerInfo newplay = iter.next();
+				System.out.println("Player: "+newplay.getName()+" at index:"+newplay.getPlayerIndex());
 				if (newplay.getId() == proxy.getUserId())
 				{
-					System.out.println("Joined with player index:"+i);
+					System.out.println("Joined with player index:"+newplay.getPlayerIndex());
 					this.myPlayerIndex = newplay.getPlayerIndex();
 					rejoining = true;
 				}
@@ -436,6 +437,21 @@ public class ClientGameManager extends GameManager
 		//If there are new players or the number of resources have changed
 		List<Player> newplayers = game.players;
 		List<Player> oldplayers = this.players;
+		
+		//Check if we need to got our player index
+		if (this.myPlayerIndex == -1)
+		{
+			Iterator<Player> iter = this.players.iterator();
+			while (iter.hasNext())
+			{
+				Player p = iter.next();
+				if (p.playerID() == this.proxy.getUserId())
+				{
+					this.myPlayerIndex = p.playerIndex();
+					break;
+				}
+			}
+		}
 		
 		//Check if we have a different size
 		if (newplayers.size() != oldplayers.size() || !newplayers.equals(oldplayers))

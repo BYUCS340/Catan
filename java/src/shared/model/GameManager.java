@@ -195,6 +195,11 @@ public class GameManager implements ModelSubject
 	
 	public CatanColor getPlayerColorByIndex(int playerIndex)
 	{
+		if (playerIndex > players.size() || playerIndex < 0)
+		{
+			System.out.println("UNKNOWN INDEX"+playerIndex);
+			return null;
+		}
 		return players.get(playerIndex).color;
 	}
 	
