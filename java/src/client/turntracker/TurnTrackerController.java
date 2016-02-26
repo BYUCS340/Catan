@@ -4,8 +4,7 @@ import client.base.Controller;
 import client.model.ClientGame;
 import client.model.ClientGameManager;
 import shared.definitions.CatanColor;
-import shared.definitions.GameRound;
-import shared.definitions.ModelNotification;
+import shared.definitions.TurnState;
 import shared.model.ModelObserver;
 import shared.model.VictoryPointManager;
 
@@ -97,7 +96,15 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		if(game.CanFinishTurn() && currPlayerIndex == myIndex)
 		{
 			this.getView().updateGameState("Finish Turn", true);
-		}		
+		}
+		else if(game.getTurnState() == TurnState.DISCARDING)
+		{
+			this.getView().updateGameState("Discarding...", false);
+		}
+		else if(game.getTurnState() == TurnState.ROBBING)
+		{
+			this.getView().updateGameState("Robbing...", false);
+		}
 		else
 		{
 			this.getView().updateGameState("Waiting for other players", false);
