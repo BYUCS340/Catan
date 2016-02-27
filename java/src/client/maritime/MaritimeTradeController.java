@@ -10,6 +10,7 @@ import java.util.Iterator;
 import client.base.*;
 import client.model.ClientGame;
 import client.model.ClientGameManager;
+import client.networking.ServerProxyException;
 
 
 /**
@@ -59,20 +60,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		this.tradeOverlay = tradeOverlay;
 	}
 	
-	
-	private void getCurrentUserResourcesForAdHocTesting() throws ModelException{
-		ClientGameManager game = ClientGame.getGame();
-		game.giveResourcesToCurrentPlayer(ResourceType.BRICK, 4);
-		game.giveResourcesToCurrentPlayer(ResourceType.WOOD, 3);
-		game.giveResourcesToCurrentPlayer(ResourceType.SHEEP, 1);
-		game.giveResourcesToCurrentPlayer(ResourceType.WHEAT, 1);
-		game.giveResourcesToCurrentPlayer(ResourceType.ORE, 5);
-	}
-	
-	
-	
-	
-	
+		
 	
 	@Override
 	public void alert()
@@ -99,17 +87,17 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		
 		
 		
-		//  TODO:  remove later this is only for AdHoc testing
-		try{
-			if(!userTestingAlreadySupplied){
-				getCurrentUserResourcesForAdHocTesting();
-
-
-				userTestingAlreadySupplied = true;
-			}
-		}catch(ModelException e){
-			System.out.println("Resources Could not be taken from bank in Maritime Trade Controller initialization");
-		}
+//		//  TODO:  remove later this is only for AdHoc testing
+//		try{
+//			if(!userTestingAlreadySupplied){
+//				getCurrentUserResourcesForAdHocTesting();
+//
+//
+//				userTestingAlreadySupplied = true;
+//			}
+//		}catch(ModelException e){
+//			System.out.println("Resources Could not be taken from bank in Maritime Trade Controller initialization");
+//		}
 		System.out.println("ORE: " + ClientGame.getGame().playerResourceCount(ResourceType.ORE));
 		System.out.println("WHEAT: " + ClientGame.getGame().playerResourceCount(ResourceType.WHEAT));
 		System.out.println("WOOD: " + ClientGame.getGame().playerResourceCount(ResourceType.WOOD));
@@ -157,15 +145,14 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 					throw new ModelException("Maritime Trade: Error with trade rates");
 				}
 				
-				ClientGame.getGame().takeResourcesFromCurrentPlayer(giveResource, giveResourceRate);
-				ClientGame.getGame().giveResourcesToCurrentPlayer(getResource, 1);
+				ClientGame.getGame().maritimeTradeCurrentPlayer(giveResourceRate, giveResource, getResource);
 
 				startTrade();
 			}else{
 				//  something failed so start over gracefully
 				throw new ModelException("Maritime Trade: Unknown error");
 			}
-		}catch(ModelException e){
+		}catch(ModelException | ServerProxyException e){
 			startTrade();
 			getTradeOverlay().setStateMessage("Error processing trade, please try again. Choose what to give up");
 			System.out.println(e.getMessage());
