@@ -354,6 +354,7 @@ public class ClientGameManager extends GameManager
 			return;
 		try 
 		{
+			this.playDevCard(this.myPlayerIndex, DevCardType.MONOPOLY);
 			NetGameModel model = proxy.monopolyCard(resource);
 			this.reloadGame(model, true);
 		} 

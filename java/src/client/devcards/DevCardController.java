@@ -84,7 +84,8 @@ public class DevCardController extends Controller implements IDevCardController,
 	@Override
 	public void playMonopolyCard(ResourceType resource)
 	{
-			ClientGame.getGame().PlayMonopoly(resource);
+		System.out.println("Playing Monopoly");
+		ClientGame.getGame().PlayMonopoly(resource);
 	}
 
 	@Override
