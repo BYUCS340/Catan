@@ -22,6 +22,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//ClientGame.getGame().startListening(this);
 		System.out.println("Starting Turn tracker");
 		ClientGame.getGame().startListening(this, ModelNotification.STATE);
+		ClientGame.getGame().startListening(this, ModelNotification.SCORE);
 		ClientGame.getGame().startListening(this, ModelNotification.PLAYERS);
 		
 		isInitializedTo = 0;
