@@ -47,7 +47,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		setAcceptOverlay(acceptOverlay);
 		playersToTradeWithAlreadySet = false;
 
-		ClientGame.getGame().startListening(this, ModelNotification.ALL);
+		ClientGame.getGame().startListening(this, ModelNotification.STATE);
 		this.alert();
 		System.out.println(ResourcePositions.iBRICK.ordinal());
 		System.out.println(ResourcePositions.iWHEAT.ordinal());
@@ -108,17 +108,17 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	@Override
 	public void startTrade() {
 		initializePlayersToTradeWith();
+		resetResourcesToTrade();
+		resetTradeResesourceStates();
+		playerIndexToTradeWith = -1;
+
 		resetTradeOverlay();
 		resetUpDownButtons();
 		
-		resetResourcesToTrade();
-		resetTradeResesourceStates();
+		if(!getTradeOverlay().isModalShowing())
+			getTradeOverlay().showModal();
+		
 
-		playerIndexToTradeWith = -1;
-		getTradeOverlay().showModal();
-		
-		
-		
 		
 //		game.playerResourceCount(ResourceType.ORE);
 		
@@ -269,15 +269,15 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	 * @param type
 	 */
 	private void enableUpDownButtonsForSendResource(ResourceType type){
-		
+		//  resourcesToTrade is negative so 
 		int playerCount = ClientGame.getGame().playerResourceCount(type);
 		boolean canIncrease, canDecrease;
-		if(playerCount > resourcesToTrade[getResourceIndex(type)]){
+		if(playerCount > Math.abs(resourcesToTrade[getResourceIndex(type)])){
 			canIncrease = true;
 		}else{
 			canIncrease = false;
 		}
-		if(resourcesToTrade[getResourceIndex(type)] <= 0){
+		if(Math.abs(resourcesToTrade[getResourceIndex(type)]) <= 0){
 			canDecrease = false;
 		}else{
 			canDecrease = true;
