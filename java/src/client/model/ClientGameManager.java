@@ -677,6 +677,14 @@ public class ClientGameManager extends GameManager
 			this.notifyCenter.notify(ModelNotification.MAP);
 		}
 		
+		//updates the bank
+		Bank newbank = game.gameBank;
+		if (!this.gameBank.equals(newbank) && newbank != null)
+		{
+			this.gameBank = newbank;
+			this.notifyCenter.notify(ModelNotification.BANK);
+		}
+		
 		//Victory point manager
 		VictoryPointManager newVPM = game.victoryPointManager;
 		if (!victoryPointManager.equals(newVPM) && newVPM != null)
