@@ -307,10 +307,12 @@ public class ClientGameManager extends GameManager
 
 			VertexLocation location = Translate.GetVertexLocation(point);
 
-			proxy.buildSettlement(location, free);
+			NetGameModel newmodel = proxy.buildSettlement(location, free);
+			this.reloadGame(newmodel,true);
 		}
 		catch (ModelException e)
 		{
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		catch (ServerProxyException e)
