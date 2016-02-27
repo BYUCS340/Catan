@@ -120,6 +120,13 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		
 		
 		
+		if (!ClientGame.getGame().CanOfferTrade(ClientGame.getGame().CurrentPlayersTurn())){
+			System.out.println("GM says current player can't make a trade right now");
+			cancelTrade();
+			return;
+		}
+		
+		
 		
 		getResource = null;
 		giveResource = null;
