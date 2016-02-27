@@ -84,4 +84,46 @@ public class Player
 		return name + ":"+ color.name()+" "+playerID+"-"+playerIndex;
 		
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((color == null) ? 0 : color.hashCode());
+		result = prime * result + (isRobot ? 1231 : 1237);
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + playerID;
+		result = prime * result + playerIndex;
+		return result;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Player))
+			return false;
+		Player other = (Player) obj;
+		if (color != other.color)
+			return false;
+		if (isRobot != other.isRobot)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (playerID != other.playerID)
+			return false;
+		if (playerIndex != other.playerIndex)
+			return false;
+		return true;
+	}
 }

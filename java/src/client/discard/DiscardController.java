@@ -10,6 +10,7 @@ import client.model.ClientGameManager;
 import shared.definitions.GameRound;
 import shared.definitions.ModelNotification;
 import shared.definitions.ResourceType;
+import shared.definitions.TurnState;
 import shared.model.ModelObserver;
 
 
@@ -20,6 +21,7 @@ public class DiscardController extends Controller implements IDiscardController,
 	
 	private IWaitView waitView;
 	private List<Integer> resourceList;
+	private TurnState lTurnState;
 	
 	/**
 	 * DiscardController constructor
@@ -31,8 +33,8 @@ public class DiscardController extends Controller implements IDiscardController,
 		super(view);
 		this.waitView = waitView;
 		this.initResourceList();
-		//TODO change this to STATE only
-		ClientGame.getGame().startListening(this, ModelNotification.ALL);
+		ClientGame.getGame().startListening(this, ModelNotification.STATE);
+		lTurnState = null;
 	}
 
 	public IDiscardView getDiscardView() {
@@ -150,24 +152,27 @@ public class DiscardController extends Controller implements IDiscardController,
 	@Override
 	public void alert()
 	{
+		TurnState cTurnState = ClientGame.getGame().getTurnState();
 		ClientGameManager game = ClientGame.getGame();
-		if(game.CurrentState() == GameRound.DISCARDING)
+		if(cTurnState == TurnState.DISCARDING)
 		{
-			if(this.getNumResourceCards() > 7)
+			//at this point, we know that we have more than 7 cards and need to 
+			//discard some
+			initDiscardView();
+			this.getDiscardView().showModal();
+		}
+		else if(cTurnState == TurnState.DISCARDED_WAITING)
+		{
+			if(lTurnState != TurnState.DISCARDING && lTurnState != TurnState.DISCARDED_WAITING)
 			{
-				//at this point, we know that we have more than 7 cards and need to 
-				//discard some
-				initDiscardView();
-				this.getDiscardView().showModal();
+				lTurnState = game.getTurnState();
+				game.DiscardCards(resourceList);
 			}
-			else
-			{
-				this.getWaitView().showModal();
-			}
+			this.getWaitView().showModal();
 		}
 		else if (this.getWaitView().isModalShowing())
 			this.getWaitView().closeModal();
-		
+		lTurnState = game.getTurnState();
 	}
 	
 	private void initDiscardView()

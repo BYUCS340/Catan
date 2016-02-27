@@ -1,6 +1,7 @@
 package client.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import client.data.ClientDataTranslator;
@@ -28,6 +29,7 @@ import shared.locations.*;
 import shared.model.*;
 import shared.model.map.*;
 import shared.model.map.model.IMapModel;
+import shared.model.map.model.MapModel;
 import shared.model.map.model.UnmodifiableMapModel;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
@@ -35,7 +37,7 @@ import shared.networking.transport.NetGameModel;
 public class ClientGameManager extends GameManager
 {
 	private ServerProxy proxy;
-	private int myPlayerIndex;
+	private int myPlayerIndex = -1;
 	private TurnState turnState;
 
 	private int refreshCount = 0;
@@ -56,18 +58,18 @@ public class ClientGameManager extends GameManager
 	 * @param clientProxy
 	 * @param myPlayerID
 	 */
-	public ClientGameManager(RealServerProxy clientProxy, int myPlayerID)
+	public ClientGameManager(RealServerProxy clientProxy, int myPlayerIndex)
 	{
 		this(clientProxy);
-		this.myPlayerIndex = myPlayerID;
+		this.myPlayerIndex = myPlayerIndex;
 	}
 
 
 	/**
-	 * Get the ID of the current player client
+	 * Get the Index of the current player client
 	 * @return
 	 */
-	public int myPlayerID()
+	public int myPlayerIndex()
 	{
 		return this.myPlayerIndex;
 	}
@@ -163,14 +165,18 @@ public class ClientGameManager extends GameManager
 			this.myPlayerColor = color;
 			boolean rejoining = false;
 			List<Player> newplayers = new ArrayList<>();
-			for (int i=0; i< game.getPlayers().size(); i++)
+			Iterator<PlayerInfo> iter = game.getPlayers().iterator();
+			while(iter.hasNext())
 			{
-				PlayerInfo newplay = game.getPlayers().get(i);
+				PlayerInfo newplay = iter.next();
+				System.out.println("Player: "+newplay.getName()+" at index:"+newplay.getPlayerIndex());
 				if (newplay.getId() == proxy.getUserId())
+				{
+					System.out.println("Joined with player index:"+newplay.getPlayerIndex());
+					this.myPlayerIndex = newplay.getPlayerIndex();
 					rejoining = true;
+				}
 				Player play = ClientDataTranslator.convertPlayerInfo(newplay);
-				System.out.println(play);
-
 				newplayers.add(play);
 
 			}
@@ -253,11 +259,17 @@ public class ClientGameManager extends GameManager
 
 		try
 		{
-			this.BuildRoad(myPlayerIndex, start, end);
+			boolean free = false;
+			
+			//TODOD This logic will need added to
+			if (turnState == TurnState.FIRST_ROUND_MY_TURN || turnState == TurnState.SECOND_ROUND_MY_TURN)
+				free = true;
+			
+			this.BuildRoad(myPlayerIndex, start, end, free);
 
 			EdgeLocation location = Translate.GetEdgeLocation(start, end);
-			//TODO Sometimes this is free, 'cause 'Merica.
-			proxy.buildRoad(location, false);
+			
+			proxy.buildRoad(location, free);
 
 		}
 		catch (ModelException e)
@@ -275,11 +287,16 @@ public class ClientGameManager extends GameManager
 	{
 		try
 		{
-			this.BuildSettlement(myPlayerIndex, point);
+			boolean free = false;
+			
+			if (turnState == TurnState.FIRST_ROUND_MY_TURN || turnState == TurnState.SECOND_ROUND_MY_TURN)
+				free = true;
+			
+			this.BuildSettlement(myPlayerIndex, point, free);
 
 			VertexLocation location = Translate.GetVertexLocation(point);
-			//TODO This can't always be free, although we are American...
-			proxy.buildSettlement(location, false);
+
+			proxy.buildSettlement(location, free);
 		}
 		catch (ModelException e)
 		{
@@ -372,6 +389,14 @@ public class ClientGameManager extends GameManager
 		}
 
 	}
+	
+	
+	@Override
+	public void StartGame()
+	{
+		super.StartGame();
+		this.notifyCenter.notify(ModelNotification.ALL);
+	}
 
 	/**
 	 * Gets the points of the current player
@@ -404,59 +429,175 @@ public class ClientGameManager extends GameManager
 	 */
 	private void reloadGame(NetGameModel model, boolean forced) throws ModelException
 	{
-		if (forced == true)
+		if (forced == false && model.getVersion() == this.version && this.version > 0 )
 		{
-			if (model.getVersion() == this.version && model.getNetPlayers().size() == this.getNumberPlayers())
-				return;
+			return;
 		}
-
-		System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
-		this.version = model.getVersion();
-		//TODO All of this
-
-		//TODO update turn status
+		System.out.print("\n-----------------------------------------\nRefresh: "+this.refreshCount+":");
+		if (forced)
+			System.out.println("Forced update of game");
+		else
+			System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
+		
+		
 
 		//Add new players if needed
 		Translate trans = new Translate();
+		GameModel game = trans.fromNetGameModel(model);
+		
 		//If there are new players or the number of resources have changed
-		if (model.getNetPlayers().size() != this.getNumberPlayers())
+		List<Player> newplayers = game.players;
+		List<Player> oldplayers = this.players;
+		
+		//Check if we need to got our player index
+		if (this.myPlayerIndex == -1)
 		{
-
-			System.out.println("Updated number of players");
-			List<Player> newplayers = trans.fromNetPlayers(model.getNetPlayers());
-			this.SetPlayers(newplayers);
-
-		}
-
-		//Check if we need to update the resources
-		if (model.getVersion() != this.version)
-		{
-
-			List<Player> newplayers = trans.fromNetPlayers(model.getNetPlayers());
-			int oldresources = ClientDataTranslator.totalPlayerResouces(newplayers);
-			int newresources = ClientDataTranslator.totalPlayerResouces(this.players);
-			if (version != model.getVersion() && oldresources != newresources)
+			Iterator<Player> iter = this.players.iterator();
+			while (iter.hasNext())
 			{
-				this.SetPlayers(newplayers);
-				this.notifyCenter.notify(ModelNotification.RESOURCES);
+				Player p = iter.next();
+				if (p.playerID() == this.proxy.getUserId())
+				{
+					this.myPlayerIndex = p.playerIndex();
+					break;
+				}
 			}
 		}
+		
+		//Check if we have a different size
+		if (newplayers.size() != oldplayers.size() || !newplayers.equals(oldplayers))
+		{
+			System.out.println("Updated the players");
+			this.SetPlayers(newplayers);
+			this.notifyCenter.notify(ModelNotification.PLAYERS);
+		}
+		
+		int oldresources = ClientDataTranslator.totalPlayerResouces(newplayers);
+		int newresources = ClientDataTranslator.totalPlayerResouces(oldplayers);
+		
+		//check if resources have changed
+		if (oldresources != newresources)
+		{
+			this.notifyCenter.notify(ModelNotification.RESOURCES);
+		}
+		
 
 		//Update our chat
-		if (model.getNetChat().size() > this.waterCooler.size())
+		if (game.waterCooler.size() > this.waterCooler.size())
 		{
-			this.waterCooler = trans.fromNetChat(model.getNetChat());
+			this.waterCooler = game.waterCooler;
 			System.out.println("New watercooler size: " + waterCooler.size());
 			this.notifyCenter.notify(ModelNotification.CHAT);
 		}
 
-		GameRound newround = model.getNetTurnTracker().getRound();
-		if (newround != gameState.state)
+		GameState newgamestate = game.gameState;
+		GameRound oldstate = game.gameState.state;
+		GameRound newstate = game.gameState.state;
+		//System.out.println("STATE current:"+gameState.state+" new:"+newstate.state);
+		if (!this.gameState.equals(newgamestate) && newstate != null)
 		{
+			gameState = newgamestate;
+			//handle the logic from this
+			System.out.println("STATE Refreshed to "+newstate);
 			this.notifyCenter.notify(ModelNotification.STATE);
 		}
-
-
+		TurnState oldTurnState = this.turnState;
+		//Handle the new player state
+		if(this.version != -1 && players.size() < 4)
+		{
+			this.turnState = TurnState.WAITING_FOR_PLAYERS;
+		}
+		else if(this.getVictoryPointManager().anyWinner())
+		{
+			this.turnState = TurnState.GAME_OVER;
+		}
+		//TODO implement trade offer turnstate
+		//TODO implement placing piece turnstate
+		//TODO implement domestic_trade turnstate
+		//TODO implement maritime_trade turnstate
+		else
+		{
+			switch (newstate){
+				case FIRSTROUND: 
+					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
+						this.turnState = TurnState.FIRST_ROUND_MY_TURN;
+					else
+						this.turnState = TurnState.FIRST_ROUND_WAITING;
+					break;
+				case SECONDROUND:
+					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
+						this.turnState = TurnState.SECOND_ROUND_MY_TURN;
+					else
+						this.turnState = TurnState.SECOND_ROUND_WAITING;
+					break;
+				case ROLLING:
+					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
+						this.turnState = TurnState.ROLLING;
+					else
+						this.turnState = TurnState.WAITING;
+					break;
+				case ROBBING:
+					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
+						this.turnState = TurnState.ROBBING;
+					else
+						this.turnState = TurnState.WAITING;
+					break;
+				case DISCARDING:
+					if(players.get(this.myPlayerIndex).totalResources() > 7)
+						this.turnState = TurnState.DISCARDING;
+					else
+						this.turnState = TurnState.DISCARDED_WAITING;
+					break;
+				case PLAYING:
+					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
+						this.turnState = TurnState.PLAYING;
+					else
+						this.turnState = TurnState.WAITING;
+					break;
+				default:
+					this.turnState = TurnState.WAITING;
+					break;
+			}
+		}
+		
+		if (this.turnState != oldTurnState)
+		{
+			System.out.println("Old TS: "+oldTurnState+" New: "+this.turnState);
+			this.notifyCenter.notify(ModelNotification.STATE);
+		}
+		
+		
+		
+		//Update the map model
+		MapModel newmap = game.mapModel;
+		
+		if (!this.map.equals(newmap) && newmap != null)
+		{
+			this.map = newmap;
+			this.notifyCenter.notify(ModelNotification.MAP);
+		}
+		
+		//Victory point manager
+		VictoryPointManager newVPM = game.victoryPointManager;
+		if (!victoryPointManager.equals(newVPM) && newVPM != null)
+		{
+			this.victoryPointManager = newVPM;
+			this.notifyCenter.notify(ModelNotification.SCORE);
+		}
+		
+		//Game action log
+		GameActionLog newLog = game.log;
+		if (!newLog.equals(this.log) && newLog != null)
+		{
+			this.log = newLog;
+			this.notifyCenter.notify(ModelNotification.LOG);
+		}
+		
+		if (this.version == -1)
+			this.notifyCenter.notify(ModelNotification.ALL);
+		
+		this.version = model.getVersion();
+		System.out.println("Refresh finished");
 		//throw new ModelException();
 	}
 

@@ -1,5 +1,5 @@
 package shared.definitions;
 
 public enum ModelNotification {
-	ALL, RESOURCES, MAP, PLAYERS, CHAT, STATE
+	ALL, RESOURCES, MAP, PLAYERS, CHAT, STATE, SCORE, LOG
 }

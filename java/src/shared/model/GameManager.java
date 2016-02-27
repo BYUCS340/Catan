@@ -141,14 +141,12 @@ public class GameManager implements ModelSubject
 			throw new ModelException();
 		
 		int newIndex = players.size();
-		if (newIndex > 3)
+		if (newIndex > 3 || newIndex < 0)
 		{
 			throw new ModelException("Too many players already to add another");
 		}
 		Player newPlayer = new Player(name, newIndex, color, isHuman);
 		players.add(newPlayer);
-		
-		this.notifyCenter.notify(ModelNotification.PLAYERS);
 		
 		playerColors[color.ordinal()] = newIndex;
 		return newIndex;
@@ -169,11 +167,10 @@ public class GameManager implements ModelSubject
 				System.err.println("Player at "+i+" is null");
 				continue;
 			}
-			System.out.println(p);
+			//System.out.println(p);
 			this.players.add(p);
 			playerColors[p.color.ordinal()] = p.playerIndex();
 		}
-		this.notifyCenter.notify(ModelNotification.PLAYERS);
 		
 	}
 	
@@ -198,6 +195,11 @@ public class GameManager implements ModelSubject
 	
 	public CatanColor getPlayerColorByIndex(int playerIndex)
 	{
+		if (playerIndex > players.size() || playerIndex < 0)
+		{
+			System.out.println("UNKNOWN INDEX"+playerIndex);
+			return null;
+		}
 		return players.get(playerIndex).color;
 	}
 	
@@ -340,14 +342,17 @@ public class GameManager implements ModelSubject
 	 * @param playerIndex
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuildRoad(int playerIndex, Coordinate start, Coordinate end) throws ModelException
+	public void BuildRoad(int playerIndex, Coordinate start, Coordinate end, boolean free) throws ModelException
 	{
 		try
 		{
-			//check to see if player has resources
-			if (!this.CanBuildRoad(playerIndex, start,end))
-				throw new ModelException();
-			GetPlayer(playerIndex).playerBank.buildRoad();
+			if (!free)
+			{
+				//check to see if player has resources
+				if (!this.CanBuildRoad(playerIndex, start,end))
+					throw new ModelException();
+				GetPlayer(playerIndex).playerBank.buildRoad();
+			}
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceRoad(start,end, color);
 			victoryPointManager.playerBuiltRoad(playerIndex);
@@ -363,14 +368,17 @@ public class GameManager implements ModelSubject
 	 * @param playerIndex
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuildSettlement(int playerIndex, Coordinate location) throws ModelException
+	public void BuildSettlement(int playerIndex, Coordinate location, boolean free) throws ModelException
 	{
 		try
 		{
-			//check to see if player has resources
-			if (!this.CanBuildSettlement(playerIndex, location))
-				throw new ModelException();
-			GetPlayer(playerIndex).playerBank.buildSettlement();
+			if (!free)
+			{
+				//check to see if player has resources
+				if (!this.CanBuildSettlement(playerIndex, location))
+					throw new ModelException();
+				GetPlayer(playerIndex).playerBank.buildSettlement();
+			}
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceSettlement(location, color);
 			victoryPointManager.playerBuiltSettlement(playerIndex);

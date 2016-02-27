@@ -79,4 +79,43 @@ public class PortHandler
 	{
 		return java.util.Collections.unmodifiableSet(ePorts.entrySet()).iterator();
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() 
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cPorts == null) ? 0 : cPorts.hashCode());
+		result = prime * result + ((ePorts == null) ? 0 : ePorts.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof PortHandler))
+			return false;
+		PortHandler other = (PortHandler) obj;
+		if (cPorts == null) {
+			if (other.cPorts != null)
+				return false;
+		} else if (!cPorts.equals(other.cPorts))
+			return false;
+		if (ePorts == null) {
+			if (other.ePorts != null)
+				return false;
+		} else if (!ePorts.equals(other.ePorts))
+			return false;
+		return true;
+	}
 }

@@ -43,6 +43,7 @@ public class MapController extends Controller implements IMapController
 		this.state = new NormalState(PieceType.NONE);
 		
 		ClientGame.getGame().startListening(modelObserver, ModelNotification.MAP);
+		ClientGame.getGame().startListening(modelObserver, ModelNotification.STATE);
 	}
 	
 	public IMapView getView()
@@ -176,7 +177,7 @@ public class MapController extends Controller implements IMapController
 			
 			StartMove(state.GetPieceType());
 			
-			if (wasSetup != isSetup)
+			if (wasSetup && !isSetup)
 				ClientGame.getGame().endTurn();
 		}
 	}	
@@ -243,6 +244,9 @@ public class MapController extends Controller implements IMapController
 		public void alert()
 		{
 			TurnState gameState = ClientGame.getGame().getTurnState();
+			
+			if (gameState == null)
+				gameState = TurnState.WAITING;
 			
 			switch (gameState)
 			{

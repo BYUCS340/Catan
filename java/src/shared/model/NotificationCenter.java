@@ -20,12 +20,26 @@ public class NotificationCenter {
 	 */
 	public void add(ModelObserver listener, ModelNotification type)
 	{
-		Set<ModelObserver> list = listeners.get(type);
+		
+		if (type != ModelNotification.ALL)
+		{
+			
+			Set<ModelObserver> list = listeners.get(type);
+			if (list == null){
+				list = new HashSet<>();
+				listeners.put(type, list);
+			}
+			list.add(listener);
+			
+		}
+		
+		Set<ModelObserver> list = listeners.get(ModelNotification.ALL);
 		if (list == null){
 			list = new HashSet<>();
 			listeners.put(type, list);
 		}
 		list.add(listener);
+		
 		
 	}
 	
@@ -61,7 +75,8 @@ public class NotificationCenter {
 	public void remove(ModelObserver listener, ModelNotification type)
 	{
 		Set<ModelObserver> list = listeners.get(type);
-		list.remove(listener);
+		if (list != null)
+			list.remove(listener);
 	}
 	
 	
@@ -78,6 +93,8 @@ public class NotificationCenter {
 			if (list != null)
 				this.pokeListeners(list.iterator());
 		}
+		
+		System.out.println("Notify Center for "+type);
 		
 		Set<ModelObserver> list = listeners.get(ModelNotification.ALL);
 		//make sure we don't have a null list

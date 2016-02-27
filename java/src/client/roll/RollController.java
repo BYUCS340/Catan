@@ -1,13 +1,16 @@
 package client.roll;
 
-import client.base.*;
+import client.base.Controller;
 import client.model.ClientGame;
+import shared.definitions.ModelNotification;
+import shared.definitions.TurnState;
+import shared.model.ModelObserver;
 
 
 /**
  * Implementation for the roll controller
  */
-public class RollController extends Controller implements IRollController {
+public class RollController extends Controller implements IRollController, ModelObserver {
 
 	private IRollResultView resultView;
 
@@ -20,7 +23,7 @@ public class RollController extends Controller implements IRollController {
 	public RollController(IRollView view, IRollResultView resultView) {
 
 		super(view);
-		
+		ClientGame.getGame().startListening(this, ModelNotification.STATE);
 		setResultView(resultView);
 	}
 	
@@ -40,6 +43,19 @@ public class RollController extends Controller implements IRollController {
 		int roll = ClientGame.getGame().RollDice();
 		getResultView().setRollValue(roll);
 		getResultView().showModal();
+	}
+
+	@Override
+	public void alert()
+	{
+		if(ClientGame.getGame().getTurnState() == TurnState.ROLLING)
+		{
+			this.getRollView().showModal();
+		}	
+		else if(this.getRollView().isModalShowing())
+		{
+			this.getRollView().closeModal();
+		}
 	}
 
 }
