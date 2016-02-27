@@ -48,25 +48,25 @@ public class DevCardController extends Controller implements IDevCardController,
 	}
 
 	@Override
-	public void startBuyCard() {
+	public void startBuyCard()
+	{
 		if (ClientGame.getGame().CanBuyDevCard(ClientGame.getGame().myPlayerIndex()))
 			getBuyCardView().showModal();
 	}
 
 	@Override
-	public void cancelBuyCard() {
-		
+	public void cancelBuyCard()
+	{
 		getBuyCardView().closeModal();
 	}
 
 	@Override
-	public void buyCard() {
-		System.out.println("Buying a card");
+	public void buyCard()
+	{
 		ClientGameManager game = ClientGame.getGame();
 		//Check to make sure we can buy a card
 		game.BuyDevCard();
 		getBuyCardView().closeModal();
-
 	}
 
 	@Override
@@ -86,11 +86,10 @@ public class DevCardController extends Controller implements IDevCardController,
 	{
 		try
 		{
-			ClientGame.getGame().playDevCard(ClientGame.getGame().myPlayerIndex(), DevCardType.MONOPOLY);
+			ClientGame.getGame().PlayMonopoly(resource);
 		}
 		catch (ModelException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		};
 	}
@@ -100,24 +99,23 @@ public class DevCardController extends Controller implements IDevCardController,
 	{
 		try
 		{
-			ClientGame.getGame().playDevCard(ClientGame.getGame().myPlayerIndex(), DevCardType.MONUMENT);
+			ClientGame.getGame().PlayMonument();
 		}
 		catch (ModelException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		};
 	}
 
 	@Override
-	public void playRoadBuildCard() {
-		
+	public void playRoadBuildCard()
+	{
 		roadAction.execute();
 	}
 
 	@Override
-	public void playSoldierCard() {
-		
+	public void playSoldierCard()
+	{
 		soldierAction.execute();
 	}
 
@@ -130,7 +128,6 @@ public class DevCardController extends Controller implements IDevCardController,
 		}
 		catch (ModelException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		};
 	}
