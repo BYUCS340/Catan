@@ -478,6 +478,7 @@ public class ClientGameManager extends GameManager
 		//check if resources have changed
 		if (oldresources != newresources)
 		{
+			this.SetPlayers(newplayers);
 			this.notifyCenter.notify(ModelNotification.RESOURCES);
 		}
 		
