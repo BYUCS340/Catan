@@ -165,9 +165,9 @@ public class DiscardController extends Controller implements IDiscardController,
 
 	@Override
 	public void discard() {
+		getDiscardView().closeModal();
 		ClientGame.getGame().DiscardCards(resourceList);
 		ClientGame.getGame().doneDiscarding();
-		getDiscardView().closeModal();
 		initResourceList();
 			
 	}
