@@ -84,27 +84,13 @@ public class DevCardController extends Controller implements IDevCardController,
 	@Override
 	public void playMonopolyCard(ResourceType resource)
 	{
-		try
-		{
 			ClientGame.getGame().PlayMonopoly(resource);
-		}
-		catch (ModelException e)
-		{
-			e.printStackTrace();
-		};
 	}
 
 	@Override
 	public void playMonumentCard()
 	{
-		try
-		{
 			ClientGame.getGame().PlayMonument();
-		}
-		catch (ModelException e)
-		{
-			e.printStackTrace();
-		};
 	}
 
 	@Override
@@ -122,14 +108,7 @@ public class DevCardController extends Controller implements IDevCardController,
 	@Override
 	public void playYearOfPlentyCard(ResourceType resource1, ResourceType resource2)
 	{
-		try
-		{
-			ClientGame.getGame().playDevCard(ClientGame.getGame().myPlayerIndex(), DevCardType.YEAR_OF_PLENTY);
-		}
-		catch (ModelException e)
-		{
-			e.printStackTrace();
-		};
+			ClientGame.getGame().PlayYearOfPlenty(resource1, resource2);
 	}
 
 	@Override
