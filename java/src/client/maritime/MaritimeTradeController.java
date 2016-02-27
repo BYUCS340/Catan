@@ -144,7 +144,8 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	public void cancelTrade() {
 		getResource = null;
 		giveResource = null;
-		getTradeOverlay().closeModal();
+		if(getTradeOverlay().isModalShowing())
+			getTradeOverlay().closeModal();
 	}
 
 	@Override
