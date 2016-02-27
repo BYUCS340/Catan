@@ -344,10 +344,113 @@ public class ClientGameManager extends GameManager
 		}
 	}
 	
-	public void PlayDevCard(DevCardType dev, ResourceType resource)
+	/**
+	 * Plays the monopoly card for the current player
+	 * @param resource
+	 */
+	public void PlayMonopoly(ResourceType resource)
 	{
-		
+		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.MONOPOLY))
+			return;
+		try 
+		{
+			NetGameModel model = proxy.monopolyCard(resource);
+			this.reloadGame(model, true);
+		} 
+		catch (ModelException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ServerProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+	
+	/**
+	 * Plays the monopoly card for the current player
+	 * @param resource
+	 */
+	public void PlaySolider()
+	{
+		System.out.println("NO SOLIDER PLAYED");
+		//TODO IMPLEMENT
+	}
+	
+	/**
+	 * Plays the monument card for the current player
+	 * @param resource
+	 */
+	public void PlayMonument()
+	{
+		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.MONUMENT))
+			return;
+		try 
+		{
+			NetGameModel model = proxy.monumentCard();
+			this.reloadGame(model, true);
+		} 
+		catch (ModelException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ServerProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Plays the road builder card for the current player
+	 * @param resource
+	 */
+	public void PlayRoadBuilder()
+	{
+		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.ROAD_BUILD))
+			return;
+		try 
+		{
+			
+			//TODO implement
+			//NetGameModel model = proxy.roadBuildingCard(location1, location2)
+			//this.reloadGame(model, true);
+		} 
+		/*catch (ModelException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ServerProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+	}
+	
+
+	/**
+	 * Plays the road builder card for the current player
+	 * @param resource
+	 */
+	public void PlayYearOfPlenty(ResourceType resource1, ResourceType resource2)
+	{
+		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.ROAD_BUILD))
+			return;
+		try 
+		{
+			//TODO implement
+			NetGameModel model = proxy.yearOfPlentyCard(resource1, resource2);
+			this.reloadGame(model, true);
+		} 
+		catch (ModelException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ServerProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
 	
 	/**
 	 * Builds a city for the current player
