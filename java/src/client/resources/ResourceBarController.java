@@ -14,7 +14,8 @@ import shared.model.ModelObserver;
 /**
  * Implementation for the resource bar controller
  */
-public class ResourceBarController extends Controller implements IResourceBarController, ModelObserver {
+public class ResourceBarController extends Controller implements IResourceBarController, ModelObserver
+{
 
 	private Map<ResourceBarElement, IAction> elementActions;
 	

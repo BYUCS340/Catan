@@ -48,25 +48,25 @@ public class DevCardController extends Controller implements IDevCardController,
 	}
 
 	@Override
-	public void startBuyCard() {
+	public void startBuyCard()
+	{
 		if (ClientGame.getGame().CanBuyDevCard(ClientGame.getGame().myPlayerIndex()))
 			getBuyCardView().showModal();
 	}
 
 	@Override
-	public void cancelBuyCard() {
-		
+	public void cancelBuyCard()
+	{
 		getBuyCardView().closeModal();
 	}
 
 	@Override
-	public void buyCard() {
-		System.out.println("Buying a card");
+	public void buyCard()
+	{
 		ClientGameManager game = ClientGame.getGame();
 		//Check to make sure we can buy a card
 		game.BuyDevCard();
 		getBuyCardView().closeModal();
-
 	}
 
 	@Override
@@ -84,55 +84,32 @@ public class DevCardController extends Controller implements IDevCardController,
 	@Override
 	public void playMonopolyCard(ResourceType resource)
 	{
-		try
-		{
-			ClientGame.getGame().playDevCard(ClientGame.getGame().myPlayerIndex(), DevCardType.MONOPOLY);
-		}
-		catch (ModelException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		};
+		System.out.println("Playing Monopoly");
+		ClientGame.getGame().PlayMonopoly(resource);
 	}
 
 	@Override
 	public void playMonumentCard()
 	{
-		try
-		{
-			ClientGame.getGame().playDevCard(ClientGame.getGame().myPlayerIndex(), DevCardType.MONUMENT);
-		}
-		catch (ModelException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		};
+			ClientGame.getGame().PlayMonument();
 	}
 
 	@Override
-	public void playRoadBuildCard() {
-		
+	public void playRoadBuildCard()
+	{
 		roadAction.execute();
 	}
 
 	@Override
-	public void playSoldierCard() {
-		
+	public void playSoldierCard()
+	{
 		soldierAction.execute();
 	}
 
 	@Override
 	public void playYearOfPlentyCard(ResourceType resource1, ResourceType resource2)
 	{
-		try
-		{
-			ClientGame.getGame().playDevCard(ClientGame.getGame().myPlayerIndex(), DevCardType.YEAR_OF_PLENTY);
-		}
-		catch (ModelException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		};
+			ClientGame.getGame().PlayYearOfPlenty(resource1, resource2);
 	}
 
 	@Override
