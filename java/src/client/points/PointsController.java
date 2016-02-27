@@ -1,7 +1,8 @@
 package client.points;
 
-import client.base.*;
+import client.base.Controller;
 import client.model.ClientGame;
+import client.model.ClientGameManager;
 import shared.definitions.ModelNotification;
 import shared.model.ModelObserver;
 
@@ -46,13 +47,24 @@ public class PointsController extends Controller implements IPointsController, M
 
 	private void updateFromModel()
 	{
-		int points = ClientGame.getGame().PlayerPoints();
+		ClientGameManager game = ClientGame.getGame();
+		int points = game.PlayerPoints();
 		getPointsView().setPoints(points);
+		
+		//if there's a winner, set the modal and show it
+		if(game.getVictoryPointManager().anyWinner())
+		{
+			
+			//If we're the winner, show the right modal!
+			int winnerIdx = game.getVictoryPointManager().winner();
+			this.getFinishedView().setWinner(game.getPlayerNameByIndex(winnerIdx), winnerIdx == game.getVictoryPointManager().winner());
+			this.getFinishedView().showModal();
+		}
+		
 	}
 
 	@Override
 	public void alert() {
-		// TODO Auto-generated method stub
 		updateFromModel();
 	}
 	
