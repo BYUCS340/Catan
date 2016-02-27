@@ -791,12 +791,12 @@ public class ClientGameManager extends GameManager
 		System.out.println("In taking from bank: The bank has" + gameBank.getResourceCount(inputResource) + " of " + inputResource);
 		
 		//  give bank the player's resources
-		gameBank.getResource(inputResource, ratio);
-		this.players.get(this.CurrentPlayersTurn()).playerBank.giveResource(inputResource, ratio);
+		gameBank.giveResource(inputResource, ratio);
+		this.players.get(this.CurrentPlayersTurn()).playerBank.getResource(inputResource, ratio);
 		
 		//  give the player the bought resource
-		gameBank.giveResource(outputResource, 1);
-		this.players.get(this.CurrentPlayersTurn()).playerBank.getResource(outputResource, 1);
+		gameBank.getResource(outputResource, 1);
+		this.players.get(this.CurrentPlayersTurn()).playerBank.giveResource(outputResource, 1);
 		
 		this.notifyCenter.notify(ModelNotification.RESOURCES);
 		this.proxy.maritimeTrade(ratio, inputResource, outputResource);

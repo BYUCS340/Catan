@@ -32,10 +32,6 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	
 	
 	
-	//  TODO:  remove this later
-//	boolean userTestingAlreadySupplied = false;
-	
-	
 	public MaritimeTradeController(IMaritimeTradeView tradeView, IMaritimeTradeOverlay tradeOverlay){
 		super(tradeView);
 		setTradeOverlay(tradeOverlay);
@@ -81,39 +77,17 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	
 	@Override
 	public void startTrade() {
-		//  TODO:  I need to remove this later when testing is over
-//		ClientGame.getGame().initializeBankTempTesting();
-//		System.out.println("Setting up bank");
-		
-		
-		
-//		//  TODO:  remove later this is only for AdHoc testing
-//		try{
-//			if(!userTestingAlreadySupplied){
-//				getCurrentUserResourcesForAdHocTesting();
-//
-//
-//				userTestingAlreadySupplied = true;
-//			}
-//		}catch(ModelException e){
-//			System.out.println("Resources Could not be taken from bank in Maritime Trade Controller initialization");
-//		}
-		System.out.println("ORE: " + ClientGame.getGame().playerResourceCount(ResourceType.ORE));
-		System.out.println("WHEAT: " + ClientGame.getGame().playerResourceCount(ResourceType.WHEAT));
-		System.out.println("WOOD: " + ClientGame.getGame().playerResourceCount(ResourceType.WOOD));
-		System.out.println("BRICK: " + ClientGame.getGame().playerResourceCount(ResourceType.BRICK));
-		System.out.println("SHEEP: " + ClientGame.getGame().playerResourceCount(ResourceType.SHEEP));
-		
-		
-		
-		
+//		System.out.println("ORE: " + ClientGame.getGame().playerResourceCount(ResourceType.ORE));
+//		System.out.println("WHEAT: " + ClientGame.getGame().playerResourceCount(ResourceType.WHEAT));
+//		System.out.println("WOOD: " + ClientGame.getGame().playerResourceCount(ResourceType.WOOD));
+//		System.out.println("BRICK: " + ClientGame.getGame().playerResourceCount(ResourceType.BRICK));
+//		System.out.println("SHEEP: " + ClientGame.getGame().playerResourceCount(ResourceType.SHEEP));
 		
 		if (!ClientGame.getGame().CanOfferTrade(ClientGame.getGame().CurrentPlayersTurn())){
 			System.out.println("GM says current player can't make a trade right now");
 			cancelTrade();
 			return;
 		}
-		
 		
 		
 		getResource = null;
@@ -147,6 +121,11 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 				
 				ClientGame.getGame().maritimeTradeCurrentPlayer(giveResourceRate, giveResource, getResource);
 
+				tradeRates = new int[]{4,4,4,4,4};  //  default trade rates
+				getResource = null;
+				giveResource = null;
+				resourcesPlayerCanGive = new ArrayList<ResourceType>();
+				resourcesPlayerCanGet = new ArrayList<ResourceType>();
 				startTrade();
 			}else{
 				//  something failed so start over gracefully
@@ -154,6 +133,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 			}
 		}catch(ModelException | ServerProxyException e){
 			startTrade();
+			System.out.println("Error processing trade, please try again. Choose what to give up");
 			getTradeOverlay().setStateMessage("Error processing trade, please try again. Choose what to give up");
 			System.out.println(e.getMessage());
 		}
