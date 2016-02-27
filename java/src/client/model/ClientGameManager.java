@@ -655,7 +655,10 @@ public class ClientGameManager extends GameManager
 	
 	public void doneDiscarding()
 	{
-		this.turnState = TurnState.DISCARDED_WAITING;
+		if(this.gameState.state == GameRound.DISCARDING)
+		{
+			this.turnState = TurnState.DISCARDED_WAITING;
+		}
 		notifyCenter.notify(ModelNotification.STATE);
 	}
 
