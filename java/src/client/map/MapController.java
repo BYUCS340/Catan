@@ -43,7 +43,7 @@ public class MapController extends Controller implements IMapController
 		this.state = new NormalState(PieceType.NONE);
 		
 		ClientGame.getGame().startListening(modelObserver, ModelNotification.MAP);
-		ClientGame.getGame().startListening(modelObserver, ModelNotification.STATE);
+		ClientGame.getGame().startListening(stateObserver, ModelNotification.STATE);
 	}
 	
 	public IMapView getView()
@@ -243,6 +243,15 @@ public class MapController extends Controller implements IMapController
 		@Override
 		public void alert()
 		{
+			
+		}
+	};
+	
+	private ModelObserver stateObserver = new ModelObserver()
+	{
+		@Override
+		public void alert()
+		{
 			TurnState gameState = ClientGame.getGame().getTurnState();
 			
 			if (gameState == null)
@@ -250,17 +259,22 @@ public class MapController extends Controller implements IMapController
 			
 			switch (gameState)
 			{
-			case PLACING_PIECE:
-				//TODO Need way of figuring out what piece is being placed.
-				break;
-			case FIRST_ROUND_MY_TURN:
-			case SECOND_ROUND_MY_TURN:
-				if (!state.IsSetup())
-					state = new SettlementSetupState();
-				break;
-			default:
-				state = new NormalState(PieceType.NONE);
-				break;
+				case PLACING_PIECE:
+					//TODO Need way of figuring out what piece is being placed.
+					state = new NormalState(ClientGame.getGame().myPlayerLastPiece());
+					break;
+				case FIRST_ROUND_MY_TURN:
+				case SECOND_ROUND_MY_TURN:
+					if (!state.IsSetup())
+						state = new SettlementSetupState();
+					break;
+				case ROBBING:
+					System.out.println(">>>We robbing");
+					state = new RobbingState();
+					break;
+				default:
+					state = new NormalState(PieceType.NONE);
+					break;
 			}
 			
 			StartMove(state.GetPieceType());
