@@ -1,18 +1,29 @@
 package client.domestic;
 
 import shared.definitions.*;
+import shared.model.ModelObserver;
+
+import java.util.ArrayList;
+
 import client.base.*;
 import client.misc.*;
+import client.model.ClientGame;
+import client.model.ClientGameManager;
 
 
 /**
  * Domestic trade controller implementation
  */
-public class DomesticTradeController extends Controller implements IDomesticTradeController {
+public class DomesticTradeController extends Controller implements IDomesticTradeController, ModelObserver {
 
 	private IDomesticTradeOverlay tradeOverlay;
 	private IWaitView waitOverlay;
 	private IAcceptTradeOverlay acceptOverlay;
+	
+	private enum ResourcePositions{iWOOD, iBRICK, iSHEEP, iWHEAT, iORE;}
+	private int[] resourcesToSend;
+	private int[] resourceToReceive;
+	
 
 	/**
 	 * DomesticTradeController constructor
@@ -30,6 +41,9 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		setTradeOverlay(tradeOverlay);
 		setWaitOverlay(waitOverlay);
 		setAcceptOverlay(acceptOverlay);
+		tradeOverlay.setPlayers(ClientGame.getGame().allCurrentPlayers());
+		ClientGame.getGame().startListening(this, ModelNotification.ALL);
+		this.alert();
 	}
 	
 	public IDomesticTradeView getTradeView() {
@@ -60,11 +74,43 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	public void setAcceptOverlay(IAcceptTradeOverlay acceptOverlay) {
 		this.acceptOverlay = acceptOverlay;
 	}
+	
+	
+	@Override
+	public void alert() {
+		ClientGameManager game = ClientGame.getGame();
+		//  TODO:  this should be more efficient later, should probably check for changed in state before updating everything
+		if(game.CurrentState() == GameRound.PLAYING)
+		{
+			getTradeView().enableDomesticTrade(true);
+			//  TODO:  probably need more fucntionality here to check why we're being alerted
+		}
+		else	//  Maritime Trade is disabled when not playing
+		{	
+			getTradeView().enableDomesticTrade(false);
+			
+			
+			//  TODO:  check to see if I have an offer
+		}
+	}
+	
 
 	@Override
 	public void startTrade() {
 
 		getTradeOverlay().showModal();
+		
+		
+		
+//		game.playerResourceCount(ResourceType.ORE);
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 
 	@Override
@@ -115,6 +161,8 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 
 		getAcceptOverlay().closeModal();
 	}
+
+
 
 }
 
