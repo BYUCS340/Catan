@@ -401,8 +401,9 @@ public class GameManager implements ModelSubject
 		try
 		{
 			//check to see if player has resources
-			if (!this.CanBuildSettlement(playerIndex, location))
-				throw new ModelException();
+			if (!this.CanBuildCity(playerIndex, location))
+				throw new ModelException("Cannot place city");
+			
 			GetPlayer(playerIndex).playerBank.buildRoad();
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceCity(location,color);
@@ -589,7 +590,7 @@ public class GameManager implements ModelSubject
 			Player player = GetPlayer(playerIndex);
 			
 			//check if they have the resources needed
-			if (!player.playerBank.canBuildRoad())
+			if (!player.playerBank.canBuildSettlement())
 				return false;
 			
 			//Map has been/will be checked by map

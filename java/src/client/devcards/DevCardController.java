@@ -1,6 +1,7 @@
 package client.devcards;
 
 import shared.definitions.ResourceType;
+import shared.model.ModelException;
 import shared.model.ModelObserver;
 import shared.definitions.*;
 import client.base.*;
@@ -81,13 +82,31 @@ public class DevCardController extends Controller implements IDevCardController,
 	}
 
 	@Override
-	public void playMonopolyCard(ResourceType resource) {
-		
+	public void playMonopolyCard(ResourceType resource)
+	{
+		try
+		{
+			ClientGame.getGame().playDevCard(ClientGame.getGame().myPlayerIndex(), DevCardType.MONOPOLY);
+		}
+		catch (ModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
 	}
 
 	@Override
-	public void playMonumentCard() {
-		
+	public void playMonumentCard()
+	{
+		try
+		{
+			ClientGame.getGame().playDevCard(ClientGame.getGame().myPlayerIndex(), DevCardType.MONUMENT);
+		}
+		catch (ModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
 	}
 
 	@Override
@@ -103,8 +122,17 @@ public class DevCardController extends Controller implements IDevCardController,
 	}
 
 	@Override
-	public void playYearOfPlentyCard(ResourceType resource1, ResourceType resource2) {
-		
+	public void playYearOfPlentyCard(ResourceType resource1, ResourceType resource2)
+	{
+		try
+		{
+			ClientGame.getGame().playDevCard(ClientGame.getGame().myPlayerIndex(), DevCardType.YEAR_OF_PLENTY);
+		}
+		catch (ModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
 	}
 
 	@Override
