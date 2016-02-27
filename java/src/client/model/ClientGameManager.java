@@ -128,6 +128,7 @@ public class ClientGameManager extends GameManager
 			return 0;
 		}
 	}
+	
 
 	/**
 	 *
@@ -263,7 +264,6 @@ public class ClientGameManager extends GameManager
 	 */
 	public void BuildRoad(Coordinate start, Coordinate end)
 	{
-
 		try
 		{
 			boolean free = false;
@@ -321,7 +321,31 @@ public class ClientGameManager extends GameManager
 	}
 	
 	/**
-	 * 
+	 * Buys a dev card for the current player
+	 */
+	public void BuyDevCard()
+	{
+
+		try 
+		{
+			NetGameModel newmodel = proxy.buyDevCard();
+			this.reloadGame(newmodel,true);
+			
+		} 
+		catch (ServerProxyException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		catch (ModelException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Builds a city for the current player
 	 * @param point
 	 */
 	public void BuildCity(Coordinate point)
@@ -332,7 +356,8 @@ public class ClientGameManager extends GameManager
 
 			VertexLocation location = Translate.GetVertexLocation(point);
 
-			proxy.buildCity(location);
+			NetGameModel newmodel = proxy.buildCity(location);
+			this.reloadGame(newmodel,true);
 		}
 		catch (ModelException e)
 		{
@@ -349,12 +374,12 @@ public class ClientGameManager extends GameManager
 		if (super.CanPlaceRobber(this.myPlayerIndex))
 		{
 			
-			
 			try 
 			{
 				super.placeRobber(this.myPlayerIndex);
 				HexLocation location = Translate.GetHexLocation(point);
-				this.proxy.robPlayer(victimIndex, location);
+				NetGameModel newmodel = this.proxy.robPlayer(victimIndex, location);
+				this.reloadGame(newmodel,true);
 			} 
 			catch (ServerProxyException e) 
 			{
@@ -426,6 +451,40 @@ public class ClientGameManager extends GameManager
 			e.printStackTrace();
 		}
 
+	}
+	
+	
+	
+	//CAN DO METHOD
+	public boolean canBuildPiece(PieceType p){
+		
+		switch(p){
+			case CITY:
+				return super.CanBuildCity(this.myPlayerIndex);
+			case NONE:
+				break;
+			case ROAD:
+				return super.CanBuildRoad(this.myPlayerIndex);
+			case ROBBER:
+				break;
+			case SETTLEMENT:
+				return super.CanBuildSettlement(this.myPlayerIndex);
+			default:
+				break;
+		}
+		return false;
+	}
+	
+	/**
+	 * Starts building a piece
+	 * @param road
+	 */
+	public void startBuilding(PieceType piece) {
+		// TODO Auto-generated method stub
+		this.lastSelectedPiece = piece;
+		this.turnState = TurnState.PLACING_PIECE;
+		this.notifyCenter.notify(ModelNotification.STATE);
+		
 	}
 	
 	
@@ -575,10 +634,15 @@ public class ClientGameManager extends GameManager
 						this.turnState = TurnState.WAITING;
 					break;
 				case DISCARDING:
-					if(players.get(this.myPlayerIndex).totalResources() > 7)
+					if(this.turnState != TurnState.DISCARDED_WAITING)
+					{
 						this.turnState = TurnState.DISCARDING;
-					else
-						this.turnState = TurnState.DISCARDED_WAITING;
+						
+					}
+//					if(players.get(this.myPlayerIndex).totalResources() > 7)
+//						this.turnState = TurnState.DISCARDING;
+//					else
+//						this.turnState = TurnState.DISCARDED_WAITING;
 					break;
 				case PLAYING:
 					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
@@ -611,6 +675,14 @@ public class ClientGameManager extends GameManager
 		{
 			this.map = newmap;
 			this.notifyCenter.notify(ModelNotification.MAP);
+		}
+		
+		//updates the bank
+		Bank newbank = game.gameBank;
+		if (!this.gameBank.equals(newbank) && newbank != null)
+		{
+			this.gameBank = newbank;
+			this.notifyCenter.notify(ModelNotification.BANK);
 		}
 		
 		//Victory point manager
@@ -646,6 +718,15 @@ public class ClientGameManager extends GameManager
 		this.gameTitle = model.getTitle();
 
 		//TODO  make sure I assign the colors correctly
+	}
+	
+	public void doneDiscarding()
+	{
+		if(this.gameState.state == GameRound.DISCARDING)
+		{
+			this.turnState = TurnState.DISCARDED_WAITING;
+		}
+		notifyCenter.notify(ModelNotification.STATE);
 	}
 
 	/**
@@ -750,4 +831,5 @@ public class ClientGameManager extends GameManager
 		this.players.get(playerIndex).playerBank.getResource(type, count);
 		this.notifyCenter.notify(ModelNotification.RESOURCES);
 	}
+
 }

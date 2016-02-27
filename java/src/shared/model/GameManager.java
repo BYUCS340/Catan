@@ -538,6 +538,16 @@ public class GameManager implements ModelSubject
 	 */
 	public boolean CanBuildRoad(int playerIndex,Coordinate start, Coordinate end)
 	{
+		return this.CanBuildRoad(playerIndex);
+	}
+	
+	/**
+	 * Just checks if a player can build a road
+	 * @param playerIndex
+	 * @return
+	 */
+	public boolean CanBuildRoad(int playerIndex)
+	{
 		if (!CanPlayerPlay(playerIndex))
 			return false;
 		try 
@@ -561,6 +571,16 @@ public class GameManager implements ModelSubject
 	 * @return
 	 */
 	public boolean CanBuildSettlement(int playerIndex, Coordinate location)
+	{
+		return this.CanBuildSettlement(playerIndex);
+	}
+	
+	/**
+	 * Checks if a player can build the settlement
+	 * @param playerIndex
+	 * @return
+	 */
+	public boolean CanBuildSettlement(int playerIndex)
 	{
 		if (!CanPlayerPlay(playerIndex))
 			return false;
@@ -591,15 +611,26 @@ public class GameManager implements ModelSubject
 	 */
 	public boolean CanBuildCity (int playerIndex, Coordinate location)
 	{
+		//ask the map
+		if (!map.CanPlaceCity(location,this.getPlayerColorByIndex(playerIndex)))
+			return false;
+		return this.CanBuildCity(playerIndex);
+	}
+	
+	/**
+	 * Checks if a player can build a city
+	 * @param playerIndex
+	 * @return
+	 */
+	public boolean CanBuildCity (int playerIndex)
+	{
 		if (!CanPlayerPlay(playerIndex))
 			return false;
 		try 
 		{
 			if (!GetPlayer(playerIndex).playerBank.canBuildCity())
 				return false;
-			//ask the map
-			if (!map.CanPlaceCity(location,this.getPlayerColorByIndex(playerIndex)))
-				return false;
+			
 		}
 		catch (ModelException e)
 		{
@@ -609,6 +640,11 @@ public class GameManager implements ModelSubject
 		return true;
 	}
 	
+	/**
+	 * 
+	 * @param playerIndex
+	 * @return
+	 */
 	public boolean CanOfferTrade (int playerIndex)
 	{
 		if (!CanPlayerPlay(playerIndex))

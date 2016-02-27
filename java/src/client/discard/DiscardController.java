@@ -166,9 +166,10 @@ public class DiscardController extends Controller implements IDiscardController,
 	@Override
 	public void discard() {
 		ClientGame.getGame().DiscardCards(resourceList);
+		ClientGame.getGame().doneDiscarding();
 		getDiscardView().closeModal();
 		initResourceList();
-		
+			
 	}
 
 	@Override
@@ -178,19 +179,24 @@ public class DiscardController extends Controller implements IDiscardController,
 		ClientGameManager game = ClientGame.getGame();
 		if(cTurnState == TurnState.DISCARDING)
 		{
-			//at this point, we know that we have more than 7 cards and need to 
-			//discard some
-			initDiscardView();
-			this.getDiscardView().showModal();
-		}
-		else if(cTurnState == TurnState.DISCARDED_WAITING)
-		{
-			if(lTurnState != TurnState.DISCARDING && lTurnState != TurnState.DISCARDED_WAITING)
+			if(this.getNumResourceCards() <= 7)
 			{
 				lTurnState = game.getTurnState();
 				game.DiscardCards(resourceList);
+				game.doneDiscarding();
 			}
-			this.getWaitView().showModal();
+			else
+			{
+				//at this point, we know that we have more than 7 cards and need to 
+				//discard some
+				initDiscardView();
+				this.getDiscardView().showModal();
+			}
+		}
+		else if(cTurnState == TurnState.DISCARDED_WAITING)
+		{
+			if(!this.getWaitView().isModalShowing())
+				this.getWaitView().showModal();
 		}
 		else if (this.getWaitView().isModalShowing())
 			this.getWaitView().closeModal();

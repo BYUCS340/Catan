@@ -4,6 +4,7 @@ import java.util.*;
 
 import client.base.*;
 import client.model.ClientGame;
+import client.model.ClientGameManager;
 import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
@@ -43,6 +44,8 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 	@Override
 	public void buildRoad() {
 		executeElementAction(ResourceBarElement.ROAD);
+		ClientGame.getGame().startBuilding(PieceType.ROAD);
+		
 	}
 
 	@Override
@@ -79,14 +82,21 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 	 */
 	private void updateResources()
 	{
-		this.getView().setElementAmount(ResourceBarElement.BRICK, ClientGame.getGame().playerResourceCount(ResourceType.BRICK));
-		this.getView().setElementAmount(ResourceBarElement.ORE, ClientGame.getGame().playerResourceCount(ResourceType.ORE));
-		this.getView().setElementAmount(ResourceBarElement.SHEEP, ClientGame.getGame().playerResourceCount(ResourceType.SHEEP));
-		this.getView().setElementAmount(ResourceBarElement.WOOD, ClientGame.getGame().playerResourceCount(ResourceType.WOOD));
-		this.getView().setElementAmount(ResourceBarElement.WHEAT, ClientGame.getGame().playerResourceCount(ResourceType.WHEAT));
+		ClientGameManager game = ClientGame.getGame();
+		this.getView().setElementAmount(ResourceBarElement.BRICK, game.playerResourceCount(ResourceType.BRICK));
+		this.getView().setElementAmount(ResourceBarElement.ORE,   game.playerResourceCount(ResourceType.ORE));
+		this.getView().setElementAmount(ResourceBarElement.SHEEP, game.playerResourceCount(ResourceType.SHEEP));
+		this.getView().setElementAmount(ResourceBarElement.WOOD,  game.playerResourceCount(ResourceType.WOOD));
+		this.getView().setElementAmount(ResourceBarElement.WHEAT, game.playerResourceCount(ResourceType.WHEAT));
 		
-		this.getView().setElementAmount(ResourceBarElement.ROAD, ClientGame.getGame().playerPieceCount(PieceType.ROAD));
-		this.getView().setElementAmount(ResourceBarElement.CITY, ClientGame.getGame().playerPieceCount(PieceType.CITY));
+		this.getView().setElementAmount(ResourceBarElement.ROAD, game.playerPieceCount(PieceType.ROAD));
+		this.getView().setElementAmount(ResourceBarElement.CITY, game.playerPieceCount(PieceType.CITY));
+		this.getView().setElementAmount(ResourceBarElement.SETTLEMENT, game.playerPieceCount(PieceType.SETTLEMENT));
+		
+		this.getView().setElementEnabled(ResourceBarElement.BUY_CARD, game.CanBuyDevCard(game.myPlayerIndex()));
+		this.getView().setElementEnabled(ResourceBarElement.ROAD, game.CanBuildRoad(game.myPlayerIndex()));
+		this.getView().setElementEnabled(ResourceBarElement.SETTLEMENT, game.CanBuildSettlement(game.myPlayerIndex()));
+		this.getView().setElementEnabled(ResourceBarElement.CITY, game.CanBuildCity(game.myPlayerIndex()));
 	}
 
 	@Override
