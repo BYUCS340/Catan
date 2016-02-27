@@ -662,4 +662,63 @@ public class ClientGameManager extends GameManager
 	{
 		return new UnmodifiableMapModel(map);
 	}
+	
+	
+//	/**
+//	 * Takes resource from the bank and gives them to the current player
+//	 * @param type
+//	 * @param count
+//	 * @throws ModelException
+//	 * @throws ServerProxyException 
+//	 */
+//	public void maritimeTradeCurrentPlayer(int ratio, ResourceType inputResource, ResourceType outputResource) throws ModelException, ServerProxyException{
+//		System.out.println("In taking from bank: The bank has" + gameBank.getResourceCount(inputResource) + " of " + inputResource);
+//		
+//		//  give bank the player's resources
+//		gameBank.getResource(inputResource, ratio);
+//		this.players.get(this.CurrentPlayersTurn()).playerBank.giveResource(inputResource, ratio);
+//		
+//		//  give the player the bought resource
+//		gameBank.giveResource(outputResource, 1);
+//		this.players.get(this.CurrentPlayersTurn()).playerBank.getResource(outputResource, 1);
+//		
+//		this.notifyCenter.notify(ModelNotification.RESOURCES);
+//		this.proxy.maritimeTrade(ratio, inputResource, outputResource);
+//	}
+	
+	
+	public void offerTrade(){
+		
+		//  TODO:  Fix this!
+		
+//		this.proxy.offerTrade(resourceList, receiver);
+	}
+
+	
+//	
+//	/**
+//	 * Takes resources from the bank and gives them to the passed player index
+//	 * @param playerIndex
+//	 * @param type
+//	 * @param count
+//	 * @throws ModelException
+//	 */
+//	public void giveResourcesToPlayer(int playerIndex, ResourceType type, int count) throws ModelException{
+//		gameBank.getResource(type, count);
+//		this.players.get(playerIndex).playerBank.giveResource(type, count);
+//		this.notifyCenter.notify(ModelNotification.RESOURCES);
+//	}
+//	
+//	/**
+//	 * Takes resources from the passed player index and gives them to the bank
+//	 * @param playerIndex
+//	 * @param type
+//	 * @param count
+//	 * @throws ModelException
+//	 */
+//	public void takeResourcesFromPlayer(int playerIndex, ResourceType type, int count) throws ModelException{
+//		gameBank.giveResource(type, count);
+//		this.players.get(playerIndex).playerBank.getResource(type, count);
+//		this.notifyCenter.notify(ModelNotification.RESOURCES);
+//	}
 }
