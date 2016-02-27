@@ -5,6 +5,7 @@ import shared.model.ModelObserver;
 import shared.definitions.*;
 import client.base.*;
 import client.model.ClientGame;
+import client.model.ClientGameManager;
 
 
 /**
@@ -47,8 +48,8 @@ public class DevCardController extends Controller implements IDevCardController,
 
 	@Override
 	public void startBuyCard() {
-		
-		getBuyCardView().showModal();
+		if (ClientGame.getGame().CanBuyDevCard(ClientGame.getGame().myPlayerIndex()))
+			getBuyCardView().showModal();
 	}
 
 	@Override
@@ -59,8 +60,12 @@ public class DevCardController extends Controller implements IDevCardController,
 
 	@Override
 	public void buyCard() {
-		
+		System.out.println("Buying a card");
+		ClientGameManager game = ClientGame.getGame();
+		//Check to make sure we can buy a card
+		game.BuyDevCard();
 		getBuyCardView().closeModal();
+
 	}
 
 	@Override

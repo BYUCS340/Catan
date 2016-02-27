@@ -121,7 +121,7 @@ public class Translate
 			//PIECES
 			player.playerBank.givePiece(PieceType.CITY, netPlayer.getNumCities());
 			player.playerBank.givePiece(PieceType.ROAD, netPlayer.getNumRoads());
-			player.playerBank.givePiece(PieceType.SETTLEMENT, netPlayer.getNumMonuments());
+			player.playerBank.givePiece(PieceType.SETTLEMENT, netPlayer.getNumSettlements());
 
 			//RESOURCES
 			player.playerBank.giveResource(ResourceType.BRICK, netPlayer.getNetResourceList().getNumBrick());
