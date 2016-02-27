@@ -4,6 +4,7 @@ import client.base.Controller;
 import client.model.ClientGame;
 import client.model.ClientGameManager;
 import shared.definitions.CatanColor;
+import shared.definitions.ModelNotification;
 import shared.definitions.TurnState;
 import shared.model.ModelObserver;
 import shared.model.VictoryPointManager;
@@ -18,8 +19,12 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 
 	public TurnTrackerController(ITurnTrackerView view) {
 		super(view);
-		ClientGame.getGame().startListening(this);
-		//ClientGame.getGame().startListening(this, ModelNotification.SCORE);
+		//ClientGame.getGame().startListening(this);
+		System.out.println("Starting Turn tracker");
+		ClientGame.getGame().startListening(this, ModelNotification.STATE);
+		ClientGame.getGame().startListening(this, ModelNotification.SCORE);
+		ClientGame.getGame().startListening(this, ModelNotification.PLAYERS);
+		
 		isInitializedTo = 0;
 	}
 	
@@ -117,8 +122,10 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		ClientGameManager game = ClientGame.getGame();
 		
 		//OJO if the version number wraps around to -1, THIS WILL NOT WORK
+		//System.out.println("Trying to update on turn tracker");
 		if(game.hasGameStarted())
 		{
+			//System.out.println("Update on turn tracker");
 			this.updateFromModel();
 		}
 

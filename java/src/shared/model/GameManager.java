@@ -246,7 +246,8 @@ public class GameManager implements ModelSubject
 		try
 		{
 			return this.players.get(playerIndex).playerBank.getPieceCount(type);
-		} catch (ModelException e)
+		} 
+		catch (ModelException e)
 		{
 			e.printStackTrace();
 			return 0;

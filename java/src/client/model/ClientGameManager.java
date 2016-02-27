@@ -42,6 +42,8 @@ public class ClientGameManager extends GameManager
 
 	private int refreshCount = 0;
 	private CatanColor myPlayerColor;
+	
+	private PieceType lastSelectedPiece = null;
 	/**
 	 * Creates the client game manager with the proxy
 	 * @param clientProxy
@@ -82,6 +84,11 @@ public class ClientGameManager extends GameManager
 	public CatanColor myPlayerColor()
 	{
 		return this.myPlayerColor;
+	}
+	
+	public PieceType myPlayerLastPiece()
+	{
+		return this.lastSelectedPiece;
 	}
 
 	/**
@@ -283,6 +290,10 @@ public class ClientGameManager extends GameManager
 		}
 	}
 
+	/**
+	 * Builds a settlement
+	 * @param point
+	 */
 	public void BuildSettlement(Coordinate point)
 	{
 		try
@@ -308,7 +319,11 @@ public class ClientGameManager extends GameManager
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * 
+	 * @param point
+	 */
 	public void BuildCity(Coordinate point)
 	{
 		try
@@ -327,6 +342,29 @@ public class ClientGameManager extends GameManager
 		{
 			//TODO How should this be handled?
 			e.printStackTrace();
+		}
+	}
+	
+	public void PlaceRobber(int victimIndex, Coordinate point){
+		if (super.CanPlaceRobber(this.myPlayerIndex))
+		{
+			
+			
+			try 
+			{
+				super.placeRobber(this.myPlayerIndex);
+				HexLocation location = Translate.GetHexLocation(point);
+				this.proxy.robPlayer(victimIndex, location);
+			} 
+			catch (ServerProxyException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			catch (ModelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -467,7 +505,7 @@ public class ClientGameManager extends GameManager
 		//Check if we have a different size
 		if (newplayers.size() != oldplayers.size() || !newplayers.equals(oldplayers))
 		{
-			System.out.println("Updated the players");
+			//System.out.println("Updated the players");
 			this.SetPlayers(newplayers);
 			this.notifyCenter.notify(ModelNotification.PLAYERS);
 		}
@@ -478,6 +516,7 @@ public class ClientGameManager extends GameManager
 		//check if resources have changed
 		if (oldresources != newresources)
 		{
+			this.SetPlayers(newplayers);
 			this.notifyCenter.notify(ModelNotification.RESOURCES);
 		}
 		
@@ -486,21 +525,14 @@ public class ClientGameManager extends GameManager
 		if (game.waterCooler.size() > this.waterCooler.size())
 		{
 			this.waterCooler = game.waterCooler;
-			System.out.println("New watercooler size: " + waterCooler.size());
+			//System.out.println("New watercooler size: " + waterCooler.size());
 			this.notifyCenter.notify(ModelNotification.CHAT);
 		}
 
 		GameState newgamestate = game.gameState;
 		GameRound oldstate = game.gameState.state;
 		GameRound newstate = game.gameState.state;
-		//System.out.println("STATE current:"+gameState.state+" new:"+newstate.state);
-		if (!this.gameState.equals(newgamestate) && newstate != null)
-		{
-			gameState = newgamestate;
-			//handle the logic from this
-			System.out.println("STATE Refreshed to "+newstate);
-			this.notifyCenter.notify(ModelNotification.STATE);
-		}
+		
 		TurnState oldTurnState = this.turnState;
 		//Handle the new player state
 		if(this.version != -1 && players.size() < 4)
@@ -560,10 +592,14 @@ public class ClientGameManager extends GameManager
 			}
 		}
 		
-		if (this.turnState != oldTurnState)
+		if (this.turnState != oldTurnState || (!this.gameState.equals(newgamestate) && newstate != null))
 		{
+			gameState = newgamestate;
+			//handle the logic from this
+			System.out.println("STATE Refreshed to "+newstate);
 			System.out.println("Old TS: "+oldTurnState+" New: "+this.turnState);
 			this.notifyCenter.notify(ModelNotification.STATE);
+			
 		}
 		
 		
