@@ -325,12 +325,10 @@ public class ClientGameManager extends GameManager
 	 */
 	public void BuyDevCard()
 	{
-
-		try 
+		try
 		{
 			NetGameModel newmodel = proxy.buyDevCard();
 			this.reloadGame(newmodel,true);
-			
 		} 
 		catch (ServerProxyException e) 
 		{
