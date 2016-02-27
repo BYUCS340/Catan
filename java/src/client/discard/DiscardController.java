@@ -77,7 +77,7 @@ public class DiscardController extends Controller implements IDiscardController,
 		
 		int maxAmt = ClientGame.getGame().playerResourceCount(resource);
 		int currAmt = resourceList.get(resourceIdx);
-		boolean increase = currAmt < maxAmt;
+		boolean increase = (currAmt < maxAmt);
 		
 		dView.setResourceDiscardAmount(resource, currAmt);
 		dView.setResourceAmountChangeEnabled(resource, increase, true);
@@ -124,9 +124,7 @@ public class DiscardController extends Controller implements IDiscardController,
 		updateDiscardStatus();
 	}
 	
-
-	
-	private void updateDiscardStatus()
+	private int numResourcesPending()
 	{
 		int total = 0;
 		for(Integer i : resourceList)
@@ -134,10 +132,34 @@ public class DiscardController extends Controller implements IDiscardController,
 			total += i;
 		}
 		
+		return total;
+	}
+	
+	private void updateDiscardStatus()
+	{
+		ClientGameManager game = ClientGame.getGame();
+		int total = numResourcesPending();
+		
 		int discardAmt = this.getNumResourceCards() / 2;
 		
 		getDiscardView().setStateMessage("" + total + "/" + discardAmt);
 		getDiscardView().setDiscardButtonEnabled(total == discardAmt);
+		if(total >= discardAmt)
+		{
+			getDiscardView().setResourceAmountChangeEnabled(ResourceType.BRICK, false, resourceList.get(0) > 0);
+			getDiscardView().setResourceAmountChangeEnabled(ResourceType.ORE, false, resourceList.get(1) > 0);
+			getDiscardView().setResourceAmountChangeEnabled(ResourceType.SHEEP, false, resourceList.get(2) > 0);
+			getDiscardView().setResourceAmountChangeEnabled(ResourceType.WHEAT, false, resourceList.get(3) > 0);
+			getDiscardView().setResourceAmountChangeEnabled(ResourceType.WOOD, false, resourceList.get(4) > 0);
+		}
+		else
+		{
+			getDiscardView().setResourceAmountChangeEnabled(ResourceType.BRICK, resourceList.get(0) < game.playerResourceCount(ResourceType.BRICK), resourceList.get(0) > 0);
+			getDiscardView().setResourceAmountChangeEnabled(ResourceType.ORE, resourceList.get(1) < game.playerResourceCount(ResourceType.ORE), resourceList.get(1) > 0);
+			getDiscardView().setResourceAmountChangeEnabled(ResourceType.SHEEP, resourceList.get(2) < game.playerResourceCount(ResourceType.SHEEP), resourceList.get(2) > 0);
+			getDiscardView().setResourceAmountChangeEnabled(ResourceType.WHEAT, resourceList.get(3) < game.playerResourceCount(ResourceType.WHEAT), resourceList.get(3) > 0);
+			getDiscardView().setResourceAmountChangeEnabled(ResourceType.WOOD, resourceList.get(4) < game.playerResourceCount(ResourceType.WOOD), resourceList.get(4) > 0);
+		}
 		
 	}
 
