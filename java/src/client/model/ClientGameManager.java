@@ -494,14 +494,7 @@ public class ClientGameManager extends GameManager
 		GameState newgamestate = game.gameState;
 		GameRound oldstate = game.gameState.state;
 		GameRound newstate = game.gameState.state;
-		//System.out.println("STATE current:"+gameState.state+" new:"+newstate.state);
-		if (!this.gameState.equals(newgamestate) && newstate != null)
-		{
-			gameState = newgamestate;
-			//handle the logic from this
-			System.out.println("STATE Refreshed to "+newstate);
-			this.notifyCenter.notify(ModelNotification.STATE);
-		}
+		
 		TurnState oldTurnState = this.turnState;
 		//Handle the new player state
 		if(this.version != -1 && players.size() < 4)
@@ -561,10 +554,14 @@ public class ClientGameManager extends GameManager
 			}
 		}
 		
-		if (this.turnState != oldTurnState)
+		if (this.turnState != oldTurnState || (!this.gameState.equals(newgamestate) && newstate != null))
 		{
+			gameState = newgamestate;
+			//handle the logic from this
+			System.out.println("STATE Refreshed to "+newstate);
 			System.out.println("Old TS: "+oldTurnState+" New: "+this.turnState);
 			this.notifyCenter.notify(ModelNotification.STATE);
+			
 		}
 		
 		
