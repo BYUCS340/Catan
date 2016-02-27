@@ -51,11 +51,13 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 	@Override
 	public void buildSettlement() {
 		executeElementAction(ResourceBarElement.SETTLEMENT);
+		ClientGame.getGame().startBuilding(PieceType.SETTLEMENT);
 	}
 
 	@Override
 	public void buildCity() {
 		executeElementAction(ResourceBarElement.CITY);
+		ClientGame.getGame().startBuilding(PieceType.CITY);
 	}
 
 	@Override

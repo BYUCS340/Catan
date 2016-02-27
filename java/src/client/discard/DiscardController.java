@@ -165,9 +165,9 @@ public class DiscardController extends Controller implements IDiscardController,
 
 	@Override
 	public void discard() {
+		getDiscardView().closeModal();
 		ClientGame.getGame().DiscardCards(resourceList);
 		ClientGame.getGame().doneDiscarding();
-		getDiscardView().closeModal();
 		initResourceList();
 			
 	}
@@ -218,6 +218,12 @@ public class DiscardController extends Controller implements IDiscardController,
 		discardView.setResourceMaxAmount(ResourceType.SHEEP, numSheep);
 		discardView.setResourceMaxAmount(ResourceType.WHEAT, numWheat);
 		discardView.setResourceMaxAmount(ResourceType.ORE, numOre);
+		
+		getDiscardView().setResourceDiscardAmount(ResourceType.WOOD, 0);
+		getDiscardView().setResourceDiscardAmount(ResourceType.BRICK, 0);
+		getDiscardView().setResourceDiscardAmount(ResourceType.SHEEP, 0);
+		getDiscardView().setResourceDiscardAmount(ResourceType.WHEAT, 0);
+		getDiscardView().setResourceDiscardAmount(ResourceType.ORE, 0);
 		
 		discardView.setResourceAmountChangeEnabled(ResourceType.WOOD, numWood > 0, false);
 		discardView.setResourceAmountChangeEnabled(ResourceType.BRICK, numBrick > 0, false);
