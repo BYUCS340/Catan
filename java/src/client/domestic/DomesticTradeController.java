@@ -49,6 +49,11 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 
 		ClientGame.getGame().startListening(this, ModelNotification.ALL);
 		this.alert();
+		System.out.println(ResourcePositions.iBRICK.ordinal());
+		System.out.println(ResourcePositions.iWHEAT.ordinal());
+		System.out.println(ResourcePositions.iSHEEP.ordinal());
+		System.out.println(ResourcePositions.iWOOD.ordinal());
+		System.out.println(ResourcePositions.iORE.ordinal());
 	}
 	
 	public IDomesticTradeView getTradeView() {
@@ -103,10 +108,12 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	@Override
 	public void startTrade() {
 		initializePlayersToTradeWith();
-
+		resetTradeOverlay();
+		resetUpDownButtons();
 		
 		resetResourcesToTrade();
 		resetTradeResesourceStates();
+
 		playerIndexToTradeWith = -1;
 		getTradeOverlay().showModal();
 		
@@ -166,17 +173,81 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	private void resetTradeResesourceStates(){
 		resourceStates = new TradeResourceStates[]{TradeResourceStates.NONE,TradeResourceStates.NONE,TradeResourceStates.NONE,TradeResourceStates.NONE,TradeResourceStates.NONE};
 	}
+	
+	private void resetTradeOverlay(){
+		getTradeOverlay().reset();
+	}
+	
+	/**
+	 * Check if the trade is ready, enable and disable the trade button accordingly
+	 */
+	private void checkIfTradeIsReady(){
+		System.out.println("Resources to Trade: " + this.resourcesToTrade[0]);
+		System.out.println("Resources to Trade: " + this.resourcesToTrade[1]);
+		System.out.println("Resources to Trade: " + this.resourcesToTrade[2]);
+		System.out.println("Resources to Trade: " + this.resourcesToTrade[3]);
+		System.out.println("Resources to Trade: " + this.resourcesToTrade[4]);
+
+		if(!sendAndReceiveResourcesSet()){
+			System.out.println("need resources");
+			getTradeOverlay().setStateMessage("Select Send and Receive Resources");
+			getTradeOverlay().setTradeEnabled(false);
+		}else if(playerIndexToTradeWith <= 0){
+			System.out.println("need players");
+			getTradeOverlay().setStateMessage("Select Player to Trade With");	
+			getTradeOverlay().setTradeEnabled(false);
+		}else{
+			System.out.println("can trade");
+			getTradeOverlay().setStateMessage("Trade!");	
+			getTradeOverlay().setTradeEnabled(true);
+		}
+	}
+	
+	/**
+	 * Checks to see if send and receive resources are set in the trade
+	 * @return
+	 */
+	private boolean sendAndReceiveResourcesSet(){
+		boolean sendResourcesSet = false;
+		boolean receiveResourceSet = false;
+		
+		for(int value : resourcesToTrade){
+			if(value > 0)
+				receiveResourceSet = true;
+			else if(value < 0)
+				sendResourcesSet = true;
+		}
+		return (sendResourcesSet && receiveResourceSet);
+	}
 
 	@Override
 	public void decreaseResourceAmount(ResourceType resource) {
-		resourcesToTrade[getResourceIndex(resource)] -= 1;
+		if(resourceStates[getResourceIndex(resource)] == TradeResourceStates.SEND){
+			resourcesToTrade[getResourceIndex(resource)] += 1;
+		}else{
+			resourcesToTrade[getResourceIndex(resource)] -= 1;
+		}
 		updateUpDownForResource(resource);
+		checkIfTradeIsReady();
 	}
 
 	@Override
 	public void increaseResourceAmount(ResourceType resource) {
-		resourcesToTrade[getResourceIndex(resource)] += 1;
+		if(resourceStates[getResourceIndex(resource)] == TradeResourceStates.SEND){
+			resourcesToTrade[getResourceIndex(resource)] -= 1;
+		}else{
+			resourcesToTrade[getResourceIndex(resource)] += 1;
+		}
 		updateUpDownForResource(resource);
+		checkIfTradeIsReady();
+	}
+	
+	private void resetUpDownButtons(){
+		updateUpDownForResource(ResourceType.BRICK);
+		updateUpDownForResource(ResourceType.WOOD);
+		updateUpDownForResource(ResourceType.WHEAT);
+		updateUpDownForResource(ResourceType.ORE);
+		updateUpDownForResource(ResourceType.SHEEP);
 	}
 	
 	/**
@@ -239,15 +310,25 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	private int getResourceIndex(ResourceType type){
 		switch(type){
 		case WOOD:
-			return resourcesToTrade[ResourcePositions.iWOOD.ordinal()];
+//			System.out.println("Wood");
+//			System.out.println(ResourcePositions.iWOOD.ordinal());
+			return ResourcePositions.iWOOD.ordinal();
 		case WHEAT:
-			return resourcesToTrade[ResourcePositions.iWHEAT.ordinal()];
+//			System.out.println("Wheat");
+//			System.out.println(ResourcePositions.iWHEAT.ordinal());
+			return ResourcePositions.iWHEAT.ordinal();
 		case SHEEP:
-			return resourcesToTrade[ResourcePositions.iSHEEP.ordinal()];
+//			System.out.println("Sheep");
+//			System.out.println(ResourcePositions.iSHEEP.ordinal());
+			return ResourcePositions.iSHEEP.ordinal();
 		case ORE:
-			return resourcesToTrade[ResourcePositions.iORE.ordinal()];
+//			System.out.println("Ore");
+//			System.out.println(ResourcePositions.iORE.ordinal());
+			return ResourcePositions.iORE.ordinal();
 		case BRICK:
-			return resourcesToTrade[ResourcePositions.iBRICK.ordinal()];
+//			System.out.println("Brick");
+//			System.out.println(ResourcePositions.iBRICK.ordinal());
+			return ResourcePositions.iBRICK.ordinal();
 		default:
 			return -1;
 		}		
@@ -263,11 +344,13 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	@Override
 	public void setPlayerToTradeWith(int playerIndex) {
 		playerIndexToTradeWith = playerIndex;
-		getTradeOverlay().setTradeEnabled(true);
+		checkIfTradeIsReady();
 	}
 
 	@Override
 	public void setResourceToReceive(ResourceType resource) {
+//		System.out.println("Setting Resource to Receive: " + resource);
+//		System.out.println("Resource Index: " + getResourceIndex(resource));
 		resourceStates[getResourceIndex(resource)] = TradeResourceStates.RECEIVE;
 		//  make it positive
 		resourcesToTrade[getResourceIndex(resource)] = 0;
@@ -277,6 +360,8 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 
 	@Override
 	public void setResourceToSend(ResourceType resource) {
+//		System.out.println("Setting Resource to Send: " + resource);
+//		System.out.println("Resource Index: " + getResourceIndex(resource));
 		resourceStates[getResourceIndex(resource)] = TradeResourceStates.SEND;
 		//  make it negative
 		resourcesToTrade[getResourceIndex(resource)] = 0;
@@ -289,6 +374,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		resourceStates[getResourceIndex(resource)] = TradeResourceStates.NONE;
 		resourcesToTrade[getResourceIndex(resource)] = 0;
 		updateUpDownForResource(resource);
+		checkIfTradeIsReady();
 	}
 
 	@Override
