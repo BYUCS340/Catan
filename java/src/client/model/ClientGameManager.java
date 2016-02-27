@@ -408,14 +408,14 @@ public class ClientGameManager extends GameManager
 	{
 		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.ROAD_BUILD))
 			return;
-		try 
+		/*try 
 		{
 			
 			//TODO implement
 			//NetGameModel model = proxy.roadBuildingCard(location1, location2)
 			//this.reloadGame(model, true);
 		} 
-		/*catch (ModelException e) 
+		catch (ModelException e) 
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
