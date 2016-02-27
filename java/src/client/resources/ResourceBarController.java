@@ -77,7 +77,8 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 	/**
 	 * Update the resources on the bar
 	 */
-	private void updateResources(){
+	private void updateResources()
+	{
 		this.getView().setElementAmount(ResourceBarElement.BRICK, ClientGame.getGame().playerResourceCount(ResourceType.BRICK));
 		this.getView().setElementAmount(ResourceBarElement.ORE, ClientGame.getGame().playerResourceCount(ResourceType.ORE));
 		this.getView().setElementAmount(ResourceBarElement.SHEEP, ClientGame.getGame().playerResourceCount(ResourceType.SHEEP));
@@ -86,13 +87,12 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		
 		this.getView().setElementAmount(ResourceBarElement.ROAD, ClientGame.getGame().playerPieceCount(PieceType.ROAD));
 		this.getView().setElementAmount(ResourceBarElement.CITY, ClientGame.getGame().playerPieceCount(PieceType.CITY));
-		
 	}
 
 	@Override
-	public void alert() {
+	public void alert()
+	{
 		updateResources();
-		
 	}
 
 }
