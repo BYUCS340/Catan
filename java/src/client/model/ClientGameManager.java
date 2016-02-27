@@ -348,9 +348,23 @@ public class ClientGameManager extends GameManager
 	public void PlaceRobber(int victimIndex, Coordinate point){
 		if (super.CanPlaceRobber(this.myPlayerIndex))
 		{
-			super.placeRobber(this.myPlayerIndex);
-			HexLocation location = Translate.GetHexLocation(point);
-			this.proxy.robPlayer(victimIndex, location);
+			
+			
+			try 
+			{
+				super.placeRobber(this.myPlayerIndex);
+				HexLocation location = Translate.GetHexLocation(point);
+				this.proxy.robPlayer(victimIndex, location);
+			} 
+			catch (ServerProxyException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			catch (ModelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
