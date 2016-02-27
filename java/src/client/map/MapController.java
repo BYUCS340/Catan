@@ -254,10 +254,9 @@ public class MapController extends Controller implements IMapController
 				//TODO Need way of figuring out what piece is being placed.
 				break;
 			case FIRST_ROUND_MY_TURN:
-				state = new SettlementSetupState();
-				break;
 			case SECOND_ROUND_MY_TURN:
-				state = new SettlementSetupState();
+				if (!state.IsSetup())
+					state = new SettlementSetupState();
 				break;
 			default:
 				state = new NormalState(PieceType.NONE);
