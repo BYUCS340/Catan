@@ -344,6 +344,11 @@ public class ClientGameManager extends GameManager
 		}
 	}
 	
+	public void PlayDevCard(DevCardType dev, ResourceType resource)
+	{
+		
+	}
+	
 	/**
 	 * Builds a city for the current player
 	 * @param point
@@ -352,7 +357,7 @@ public class ClientGameManager extends GameManager
 	{
 		try
 		{
-			this.BuildCity(myPlayerIndex, point);
+			//super.BuildCity(myPlayerIndex, point);
 
 			VertexLocation location = Translate.GetVertexLocation(point);
 
@@ -361,6 +366,7 @@ public class ClientGameManager extends GameManager
 		}
 		catch (ModelException e)
 		{
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		catch (ServerProxyException e)
