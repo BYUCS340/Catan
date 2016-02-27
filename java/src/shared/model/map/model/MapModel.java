@@ -231,7 +231,11 @@ public class MapModel implements IMapModel {
 		if (CanPlaceRoad(p1, p2, color, false))
 			edges.AddRoad(p1, p2, color);
 		else
+		{
 			throw new MapException("Attempt to place road where not allowed");
+			//System.out.println("Cannot place road for "+color+" at "+p1+", "+p2);
+			//return;
+		}
 		
 		Set<Edge> handledEdges = new HashSet<Edge>();
 		Set<Edge> allHandledEdges = new HashSet<Edge>();
