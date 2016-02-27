@@ -38,9 +38,7 @@ public class NotificationCenter {
 			list = new HashSet<>();
 			listeners.put(ModelNotification.ALL, list);
 		}
-		list = listeners.get(ModelNotification.ALL);
 		list.add(listener);
-		
 		
 	}
 	
@@ -89,7 +87,7 @@ public class NotificationCenter {
 	{
 		int size = 0;
 		//If we aren't notifying twice
-		if (type != ModelNotification.ALL)
+		if (true) // || type != ModelNotification.ALL)
 		{
 			Set<ModelObserver> list = listeners.get(type);
 			if (list != null)			
@@ -98,6 +96,14 @@ public class NotificationCenter {
 				size = list.size();
 			}
 		}
+		
+		
+		/*Set<ModelObserver> list = listeners.get(ModelNotification.ALL);
+		if (list != null)			
+		{
+			this.pokeListeners(list.iterator());
+		}*/
+		
 		
 		System.out.println("Notify Center for "+type+ " = "+size);
 		
