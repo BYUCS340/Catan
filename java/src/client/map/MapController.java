@@ -155,7 +155,10 @@ public class MapController extends Controller implements IMapController
 	@Override
 	public void PlaceRobber(Coordinate point)
 	{
-		//TODO Add appropriate call
+		//TODO figure out the victim
+//		/this.GetModel().
+		ClientGame.getGame().PlaceRobber(1,point);
+		
 	}
 
 	@Override
