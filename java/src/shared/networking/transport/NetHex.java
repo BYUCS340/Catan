@@ -16,7 +16,7 @@ public class NetHex
 	public NetHex()
 	{
 		netHexLocation = new NetHexLocation();
-		resourceType = null;
+		resourceType = ResourceType.BRICK;
 		numberChit = -1;
 	}
 
@@ -74,7 +74,12 @@ public class NetHex
 		this.numberChit = numberChit;
 	}
 	
-	
+	public String toString(){
+		if (resourceType == null)
+			return "N/A "+ numberChit+ "@" + netHexLocation;
+		else
+			return resourceType.toString() + " "+ numberChit+ "@" + netHexLocation;
+	}
 
 		
 	

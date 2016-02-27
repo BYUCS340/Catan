@@ -108,4 +108,37 @@ public class VertexHandler
 	{
 		return point.getX() * 100 + point.getY() + Y_SHIFT;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() 
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((verticies == null) ? 0 : verticies.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof VertexHandler))
+			return false;
+		VertexHandler other = (VertexHandler) obj;
+		if (verticies == null) {
+			if (other.verticies != null)
+				return false;
+		} else if (!verticies.equals(other.verticies))
+			return false;
+		return true;
+	}
 }

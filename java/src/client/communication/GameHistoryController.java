@@ -7,6 +7,7 @@ import client.base.Controller;
 import client.model.ClientGame;
 import client.model.ClientGameManager;
 import shared.definitions.CatanColor;
+import shared.definitions.ModelNotification;
 import shared.model.GameActionLog;
 import shared.model.ModelObserver;
 
@@ -20,7 +21,7 @@ public class GameHistoryController extends Controller implements IGameHistoryCon
 	public GameHistoryController(IGameHistoryView view) {
 		
 		super(view);
-		ClientGame.getGame().startListening(this);
+		ClientGame.getGame().startListening(this,ModelNotification.LOG);
 		updateFromModel();
 	}
 	

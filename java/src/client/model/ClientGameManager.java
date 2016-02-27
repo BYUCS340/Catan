@@ -28,6 +28,7 @@ import shared.locations.*;
 import shared.model.*;
 import shared.model.map.*;
 import shared.model.map.model.IMapModel;
+import shared.model.map.model.MapModel;
 import shared.model.map.model.UnmodifiableMapModel;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
@@ -64,10 +65,10 @@ public class ClientGameManager extends GameManager
 
 
 	/**
-	 * Get the ID of the current player client
+	 * Get the Index of the current player client
 	 * @return
 	 */
-	public int myPlayerID()
+	public int myPlayerIndex()
 	{
 		return this.myPlayerIndex;
 	}
@@ -167,10 +168,11 @@ public class ClientGameManager extends GameManager
 			{
 				PlayerInfo newplay = game.getPlayers().get(i);
 				if (newplay.getId() == proxy.getUserId())
+				{
+					this.myPlayerIndex = i;
 					rejoining = true;
+				}
 				Player play = ClientDataTranslator.convertPlayerInfo(newplay);
-				System.out.println(play);
-
 				newplayers.add(play);
 
 			}
@@ -372,6 +374,14 @@ public class ClientGameManager extends GameManager
 		}
 
 	}
+	
+	
+	@Override
+	public void StartGame()
+	{
+		super.StartGame();
+		this.notifyCenter.notify(ModelNotification.ALL);
+	}
 
 	/**
 	 * Gets the points of the current player
@@ -404,59 +414,92 @@ public class ClientGameManager extends GameManager
 	 */
 	private void reloadGame(NetGameModel model, boolean forced) throws ModelException
 	{
-		if (forced == true)
+		if (forced == false && model.getVersion() == this.version && this.version > 0 )
 		{
-			if (model.getVersion() == this.version && model.getNetPlayers().size() == this.getNumberPlayers())
-				return;
+			return;
 		}
-
-		System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
-		this.version = model.getVersion();
-		//TODO All of this
-
-		//TODO update turn status
+		System.out.print("\n-----------------------------------------\nRefresh: "+this.refreshCount+":");
+		if (forced)
+			System.out.println("Forced update of game");
+		else
+			System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
+		
+		
 
 		//Add new players if needed
 		Translate trans = new Translate();
+		GameModel game = trans.fromNetGameModel(model);
+		
 		//If there are new players or the number of resources have changed
-		if (model.getNetPlayers().size() != this.getNumberPlayers())
+		List<Player> newplayers = game.players;
+		List<Player> oldplayers = this.players;
+		
+		//Check if we have a different size
+		if (newplayers.size() != oldplayers.size() || !newplayers.equals(oldplayers))
 		{
-
-			System.out.println("Updated number of players");
-			List<Player> newplayers = trans.fromNetPlayers(model.getNetPlayers());
+			System.out.println("Updated the players");
 			this.SetPlayers(newplayers);
-
+			this.notifyCenter.notify(ModelNotification.PLAYERS);
 		}
-
-		//Check if we need to update the resources
-		if (model.getVersion() != this.version)
+		
+		int oldresources = ClientDataTranslator.totalPlayerResouces(newplayers);
+		int newresources = ClientDataTranslator.totalPlayerResouces(oldplayers);
+		
+		//check if resources have changed
+		if (oldresources != newresources)
 		{
-
-			List<Player> newplayers = trans.fromNetPlayers(model.getNetPlayers());
-			int oldresources = ClientDataTranslator.totalPlayerResouces(newplayers);
-			int newresources = ClientDataTranslator.totalPlayerResouces(this.players);
-			if (version != model.getVersion() && oldresources != newresources)
-			{
-				this.SetPlayers(newplayers);
-				this.notifyCenter.notify(ModelNotification.RESOURCES);
-			}
+			this.notifyCenter.notify(ModelNotification.RESOURCES);
 		}
+		
 
 		//Update our chat
-		if (model.getNetChat().size() > this.waterCooler.size())
+		if (game.waterCooler.size() > this.waterCooler.size())
 		{
-			this.waterCooler = trans.fromNetChat(model.getNetChat());
+			this.waterCooler = game.waterCooler;
 			System.out.println("New watercooler size: " + waterCooler.size());
 			this.notifyCenter.notify(ModelNotification.CHAT);
 		}
 
-		GameRound newround = model.getNetTurnTracker().getRound();
-		if (newround != gameState.state)
+		GameState newstate = game.gameState;
+		//System.out.println("STATE current:"+gameState.state+" new:"+newstate.state);
+		if (!this.gameState.equals(newstate) && newstate != null)
 		{
+			gameState = newstate;
+			//handle the logic from this
+			System.out.println("STATE Refreshed to "+newstate.state);
 			this.notifyCenter.notify(ModelNotification.STATE);
 		}
-
-
+		
+		//Update the map model
+		MapModel newmap = game.mapModel;
+		
+		if (!this.map.equals(newmap) && newmap != null)
+		{
+			this.map = newmap;
+			this.notifyCenter.notify(ModelNotification.MAP);
+		}
+		
+		//Victory point manager
+		VictoryPointManager newVPM = game.victoryPointManager;
+		if (!victoryPointManager.equals(newVPM) && newVPM != null)
+		{
+			this.victoryPointManager = newVPM;
+			this.notifyCenter.notify(ModelNotification.SCORE);
+		}
+		
+		//Game action log
+		GameActionLog newLog = game.log;
+		if (!newLog.equals(this.log) && newLog != null)
+		{
+			this.log = newLog;
+			this.notifyCenter.notify(ModelNotification.LOG);
+		}
+		
+		if (this.version == -1)
+			this.notifyCenter.notify(ModelNotification.ALL);
+		
+		this.version = model.getVersion();
+		System.out.println("Refresh finished");
 		//throw new ModelException();
 	}
 

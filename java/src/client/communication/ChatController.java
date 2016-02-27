@@ -7,6 +7,7 @@ import client.base.Controller;
 import client.model.ClientGame;
 import client.model.ClientGameManager;
 import shared.definitions.CatanColor;
+import shared.definitions.ModelNotification;
 import shared.model.GameManager;
 import shared.model.ModelObserver;
 import shared.model.chat.ChatBox;
@@ -21,7 +22,7 @@ public class ChatController extends Controller implements IChatController, Model
 
 	public ChatController(IChatView view) {
 		super(view);
-		ClientGame.getGame().startListening(this);
+		ClientGame.getGame().startListening(this, ModelNotification.CHAT);
 	}
 
 	@Override

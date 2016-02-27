@@ -20,97 +20,98 @@ import client.networking.ServerProxyException;
 /**
  * Implementation for the join game controller
  */
-public class JoinGameController extends Controller implements IJoinGameController, ActionListener  {
-
+public class JoinGameController extends Controller implements IJoinGameController, ActionListener
+{
 	private INewGameView newGameView;
 	private ISelectColorView selectColorView;
 	private IMessageView messageView;
 	private IAction joinAction;
 	private Timer timer;
-	
-	
+
+
 	/**
 	 * JoinGameController constructor
-	 * 
+	 *
 	 * @param view Join game view
 	 * @param newGameView New game view
 	 * @param selectColorView Select color view
 	 * @param messageView Message view (used to display error messages that occur while the user is joining a game)
 	 */
-	public JoinGameController(IJoinGameView view, INewGameView newGameView, 
-								ISelectColorView selectColorView, IMessageView messageView) {
-
+	public JoinGameController(IJoinGameView view, INewGameView newGameView,
+								ISelectColorView selectColorView, IMessageView messageView)
+	{
 		super(view);
 
 		setNewGameView(newGameView);
 		setSelectColorView(selectColorView);
 		setMessageView(messageView);
-		
+
 		timer = new Timer(3500, this);
-		
+
 	}
-	
-	
-	public IJoinGameView getJoinGameView() {
-		
+
+
+	public IJoinGameView getJoinGameView()
+	{
 		return (IJoinGameView)super.getView();
 	}
-	
+
 	/**
 	 * Returns the action to be executed when the user joins a game
-	 * 
+	 *
 	 * @return The action to be executed when the user joins a game
 	 */
-	public IAction getJoinAction() {
-		
+	public IAction getJoinAction()
+	{
 		return joinAction;
 	}
 
 	/**
 	 * Sets the action to be executed when the user joins a game
-	 * 
+	 *
 	 * @param value The action to be executed when the user joins a game
 	 */
-	public void setJoinAction(IAction value) {	
-		
+	public void setJoinAction(IAction value)
+	{
 		joinAction = value;
 	}
-	
-	public INewGameView getNewGameView() {
-		
+
+	public INewGameView getNewGameView()
+	{
 		return newGameView;
 	}
 
-	public void setNewGameView(INewGameView newGameView) {
-		
+	public void setNewGameView(INewGameView newGameView)
+	{
 		this.newGameView = newGameView;
 	}
-	
-	public ISelectColorView getSelectColorView() {
-		
+
+	public ISelectColorView getSelectColorView()
+	{
 		return selectColorView;
 	}
-	public void setSelectColorView(ISelectColorView selectColorView) {
-		
+	public void setSelectColorView(ISelectColorView selectColorView)
+	{
 		this.selectColorView = selectColorView;
 	}
-	
-	public IMessageView getMessageView() {
-		
+
+	public IMessageView getMessageView()
+	{
 		return messageView;
 	}
-	public void setMessageView(IMessageView messageView) {
-		
+	public void setMessageView(IMessageView messageView)
+	{
 		this.messageView = messageView;
 	}
 
 	@Override
-	public void start() {
+	public void start()
+	{
 		refreshGameList();
 		getJoinGameView().showModal();
 		timer.start();
 	}
-	
+
 	/**
 	 * Refreshes the view's game list from the proxy
 	 */
@@ -118,18 +119,18 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private int joinedPlayerCount = 0;
 	private void refreshGameList()
 	{
-		try 
+		try
 		{
 			List<NetGame> allGames = ClientGame.getCurrentProxy().listGames();
-			
+
 			//Get the number of players currently joined to a game
 			int currentPlayerCount = 0;
 			Iterator<NetGame> gameIter = allGames.iterator();
-			while (gameIter.hasNext()) 
+			while (gameIter.hasNext())
 				currentPlayerCount += gameIter.next().getNetPlayers().size();
 			//If there is no need to update, don't
 			if (allGames.size() <= gameCount && joinedPlayerCount != currentPlayerCount) return;
-			
+
 			//Get the games
 			GameInfo[] games = new GameInfo[allGames.size()];
 			for (int i=0; i< allGames.size(); i++)
@@ -144,7 +145,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			//update the game count and player count
 			gameCount = games.length;
 			joinedPlayerCount = currentPlayerCount;
-		} 
+		}
 		catch (ServerProxyException e)
 		{
 			System.err.println("UNABLE TO GET GAME LIST " + e);
@@ -159,13 +160,13 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	}
 
 	@Override
-	public void cancelCreateNewGame() 
+	public void cancelCreateNewGame()
 	{
 		getNewGameView().closeModal();
 	}
 
 	@Override
-	public void createNewGame() 
+	public void createNewGame()
 	{
 		String name = getNewGameView().getTitle();
 		boolean randomTiles = getNewGameView().getRandomlyPlaceHexes();
@@ -179,14 +180,14 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		}
 		this.refreshGameList();
 		getNewGameView().closeModal();
-		
+
 		//Open the games list
 		getJoinGameView().showModal();
 	}
-	
+
 	private GameInfo lastGameSelected = null;
 	@Override
-	public void startJoinGame(GameInfo game) 
+	public void startJoinGame(GameInfo game)
 	{
 		getJoinGameView().closeModal();
 		lastGameSelected = game;
@@ -201,44 +202,43 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 				mycolor = play.getColor();
 			}
 		}
-		
+
 		//If we are rejoining a game
+		getSelectColorView().showModal();
 		if (mycolor != null)
 		{
-			getSelectColorView().showModal();
+
 			joinGame(mycolor);
 		}
-		else
-		{
-			getSelectColorView().showModal();
-		}
 	}
 
 	@Override
-	public void cancelJoinGame() 
+	public void cancelJoinGame()
 	{
 		lastGameSelected = null;
-		getJoinGameView().closeModal();
+		getSelectColorView().closeModal();
 	}
 
 	@Override
-	public void joinGame(CatanColor color) 
+	public void joinGame(CatanColor color)
 	{
 		if (lastGameSelected == null) return;
-		
+
 		if (!ClientGame.getGame().joinGame(lastGameSelected, color))
 		{
 			getMessageView().setMessage("Unable to join game: #"+lastGameSelected);
 			getMessageView().showModal();
 			return;
 		}
-		System.out.println("joining game "+lastGameSelected);
-		this.refreshGameList();
-		// If join succeeded
-		
 		getSelectColorView().closeModal();
-		//getJoinGameView().closeModal();
+		
+		if (getJoinGameView().isModalShowing())
+			getJoinGameView().closeModal();
+
 		timer.stop();
+		timer.setRepeats(false);
+		System.out.println("joining game "+lastGameSelected);
+
 		joinAction.execute();
 	}
 
@@ -251,11 +251,10 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		boolean showing = this.getJoinGameView().isModalShowing() && !this.getNewGameView().isModalShowing() && !this.getSelectColorView().isModalShowing();
 		if (showing)
 			this.getJoinGameView().closeModal();
-		
+
 		this.refreshGameList();
 		if (showing)
 			this.getJoinGameView().showModal();
-		
+
 	}
 }
-

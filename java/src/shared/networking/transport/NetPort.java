@@ -57,6 +57,11 @@ public class NetPort {
 	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
+	
+	public String toString()
+	{
+		return "NETPORT: "+this.resource+" at ratio "+ratio+" @"+this.netHexLocation+"->"+this.direction;
+	}
 
 	
 	
