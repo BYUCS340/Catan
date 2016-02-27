@@ -131,23 +131,23 @@ public class Translate
 			player.playerBank.giveResource(ResourceType.WOOD, netPlayer.getNetResourceList().getNumWood());
 
 			//DEV CARDS
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumMonopoly(); i++)
+			for (int i = 0; i < netPlayer.getOldNetDevCardList().getNumMonopoly(); i++)
 			{
 				player.playerBank.giveDevCard(DevCardType.MONOPOLY);
 			}
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumMonument(); i++)
+			for (int i = 0; i < netPlayer.getOldNetDevCardList().getNumMonument(); i++)
 			{
 				player.playerBank.giveDevCard(DevCardType.MONUMENT);
 			}
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumRoadBuilding(); i++)
+			for (int i = 0; i < netPlayer.getOldNetDevCardList().getNumRoadBuilding(); i++)
 			{
 				player.playerBank.giveDevCard(DevCardType.ROAD_BUILD);
 			}
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumSoldier(); i++)
+			for (int i = 0; i < netPlayer.getOldNetDevCardList().getNumSoldier(); i++)
 			{
 				player.playerBank.giveDevCard(DevCardType.SOLDIER);
 			}
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumYearOfPlenty(); i++)
+			for (int i = 0; i < netPlayer.getOldNetDevCardList().getNumYearOfPlenty(); i++)
 			{
 				player.playerBank.giveDevCard(DevCardType.YEAR_OF_PLENTY);
 			}
@@ -391,7 +391,8 @@ public class Translate
 			}
 			catch (MapException e)
 			{
-				e.printStackTrace();
+				System.out.println("Unable to place road for "+color);
+				//e.printStackTrace();
 			}
 		}
 	}

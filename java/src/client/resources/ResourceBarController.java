@@ -22,6 +22,7 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 
 		super(view);
 		ClientGame.getGame().startListening(this, ModelNotification.RESOURCES);
+		ClientGame.getGame().startListening(this, ModelNotification.STATE);
 		elementActions = new HashMap<ResourceBarElement, IAction>();
 	}
 
