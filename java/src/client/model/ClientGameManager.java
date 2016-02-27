@@ -537,10 +537,15 @@ public class ClientGameManager extends GameManager
 						this.turnState = TurnState.WAITING;
 					break;
 				case DISCARDING:
-					if(players.get(this.myPlayerIndex).totalResources() > 7)
+					if(this.turnState != TurnState.DISCARDED_WAITING)
+					{
 						this.turnState = TurnState.DISCARDING;
-					else
-						this.turnState = TurnState.DISCARDED_WAITING;
+						
+					}
+//					if(players.get(this.myPlayerIndex).totalResources() > 7)
+//						this.turnState = TurnState.DISCARDING;
+//					else
+//						this.turnState = TurnState.DISCARDED_WAITING;
 					break;
 				case PLAYING:
 					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
@@ -608,6 +613,12 @@ public class ClientGameManager extends GameManager
 		this.gameTitle = model.getTitle();
 
 		//TODO  make sure I assign the colors correctly
+	}
+	
+	public void doneDiscarding()
+	{
+		this.turnState = TurnState.DISCARDED_WAITING;
+		notifyCenter.notify(ModelNotification.STATE);
 	}
 
 	/**
