@@ -98,7 +98,8 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		updateResourcesPlayerCanGive();
 		updateResourcesPlayerCanGet();
 		
-		getTradeOverlay().showModal();
+		if(!getTradeOverlay().isModalShowing())
+			getTradeOverlay().showModal();
 		getTradeOverlay().setTradeEnabled(false);
 		getTradeOverlay().showGiveOptions(resourcesPlayerCanGive.toArray(new ResourceType[]{}));
 		getTradeOverlay().hideGetOptions();
