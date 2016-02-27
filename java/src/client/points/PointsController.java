@@ -2,12 +2,14 @@ package client.points;
 
 import client.base.*;
 import client.model.ClientGame;
+import shared.definitions.ModelNotification;
+import shared.model.ModelObserver;
 
 
 /**
  * Implementation for the points controller
  */
-public class PointsController extends Controller implements IPointsController
+public class PointsController extends Controller implements IPointsController, ModelObserver
 {
 
 	private IGameFinishedView finishedView;
@@ -23,8 +25,9 @@ public class PointsController extends Controller implements IPointsController
 		super(view);
 		
 		setFinishedView(finishedView);
+		ClientGame.getGame().startListening(this, ModelNotification.SCORE);
 		
-		initFromModel();
+		updateFromModel();
 	}
 	
 	public IPointsView getPointsView()
@@ -41,10 +44,16 @@ public class PointsController extends Controller implements IPointsController
 		this.finishedView = finishedView;
 	}
 
-	private void initFromModel()
+	private void updateFromModel()
 	{
 		int points = ClientGame.getGame().PlayerPoints();
 		getPointsView().setPoints(points);
+	}
+
+	@Override
+	public void alert() {
+		// TODO Auto-generated method stub
+		updateFromModel();
 	}
 	
 }

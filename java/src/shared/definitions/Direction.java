@@ -28,11 +28,14 @@ public enum Direction
 			case "nw": return Direction.NW;
 			case "n" : return Direction.N;
 			case "ne": return Direction.NE;
+			case "sw": return Direction.SW;
 			case "s" : return Direction.S;
 			case "se": return Direction.SE;
 			case "w" : return Direction.W;
 			case "e" : return Direction.E;
 		}
+		
+		assert false;
 		return null;
 	}
 }

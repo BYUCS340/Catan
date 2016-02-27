@@ -69,7 +69,7 @@ import client.utils.FontUtils;
 @SuppressWarnings({"serial", "unused"})
 public class DiscardView extends OverlayView implements IDiscardView
 {
-	private final boolean TESTING = true;
+	private final boolean TESTING = false;
 	
 	private final int LABEL_TEXT_SIZE = 20;
 	private final int BUTTON_TEXT_SIZE = 14;

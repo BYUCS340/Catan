@@ -19,7 +19,7 @@ public class ClientDataTranslator {
 		PlayerInfo pi = new PlayerInfo();
 		pi.setName(player.getName());
 		pi.setId(player.getPlayerID());
-		pi.setPlayerIndex(player.getPlayerID());
+		pi.setPlayerIndex(player.getPlayerIndex());
 		pi.setColor(player.getColor());
 		return pi;
 		
@@ -46,7 +46,7 @@ public class ClientDataTranslator {
 	static public PlayerInfo convertPlayerInfo(Player player){
 		PlayerInfo pi = new PlayerInfo();
 		pi.setName(player.name);
-		pi.setId(player.playerIndex());
+		pi.setId(player.playerID());
 		pi.setPlayerIndex(player.playerIndex());
 		pi.setColor(player.color);
 		return pi;

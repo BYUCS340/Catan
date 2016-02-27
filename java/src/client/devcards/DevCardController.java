@@ -1,13 +1,18 @@
 package client.devcards;
 
 import shared.definitions.ResourceType;
+import shared.model.ModelObserver;
+import shared.definitions.*;
 import client.base.*;
+import client.model.ClientGame;
+import client.model.ClientGameManager;
 
 
 /**
  * "Dev card" controller implementation
  */
-public class DevCardController extends Controller implements IDevCardController {
+public class DevCardController extends Controller implements IDevCardController, ModelObserver
+{
 
 	private IBuyDevCardView buyCardView;
 	private IAction soldierAction;
@@ -22,13 +27,15 @@ public class DevCardController extends Controller implements IDevCardController 
 	 * @param roadAction Action to be executed when the user plays a road building card.  It calls "mapController.playRoadBuildingCard()".
 	 */
 	public DevCardController(IPlayDevCardView view, IBuyDevCardView buyCardView, 
-								IAction soldierAction, IAction roadAction) {
-
+								IAction soldierAction, IAction roadAction)
+	{
 		super(view);
 		
 		this.buyCardView = buyCardView;
 		this.soldierAction = soldierAction;
 		this.roadAction = roadAction;
+		
+		ClientGame.getGame().startListening(this, ModelNotification.RESOURCES);
 	}
 
 	public IPlayDevCardView getPlayCardView() {
@@ -41,8 +48,8 @@ public class DevCardController extends Controller implements IDevCardController 
 
 	@Override
 	public void startBuyCard() {
-		
-		getBuyCardView().showModal();
+		if (ClientGame.getGame().CanBuyDevCard(ClientGame.getGame().myPlayerIndex()))
+			getBuyCardView().showModal();
 	}
 
 	@Override
@@ -53,8 +60,12 @@ public class DevCardController extends Controller implements IDevCardController 
 
 	@Override
 	public void buyCard() {
-		
+		System.out.println("Buying a card");
+		ClientGameManager game = ClientGame.getGame();
+		//Check to make sure we can buy a card
+		game.BuyDevCard();
 		getBuyCardView().closeModal();
+
 	}
 
 	@Override
@@ -94,6 +105,21 @@ public class DevCardController extends Controller implements IDevCardController 
 	@Override
 	public void playYearOfPlentyCard(ResourceType resource1, ResourceType resource2) {
 		
+	}
+
+	@Override
+	public void alert()
+	{
+		updateDevCards();
+	}
+	
+	public void updateDevCards()
+	{
+		getPlayCardView().setCardAmount(DevCardType.SOLDIER, ClientGame.getGame().playerDevCardCount(DevCardType.SOLDIER));
+		getPlayCardView().setCardAmount(DevCardType.YEAR_OF_PLENTY, ClientGame.getGame().playerDevCardCount(DevCardType.YEAR_OF_PLENTY));
+		getPlayCardView().setCardAmount(DevCardType.MONOPOLY, ClientGame.getGame().playerDevCardCount(DevCardType.MONOPOLY));
+		getPlayCardView().setCardAmount(DevCardType.ROAD_BUILD, ClientGame.getGame().playerDevCardCount(DevCardType.ROAD_BUILD));
+		getPlayCardView().setCardAmount(DevCardType.MONUMENT, ClientGame.getGame().playerDevCardCount(DevCardType.MONUMENT));
 	}
 
 }

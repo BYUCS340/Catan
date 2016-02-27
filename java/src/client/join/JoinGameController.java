@@ -207,7 +207,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		getSelectColorView().showModal();
 		if (mycolor != null)
 		{
-
 			joinGame(mycolor);
 		}
 	}

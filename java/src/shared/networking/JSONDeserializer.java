@@ -91,6 +91,7 @@ public class JSONDeserializer implements Deserializer
 				continue;
 			}
 			NetPlayer tempNetPlayer = parsePartialNetPlayer(playerArr.getJSONObject(i).toString());
+			tempNetPlayer.setPlayerIndex(i);
 			netPlayers.add(tempNetPlayer);
 		}
 		
