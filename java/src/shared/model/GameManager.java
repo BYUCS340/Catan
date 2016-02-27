@@ -978,31 +978,31 @@ public class GameManager implements ModelSubject
 		return gameBank.getResourceCount(resourceType);
 	}
 	
-	public void initializeBankTempTesting(){
-		try {
-			gameBank.giveResource(ResourceType.BRICK, 60);
-			gameBank.giveResource(ResourceType.SHEEP, 60);
-			gameBank.giveResource(ResourceType.WHEAT, 60);
-			gameBank.giveResource(ResourceType.ORE, 60);
-			gameBank.giveResource(ResourceType.WOOD, 60);
-
-		} catch (ModelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ResourceType type = ResourceType.BRICK;
-		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
-		type = ResourceType.SHEEP;
-		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
-		 type = ResourceType.WHEAT;
-		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
-		 type = ResourceType.ORE;
-		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
-		 type = ResourceType.WOOD;
-		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
-		
-
-	}
+//	public void initializeBankTempTesting(){
+//		try {
+//			gameBank.giveResource(ResourceType.BRICK, 60);
+//			gameBank.giveResource(ResourceType.SHEEP, 60);
+//			gameBank.giveResource(ResourceType.WHEAT, 60);
+//			gameBank.giveResource(ResourceType.ORE, 60);
+//			gameBank.giveResource(ResourceType.WOOD, 60);
+//
+//		} catch (ModelException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		ResourceType type = ResourceType.BRICK;
+//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+//		type = ResourceType.SHEEP;
+//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+//		 type = ResourceType.WHEAT;
+//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+//		 type = ResourceType.ORE;
+//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+//		 type = ResourceType.WOOD;
+//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+//		
+//
+//	}
 
 	
 	

@@ -33,7 +33,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	
 	
 	//  TODO:  remove this later
-	boolean userTestingAlreadySupplied = false;
+//	boolean userTestingAlreadySupplied = false;
 	
 	
 	public MaritimeTradeController(IMaritimeTradeView tradeView, IMaritimeTradeOverlay tradeOverlay){
@@ -82,8 +82,8 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	@Override
 	public void startTrade() {
 		//  TODO:  I need to remove this later when testing is over
-		ClientGame.getGame().initializeBankTempTesting();
-		System.out.println("Setting up bank");
+//		ClientGame.getGame().initializeBankTempTesting();
+//		System.out.println("Setting up bank");
 		
 		
 		
