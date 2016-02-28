@@ -43,15 +43,8 @@ public class MockServerProxy implements ServerProxy
 	 * Default constructor; sets up everything needed for 
 	 * mock server
 	 */
-	public MockServerProxy(){
-//		UserCookie userCookie;
-//		int gameID;
-//		String SERVER_HOST;
-//		int SERVER_PORT;
-//		String URL_PREFIX;
-//		String HTTP_GET = "GET";
-//		String HTTP_POST = "POST";
-		
+	public MockServerProxy()
+	{	
 		loginCredentials = new ArrayList<String[]>();
 		userLoggedIn = false;
 		userJoinedGame = false;
@@ -63,7 +56,8 @@ public class MockServerProxy implements ServerProxy
 	/**
 	 * Initializes a hard-coded state of the game
 	 */
-	private void initializeStaticStateOfGame(){
+	private void initializeStaticStateOfGame()
+	{
 		currentStateOfGame = new NetGameModel();
 		
 		NetLog currentLog = new NetLog();
@@ -426,7 +420,8 @@ public class MockServerProxy implements ServerProxy
 	/**
 	 * Initializes a hard coded static state of the game
 	 */
-	private void initializeStaticListOfGames(){
+	private void initializeStaticListOfGames()
+	{
 		gameList = new ArrayList<NetGame>();
 		
 		NetGame game1 = new NetGame();
@@ -632,16 +627,22 @@ public class MockServerProxy implements ServerProxy
 	public boolean loginUser(String username, String password)
 	{
 		// if the username is in use then check the password, if both are the same true, false otherwise
-		for(String[] credPair : loginCredentials){
-			if(username.equals(credPair[0])){
-				if(password.equals(credPair[1])){
+		for(String[] credPair : loginCredentials)
+		{
+			if(username.equals(credPair[0]))
+			{
+				if(password.equals(credPair[1]))
+				{
 					userLoggedIn = true;
 					return true;
-				}else{
+				}
+				else
+				{
 					return false;
 				}
 			}
 		}
+		
 		return false;
 	}
 
@@ -655,31 +656,41 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public boolean registerUser(String username, String password) 
 	{
-		if(usernameIsValid(username) && passwordIsValid(password)){
+		if(usernameIsValid(username) && passwordIsValid(password))
+		{
 			String[] userCredentials = {username, password};
 			loginCredentials.add(userCredentials);
 			return true;
 		}
+		
 		return false;
 	}
 	
-	private boolean usernameIsValid(String username){
-		if (username != null && username.length() > 0){
+	private boolean usernameIsValid(String username)
+	{
+		if (username != null && username.length() > 0)
+		{
 			// if the username isn't in use then allow it, otherwise return false
-			for(String[] credPair : loginCredentials){
-				if(username.equals(credPair[0])){
+			for(String[] credPair : loginCredentials)
+			{
+				if(username.equals(credPair[0]))
+				{
 					return false;
 				}
 			}
 			return true;
 		}
+		
 		return false;
 	}
 	
-	private boolean passwordIsValid(String password){
-		if(password != null && password.length() > 0){
+	private boolean passwordIsValid(String password)
+	{
+		if(password != null && password.length() > 0)
+		{
 			return true;
 		}
+		
 		return false;
 	}
 
@@ -705,9 +716,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name) throws ServerProxyException
 	{
-        if(name == null || name.equals("")){
+        if(name == null || name.equals(""))
+        {
             throw new ServerProxyException("Invalid name for creat game");
         }
+        
 		return gameList.get(0);
 	}
 
@@ -720,12 +733,10 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public void joinGame(int id, CatanColor color) throws ServerProxyException
 	{
-        if(!userLoggedIn){
+        if(!userLoggedIn)
+        {
             throw new ServerProxyException("JoinGame invalid when user not logged in");
         }
-        
-//        userJoinedGame = true;
-//		return gameList.get(0);
 	}
 
 	/**
@@ -736,9 +747,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel getGameModel() throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("GetGameModel invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -750,7 +763,8 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public void addAI(AIType aiType) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("AddAI invalid when user not logged in");
         }
 		//  mock does nothing/returns nothing :)
@@ -778,9 +792,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel sendChat(String content) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("sednChat invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -793,9 +809,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel rollNumber(int roll) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("RollNumber invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -809,9 +827,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel robPlayer(int victimIndex, HexLocation location) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("RobPlayer invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -824,9 +844,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel finishTurn() throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("FinishTurn invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -838,9 +860,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel buyDevCard() throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("BuyDevCard invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -854,9 +878,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel yearOfPlentyCard(ResourceType resource1, ResourceType resource2) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("YearOfPlentyCard invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -870,9 +896,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel roadBuildingCard(EdgeLocation location1, EdgeLocation location2) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("RoadBuildingCard invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -886,9 +914,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel soldierCard(int victimIndex, HexLocation hexLocation) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("soldierCard invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -901,9 +931,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel monopolyCard(ResourceType resource) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("monopolyCard invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -915,9 +947,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel monumentCard() throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("monumentCard invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -931,9 +965,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel buildRoad(EdgeLocation edgeLocation, boolean free) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("buildRoad invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -947,9 +983,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel buildSettlement(VertexLocation vertexLocation, boolean free) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("buildSettlement invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -962,9 +1000,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel buildCity(VertexLocation vertexLocation) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("buildCity invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -980,9 +1020,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel offerTrade(List<Integer> resourceList, int receiver) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("offerTrade invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -995,9 +1037,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel acceptTrade(boolean willAccept) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("acceptTrade invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -1012,9 +1056,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("maritimeTrade invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 
@@ -1028,9 +1074,11 @@ public class MockServerProxy implements ServerProxy
 	@Override
 	public NetGameModel discardCards(List<Integer> resourceList) throws ServerProxyException
 	{
-        if(!userLoggedIn || !userJoinedGame){
+        if(!userLoggedIn || !userJoinedGame)
+        {
             throw new ServerProxyException("Discard Cards invalid when user not logged in");
         }
+        
 		return currentStateOfGame;
 	}
 	
@@ -1042,15 +1090,14 @@ public class MockServerProxy implements ServerProxy
 	private boolean userLoggedIn;
 	private boolean userJoinedGame;
 	@Override
-	public String getUserName() throws ServerProxyException {
-		// TODO Auto-generated method stub
+	public String getUserName() throws ServerProxyException
+	{
 		return null;
 	}
 
 	@Override
-	public int getUserId() {
-		// TODO Auto-generated method stub
+	public int getUserId()
+	{
 		return 0;
 	}
-	
 }

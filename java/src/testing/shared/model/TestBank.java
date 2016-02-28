@@ -40,7 +40,8 @@ public class TestBank {
 		assertFalse(bank.canBuyDevCard());
 	}
 	@Test
-	public void testRoadBuild() {
+	public void testRoadBuild() 
+	{
 		try 
 		{
 			bank.resetToPlayerDefaults();
@@ -49,13 +50,10 @@ public class TestBank {
 			assertTrue(bank.canBuildRoad());
 			bank.buildRoad();
 			assertFalse(bank.canBuildRoad());
-			
-			
 		} 
 		catch (ModelException e) 
 		{
 			fail("We shouldn't have an exception");
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

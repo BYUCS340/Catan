@@ -8,14 +8,12 @@ import shared.model.map.Coordinate;
  * @author Jonathan Sadler
  *
  */
-public class Vertex {
-
+public class Vertex
+{
 	private Coordinate point;
 	
 	private PieceType type;
 	private CatanColor color;
-	
-	private PortType portType;
 	
 	/**
 	 * Creates a vertex object.
@@ -28,8 +26,6 @@ public class Vertex {
 		this.color = null;
 		
 		this.point = point;
-		
-		portType = PortType.NONE;
 	}
 	
 	/**
@@ -52,35 +48,67 @@ public class Vertex {
 		this.color = null;
 	}
 
-	public Coordinate getPoint() {
+	/**
+	 * Gets the point for the vertex.
+	 * @return The point.
+	 */
+	public Coordinate getPoint()
+	{
 		return point;
 	}
 
 	/**
 	 * @return the type
 	 */
-	public PieceType getType() {
+	public PieceType getType()
+	{
 		return type;
 	}
 
 	/**
 	 * @return the color
 	 */
-	public CatanColor getColor() {
+	public CatanColor getColor() 
+	{
 		return color;
 	}
 
-	/**
-	 * @return the portType
-	 */
-	public PortType getPortType() {
-		return portType;
+	@Override
+	public int hashCode() 
+	{
+		return point.hashCode();
 	}
 
-	/**
-	 * @param portType the portType to set
-	 */
-	public void setPortType(PortType portType) {
-		this.portType = portType;
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		
+		Vertex other = (Vertex) obj;
+		
+		if (color != other.color)
+			return false;
+		if (point == null) 
+		{
+			if (other.point != null)
+				return false;
+		} 
+		else if (!point.equals(other.point))
+			return false;
+		if (type != other.type)
+			return false;
+		
+		return true;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Vertex-" + point.toString();
+	}	
 }

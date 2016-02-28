@@ -1,5 +1,7 @@
 package shared.model;
 
+import java.util.Arrays;
+
 import shared.definitions.DevCardType;
 
 /**
@@ -49,9 +51,8 @@ public class VictoryPointManager
 	/**
 	 * Generic default contructor
 	 */
-	public VictoryPointManager() {
-		// TODO Auto-generated constructor stub
-	}
+	public VictoryPointManager() { }
+	
 	/**
 	 * Gets the current number of victory points the current player has
 	 * @param playerIndex 0 to 3
@@ -195,5 +196,58 @@ public class VictoryPointManager
 			if (victoryPoints[i] >= 10) return i;
 		}
 		return -1;
+	}
+
+	/**
+	 * @return the current Longest Road Player's index
+	 */
+	public int getCurrentLongestRoadPlayer()
+	{
+		return currentLongestRoadPlayer;
+	}
+
+	/**
+	 * @return the current Largest Army Player's index
+	 */
+	public int getCurrentLargestArmyPlayer()
+	{
+		return currentLargestArmyPlayer;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + currentLargestArmyPlayer;
+		result = prime * result + currentLargestArmySize;
+		result = prime * result + currentLongestRoadPlayer;
+		result = prime * result + Arrays.hashCode(victoryPoints);
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof VictoryPointManager))
+			return false;
+		VictoryPointManager other = (VictoryPointManager) obj;
+		if (currentLargestArmyPlayer != other.currentLargestArmyPlayer)
+			return false;
+		if (currentLargestArmySize != other.currentLargestArmySize)
+			return false;
+		if (currentLongestRoadPlayer != other.currentLongestRoadPlayer)
+			return false;
+		if (!Arrays.equals(victoryPoints, other.victoryPoints))
+			return false;
+		return true;
 	}
 }

@@ -4,10 +4,9 @@ import java.awt.*;
 import javax.swing.*;
 
 import client.map.*;
-import client.map.view.MapView;
-import client.model.ClientGame;
-import shared.model.IMapController;
-import shared.model.map.MapModel;
+import client.map.IMapController;
+import client.map.view.*;
+import shared.model.map.*;
 
 @SuppressWarnings("serial")
 public class MidPanel extends JPanel
@@ -15,6 +14,7 @@ public class MidPanel extends JPanel
 
 	private TradePanel tradePanel;
 	private MapView mapView;
+	private MapOverlayView mapOverlayView;
 	private RobView robView;
 	private MapController mapController;
 	private GameStatePanel gameStatePanel;
@@ -26,11 +26,13 @@ public class MidPanel extends JPanel
 		tradePanel = new TradePanel();
 
 		mapView = new MapView();
+		mapOverlayView = new MapOverlayView();
 		robView = new RobView();
-		mapController = new MapController(mapView, robView, new MapModel());
+		
+		mapController = new MapController(mapView);
 		//Give the game the right map controller
-		ClientGame.getGame().map = mapController;
 		mapView.setController(mapController);
+		mapOverlayView.setController(mapController);
 		robView.setController(mapController);
 
 		gameStatePanel = new GameStatePanel();

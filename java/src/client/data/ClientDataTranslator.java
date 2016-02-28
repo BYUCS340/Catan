@@ -1,5 +1,6 @@
 package client.data;
 
+import java.util.Iterator;
 import java.util.List;
 
 import shared.definitions.CatanColor;
@@ -22,6 +23,19 @@ public class ClientDataTranslator {
 		pi.setColor(player.getColor());
 		return pi;
 		
+	}
+	
+	/**
+	 * Adds up all the player resources
+	 * @param players
+	 * @return
+	 */
+	static public int totalPlayerResouces(List<Player> players)
+	{
+		int resources = 0;
+		Iterator<Player> i = players.iterator();
+		while (i.hasNext()) resources += i.next().totalResources();
+		return resources;
 	}
 	
 	/**

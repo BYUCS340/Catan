@@ -11,8 +11,8 @@ import shared.definitions.GameRound;
 import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
-import shared.model.map.Coordinate;
-import shared.model.map.Transaction;
+import shared.model.map.*;
+import shared.model.map.model.MapModel;
 import shared.model.chat.ChatBox;
 
 /**
@@ -22,7 +22,6 @@ import shared.model.chat.ChatBox;
  */
 public class GameManager implements ModelSubject
 {
-	//public  MapController mapController; 
 	protected int gameID;
 	public String gameTitle;
 	protected GameState gameState;
@@ -31,7 +30,7 @@ public class GameManager implements ModelSubject
 	protected VictoryPointManager victoryPointManager;
 	protected ChatBox waterCooler;
 	protected GameActionLog log;
-	public IMapController map; //this is exposed for easier access
+	protected MapModel map;
 	protected int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;
@@ -42,7 +41,8 @@ public class GameManager implements ModelSubject
 	 * Constructor for the game manager
 	 * @post all players
 	 */
-	public GameManager(){
+	public GameManager()
+	{
 		this("Default",0);
 	}
 	
@@ -62,7 +62,6 @@ public class GameManager implements ModelSubject
 		players = new ArrayList<>();
 		gameBank = new Bank();
 		gameState = new GameState();
-		//mapController = new MapController();
 		victoryPointManager = new VictoryPointManager();
 		notifyCenter = new NotificationCenter();
 		playerColors = new int[10];
@@ -70,6 +69,10 @@ public class GameManager implements ModelSubject
 		Arrays.fill(playerColors,-1);
 		playerCanMoveRobber = -1;
 		gameBank.resetToBankDefaults();
+		
+		//Create map and fill with default data.
+		map = new MapModel();
+		MapGenerator.BeginnerMap(map);
 	}
 	
 	/**
@@ -84,7 +87,7 @@ public class GameManager implements ModelSubject
 		players = new ArrayList<>();
 		gameBank = new Bank();
 		gameState = new GameState();
-		//mapController = new MapController();
+		map = new MapModel();
 		victoryPointManager = new VictoryPointManager();
 		playerColors = new int[10];
 		//fill the array with -1 by default
@@ -138,14 +141,12 @@ public class GameManager implements ModelSubject
 			throw new ModelException();
 		
 		int newIndex = players.size();
-		if (newIndex > 3)
+		if (newIndex > 3 || newIndex < 0)
 		{
 			throw new ModelException("Too many players already to add another");
 		}
 		Player newPlayer = new Player(name, newIndex, color, isHuman);
 		players.add(newPlayer);
-		
-		this.notifyCenter.notify(ModelNotification.PLAYERS);
 		
 		playerColors[color.ordinal()] = newIndex;
 		return newIndex;
@@ -166,11 +167,10 @@ public class GameManager implements ModelSubject
 				System.err.println("Player at "+i+" is null");
 				continue;
 			}
-			System.out.println(p);
+			//System.out.println(p);
 			this.players.add(p);
 			playerColors[p.color.ordinal()] = p.playerIndex();
 		}
-		this.notifyCenter.notify(ModelNotification.PLAYERS);
 		
 	}
 	
@@ -238,10 +238,11 @@ public class GameManager implements ModelSubject
 	 */
 	public int playerPieceCount(int playerIndex,PieceType type)
 	{
-		try {
+		try
+		{
 			return this.players.get(playerIndex).playerBank.getPieceCount(type);
-		} catch (ModelException e) {
-			// TODO Auto-generated catch block
+		} catch (ModelException e)
+		{
 			e.printStackTrace();
 			return 0;
 		}
@@ -284,23 +285,24 @@ public class GameManager implements ModelSubject
 		if (diceRoll == 7 )
 		{
 			this.playerCanMoveRobber = this.CurrentPlayersTurn();
-			gameState.startRobbing();
+			if (!gameState.startRobbing()) throw new ModelException("Unable to stop rolling after 7");
 		}
 		else
 		{
-			gameState.stopRolling();
+			if (!gameState.stopRolling()) throw new ModelException("Unable to stop rolling after a non 7");
 		}
 		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
 		
-		//Call map to update the get the transacations
-		Iterator<Transaction> transList = map.GetVillages(diceRoll);
-		//Go through each trasaction
+		//Call map to update the get the transactions
+		Iterator<Transaction> transList = map.GetTransactions(diceRoll);
+		//Go through each transaction
 		while (transList.hasNext())
 		{
 			Transaction trans = transList.next();
 			//Get the player ID
 			int playerIndex = this.getPlayerIndexByColor(trans.getColor());
-			try {
+			try 
+			{
 				//Get the player
 				Player player = this.GetPlayer(playerIndex);
 				//The piece type
@@ -315,13 +317,12 @@ public class GameManager implements ModelSubject
 				//TODO get the resources from the game bank and give them to the player
 				player.playerBank.giveResource(resource, amount);
 				//player.playerBank
-			} catch (ModelException e) {
-				// TODO Auto-generated catch block
+			} 
+			catch (ModelException e) 
+			{
 				System.err.println("No player with the color specified by transaction found");
 				System.err.println(trans.getColor());
-				//e.printStackTrace();
 			}
-			
 		}
 		return diceRoll; // chosen by fair dice roll
 						// guaranteed to be random
@@ -338,13 +339,20 @@ public class GameManager implements ModelSubject
 	 */
 	public void BuildRoad(int playerIndex, Coordinate start, Coordinate end) throws ModelException
 	{
-		//check to see if player has resources
-		if (!this.CanBuildRoad(playerIndex, start, end))
-			throw new ModelException("Player can't build road right now");
-		GetPlayer(playerIndex).playerBank.buildRoad();
-		CatanColor color = this.getPlayerColorByIndex(playerIndex);
-		map.placeRoad(start, end, color);
-		victoryPointManager.playerBuiltRoad(playerIndex);
+		try
+		{
+			//check to see if player has resources
+			if (!this.CanBuildRoad(playerIndex, start,end))
+				throw new ModelException();
+			GetPlayer(playerIndex).playerBank.buildRoad();
+			CatanColor color = this.getPlayerColorByIndex(playerIndex);
+			map.PlaceRoad(start,end, color);
+			victoryPointManager.playerBuiltRoad(playerIndex);
+		}
+		catch (MapException e)
+		{
+			throw new ModelException("Can't place road.", e);
+		}
 	}
 	
 	/**
@@ -354,30 +362,44 @@ public class GameManager implements ModelSubject
 	 */
 	public void BuildSettlement(int playerIndex, Coordinate location) throws ModelException
 	{
-		//check to see if player has resources
-		if (!this.CanBuildSettlement(playerIndex, location))
-			throw new ModelException("Player can't build settlement right now");
-		GetPlayer(playerIndex).playerBank.buildSettlement();
-		CatanColor color = this.getPlayerColorByIndex(playerIndex);
-		map.placeSettlement(location, color);
-		victoryPointManager.playerBuiltSettlement(playerIndex);
-		
+		try
+		{
+			//check to see if player has resources
+			if (!this.CanBuildSettlement(playerIndex, location))
+				throw new ModelException();
+			GetPlayer(playerIndex).playerBank.buildSettlement();
+			CatanColor color = this.getPlayerColorByIndex(playerIndex);
+			map.PlaceSettlement(location, color);
+			victoryPointManager.playerBuiltSettlement(playerIndex);
+		}
+		catch (MapException e)
+		{
+			throw new ModelException("Can't place settlement.", e);
+		}
 	}
 	
 	/**
 	 * Attempts to build a road
 	 * @param playerIndex
 	 * @throws ModelException if the player doesn't have the resources
+	 * @throws MapException if the Location doesn't exist
 	 */
 	public void BuildCity(int playerIndex,Coordinate location) throws ModelException
 	{
-		//check to see if player has resources
-		if (!this.CanBuildSettlement(playerIndex, location))
-			throw new ModelException("Player can't build city right now");
-		GetPlayer(playerIndex).playerBank.buildRoad();
-		CatanColor color = this.getPlayerColorByIndex(playerIndex);
-		map.placeCity(location,color);
-		victoryPointManager.playerBuiltCity(playerIndex);
+		try
+		{
+			//check to see if player has resources
+			if (!this.CanBuildSettlement(playerIndex, location))
+				throw new ModelException();
+			GetPlayer(playerIndex).playerBank.buildRoad();
+			CatanColor color = this.getPlayerColorByIndex(playerIndex);
+			map.PlaceCity(location,color);
+			victoryPointManager.playerBuiltCity(playerIndex);
+		}
+		catch (MapException e)
+		{
+			throw new ModelException("Can't place city.", e);
+		}
 	}
 	
 	/**
@@ -433,12 +455,13 @@ public class GameManager implements ModelSubject
 	 * @param location
 	 * @throws ModelException 
 	 */
-	public void placeRobber(int playerIndex, Coordinate location) throws ModelException
+	public void placeRobber(int playerIndex) throws ModelException
 	{
-		if (!this.CanPlaceRobber(playerIndex)) throw new ModelException("Player can't place robber right now");
-		map.placeRobber(location);
+		if (!this.CanPlaceRobber(playerIndex))
+			throw new ModelException("Player can't place robber right now");
 		//mark that the robber has been moved
 		this.playerCanMoveRobber = -1;
+		if (!gameState.stopRobbing()) throw new ModelException("Can't stop robbing.");
 	}
 	
 	//--------------------------------------------------------------------------
@@ -509,14 +532,10 @@ public class GameManager implements ModelSubject
 		{
 			if (!GetPlayer(playerIndex).playerBank.canBuildRoad())
 				return false;
-			//check map
-			CatanColor color = getPlayerColorByIndex(playerIndex);
-			if (!map.canPlaceRoad(start, end, color))
-				return false;
+			//Map has already been checked by map
 		}
 		catch (ModelException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -535,16 +554,16 @@ public class GameManager implements ModelSubject
 			return false;
 		try 
 		{
+			Player player = GetPlayer(playerIndex);
+			
 			//check if they have the resources needed
-			if (!GetPlayer(playerIndex).playerBank.canBuildRoad())
+			if (!player.playerBank.canBuildRoad())
 				return false;
-			//ask the map
-			if (!map.canPlaceSettlement(location))
-				return false;
+			
+			//Map has been/will be checked by map
 		}
 		catch (ModelException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -567,12 +586,11 @@ public class GameManager implements ModelSubject
 			if (!GetPlayer(playerIndex).playerBank.canBuildCity())
 				return false;
 			//ask the map
-			if (!map.canPlaceCity(location,this.getPlayerColorByIndex(playerIndex)))
+			if (!map.CanPlaceCity(location,this.getPlayerColorByIndex(playerIndex)))
 				return false;
 		}
 		catch (ModelException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -583,13 +601,13 @@ public class GameManager implements ModelSubject
 	{
 		if (!CanPlayerPlay(playerIndex))
 			return false;
+		
 		try 
 		{
 			GetPlayer(playerIndex).playerBank.canBuildCity();
 		}
 		catch (ModelException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -615,14 +633,16 @@ public class GameManager implements ModelSubject
 		//TODO remove
 		for (int i=0;i < this.NumberActivePlayers(); i++)
 		{
-			try {
+			try
+			{
 				players.get(i).playerBank.giveResource(ResourceType.BRICK, 5);
 				players.get(i).playerBank.giveResource(ResourceType.ORE, 5);
 				players.get(i).playerBank.giveResource(ResourceType.SHEEP, 5);
 				players.get(i).playerBank.giveResource(ResourceType.WOOD, 5);
 				players.get(i).playerBank.giveResource(ResourceType.WHEAT, 5);
-			} catch (ModelException e) {
-				// TODO Auto-generated catch block
+			} 
+			catch (ModelException e) 
+			{
 				e.printStackTrace();
 			}
 		}
@@ -685,10 +705,12 @@ public class GameManager implements ModelSubject
 	/**
 	 * Check if player can chat
 	 * @param playerIndex
-	 * @return always true?
+	 * @return true if we aren't waiting for players
 	 */
 	public boolean canChat(int playerIndex)
 	{
+		if (gameState.state == GameRound.WAITING) 
+			return false;
 		return true;
 	}
 	
@@ -831,6 +853,7 @@ public class GameManager implements ModelSubject
 	public void PlayerChat(int playerIndex, String message)
 	{
 		waterCooler.put(message, playerIndex);
+		notifyCenter.notify(ModelNotification.CHAT);
 	}
 	
 	//--------------------------------------------------------------------------

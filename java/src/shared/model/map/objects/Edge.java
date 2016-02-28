@@ -8,8 +8,8 @@ import shared.model.map.Coordinate;
  * @author Jonathan Sadler
  *
  */
-public class Edge {
-
+public class Edge
+{
 	private Coordinate start;
 	private Coordinate end;
 	
@@ -50,33 +50,88 @@ public class Edge {
 	/**
 	 * @return the roadExists
 	 */
-	public boolean doesRoadExists() {
+	public boolean doesRoadExists()
+	{
 		return roadExists;
 	}
 
 	/**
 	 * @return the start
 	 */
-	public Coordinate getStart() {
+	public Coordinate getStart()
+	{
 		return start;
 	}
 
 	/**
 	 * @return the end
 	 */
-	public Coordinate getEnd() {
+	public Coordinate getEnd()
+	{
 		return end;
 	}
 
 	/**
 	 * @return the color
 	 */
-	public CatanColor getColor() {
+	public CatanColor getColor() 
+	{
 		return color;
 	}
 	
+	public int GetRotation(Hex hex)
+	{
+		Coordinate hexPoint = hex.getPoint();
+		
+		return GetRotation(hexPoint, start, end);
+	}
+	
+	public static int GetRotation(Coordinate hex, Coordinate start, Coordinate end)
+	{
+		//Edge is horizontal
+		if (start.getY() == end.getY())
+		{
+			if (start.getY() > hex.getY())
+				return 180;
+			else
+				return 0;
+		}
+		//Edge is diagonal
+		else
+		{
+			Coordinate primary = null;
+			Coordinate secondary = null;
+			if (start.getY() == hex.getY())
+			{
+				primary = start;
+				secondary = end;
+			}
+			else
+			{
+				primary = end;
+				secondary = start;
+			}
+			
+			if (primary.getX() == hex.getX())
+			{
+				if (primary.getY() < secondary.getY())
+					return 240;
+				else
+					return 300;
+			}
+			else
+			{
+				if (primary.getY() < secondary.getY())
+					return 120;
+				else
+					return 60;
+			}
+		}
+	}
+	
 	@Override
-	public int hashCode() {
+	public int hashCode() 
+	{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
@@ -87,7 +142,8 @@ public class Edge {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj) 
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -99,19 +155,23 @@ public class Edge {
 		if (color != other.color)
 			return false;
 		
-		if (end == null) {
+		if (end == null) 
+		{
 			if (other.end != null)
 				return false;
-		} else if (!end.equals(other.end))
+		} 
+		else if (!end.equals(other.end))
 			return false;
 		
 		if (roadExists != other.roadExists)
 			return false;
 		
-		if (start == null) {
+		if (start == null) 
+		{
 			if (other.start != null)
 				return false;
-		} else if (!start.equals(other.start))
+		} 
+		else if (!start.equals(other.start))
 			return false;
 		
 		return true;

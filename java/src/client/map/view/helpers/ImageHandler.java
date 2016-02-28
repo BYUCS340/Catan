@@ -16,7 +16,8 @@ import shared.definitions.PortType;
 public class ImageHandler
 {	
 	private Map<HexType, BufferedImage> HEX_IMAGES;
-	private Map<PortType, BufferedImage> PORT_IMAGES;
+	private Map<Integer, BufferedImage> PORT_IMAGES;
+	private Map<PortType, BufferedImage> PORT_RESOURCE_IMAGES;
 	private Map<Integer, BufferedImage> NUMBER_IMAGES;
 	private BufferedImage ROBBER_IMAGE;
 	private BufferedImage DISALLOW_IMAGE;
@@ -27,15 +28,23 @@ public class ImageHandler
 		HEX_IMAGES = new HashMap<HexType, BufferedImage>();
 		
 		for (HexType hexType : HexType.values())
-			HEX_IMAGES.put(hexType, loadHexImage(hexType));
+		{
+			BufferedImage hexImage = loadHexImage(hexType);
+			HEX_IMAGES.put(hexType, hexImage);
+		}
 		
 		//Load ports
-		PORT_IMAGES = new HashMap<PortType, BufferedImage>();
+		PORT_IMAGES = new HashMap<Integer, BufferedImage>();
+		
+		for (int i = 0; i < 360; i += 60)
+			PORT_IMAGES.put(i, loadPortImage(i));
+		
+		PORT_RESOURCE_IMAGES = new HashMap<PortType, BufferedImage>();
 		
 		for (PortType portType : PortType.values())
 		{
 			if (portType != PortType.NONE)
-				PORT_IMAGES.put(portType, loadPortImage(portType));
+				PORT_RESOURCE_IMAGES.put(portType, loadPortResourceImage(portType));
 		}
 		
 		//Load numbers
@@ -72,14 +81,19 @@ public class ImageHandler
 		return GetHandler().HEX_IMAGES.get(hexType);
 	}
 	
+	public static BufferedImage getPortImage(int angle)
+	{
+		return GetHandler().PORT_IMAGES.get(angle);
+	}
+	
 	/**
 	 * Gets the image associated with a port.
 	 * @param portType The port type desired.
 	 * @return The port image.
 	 */
-	public static BufferedImage getPortImage(PortType portType)
+	public static BufferedImage getPortResourceImage(PortType portType)
 	{
-		return GetHandler().PORT_IMAGES.get(portType);
+		return GetHandler().PORT_RESOURCE_IMAGES.get(portType);
 	}
 	
 	/**
@@ -117,9 +131,16 @@ public class ImageHandler
 		return ImageUtils.loadImage(imageFile);
 	}
 	
-	private BufferedImage loadPortImage(PortType portType)
+	private BufferedImage loadPortImage(int angle)
 	{
-		String imageFile = ImageLocation.getPortImageFile(portType);
+		String imageFile = ImageLocation.getPortImageFile(angle);
+		
+		return ImageUtils.loadImage(imageFile);
+	}
+	
+	private BufferedImage loadPortResourceImage(PortType portType)
+	{
+		String imageFile = ImageLocation.getPortResourceImageFile(portType);
 		
 		return ImageUtils.loadImage(imageFile);
 	}

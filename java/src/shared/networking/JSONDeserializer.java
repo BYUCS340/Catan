@@ -172,7 +172,6 @@ public class JSONDeserializer implements Deserializer
 	@Override
 	public NetGameModel parseNetGameModel(String rawData) throws JSONException
 	{
-		// TODO Auto-generated method stub
 		//setup needed objects
 		NetGameModel result = new NetGameModel();
 		JSONObject obj = new JSONObject(rawData);

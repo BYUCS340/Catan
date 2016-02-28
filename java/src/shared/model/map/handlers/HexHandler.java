@@ -12,8 +12,8 @@ import shared.model.map.objects.Hex;
  * @author Jonathan Sadler
  *
  */
-public class HexHandler {
-
+public class HexHandler
+{
 	private static final int MAX_SIZE = 37;
 	private static final int Y_SHIFT = 6;
 	
@@ -79,6 +79,36 @@ public class HexHandler {
 		return java.util.Collections.unmodifiableCollection(hexes.values()).iterator();
 	}
 	
+	public static Coordinate GetTopLeft(Coordinate point)
+	{
+		return point.GetNorth();
+	}
+	
+	public static Coordinate GetTopRight(Coordinate point)
+	{
+		return point.GetNorthEast();
+	}
+	
+	public static Coordinate GetRight(Coordinate point)
+	{
+		return point.GetEast();
+	}
+	
+	public static Coordinate GetBottomRight(Coordinate point)
+	{
+		return point.GetSouthEast();
+	}
+	
+	public static Coordinate GetBottomLeft(Coordinate point)
+	{
+		return point.GetSouth();
+	}
+	
+	public static Coordinate GetLeft(Coordinate point)
+	{
+		return new Coordinate(point.getX(), point.getY());
+	}
+	
 	private int GetKey(Hex hex)
 	{
 		return GetKey(hex.getPoint());
@@ -87,5 +117,38 @@ public class HexHandler {
 	private int GetKey(Coordinate point)
 	{
 		return 100 * point.getX() + point.getY() + Y_SHIFT;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() 
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((hexes == null) ? 0 : hexes.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof HexHandler))
+			return false;
+		HexHandler other = (HexHandler) obj;
+		if (hexes == null) {
+			if (other.hexes != null)
+				return false;
+		} else if (!hexes.equals(other.hexes))
+			return false;
+		return true;
 	}
 }

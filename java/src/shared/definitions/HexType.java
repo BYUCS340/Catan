@@ -14,9 +14,9 @@ public enum HexType
 			case SHEEP: return SHEEP;
 			case WHEAT: return WHEAT;
 			case ORE: return ORE;
+			default: return null;
 		}
 		
-		return null;
 	}
 }
 
