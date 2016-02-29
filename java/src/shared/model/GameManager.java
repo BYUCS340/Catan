@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
@@ -285,7 +286,8 @@ public class GameManager implements ModelSubject
 			throw new ModelException("Game isn't in rolling state");
 		
 		//Correctly rolls the dice
-		int diceRoll = (int) ((Math.random() * 5) + (Math.random() * 5) + 2);
+		Random randomGen = new Random();
+		int diceRoll = randomGen.nextInt(5) + randomGen.nextInt(5) + 2;
 		
 		//check if we can move the robber
 		if (diceRoll == 7 )
