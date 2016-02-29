@@ -58,6 +58,16 @@ public class MapModel implements IMapModel {
 		longestRoadLength = LONGEST_ROAD_INITIAL_VALUE;
 	}
 	
+	public boolean IsForced()
+	{
+		return force;
+	}
+	
+	public boolean IsSetup()
+	{
+		return setup;
+	}
+	
 	@Override
 	public void ForceUpdate(boolean force)
 	{
