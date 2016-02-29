@@ -25,7 +25,9 @@
 	<property name="demo.dir" value="demo"/>
     <property name="server.jar.file" value="${demo.dir}/server.jar"/>
     <property name="client.jar.file" value="${demo.dir}/client.jar"/>
-  
+	<property name="server" value="localhost"/>
+	<property name="port" value="8081"/>
+ 
 	<!-- CLASSPATHS -->
 	<!-- ********** -->
     
