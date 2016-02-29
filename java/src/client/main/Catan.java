@@ -67,7 +67,7 @@ public class Catan extends JFrame
 		Run(host, port);
 	}
 	
-	public static void Run(final String host, final int port)
+	private static void Run(final String host, final int port)
 	{
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
@@ -118,7 +118,6 @@ public class Catan extends JFrame
 				loginController.start();
 			}
 		});
-	}
-	
+	}	
 }
 
