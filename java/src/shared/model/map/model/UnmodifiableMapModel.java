@@ -18,6 +18,18 @@ public class UnmodifiableMapModel implements IMapModel
 	{
 		this.model = model;
 	}
+	
+	@Override
+	public void ForceUpdate(boolean force)
+	{
+		model.ForceUpdate(force);
+	}
+	
+	@Override
+	public void SetupPhase(boolean setup)
+	{
+		model.SetupPhase(setup);
+	}
 
 	@Override
 	public boolean IsRobberInitialized()
@@ -50,15 +62,15 @@ public class UnmodifiableMapModel implements IMapModel
 	}
 	
 	@Override
-	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color, boolean setup)
+	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
 	{
-		return model.CanPlaceRoad(p1, p2, color, setup);
+		return model.CanPlaceRoad(p1, p2, color);
 	}
 
 	@Override
-	public boolean CanPlaceSettlement(Coordinate point, CatanColor color, boolean setup)
+	public boolean CanPlaceSettlement(Coordinate point, CatanColor color)
 	{
-		return model.CanPlaceSettlement(point, color, setup);
+		return model.CanPlaceSettlement(point, color);
 	}
 
 	@Override

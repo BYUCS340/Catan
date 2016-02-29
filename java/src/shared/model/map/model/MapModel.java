@@ -25,6 +25,9 @@ public class MapModel implements IMapModel {
 	
 	private static final int LONGEST_ROAD_INITIAL_VALUE = 2;
 	
+	private boolean force;
+	private boolean setup;
+	
 	private Map<Integer, List<Hex>> values;
 	
 	private HexHandler hexes;
@@ -42,6 +45,9 @@ public class MapModel implements IMapModel {
 	 */
 	public MapModel()
 	{
+		force = false;
+		setup = false;
+		
 		values = new HashMap<Integer, List<Hex>>();
 		
 		hexes = new HexHandler();
@@ -50,6 +56,18 @@ public class MapModel implements IMapModel {
 		ports = new PortHandler();
 		
 		longestRoadLength = LONGEST_ROAD_INITIAL_VALUE;
+	}
+	
+	@Override
+	public void ForceUpdate(boolean force)
+	{
+		this.force = force;
+	}
+	
+	@Override
+	public void SetupPhase(boolean setup)
+	{
+		this.setup = setup;
 	}
 	
 	@Override
@@ -83,7 +101,7 @@ public class MapModel implements IMapModel {
 	}
 	
 	@Override
-	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color, boolean setup)
+	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
 	{	
 		try
 		{
@@ -115,7 +133,7 @@ public class MapModel implements IMapModel {
 	}
 	
 	@Override
-	public boolean CanPlaceSettlement(Coordinate point, CatanColor color, boolean setup)
+	public boolean CanPlaceSettlement(Coordinate point, CatanColor color)
 	{
 		try
 		{
@@ -228,7 +246,7 @@ public class MapModel implements IMapModel {
 	@Override
 	public void PlaceRoad(Coordinate p1, Coordinate p2, CatanColor color) throws MapException
 	{	
-		if (CanPlaceRoad(p1, p2, color, false))
+		if (force || CanPlaceRoad(p1, p2, color))
 			edges.AddRoad(p1, p2, color);
 		else
 		{
@@ -270,7 +288,7 @@ public class MapModel implements IMapModel {
 	@Override
 	public void PlaceSettlement(Coordinate point, CatanColor color) throws MapException
 	{
-		if (CanPlaceSettlement(point, color))
+		if (force || CanPlaceSettlement(point, color))
 			vertices.SetSettlement(point, color);
 		else
 			throw new MapException("Attempt to place settlement where not allowed");
@@ -279,7 +297,7 @@ public class MapModel implements IMapModel {
 	@Override
 	public void PlaceCity(Coordinate point, CatanColor color) throws MapException
 	{
-		if (CanPlaceCity(point, color))
+		if (force || CanPlaceCity(point, color))
 			vertices.SetCity(point, color);
 		else
 			throw new MapException("Attempt to place city where not allowed");
@@ -660,69 +678,23 @@ public class MapModel implements IMapModel {
 		
 		return false;
 	}
-	
-	/**
-	 * Used for settlement to check the things that don't rely on state.
-	 * @param point The coordinate of the vertex.
-	 * @param color The color of the piece to be placed.
-	 * @return True if valid, else false.
-	 */
-	private boolean CanPlaceSettlement(Coordinate point, CatanColor color)
-	{
-		try
-		{
-			//Invalid vertex
-			if (!vertices.ContainsVertex(point))
-				return false;
-			
-			Vertex vertex = vertices.GetVertex(point);
-			
-			//Vertex contains a piece already
-			if (vertex.getType() != PieceType.NONE)
-				return false;
-			
-			Iterator<Vertex> neighbors = GetVertices(vertex);
-			
-			while(neighbors.hasNext())
-			{
-				Vertex neighbor = neighbors.next();
-				
-				//Vertex has a neighbor
-				if (neighbor.getType() != PieceType.NONE)
-					return false;
-			}
-			
-			return true;
-		} 
-		catch (MapException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() 
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((edges == null) ? 0 : edges.hashCode());
-		result = prime * result + ((hexes == null) ? 0 : hexes.hashCode());
+		result = prime * result + edges.hashCode();
+		result = prime * result + hexes.hashCode();
 		result = prime * result + ((longestRoadColor == null) ? 0 : longestRoadColor.hashCode());
 		result = prime * result + longestRoadLength;
-		result = prime * result + ((ports == null) ? 0 : ports.hashCode());
+		result = prime * result + ports.hashCode();
 		result = prime * result + ((robber == null) ? 0 : robber.hashCode());
-		result = prime * result + ((values == null) ? 0 : values.hashCode());
-		result = prime * result + ((vertices == null) ? 0 : vertices.hashCode());
+		result = prime * result + values.hashCode();
+		result = prime * result + vertices.hashCode();
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) 
 	{
@@ -732,43 +704,28 @@ public class MapModel implements IMapModel {
 			return false;
 		if (!(obj instanceof MapModel))
 			return false;
+		
 		MapModel other = (MapModel) obj;
-		if (edges == null) {
-			if (other.edges != null)
-				return false;
-		} else if (!edges.equals(other.edges))
+		
+		if (!edges.equals(other.edges))
 			return false;
-		if (hexes == null) {
-			if (other.hexes != null)
-				return false;
-		} else if (!hexes.equals(other.hexes))
+		if (!hexes.equals(other.hexes))
 			return false;
 		if (longestRoadColor != other.longestRoadColor)
 			return false;
 		if (longestRoadLength != other.longestRoadLength)
 			return false;
-		if (ports == null) {
-			if (other.ports != null)
-				return false;
-		} else if (!ports.equals(other.ports))
+		if (!ports.equals(other.ports))
 			return false;
-		if (robber == null) {
-			if (other.robber != null)
-				return false;
-		} else if (!robber.equals(other.robber))
+		if (robber == null && other.robber != null)
 			return false;
-		if (values == null) {
-			if (other.values != null)
-				return false;
-		} else if (!values.equals(other.values))
+		else if (!robber.equals(other.robber))
 			return false;
-		if (vertices == null) {
-			if (other.vertices != null)
-				return false;
-		} else if (!vertices.equals(other.vertices))
+		if (!values.equals(other.values))
 			return false;
+		if (!vertices.equals(other.vertices))
+			return false;
+		
 		return true;
 	}
-	
-	
 }

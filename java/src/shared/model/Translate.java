@@ -254,6 +254,7 @@ public class Translate
 	public MapModel fromNetMap(NetMap netMap, List<NetPlayer> players)
 	{
 		MapModel model = new MapModel();
+		model.ForceUpdate(true);
 		MapGenerator.WaterSetup(model);
 
 		SetHexes(model, netMap.getNetHexes());
@@ -262,6 +263,8 @@ public class Translate
 		SetCities(model, netMap.getNetCities(), players);
 		SetRoads(model, netMap.getNetRoads(), players);
 		SetRobber(model, netMap.getRobberLocation());
+		
+		model.ForceUpdate(false);
 
 		return model;
 	}

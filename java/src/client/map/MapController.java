@@ -55,14 +55,14 @@ public class MapController extends Controller implements IMapController
 	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
 	{
 		IMapModel model = ClientGame.getGame().GetMapModel();
-		return model.CanPlaceRoad(p1, p2, color, state.IsSetup());
+		return model.CanPlaceRoad(p1, p2, color);
 	}
 
 	@Override
 	public boolean CanPlaceSettlement(Coordinate point, CatanColor color)
 	{
 		IMapModel model = ClientGame.getGame().GetMapModel();
-		return model.CanPlaceSettlement(point, color, state.IsSetup());
+		return model.CanPlaceSettlement(point, color);
 	}
 
 	@Override
@@ -260,25 +260,32 @@ public class MapController extends Controller implements IMapController
 			if (gameState == null)
 				gameState = TurnState.WAITING;
 			
+			boolean setup = false;
+			
 			switch (gameState)
 			{
 				case PLACING_PIECE:
-					//TODO Need way of figuring out what piece is being placed.
 					state = new NormalState(ClientGame.getGame().myPlayerLastPiece());
 					break;
-				case FIRST_ROUND_MY_TURN:
-				case SECOND_ROUND_MY_TURN:
-					if (!state.IsSetup())
-						state = new SettlementSetupState();
-					break;
-				case ROBBING:
-					System.out.println(">>>We robbing");
-					state = new RobbingState();
-					break;
-				default:
-					state = new NormalState(PieceType.NONE);
-					break;
+			case FIRST_ROUND_MY_TURN:
+			case SECOND_ROUND_MY_TURN:
+				if (!state.IsSetup())
+					state = new SettlementSetupState();
+				//No break desired. This is intended to drop through.
+			case FIRST_ROUND_WAITING:
+			case SECOND_ROUND_WAITING:
+				setup = true;
+				break;
+			case ROBBING:
+				System.out.println(">>>We robbing");
+				state = new RobbingState();
+				break;
+			default:
+				state = new NormalState(PieceType.NONE);
+				break;
 			}
+			
+			ClientGame.getGame().GetMapModel().SetupPhase(setup);
 			
 			StartMove(state.GetPieceType());
 			StartDrag(!state.IsSetup());
