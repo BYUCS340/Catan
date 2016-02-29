@@ -36,7 +36,7 @@ public class Translate
 		gameModel.gameBank = fromNetBank(netGameModel.getNetBank());  //FINISHED? -- but only has resource cards (no dev cards)
 		gameModel.players = fromNetPlayers(netGameModel.getNetPlayers());  //FINISHED?
 		gameModel.victoryPointManager = fromNetVPManager(netGameModel.getNetTurnTracker(), netGameModel.getNetPlayers());  //UNFINISHED
-		gameModel.waterCooler = fromNetChat(netGameModel.getNetChat());  //FINISHED? -- but only posts as player 0
+		gameModel.waterCooler = fromNetChat(netGameModel.getNetChat(), netGameModel.getNetPlayers());  //FINISHED? -- but only posts as player 0
 		gameModel.log = fromNetLog(netGameModel.getNetGameLog(), netGameModel.getNetPlayers());  //FINISHED? -- but only logs as player 0
 		gameModel.version = netGameModel.getVersion();  //FINISHED
 		gameModel.mapModel = fromNetMap(netGameModel.getNetMap(), netGameModel.getNetPlayers());  //FINISHED -- I think ...
@@ -202,13 +202,30 @@ public class Translate
 	 * @param netChat
 	 * @return ChatBox
 	 */
-	public ChatBox fromNetChat(NetChat netChat)
+	public ChatBox fromNetChat(NetChat netChat, List<NetPlayer> players)
 	{
 		ChatBox chatBox = new ChatBox();
+		
+		HashMap<String,Integer> playerNames = new HashMap<>();
+		
+		Iterator<NetPlayer> iter = players.iterator();
+		while (iter.hasNext())
+		{
+			NetPlayer p = iter.next();
+			playerNames.put(p.getName(), p.getPlayerIndex());
+		}
+		
 		for (int i = 0; i < netChat.getLines().size(); i++)
 		{
 			//always posts as player 0 (because I don't have a good way of determining playerID from message source yet)
-			chatBox.put(netChat.getLines().get(i).getMessage(), 0);
+			NetLine line = netChat.getLines().get(i);
+			int playerIndex = 0;
+			if (playerNames.containsKey(line.getSource()))
+			{
+				playerIndex = playerNames.get(line.getSource());
+			}
+			
+			chatBox.put(line.getMessage(), playerIndex);
 		}
 		return chatBox;
 	}
@@ -240,7 +257,7 @@ public class Translate
 			{
 				playerIndex = playerNames.get(line.getSource());
 			}
-			gameActionLog.logAction(playerIndex, netLog.getLines().get(i).getMessage());
+			gameActionLog.logAction(playerIndex, line.getMessage());
 		}
 		return gameActionLog;
 	}
