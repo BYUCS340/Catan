@@ -28,4 +28,13 @@ public class NormalState implements IMapState
 	{
 		return false;
 	}
+	
+	@Override
+	public Boolean AllowCancel()
+	{
+		if (type == PieceType.ROBBER)
+			return false;
+		else
+			return true;
+	}
 }
