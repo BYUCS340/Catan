@@ -254,9 +254,6 @@ public class MapController extends Controller implements IMapController
 		{
 			TurnState gameState = ClientGame.getGame().getTurnState();
 			
-			System.out.print("Map controller handling state: ");
-			System.out.println(gameState.toString());
-			
 			boolean setup = false;
 			
 			switch (gameState)
