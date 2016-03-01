@@ -4,11 +4,21 @@ import client.base.Controller;
 import client.model.ClientGame;
 import client.model.ClientGameManager;
 import shared.definitions.CatanColor;
+import shared.definitions.GameRound;
 import shared.definitions.ModelNotification;
 import shared.definitions.TurnState;
 import shared.model.ModelObserver;
 import shared.model.VictoryPointManager;
 
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * Implementation for the turn tracker controller
@@ -93,6 +103,34 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			
 			int points = vp.getVictoryPoints(i);
 			getView().updatePlayer(i, points, highlight, largestArmy, longestRoad);
+		}
+		
+		if (game.CurrentState() == GameRound.ROLLING && currPlayerIndex == myIndex)
+		{
+			String soundName = "images/yourTurn.wav";    
+			AudioInputStream audioInputStream;
+			audioInputStream = null;
+			try {
+				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+			} catch (UnsupportedAudioFileException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			Clip clip;
+			try {
+				clip = AudioSystem.getClip();
+				clip.open(audioInputStream);
+				clip.start();
+			} catch (LineUnavailableException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 
 
