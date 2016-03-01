@@ -107,7 +107,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		
 		if (game.CurrentState() == GameRound.ROLLING && currPlayerIndex == myIndex)
 		{
-			String soundName = "images/yourTurn.wav";    
+			String soundName = "images"+File.pathSeparator+"yourTurn.wav";    
 			AudioInputStream audioInputStream;
 			audioInputStream = null;
 			try {
