@@ -33,12 +33,17 @@ import shared.model.map.model.MapModel;
 import shared.model.map.model.UnmodifiableMapModel;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
+import shared.networking.transport.NetResourceList;
+import shared.networking.transport.NetTradeOffer;
 
 public class ClientGameManager extends GameManager
 {
 	private ServerProxy proxy;
 	private int myPlayerIndex = -1;
 	private TurnState turnState;
+	private int playerIndexWithTradeOffer = -2;
+	private int playerIndexSendingOffer = -2;
+	private int[] resourceToTrade;
 
 	private int refreshCount = 0;
 	private CatanColor myPlayerColor;
@@ -155,6 +160,47 @@ public class ClientGameManager extends GameManager
 			return null;
 
 		return players.get(playerIndex).name;
+	}
+
+
+	/**
+	 * 
+	 * @param index
+	 */
+	public void setPlayerIndexWithTradeOffer(int index){
+		playerIndexWithTradeOffer = index;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public int getPlayerIndexWithTradeOffer(){
+		return playerIndexWithTradeOffer;
+	}
+	
+	/**
+	 * 
+	 * @param index
+	 */
+	public void setPlayerSendingOfferIndex(int index){
+		playerIndexSendingOffer = index;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public int getPlayerSendingOfferIndex(){
+		return playerIndexSendingOffer;
+	}
+	
+	/**
+	 * Returns the resources of the offered trade
+	 * @return
+	 */
+	public int[] getResourceToTrade(){
+		return this.resourceToTrade;
 	}
 
 	/**
@@ -823,6 +869,35 @@ public class ClientGameManager extends GameManager
 		this.version = model.getVersion();
 		System.out.println("Refresh finished");
 		//throw new ModelException();
+
+
+		//  check for trade offer, set to -1 if there is no trade in process
+		NetTradeOffer offer = model.getNetTradeOffer();
+		System.out.println("Offer: " + offer);
+		if(offer != null){
+			playerIndexWithTradeOffer =  offer.getReceiver();
+			playerIndexSendingOffer = offer.getSender();
+			System.out.println("Receiver: " + playerIndexWithTradeOffer);
+			System.out.println("Sender: " + playerIndexSendingOffer);
+			if(playerIndexWithTradeOffer == this.myPlayerIndex()){
+				//  if the player has a trade waiting for them, get resources, then notify
+				NetResourceList resourcesForTrade = offer.getNetResourceList();
+				resourceToTrade = new int[5];
+				resourceToTrade[0] = resourcesForTrade.getNumBrick();
+				resourceToTrade[1] = resourcesForTrade.getNumOre();
+				resourceToTrade[2] = resourcesForTrade.getNumSheep();
+				resourceToTrade[3] = resourcesForTrade.getNumWheat();
+				resourceToTrade[4] = resourcesForTrade.getNumWood();
+
+				System.out.println("Resources: " + resourceToTrade);
+				
+				this.notifyCenter.notify(ModelNotification.STATE);
+			}
+		}else{
+			playerIndexWithTradeOffer = -2;
+			playerIndexSendingOffer = -2;
+			resourceToTrade = null;
+		}
 	}
 
 	public void LoadGame(NetGame model) throws ModelException
@@ -897,11 +972,12 @@ public class ClientGameManager extends GameManager
 	}
 	
 	
-	public void offerTrade(){
+	public void offerTrade(List<Integer> resourceList, int receiver) throws ServerProxyException{
 		
 		//  TODO:  Fix this!
 		
-//		this.proxy.offerTrade(resourceList, receiver);
+		this.proxy.offerTrade(resourceList, receiver);
+//		this.proxy.acceptTrade(false);
 	}
 
 	
@@ -957,5 +1033,4 @@ public class ClientGameManager extends GameManager
 //		this.notifyCenter.notify(ModelNotification.RESOURCES);
 //	}
 //
-//>>>>>>> feb68756581741886ca962fdcb80100cefd9af2e
 }
