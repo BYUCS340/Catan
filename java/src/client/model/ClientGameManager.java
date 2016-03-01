@@ -223,7 +223,7 @@ public class ClientGameManager extends GameManager
 			while(iter.hasNext())
 			{
 				PlayerInfo newplay = iter.next();
-				System.out.println("Player: "+newplay.getName()+" at index:"+newplay.getPlayerIndex());
+				System.out.println("YOU:    "+proxy.getUserId()+" Player: "+newplay.getName()+":"+newplay.getId()+" at index:"+newplay.getPlayerIndex());
 				if (newplay.getId() == proxy.getUserId())
 				{
 					System.out.println("Joined with player index:"+newplay.getPlayerIndex());
@@ -237,10 +237,14 @@ public class ClientGameManager extends GameManager
 			//If we are rejoining then don't add ourselves
 			if (!rejoining)
 			{
+				this.myPlayerIndex = newplayers.size();
 				newplayers.add(new Player(proxy.getUserName(), players.size(), color, true));
-				this.myPlayerIndex = players.size();
+				System.out.println("Joined with player index:"+this.myPlayerIndex);
+				
 			}
 			this.SetPlayers(newplayers);
+			
+			System.out.println("Joiing a game with playerIndex:"+this.myPlayerIndex);
 			ClientGame.startPolling();
 			//If we can't joining a game then an exception will be thrown
 
@@ -371,12 +375,13 @@ public class ClientGameManager extends GameManager
 	/**
 	 * Buys a dev card for the current player
 	 */
-	public void BuyDevCard()
+	public boolean BuyDevCard()
 	{
 		try
 		{
 			NetGameModel newmodel = proxy.buyDevCard();
 			this.reloadGame(newmodel,true);
+			return true;
 		} 
 		catch (ServerProxyException e) 
 		{
@@ -388,21 +393,23 @@ public class ClientGameManager extends GameManager
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	/**
 	 * Plays the monopoly card for the current player
 	 * @param resource
 	 */
-	public void PlayMonopoly(ResourceType resource)
+	public boolean PlayMonopoly(ResourceType resource)
 	{
 		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.MONOPOLY))
-			return;
+			return false;
 		try 
 		{
 			this.playDevCard(this.myPlayerIndex, DevCardType.MONOPOLY);
 			NetGameModel model = proxy.monopolyCard(resource);
 			this.reloadGame(model, true);
+			return true;
 		} 
 		catch (ModelException e) 
 		{
@@ -412,30 +419,37 @@ public class ClientGameManager extends GameManager
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	/**
 	 * Plays the monopoly card for the current player
 	 * @param resource
 	 */
-	public void PlaySolider()
+	public boolean PlaySolider()
 	{
+		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.SOLDIER))
+			return false;
 		System.out.println("NO SOLIDER PLAYED");
 		//TODO IMPLEMENT
+		this.turnState = TurnState.SOLIDER_CARD;
+		this.notifyCenter.notify(ModelNotification.STATE);
+		return true;
 	}
 	
 	/**
 	 * Plays the monument card for the current player
 	 * @param resource
 	 */
-	public void PlayMonument()
+	public boolean PlayMonument()
 	{
 		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.MONUMENT))
-			return;
+			return false;
 		try 
 		{
 			NetGameModel model = proxy.monumentCard();
 			this.reloadGame(model, true);
+			return true;
 		} 
 		catch (ModelException e) 
 		{
@@ -445,16 +459,21 @@ public class ClientGameManager extends GameManager
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	/**
 	 * Plays the road builder card for the current player
 	 * @param resource
 	 */
-	public void PlayRoadBuilder()
+	public boolean PlayRoadBuilder()
 	{
 		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.ROAD_BUILD))
-			return;
+			return false;
+	
+		this.turnState = TurnState.ROAD_BUILDER;
+		this.notifyCenter.notify(ModelNotification.STATE);
+		return true;
 		/*try 
 		{
 			
@@ -477,15 +496,16 @@ public class ClientGameManager extends GameManager
 	 * Plays the road builder card for the current player
 	 * @param resource
 	 */
-	public void PlayYearOfPlenty(ResourceType resource1, ResourceType resource2)
+	public boolean PlayYearOfPlenty(ResourceType resource1, ResourceType resource2)
 	{
 		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.ROAD_BUILD))
-			return;
+			return false;
 		try 
 		{
 			//TODO implement
 			NetGameModel model = proxy.yearOfPlentyCard(resource1, resource2);
 			this.reloadGame(model, true);
+			return true;
 		} 
 		catch (ModelException e) 
 		{
@@ -495,6 +515,7 @@ public class ClientGameManager extends GameManager
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	
@@ -686,11 +707,11 @@ public class ClientGameManager extends GameManager
 		{
 			return;
 		}
-		System.out.print("\n-----------------------------------------\nRefresh: "+this.refreshCount+":");
-		if (forced)
+		System.out.println("\n--------------------- Refresh: "+this.refreshCount+" -------------------------");
+		/*if (forced)
 			System.out.println("Forced update of game");
 		else
-			System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
+			System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());*/
 		
 		
 
@@ -711,6 +732,7 @@ public class ClientGameManager extends GameManager
 				Player p = iter.next();
 				if (p.playerID() == this.proxy.getUserId())
 				{
+					System.out.println("Setting player ID to be "+p.playerIndex());
 					this.myPlayerIndex = p.playerIndex();
 					break;
 				}
@@ -816,7 +838,7 @@ public class ClientGameManager extends GameManager
 		{
 			gameState = newgamestate;
 			//handle the logic from this
-			System.out.println("STATE Refreshed to "+newstate);
+			System.out.println("STATE Refreshed to "+newstate+ " current player:"+newgamestate.activePlayerIndex);
 			System.out.println("Old TS: "+oldTurnState+" New: "+this.turnState);
 			this.notifyCenter.notify(ModelNotification.STATE);
 			
@@ -867,7 +889,6 @@ public class ClientGameManager extends GameManager
 			this.notifyCenter.notify(ModelNotification.ALL);
 		
 		this.version = model.getVersion();
-		System.out.println("Refresh finished");
 		//throw new ModelException();
 
 
@@ -993,11 +1014,11 @@ public class ClientGameManager extends GameManager
 		
 		//  give bank the player's resources
 		gameBank.giveResource(inputResource, ratio);
-		this.players.get(this.CurrentPlayersTurn()).playerBank.getResource(inputResource, ratio);
+		this.players.get(this.myPlayerIndex).playerBank.getResource(inputResource, ratio);
 		
 		//  give the player the bought resource
 		gameBank.getResource(outputResource, 1);
-		this.players.get(this.CurrentPlayersTurn()).playerBank.giveResource(outputResource, 1);
+		this.players.get(this.myPlayerIndex).playerBank.giveResource(outputResource, 1);
 		
 		this.notifyCenter.notify(ModelNotification.RESOURCES);
 		this.proxy.maritimeTrade(ratio, inputResource, outputResource);

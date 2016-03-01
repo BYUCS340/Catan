@@ -32,6 +32,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		ClientGame.getGame().startListening(this, ModelNotification.STATE);
 		ClientGame.getGame().startListening(this, ModelNotification.SCORE);
 		ClientGame.getGame().startListening(this, ModelNotification.PLAYERS);
+		ClientGame.getGame().startListening(chatObserver, ModelNotification.CHAT);
 		
 		isInitializedTo = 0;
 	}
@@ -166,6 +167,38 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		}
 
 	}
+	
+	private ModelObserver chatObserver = new ModelObserver()
+	{
+		@Override
+		public void alert()
+		{
+			if (ClientGame.getGame().getChat().lastChatter() == ClientGame.getGame().myPlayerIndex()) return;
+			String soundName = "images"+File.separator+"chat.wav";    
+			AudioInputStream audioInputStream;
+			audioInputStream = null;
+			try {
+				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+			} catch (UnsupportedAudioFileException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			Clip clip;
+			try {
+				clip = AudioSystem.getClip();
+				clip.open(audioInputStream);
+				clip.start();
+			} catch (LineUnavailableException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	};
 
 }
 

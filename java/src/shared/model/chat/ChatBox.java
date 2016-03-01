@@ -49,4 +49,14 @@ public class ChatBox
 	{
 		return messages.size();
 	}
+	
+	/**
+	 * Gets the index of the last player to chat
+	 * @return
+	 */
+	public int lastChatter()
+	{
+		if (messages.size() == 0) return -1;
+		return messages.get(messages.size() - 1).playerId;
+	}
 }
