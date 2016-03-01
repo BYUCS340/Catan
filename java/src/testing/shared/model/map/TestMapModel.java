@@ -75,8 +75,11 @@ public class TestMapModel
 		Coordinate p3 = new Coordinate(3, 2);
 		Coordinate p4 = new Coordinate(3, 3);
 		
+		model.SetupPhase(true);
 		model.PlaceSettlement(p1, CatanColor.GREEN);
 		model.PlaceRoad(p1, p2, CatanColor.GREEN);
+		
+		model.SetupPhase(false);
 		model.PlaceRoad(p2, p3, CatanColor.GREEN);
 		model.PlaceRoad(p3, p4, CatanColor.GREEN);
 		
@@ -184,8 +187,8 @@ public class TestMapModel
 		Coordinate p1 = new Coordinate(2, 0);
 		Coordinate p2 = new Coordinate(3, 0);
 		
-		assertFalse(model.CanPlaceRoad(p1, p2, CatanColor.GREEN, false));
-		assertFalse(model.CanPlaceRoad(p2, p1, CatanColor.GREEN, false));
+		assertFalse(model.CanPlaceRoad(p1, p2, CatanColor.GREEN));
+		assertFalse(model.CanPlaceRoad(p2, p1, CatanColor.GREEN));
 	}
 	
 	/**
@@ -200,12 +203,13 @@ public class TestMapModel
 		Coordinate p1 = new Coordinate(2,0);
 		Coordinate p2 = new Coordinate(2,1);
 		
+		model.SetupPhase(true);
 		model.PlaceSettlement(p1, CatanColor.GREEN);
 		model.PlaceRoad(p1, p2, CatanColor.GREEN);
-		assertFalse(model.CanPlaceRoad(p1, p2, CatanColor.GREEN, false));
-		assertFalse(model.CanPlaceRoad(p2, p1, CatanColor.GREEN, false));
-		assertFalse(model.CanPlaceRoad(p1, p2, CatanColor.BLUE, false));
-		assertFalse(model.CanPlaceRoad(p2, p1, CatanColor.BLUE, false));
+		assertFalse(model.CanPlaceRoad(p1, p2, CatanColor.GREEN));
+		assertFalse(model.CanPlaceRoad(p2, p1, CatanColor.GREEN));
+		assertFalse(model.CanPlaceRoad(p1, p2, CatanColor.BLUE));
+		assertFalse(model.CanPlaceRoad(p2, p1, CatanColor.BLUE));
 	}
 	
 	/**
@@ -222,14 +226,17 @@ public class TestMapModel
 		Coordinate p2 = new Coordinate(2,1);
 		
 		//Ensure village satisfies end condition
+		model.SetupPhase(true);
 		model.PlaceSettlement(p1, CatanColor.GREEN);
-		assertTrue(model.CanPlaceRoad(p1, p2, CatanColor.GREEN, false));
-		assertTrue(model.CanPlaceRoad(p2, p1, CatanColor.GREEN, false));
+		
+		model.SetupPhase(false);
+		assertTrue(model.CanPlaceRoad(p1, p2, CatanColor.GREEN));
+		assertTrue(model.CanPlaceRoad(p2, p1, CatanColor.GREEN));
 		
 		//Ensure city satisfies end condition
 		model.PlaceCity(p1, CatanColor.GREEN);
-		assertTrue(model.CanPlaceRoad(p1, p2, CatanColor.GREEN, false));
-		assertTrue(model.CanPlaceRoad(p2, p1, CatanColor.GREEN, false));
+		assertTrue(model.CanPlaceRoad(p1, p2, CatanColor.GREEN));
+		assertTrue(model.CanPlaceRoad(p2, p1, CatanColor.GREEN));
 	}
 	
 	/**
@@ -244,11 +251,13 @@ public class TestMapModel
 		Coordinate p2 = new Coordinate(2,1);
 		Coordinate p3 = new Coordinate(2,2);
 		
+		model.SetupPhase(true);
 		model.PlaceSettlement(p1, CatanColor.GREEN);
 		model.PlaceRoad(p1, p2, CatanColor.GREEN);
 		
-		assertTrue(model.CanPlaceRoad(p2, p3, CatanColor.GREEN, false));
-		assertTrue(model.CanPlaceRoad(p3, p2, CatanColor.GREEN, false));
+		model.SetupPhase(false);
+		assertTrue(model.CanPlaceRoad(p2, p3, CatanColor.GREEN));
+		assertTrue(model.CanPlaceRoad(p3, p2, CatanColor.GREEN));
 	}
 
 	/**
@@ -261,12 +270,13 @@ public class TestMapModel
 		Coordinate p1 = new Coordinate(2,0);
 		
 		//Test with settlement
+		model.SetupPhase(true);
 		model.PlaceSettlement(p1, CatanColor.BLUE);
-		assertFalse(model.CanPlaceSettlement(p1, CatanColor.BLUE, false));
+		assertFalse(model.CanPlaceSettlement(p1, CatanColor.BLUE));
 		
 		//Test with city
 		model.PlaceCity(p1, CatanColor.BLUE);
-		assertFalse(model.CanPlaceSettlement(p1, CatanColor.BLUE, false));
+		assertFalse(model.CanPlaceSettlement(p1, CatanColor.BLUE));
 	}
 	
 	/**
@@ -281,12 +291,13 @@ public class TestMapModel
 		Coordinate p2 = new Coordinate(2,1);
 		
 		//Test with settlement
+		model.SetupPhase(true);
 		model.PlaceSettlement(p1, CatanColor.BLUE);
-		assertFalse(model.CanPlaceSettlement(p2, CatanColor.BLUE, false));
+		assertFalse(model.CanPlaceSettlement(p2, CatanColor.BLUE));
 		
 		//Test with city
 		model.PlaceCity(p1, CatanColor.BLUE);
-		assertFalse(model.CanPlaceSettlement(p2, CatanColor.BLUE, false));
+		assertFalse(model.CanPlaceSettlement(p2, CatanColor.BLUE));
 	}
 	
 	/**
@@ -297,7 +308,7 @@ public class TestMapModel
 	{
 		Coordinate p1 = new Coordinate(0,0);
 		
-		assertFalse(model.CanPlaceSettlement(p1, CatanColor.BLUE, false));
+		assertFalse(model.CanPlaceSettlement(p1, CatanColor.BLUE));
 	}
 	
 	/**
@@ -309,7 +320,8 @@ public class TestMapModel
 	{
 		Coordinate p1 = new Coordinate(2,0);
 		
-		assertTrue(model.CanPlaceSettlement(p1, CatanColor.BLUE, true));
+		model.SetupPhase(true);
+		assertTrue(model.CanPlaceSettlement(p1, CatanColor.BLUE));
 	}
 	
 	/**
@@ -322,9 +334,11 @@ public class TestMapModel
 	{
 		Coordinate p1 = new Coordinate(2,0);
 		
+		model.SetupPhase(true);
 		model.PlaceSettlement(p1, CatanColor.BLUE);
 		assertFalse(model.CanPlaceCity(p1, CatanColor.GREEN));
 		
+		model.SetupPhase(false);
 		model.PlaceCity(p1, CatanColor.BLUE);
 		assertFalse(model.CanPlaceCity(p1, CatanColor.BLUE));
 	}
@@ -360,7 +374,10 @@ public class TestMapModel
 	{
 		Coordinate p1 = new Coordinate(2,0);
 		
+		model.SetupPhase(true);
 		model.PlaceSettlement(p1, CatanColor.GREEN);
+		
+		model.SetupPhase(false);
 		assertTrue(model.CanPlaceCity(p1, CatanColor.GREEN));
 	}
 	
@@ -550,6 +567,7 @@ public class TestMapModel
 		Edge edge = model.GetEdge(p1, p2);
 		assertFalse(edge.doesRoadExists());
 		
+		model.SetupPhase(true);
 		model.PlaceSettlement(p1, CatanColor.GREEN);
 		model.PlaceRoad(p1, p2, CatanColor.GREEN);
 		edge = model.GetEdge(p1, p2);
@@ -605,6 +623,7 @@ public class TestMapModel
 	public void testPlaceSettlement_Valid() throws MapException
 	{
 		Coordinate point = new Coordinate(1, 0);
+		model.SetupPhase(true);
 		model.PlaceSettlement(point, CatanColor.GREEN);
 		
 		Vertex vertex = model.GetVertex(point);
@@ -662,6 +681,7 @@ public class TestMapModel
 	public void testPlaceCity_Valid() throws MapException
 	{
 		Coordinate point = new Coordinate(1, 0);
+		model.SetupPhase(true);
 		model.PlaceSettlement(point, CatanColor.GREEN);
 		model.PlaceCity(point, CatanColor.GREEN);
 		
@@ -1091,8 +1111,11 @@ public class TestMapModel
 		Coordinate p3 = new Coordinate(3, 2);
 		Coordinate p4 = new Coordinate(3, 3);
 		
+		model.SetupPhase(true);
 		model.PlaceSettlement(p1, CatanColor.GREEN);
 		model.PlaceRoad(p1, p2, CatanColor.GREEN);
+		
+		model.SetupPhase(false);
 		model.PlaceRoad(p2, p3, CatanColor.GREEN);
 		model.PlaceRoad(p3, p4, CatanColor.GREEN);
 		

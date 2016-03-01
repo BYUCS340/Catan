@@ -25,7 +25,9 @@
 	<property name="demo.dir" value="demo"/>
     <property name="server.jar.file" value="${demo.dir}/server.jar"/>
     <property name="client.jar.file" value="${demo.dir}/client.jar"/>
-  
+	<property name="server" value="localhost"/>
+	<property name="port" value="8081"/>
+ 
 	<!-- CLASSPATHS -->
 	<!-- ********** -->
     
@@ -135,6 +137,8 @@
 	
 	<target name="our-client" depends="package" description="compiles, packages, and runs the student client">
 		<java jar="${java.dist}/catan-client.jar" dir="${java.dist}" fork="yes">
+			<arg value="${server}"/>
+			<arg value="${port}"/>
 			<sysproperty key="com.sun.management.jmxremote" value=""/>
 			<assertions>
 				<enable/>

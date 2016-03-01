@@ -26,6 +26,8 @@ import shared.model.map.objects.*;
 @SuppressWarnings("serial")
 public class MapComponent extends JComponent
 {
+	public boolean temp = false;
+	
 	public static final int HEX_IMAGE_WIDTH = Dimensions.HEX_IMAGE_WIDTH;
 	public static final int HEX_IMAGE_HEIGHT = Dimensions.HEX_IMAGE_HEIGHT;
 	
@@ -49,7 +51,7 @@ public class MapComponent extends JComponent
 	
 	static
 	{
-		List<Point2D> ROAD = new ArrayList<Point2D>();
+		ROAD = new ArrayList<Point2D>();
 		ROAD.add(new Point2D.Double(-ROAD_WIDTH / 2, -ROAD_HEIGHT / 2));
 		ROAD.add(new Point2D.Double(ROAD_WIDTH / 2, -ROAD_HEIGHT / 2));
 		ROAD.add(new Point2D.Double(ROAD_WIDTH / 2, ROAD_HEIGHT / 2));
@@ -306,7 +308,7 @@ public class MapComponent extends JComponent
 		List<Point2D> completedRoad = translateShape(rotatedRoad, edgeCenter);
 		
 		Polygon road = toPolygon(completedRoad);
-		drawGamePiece(g2, road, edge.getColor());
+		drawGamePiece(g2, road, color);
 	}
 	
 	private void drawVerticies(Graphics2D g2)

@@ -36,10 +36,9 @@ public class NotificationCenter {
 		Set<ModelObserver> list = listeners.get(ModelNotification.ALL);
 		if (list == null){
 			list = new HashSet<>();
-			listeners.put(type, list);
+			listeners.put(ModelNotification.ALL, list);
 		}
 		list.add(listener);
-		
 		
 	}
 	
@@ -86,20 +85,28 @@ public class NotificationCenter {
 	 */
 	public void notify(ModelNotification type)
 	{
+		int size = 0;
 		//If we aren't notifying twice
-		if (type != ModelNotification.ALL)
+		if (true) // || type != ModelNotification.ALL)
 		{
 			Set<ModelObserver> list = listeners.get(type);
-			if (list != null)
+			if (list != null)			
+			{
 				this.pokeListeners(list.iterator());
+				size = list.size();
+			}
 		}
 		
-		System.out.println("Notify Center for "+type);
 		
-		Set<ModelObserver> list = listeners.get(ModelNotification.ALL);
-		//make sure we don't have a null list
-		if (list != null)
+		/*Set<ModelObserver> list = listeners.get(ModelNotification.ALL);
+		if (list != null)			
+		{
 			this.pokeListeners(list.iterator());
+		}*/
+		
+		
+		System.out.println("Notify Center for "+type+ " = "+size);
+		
 	}
 	
 	
@@ -112,7 +119,6 @@ public class NotificationCenter {
 		//Alert each observer
 		while (observers.hasNext())
 		{
-			//TODO alert of the type
 			observers.next().alert();
 		}
 	}

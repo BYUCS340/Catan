@@ -2,6 +2,8 @@ package shared.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import shared.model.map.*;
@@ -34,14 +36,14 @@ public class Translate
 		gameModel.gameBank = fromNetBank(netGameModel.getNetBank());  //FINISHED? -- but only has resource cards (no dev cards)
 		gameModel.players = fromNetPlayers(netGameModel.getNetPlayers());  //FINISHED?
 		gameModel.victoryPointManager = fromNetVPManager(netGameModel.getNetTurnTracker(), netGameModel.getNetPlayers());  //UNFINISHED
-		gameModel.waterCooler = fromNetChat(netGameModel.getNetChat());  //FINISHED? -- but only posts as player 0
-		gameModel.log = fromNetLog(netGameModel.getNetGameLog());  //FINISHED? -- but only logs as player 0
+		gameModel.waterCooler = fromNetChat(netGameModel.getNetChat(), netGameModel.getNetPlayers());  //FINISHED? -- but only posts as player 0
+		gameModel.log = fromNetLog(netGameModel.getNetGameLog(), netGameModel.getNetPlayers());  //FINISHED? -- but only logs as player 0
 		gameModel.version = netGameModel.getVersion();  //FINISHED
 		gameModel.mapModel = fromNetMap(netGameModel.getNetMap(), netGameModel.getNetPlayers());  //FINISHED -- I think ...
 
 		if (gameModel.players.size() <= 3)
 		{
-			System.out.println("forcing game round to be waiting");
+			//System.out.println("forcing game round to be waiting");
 			gameModel.gameState.state = GameRound.WAITING;
 			gameModel.gameState.activePlayerIndex = -1;
 		}
@@ -119,7 +121,7 @@ public class Translate
 			//PIECES
 			player.playerBank.givePiece(PieceType.CITY, netPlayer.getNumCities());
 			player.playerBank.givePiece(PieceType.ROAD, netPlayer.getNumRoads());
-			player.playerBank.givePiece(PieceType.SETTLEMENT, netPlayer.getNumMonuments());
+			player.playerBank.givePiece(PieceType.SETTLEMENT, netPlayer.getNumSettlements());
 
 			//RESOURCES
 			player.playerBank.giveResource(ResourceType.BRICK, netPlayer.getNetResourceList().getNumBrick());
@@ -129,23 +131,23 @@ public class Translate
 			player.playerBank.giveResource(ResourceType.WOOD, netPlayer.getNetResourceList().getNumWood());
 
 			//DEV CARDS
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumMonopoly(); i++)
+			for (int i = 0; i < netPlayer.getOldNetDevCardList().getNumMonopoly(); i++)
 			{
 				player.playerBank.giveDevCard(DevCardType.MONOPOLY);
 			}
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumMonument(); i++)
+			for (int i = 0; i < netPlayer.getOldNetDevCardList().getNumMonument(); i++)
 			{
 				player.playerBank.giveDevCard(DevCardType.MONUMENT);
 			}
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumRoadBuilding(); i++)
+			for (int i = 0; i < netPlayer.getOldNetDevCardList().getNumRoadBuilding(); i++)
 			{
 				player.playerBank.giveDevCard(DevCardType.ROAD_BUILD);
 			}
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumSoldier(); i++)
+			for (int i = 0; i < netPlayer.getOldNetDevCardList().getNumSoldier(); i++)
 			{
 				player.playerBank.giveDevCard(DevCardType.SOLDIER);
 			}
-			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumYearOfPlenty(); i++)
+			for (int i = 0; i < netPlayer.getOldNetDevCardList().getNumYearOfPlenty(); i++)
 			{
 				player.playerBank.giveDevCard(DevCardType.YEAR_OF_PLENTY);
 			}
@@ -191,7 +193,7 @@ public class Translate
 		}
 
 		VictoryPointManager victoryPointManager = new VictoryPointManager(points[0], points[1], points[2], points[2], longRoad, largeArmy,armySize);
-
+		//TODO - finish this
 		return victoryPointManager;
 	}
 
@@ -200,13 +202,30 @@ public class Translate
 	 * @param netChat
 	 * @return ChatBox
 	 */
-	public ChatBox fromNetChat(NetChat netChat)
+	public ChatBox fromNetChat(NetChat netChat, List<NetPlayer> players)
 	{
 		ChatBox chatBox = new ChatBox();
+		
+		HashMap<String,Integer> playerNames = new HashMap<>();
+		
+		Iterator<NetPlayer> iter = players.iterator();
+		while (iter.hasNext())
+		{
+			NetPlayer p = iter.next();
+			playerNames.put(p.getName(), p.getPlayerIndex());
+		}
+		
 		for (int i = 0; i < netChat.getLines().size(); i++)
 		{
 			//always posts as player 0 (because I don't have a good way of determining playerID from message source yet)
-			chatBox.put(netChat.getLines().get(i).getMessage(), 0);
+			NetLine line = netChat.getLines().get(i);
+			int playerIndex = 0;
+			if (playerNames.containsKey(line.getSource()))
+			{
+				playerIndex = playerNames.get(line.getSource());
+			}
+			
+			chatBox.put(line.getMessage(), playerIndex);
 		}
 		return chatBox;
 	}
@@ -216,13 +235,29 @@ public class Translate
 	 * @param netLog
 	 * @return GameActionLog
 	 */
-	public GameActionLog fromNetLog(NetLog netLog)
+	public GameActionLog fromNetLog(NetLog netLog, List<NetPlayer> players)
 	{
 		GameActionLog gameActionLog = new GameActionLog();
+		
+		HashMap<String,Integer> playerNames = new HashMap<>();
+		
+		Iterator<NetPlayer> iter = players.iterator();
+		while (iter.hasNext())
+		{
+			NetPlayer p = iter.next();
+			playerNames.put(p.getName(), p.getPlayerIndex());
+		}
+		
 		for (int i = 0; i < netLog.getLines().size(); i++)
 		{
 			//always logs as player 0 (because I don't have a good way of determining playerID from message source yet)
-			gameActionLog.logAction(0, netLog.getLines().get(i).getMessage());
+			NetLine line = netLog.getLines().get(i);
+			int playerIndex = 0;
+			if (playerNames.containsKey(line.getSource()))
+			{
+				playerIndex = playerNames.get(line.getSource());
+			}
+			gameActionLog.logAction(playerIndex, line.getMessage());
 		}
 		return gameActionLog;
 	}
@@ -236,6 +271,7 @@ public class Translate
 	public MapModel fromNetMap(NetMap netMap, List<NetPlayer> players)
 	{
 		MapModel model = new MapModel();
+		model.ForceUpdate(true);
 		MapGenerator.WaterSetup(model);
 
 		SetHexes(model, netMap.getNetHexes());
@@ -244,6 +280,8 @@ public class Translate
 		SetCities(model, netMap.getNetCities(), players);
 		SetRoads(model, netMap.getNetRoads(), players);
 		SetRobber(model, netMap.getRobberLocation());
+		
+		model.ForceUpdate(false);
 
 		return model;
 	}
@@ -373,7 +411,8 @@ public class Translate
 			}
 			catch (MapException e)
 			{
-				e.printStackTrace();
+				System.out.println("Unable to place road for "+color);
+				//e.printStackTrace();
 			}
 		}
 	}
@@ -385,14 +424,6 @@ public class Translate
 	 */
 	private void SetPorts(MapModel model, List<NetPort> ports)
 	{
-		//These points we can determine the edge, which is good as it isn't always given.
-		Coordinate invalidTopRight = new Coordinate(6, 3);
-		Coordinate invalidTop = new Coordinate(3, 6);
-		Coordinate invalidTopLeft = new Coordinate(0, 3);
-		Coordinate invalidBottomRight = new Coordinate(6, -3);
-		Coordinate invalidBottom = new Coordinate(3, -6);
-		Coordinate invalidBottomLeft = new Coordinate(0, -3);
-
 		for (NetPort port : ports)
 		{
 			try
@@ -402,33 +433,8 @@ public class Translate
 				int y = hexLocation.getY();
 
 				Coordinate hex = GetHexCoordinate(x, y);
-				//System.out.println("Port:"+port);
-				//System.out.println("Hex coord:"+hex);
+
 				Direction edgeDirection = port.getDirection();
-
-				if (edgeDirection == null)
-				{
-					if (hex.equals(invalidTopRight))
-						edgeDirection = Direction.SW;
-					else if (hex.equals(invalidTop))
-						edgeDirection = Direction.S;
-					else if (hex.equals(invalidTopLeft))
-						edgeDirection = Direction.SE;
-					else if (hex.equals(invalidBottomRight))
-						edgeDirection = Direction.NW;
-					else if (hex.equals(invalidBottom))
-						edgeDirection = Direction.N;
-					else if (hex.equals(invalidBottomLeft))
-						edgeDirection = Direction.NE;
-					else
-					{
-						Exception e = new ModelException("Port edge direction not provided and unable to infer");
-						e.printStackTrace();
-						//Since we can't get the port information, we are going to continue without it.
-						continue;
-					}
-				}
-
 				List<Coordinate> edgeCoordinates = GetEdgeCoordinates(hex, edgeDirection);
 
 				PortType type = GetPortType(port.getRatio(), port.getResource());
@@ -581,20 +587,44 @@ public class Translate
 	public static VertexLocation GetVertexLocation(Coordinate point)
 	{
 		HexLocation hexLocation = null;
+		VertexDirection vertexDirection = null;
+		
 		if (point.isLeftHandCoordinate() && point.getX() <= 5)
+		{
 			hexLocation = GetHexLocation(point);
-		else if (point.isLeftHandCoordinate() && point.getY() > 0)
-			hexLocation = GetHexLocation(point.GetSouthWest());
-		else if (point.isLeftHandCoordinate())
-			hexLocation = GetHexLocation(point.GetNorthWest());
-		else
+			vertexDirection = VertexDirection.West;
+		}
+		else if (point.isRightHandCoordinate() && point.getX() > 1)
+		{
 			hexLocation = GetHexLocation(point.GetWest());
+			vertexDirection = VertexDirection.East;
+		}
+		else if (point.getX() > 5 && point.getY() >= 0)
+		{
+			hexLocation = GetHexLocation(point.GetSouthWest());
+			vertexDirection = VertexDirection.NorthEast;
+		}
+		else if (point.getX() > 5 && point.getY() < 0)
+		{
+			hexLocation = GetHexLocation(point.GetNorthWest());
+			vertexDirection = VertexDirection.SouthEast;
+		}
+		else if (point.getX() <= 1 && point.getY() >= 0)
+		{
+			hexLocation = GetHexLocation(point.GetSouth());
+			vertexDirection = VertexDirection.NorthWest;
+		}
+		else if (point.getX() <= 1 && point.getY() < 0)
+		{
+			hexLocation = GetHexLocation(point.GetNorth());
+			vertexDirection = VertexDirection.SouthWest;
+		}
+		else
+		{
+			assert false;
+		}
 
-		Coordinate hex = GetHexCoordinate(hexLocation.getX(), hexLocation.getY());
-
-		VertexDirection direction = GetVertexDirection(hex, point);
-
-		return new VertexLocation(hexLocation, direction);
+		return new VertexLocation(hexLocation, vertexDirection);
 	}
 
 	public static HexLocation GetHexLocation(Coordinate point)
@@ -666,31 +696,6 @@ public class Translate
 		default:
 			assert false;
 			return null;
-		}
-	}
-
-	private static VertexDirection GetVertexDirection(Coordinate hex, Coordinate point)
-	{
-		if (hex.getY() == point.getY())
-		{
-			if (hex.getX() == point.getX())
-				return VertexDirection.West;
-			else
-				return VertexDirection.East;
-		}
-		else if (hex.getY() < point.getY())
-		{
-			if (hex.getX() == point.getX())
-				return VertexDirection.NorthWest;
-			else
-				return VertexDirection.NorthEast;
-		}
-		else
-		{
-			if (hex.getX() == point.getX())
-				return VertexDirection.SouthWest;
-			else
-				return VertexDirection.SouthEast;
 		}
 	}
 }

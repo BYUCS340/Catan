@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
@@ -195,6 +196,11 @@ public class GameManager implements ModelSubject
 	
 	public CatanColor getPlayerColorByIndex(int playerIndex)
 	{
+		if (playerIndex > players.size() || playerIndex < 0)
+		{
+			System.out.println("UNKNOWN INDEX"+playerIndex);
+			return null;
+		}
 		return players.get(playerIndex).color;
 	}
 	
@@ -241,7 +247,8 @@ public class GameManager implements ModelSubject
 		try
 		{
 			return this.players.get(playerIndex).playerBank.getPieceCount(type);
-		} catch (ModelException e)
+		} 
+		catch (ModelException e)
 		{
 			e.printStackTrace();
 			return 0;
@@ -279,7 +286,8 @@ public class GameManager implements ModelSubject
 			throw new ModelException("Game isn't in rolling state");
 		
 		//Correctly rolls the dice
-		int diceRoll = (int) ((Math.random() * 5) + (Math.random() * 5) + 2);
+		Random randomGen = new Random();
+		int diceRoll = randomGen.nextInt(5) + randomGen.nextInt(5) + 2;
 		
 		//check if we can move the robber
 		if (diceRoll == 7 )
@@ -337,14 +345,17 @@ public class GameManager implements ModelSubject
 	 * @param playerIndex
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuildRoad(int playerIndex, Coordinate start, Coordinate end) throws ModelException
+	public void BuildRoad(int playerIndex, Coordinate start, Coordinate end, boolean free) throws ModelException
 	{
 		try
 		{
-			//check to see if player has resources
-			if (!this.CanBuildRoad(playerIndex, start,end))
-				throw new ModelException();
-			GetPlayer(playerIndex).playerBank.buildRoad();
+			if (!free)
+			{
+				//check to see if player has resources
+				if (!this.CanBuildRoad(playerIndex, start,end))
+					throw new ModelException();
+				GetPlayer(playerIndex).playerBank.buildRoad();
+			}
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceRoad(start,end, color);
 			victoryPointManager.playerBuiltRoad(playerIndex);
@@ -360,14 +371,17 @@ public class GameManager implements ModelSubject
 	 * @param playerIndex
 	 * @throws ModelException if the player doesn't have the resources
 	 */
-	public void BuildSettlement(int playerIndex, Coordinate location) throws ModelException
+	public void BuildSettlement(int playerIndex, Coordinate location, boolean free) throws ModelException
 	{
 		try
 		{
-			//check to see if player has resources
-			if (!this.CanBuildSettlement(playerIndex, location))
-				throw new ModelException();
-			GetPlayer(playerIndex).playerBank.buildSettlement();
+			if (!free)
+			{
+				//check to see if player has resources
+				if (!this.CanBuildSettlement(playerIndex, location))
+					throw new ModelException();
+				GetPlayer(playerIndex).playerBank.buildSettlement();
+			}
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceSettlement(location, color);
 			victoryPointManager.playerBuiltSettlement(playerIndex);
@@ -389,8 +403,9 @@ public class GameManager implements ModelSubject
 		try
 		{
 			//check to see if player has resources
-			if (!this.CanBuildSettlement(playerIndex, location))
-				throw new ModelException();
+			if (!this.CanBuildCity(playerIndex, location))
+				throw new ModelException("Cannot place city");
+			
 			GetPlayer(playerIndex).playerBank.buildRoad();
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceCity(location,color);
@@ -461,7 +476,9 @@ public class GameManager implements ModelSubject
 			throw new ModelException("Player can't place robber right now");
 		//mark that the robber has been moved
 		this.playerCanMoveRobber = -1;
-		if (!gameState.stopRobbing()) throw new ModelException("Can't stop robbing.");
+		
+		if (!gameState.stopRobbing())
+			throw new ModelException("Can't stop robbing.");
 	}
 	
 	//--------------------------------------------------------------------------
@@ -526,6 +543,16 @@ public class GameManager implements ModelSubject
 	 */
 	public boolean CanBuildRoad(int playerIndex,Coordinate start, Coordinate end)
 	{
+		return this.CanBuildRoad(playerIndex);
+	}
+	
+	/**
+	 * Just checks if a player can build a road
+	 * @param playerIndex
+	 * @return
+	 */
+	public boolean CanBuildRoad(int playerIndex)
+	{
 		if (!CanPlayerPlay(playerIndex))
 			return false;
 		try 
@@ -550,6 +577,16 @@ public class GameManager implements ModelSubject
 	 */
 	public boolean CanBuildSettlement(int playerIndex, Coordinate location)
 	{
+		return this.CanBuildSettlement(playerIndex);
+	}
+	
+	/**
+	 * Checks if a player can build the settlement
+	 * @param playerIndex
+	 * @return
+	 */
+	public boolean CanBuildSettlement(int playerIndex)
+	{
 		if (!CanPlayerPlay(playerIndex))
 			return false;
 		try 
@@ -557,7 +594,7 @@ public class GameManager implements ModelSubject
 			Player player = GetPlayer(playerIndex);
 			
 			//check if they have the resources needed
-			if (!player.playerBank.canBuildRoad())
+			if (!player.playerBank.canBuildSettlement())
 				return false;
 			
 			//Map has been/will be checked by map
@@ -579,15 +616,26 @@ public class GameManager implements ModelSubject
 	 */
 	public boolean CanBuildCity (int playerIndex, Coordinate location)
 	{
+		//ask the map
+		if (!map.CanPlaceCity(location,this.getPlayerColorByIndex(playerIndex)))
+			return false;
+		return this.CanBuildCity(playerIndex);
+	}
+	
+	/**
+	 * Checks if a player can build a city
+	 * @param playerIndex
+	 * @return
+	 */
+	public boolean CanBuildCity (int playerIndex)
+	{
 		if (!CanPlayerPlay(playerIndex))
 			return false;
 		try 
 		{
 			if (!GetPlayer(playerIndex).playerBank.canBuildCity())
 				return false;
-			//ask the map
-			if (!map.CanPlaceCity(location,this.getPlayerColorByIndex(playerIndex)))
-				return false;
+			
 		}
 		catch (ModelException e)
 		{
@@ -597,6 +645,11 @@ public class GameManager implements ModelSubject
 		return true;
 	}
 	
+	/**
+	 * 
+	 * @param playerIndex
+	 * @return
+	 */
 	public boolean CanOfferTrade (int playerIndex)
 	{
 		if (!CanPlayerPlay(playerIndex))
@@ -957,5 +1010,41 @@ public class GameManager implements ModelSubject
 		return victoryPointManager;
 	}
 
+	/**
+	 * Returns the number of the requested type of resource held by the bank
+	 * @param resourceType
+	 * @return
+	 */
+	public int getBankResourceCount(ResourceType resourceType){
+		return gameBank.getResourceCount(resourceType);
+	}
+	
+//	public void initializeBankTempTesting(){
+//		try {
+//			gameBank.giveResource(ResourceType.BRICK, 60);
+//			gameBank.giveResource(ResourceType.SHEEP, 60);
+//			gameBank.giveResource(ResourceType.WHEAT, 60);
+//			gameBank.giveResource(ResourceType.ORE, 60);
+//			gameBank.giveResource(ResourceType.WOOD, 60);
+//
+//		} catch (ModelException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		ResourceType type = ResourceType.BRICK;
+//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+//		type = ResourceType.SHEEP;
+//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+//		 type = ResourceType.WHEAT;
+//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+//		 type = ResourceType.ORE;
+//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+//		 type = ResourceType.WOOD;
+//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
+//		
+//
+//	}
+
+	
 	
 }

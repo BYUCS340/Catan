@@ -73,7 +73,9 @@ public class GameState
 	public boolean stopRobbing()
 	{
 		//SWIPER NOT SWIPING
-		if (state != GameRound.ROBBING) return false;
+		if (state != GameRound.ROBBING) 
+			return false;
+		
 		state = GameRound.PLAYING;
 		return true;
 	}
@@ -85,7 +87,9 @@ public class GameState
 	 */
 	public boolean stopRolling()
 	{
-		if (state != GameRound.ROLLING) return false;
+		if (state != GameRound.ROLLING) 
+			return false;
+		
 		state = GameRound.PLAYING;
 		return true;
 	}

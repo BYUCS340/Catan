@@ -6,9 +6,19 @@ import client.model.ClientGameManager;
 import shared.definitions.CatanColor;
 import shared.definitions.GameRound;
 import shared.definitions.ModelNotification;
+import shared.definitions.TurnState;
 import shared.model.ModelObserver;
 import shared.model.VictoryPointManager;
 
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * Implementation for the turn tracker controller
@@ -19,8 +29,11 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 
 	public TurnTrackerController(ITurnTrackerView view) {
 		super(view);
-		ClientGame.getGame().startListening(this);
-		//ClientGame.getGame().startListening(this, ModelNotification.SCORE);
+		ClientGame.getGame().startListening(this, ModelNotification.STATE);
+		ClientGame.getGame().startListening(this, ModelNotification.SCORE);
+		ClientGame.getGame().startListening(this, ModelNotification.PLAYERS);
+		ClientGame.getGame().startListening(chatObserver, ModelNotification.CHAT);
+		
 		isInitializedTo = 0;
 	}
 	
@@ -92,12 +105,48 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			int points = vp.getVictoryPoints(i);
 			getView().updatePlayer(i, points, highlight, largestArmy, longestRoad);
 		}
+		
+		if (game.CurrentState() == GameRound.ROLLING && currPlayerIndex == myIndex)
+		{
+			String soundName = "images"+File.separator+"yourTurn.wav";    
+			AudioInputStream audioInputStream;
+			audioInputStream = null;
+			try {
+				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+			} catch (UnsupportedAudioFileException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			Clip clip;
+			try {
+				clip = AudioSystem.getClip();
+				clip.open(audioInputStream);
+				clip.start();
+			} catch (LineUnavailableException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 
 
 		if(game.CanFinishTurn() && currPlayerIndex == myIndex)
 		{
 			this.getView().updateGameState("Finish Turn", true);
-		}		
+		}
+		else if(game.getTurnState() == TurnState.DISCARDING)
+		{
+			this.getView().updateGameState("Discarding...", false);
+		}
+		else if(game.getTurnState() == TurnState.ROBBING)
+		{
+			this.getView().updateGameState("Robbing...", false);
+		}
 		else
 		{
 			this.getView().updateGameState("Waiting for other players", false);
@@ -110,12 +159,46 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		ClientGameManager game = ClientGame.getGame();
 		
 		//OJO if the version number wraps around to -1, THIS WILL NOT WORK
+		//System.out.println("Trying to update on turn tracker");
 		if(game.hasGameStarted())
 		{
+			//System.out.println("Update on turn tracker");
 			this.updateFromModel();
 		}
 
 	}
+	
+	private ModelObserver chatObserver = new ModelObserver()
+	{
+		@Override
+		public void alert()
+		{
+			if (ClientGame.getGame().getChat().lastChatter() == ClientGame.getGame().myPlayerIndex()) return;
+			String soundName = "images"+File.separator+"chat.wav";    
+			AudioInputStream audioInputStream;
+			audioInputStream = null;
+			try {
+				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+			} catch (UnsupportedAudioFileException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			Clip clip;
+			try {
+				clip = AudioSystem.getClip();
+				clip.open(audioInputStream);
+				clip.start();
+			} catch (LineUnavailableException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	};
 
 }
 

@@ -211,7 +211,7 @@ public class Bank
 	public void givePiece(PieceType type, int amount) throws ModelException
 	{
 		if (type == PieceType.ROBBER) throw new ModelException();
-		if (amount < 0 ) throw new ModelException();
+		if (amount < 0 ) throw new ModelException("Trying to add "+amount+" to piece type "+type);
 		this.pieces[type.ordinal()] += amount;
 	}
 	

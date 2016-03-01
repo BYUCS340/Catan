@@ -13,6 +13,19 @@ import shared.model.map.objects.*;
 public interface IMapModel
 {
 	/**
+	 * Overrides can do methods. Allows placement of pieces regardless. Used when receiving
+	 * data from the server.
+	 * @param force True to force update, else set as false.
+	 */
+	public void ForceUpdate(boolean force);
+	
+	/**
+	 * Sets the map to the setup phase.
+	 * @param setup True for setup, else false.
+	 */
+	public void SetupPhase(boolean setup);
+	
+	/**
 	 * Returns if the robber is initialized.
 	 * @return True if yes, else false.
 	 */
@@ -53,17 +66,15 @@ public interface IMapModel
 	 * @param color The color of the road.
 	 * @return True if yes, else false.
 	 */
-	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color, boolean setup);
+	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color);
 	
 	/**
 	 * Returns if a Settlement can be placed at the specified location.
 	 * @param point The point of placement.
 	 * @param color The color of the piece being placed.
-	 * @param setup If true, the settlement must be connected to a road. For normal
-	 * game play, this is true. If false, the settlement can't be placed on a road.
 	 * @return True if yes, else false.
 	 */
-	public boolean CanPlaceSettlement(Coordinate point, CatanColor color, boolean setup);
+	public boolean CanPlaceSettlement(Coordinate point, CatanColor color);
 	
 	/**
 	 * Returns if a city can be placed.
@@ -201,6 +212,13 @@ public interface IMapModel
 	 * @return An iterator the the neighbors.
 	 */
 	public Iterator<Vertex> GetVertices(Vertex vertex);
+	
+	/**
+	 * Gets the colors around a hex coordinate point.
+	 * @param hexPoint The hex coordinate location.
+	 * @return The surrounding colors.
+	 */
+	public Iterator<CatanColor> GetOccupiedVertices(Coordinate hexPoint);
 	
 	/**
 	 * Gets all the ports.

@@ -1,13 +1,16 @@
 package client.points;
 
-import client.base.*;
+import client.base.Controller;
 import client.model.ClientGame;
+import client.model.ClientGameManager;
+import shared.definitions.ModelNotification;
+import shared.model.ModelObserver;
 
 
 /**
  * Implementation for the points controller
  */
-public class PointsController extends Controller implements IPointsController
+public class PointsController extends Controller implements IPointsController, ModelObserver
 {
 
 	private IGameFinishedView finishedView;
@@ -23,8 +26,10 @@ public class PointsController extends Controller implements IPointsController
 		super(view);
 		
 		setFinishedView(finishedView);
+		ClientGame.getGame().startListening(this, ModelNotification.STATE );
+		ClientGame.getGame().startListening(this, ModelNotification.SCORE );
 		
-		initFromModel();
+		updateFromModel();
 	}
 	
 	public IPointsView getPointsView()
@@ -41,10 +46,27 @@ public class PointsController extends Controller implements IPointsController
 		this.finishedView = finishedView;
 	}
 
-	private void initFromModel()
+	private void updateFromModel()
 	{
-		int points = ClientGame.getGame().PlayerPoints();
+		ClientGameManager game = ClientGame.getGame();
+		int points = game.PlayerPoints();
 		getPointsView().setPoints(points);
+		
+		//if there's a winner, set the modal and show it
+		if(game.getVictoryPointManager().anyWinner())
+		{
+			
+			//If we're the winner, show the right modal!
+			int winnerIdx = game.getVictoryPointManager().winner();
+			this.getFinishedView().setWinner(game.getPlayerNameByIndex(winnerIdx), winnerIdx == game.myPlayerIndex());
+			this.getFinishedView().showModal();
+		}
+		
+	}
+
+	@Override
+	public void alert() {
+		updateFromModel();
 	}
 	
 }

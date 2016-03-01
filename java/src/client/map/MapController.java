@@ -43,6 +43,7 @@ public class MapController extends Controller implements IMapController
 		this.state = new NormalState(PieceType.NONE);
 		
 		ClientGame.getGame().startListening(modelObserver, ModelNotification.MAP);
+		ClientGame.getGame().startListening(stateObserver, ModelNotification.STATE);
 	}
 	
 	public IMapView getView()
@@ -54,14 +55,14 @@ public class MapController extends Controller implements IMapController
 	public boolean CanPlaceRoad(Coordinate p1, Coordinate p2, CatanColor color)
 	{
 		IMapModel model = ClientGame.getGame().GetMapModel();
-		return model.CanPlaceRoad(p1, p2, color, state.IsSetup());
+		return model.CanPlaceRoad(p1, p2, color);
 	}
 
 	@Override
 	public boolean CanPlaceSettlement(Coordinate point, CatanColor color)
 	{
 		IMapModel model = ClientGame.getGame().GetMapModel();
-		return model.CanPlaceSettlement(point, color, state.IsSetup());
+		return model.CanPlaceSettlement(point, color);
 	}
 
 	@Override
@@ -154,7 +155,7 @@ public class MapController extends Controller implements IMapController
 	@Override
 	public void PlaceRobber(Coordinate point)
 	{
-		//TODO Add appropriate call
+		ClientGame.getGame().PlaceRobber(point);	
 	}
 
 	@Override
@@ -176,7 +177,7 @@ public class MapController extends Controller implements IMapController
 			
 			StartMove(state.GetPieceType());
 			
-			if (wasSetup != isSetup)
+			if (wasSetup && !isSetup)
 				ClientGame.getGame().endTurn();
 		}
 	}	
@@ -242,26 +243,49 @@ public class MapController extends Controller implements IMapController
 		@Override
 		public void alert()
 		{
+			
+		}
+	};
+	
+	private ModelObserver stateObserver = new ModelObserver()
+	{
+		@Override
+		public void alert()
+		{
 			TurnState gameState = ClientGame.getGame().getTurnState();
 			
-			if (gameState == null)
-				gameState = TurnState.WAITING;
+			System.out.print("Map controller handling state: ");
+			System.out.println(gameState.toString());
+			
+			boolean setup = false;
 			
 			switch (gameState)
 			{
 			case PLACING_PIECE:
-				//TODO Need way of figuring out what piece is being placed.
+				state = new NormalState(ClientGame.getGame().myPlayerLastPiece());
+				break;
+			case ROAD_BUILDER:
+				state = new NormalState(PieceType.ROAD);
 				break;
 			case FIRST_ROUND_MY_TURN:
-				state = new SettlementSetupState();
-				break;
 			case SECOND_ROUND_MY_TURN:
-				state = new SettlementSetupState();
+				if (!state.IsSetup())
+					state = new SettlementSetupState();
+				//No break desired. This is intended to drop through.
+			case FIRST_ROUND_WAITING:
+			case SECOND_ROUND_WAITING:
+				setup = true;
+				break;
+			case SOLIDER_CARD:
+			case ROBBING:
+				state = new NormalState(PieceType.ROBBER);
 				break;
 			default:
 				state = new NormalState(PieceType.NONE);
 				break;
 			}
+			
+			ClientGame.getGame().GetMapModel().SetupPhase(setup);
 			
 			StartMove(state.GetPieceType());
 			StartDrag(!state.IsSetup());

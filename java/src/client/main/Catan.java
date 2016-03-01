@@ -16,18 +16,16 @@ import client.base.*;
 @SuppressWarnings("serial")
 public class Catan extends JFrame
 {
-	
 	private CatanPanel catanPanel;
 	
-	public Catan()
+	public Catan(String host, int port)
 	{
-		
 		client.base.OverlayView.setWindow(this);
 		
 		this.setTitle("Settlers of Catan");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-		RealServerProxy sp = new RealServerProxy();
+		RealServerProxy sp = new RealServerProxy(host, port);
 		ClientGame.startGameWithProxy(sp);
 		
 		catanPanel = new CatanPanel();
@@ -48,6 +46,15 @@ public class Catan extends JFrame
 	
 	public static void main(final String[] args)
 	{
+		String host = "localhost";
+		int port = 8081;
+		
+		if (args.length == 2)
+		{
+			host = args[0];
+			port = Integer.parseInt(args[1]);
+		}
+		
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -57,10 +64,15 @@ public class Catan extends JFrame
 			e.printStackTrace();
 		}
 		
+		Run(host, port);
+	}
+	
+	private static void Run(final String host, final int port)
+	{
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
 			{
-				new Catan();
+				new Catan(host, port);
 				
 				PlayerWaitingView playerWaitingView = new PlayerWaitingView();
 				final PlayerWaitingController playerWaitingController = new PlayerWaitingController(
@@ -106,7 +118,6 @@ public class Catan extends JFrame
 				loginController.start();
 			}
 		});
-	}
-	
+	}	
 }
 
