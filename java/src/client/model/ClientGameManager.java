@@ -57,7 +57,7 @@ public class ClientGameManager extends GameManager
 	{
 		super();
 		this.proxy = clientProxy;
-		turnState = null;
+		turnState = TurnState.WAITING_FOR_PLAYERS;
 	}
 
 	/**
@@ -866,6 +866,10 @@ public class ClientGameManager extends GameManager
 						this.turnState = TurnState.PLAYING;
 					else
 						this.turnState = TurnState.WAITING;
+					
+					if (this.playerIndexSendingOffer == this.myPlayerIndex)
+						this.turnState = TurnState.OFFERED_TRADE;
+					
 					break;
 				default:
 					this.turnState = TurnState.WAITING;
