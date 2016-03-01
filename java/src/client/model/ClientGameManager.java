@@ -7,6 +7,8 @@ import java.util.List;
 import client.data.ClientDataTranslator;
 import client.data.GameInfo;
 import client.data.PlayerInfo;
+import client.data.RobPlayerInfo;
+import client.map.RobView;
 import client.networking.RealServerProxy;
 import client.networking.ServerProxy;
 import client.networking.ServerProxyException;
@@ -22,8 +24,6 @@ import shared.model.GameManager;
 import shared.model.ModelException;
 import shared.model.Player;
 import shared.model.Translate;
-import shared.model.map.Coordinate;
-
 import shared.definitions.*;
 import shared.locations.*;
 import shared.model.*;
@@ -547,26 +547,65 @@ public class ClientGameManager extends GameManager
 		}
 	}
 	
-	public void PlaceRobber(int victimIndex, Coordinate point){
+	public void PlaceRobber(Coordinate point)
+	{
+		try
+		{
+			map.PlaceRobber(point);
+			
+			Iterator<CatanColor> colors = map.GetOccupiedVertices(point);
+			PlayerInfo[] infoArray = allCurrentPlayers();
+			
+			List<PlayerInfo> toRob = new ArrayList<PlayerInfo>(3);
+			List<Player> playerInfo = new ArrayList<Player>(3);
+			while (colors.hasNext())
+			{
+				CatanColor color = colors.next();
+				int index = getPlayerIndexByColor(color);
+				
+				toRob.add(infoArray[index]);
+				playerInfo.add(players.get(index));
+			}
+			
+			RobPlayerInfo[] robArray = new RobPlayerInfo[toRob.size()];
+			for (int i = 0; i < toRob.size(); i++)
+			{
+				PlayerInfo player = toRob.get(i);
+				
+				robArray[i] = new RobPlayerInfo(player);
+				robArray[i].setNumCards(playerInfo.get(i).totalResources());
+			}
+			
+			RobView view = new RobView();
+			view.setPlayers(robArray);
+			view.showModal();
+		} 
+		catch (MapException e) 
+		{
+			//This shouldn't occur. The map should verify it.
+			e.printStackTrace();
+		}
+	}
+	
+	public void RobVictim(int victimIndex)
+	{
 		if (super.CanPlaceRobber(this.myPlayerIndex))
 		{
-			
 			try 
 			{
 				super.placeRobber(this.myPlayerIndex);
-				HexLocation location = Translate.GetHexLocation(point);
+				
+				turnState = TurnState.PLAYING;
+				notifyCenter.notify(ModelNotification.STATE);
+				
+				HexLocation location = Translate.GetHexLocation(map.GetRobberLocation().getPoint());
 				NetGameModel newmodel = this.proxy.robPlayer(victimIndex, location);
 				this.reloadGame(newmodel,true);
 			} 
-			catch (ServerProxyException e) 
+			catch (ServerProxyException | ModelException e) 
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-			catch (ModelException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 

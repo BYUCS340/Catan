@@ -155,9 +155,7 @@ public class MapController extends Controller implements IMapController
 	@Override
 	public void PlaceRobber(Coordinate point)
 	{
-		//TODO figure out the victim
-		ClientGame.getGame().PlaceRobber(1,point);
-		
+		ClientGame.getGame().PlaceRobber(point);	
 	}
 
 	@Override
@@ -256,36 +254,35 @@ public class MapController extends Controller implements IMapController
 		{
 			TurnState gameState = ClientGame.getGame().getTurnState();
 			
-			if (gameState == null)
-				gameState = TurnState.WAITING;
+			System.out.print("Map controller handling state: ");
+			System.out.println(gameState.toString());
 			
 			boolean setup = false;
 			
 			switch (gameState)
 			{
-				case PLACING_PIECE:
-					state = new NormalState(ClientGame.getGame().myPlayerLastPiece());
-					break;
-				case ROAD_BUILDER:
-					state = new NormalState(PieceType.ROAD);
-					break;
-				case FIRST_ROUND_MY_TURN:
-				case SECOND_ROUND_MY_TURN:
-					if (!state.IsSetup())
-						state = new SettlementSetupState();
-					//No break desired. This is intended to drop through.
-				case FIRST_ROUND_WAITING:
-				case SECOND_ROUND_WAITING:
-					setup = true;
-					break;
-				case SOLIDER_CARD:
-				case ROBBING:
-					System.out.println(">>>We robbing");
-					state = new RobbingState();
-					break;
-				default:
-					state = new NormalState(PieceType.NONE);
-					break;
+			case PLACING_PIECE:
+				state = new NormalState(ClientGame.getGame().myPlayerLastPiece());
+				break;
+			case ROAD_BUILDER:
+				state = new NormalState(PieceType.ROAD);
+				break;
+			case FIRST_ROUND_MY_TURN:
+			case SECOND_ROUND_MY_TURN:
+				if (!state.IsSetup())
+					state = new SettlementSetupState();
+				//No break desired. This is intended to drop through.
+			case FIRST_ROUND_WAITING:
+			case SECOND_ROUND_WAITING:
+				setup = true;
+				break;
+			case SOLIDER_CARD:
+			case ROBBING:
+				state = new NormalState(PieceType.ROBBER);
+				break;
+			default:
+				state = new NormalState(PieceType.NONE);
+				break;
 			}
 			
 			ClientGame.getGame().GetMapModel().SetupPhase(setup);

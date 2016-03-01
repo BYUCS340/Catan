@@ -476,7 +476,9 @@ public class GameManager implements ModelSubject
 			throw new ModelException("Player can't place robber right now");
 		//mark that the robber has been moved
 		this.playerCanMoveRobber = -1;
-		if (!gameState.stopRobbing()) throw new ModelException("Can't stop robbing.");
+		
+		if (!gameState.stopRobbing())
+			throw new ModelException("Can't stop robbing.");
 	}
 	
 	//--------------------------------------------------------------------------

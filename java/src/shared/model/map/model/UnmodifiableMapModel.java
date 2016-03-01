@@ -181,6 +181,12 @@ public class UnmodifiableMapModel implements IMapModel
 	{
 		return model.GetVertices(vertex);
 	}
+	
+	@Override
+	public Iterator<CatanColor> GetOccupiedVertices(Coordinate hexPoint)
+	{
+		return model.GetOccupiedVertices(hexPoint);
+	}
 
 	@Override
 	public Iterator<Entry<Edge, Hex>> GetPorts()

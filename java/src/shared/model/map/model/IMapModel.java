@@ -214,6 +214,13 @@ public interface IMapModel
 	public Iterator<Vertex> GetVertices(Vertex vertex);
 	
 	/**
+	 * Gets the colors around a hex coordinate point.
+	 * @param hexPoint The hex coordinate location.
+	 * @return The surrounding colors.
+	 */
+	public Iterator<CatanColor> GetOccupiedVertices(Coordinate hexPoint);
+	
+	/**
 	 * Gets all the ports.
 	 * @return All the ports.
 	 */
