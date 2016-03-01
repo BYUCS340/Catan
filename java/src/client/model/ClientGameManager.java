@@ -177,7 +177,7 @@ public class ClientGameManager extends GameManager
 			while(iter.hasNext())
 			{
 				PlayerInfo newplay = iter.next();
-				System.out.println("Player: "+newplay.getName()+" at index:"+newplay.getPlayerIndex());
+				System.out.println("YOU:    "+proxy.getUserId()+" Player: "+newplay.getName()+":"+newplay.getId()+" at index:"+newplay.getPlayerIndex());
 				if (newplay.getId() == proxy.getUserId())
 				{
 					System.out.println("Joined with player index:"+newplay.getPlayerIndex());
@@ -191,10 +191,14 @@ public class ClientGameManager extends GameManager
 			//If we are rejoining then don't add ourselves
 			if (!rejoining)
 			{
+				this.myPlayerIndex = newplayers.size();
 				newplayers.add(new Player(proxy.getUserName(), players.size(), color, true));
-				this.myPlayerIndex = players.size();
+				System.out.println("Joined with player index:"+this.myPlayerIndex);
+				
 			}
 			this.SetPlayers(newplayers);
+			
+			System.out.println("Joiing a game with playerIndex:"+this.myPlayerIndex);
 			ClientGame.startPolling();
 			//If we can't joining a game then an exception will be thrown
 
@@ -640,11 +644,11 @@ public class ClientGameManager extends GameManager
 		{
 			return;
 		}
-		System.out.print("\n-----------------------------------------\nRefresh: "+this.refreshCount+":");
-		if (forced)
+		System.out.println("\n--------------------- Refresh: "+this.refreshCount+" -------------------------");
+		/*if (forced)
 			System.out.println("Forced update of game");
 		else
-			System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());
+			System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());*/
 		
 		
 
@@ -665,6 +669,7 @@ public class ClientGameManager extends GameManager
 				Player p = iter.next();
 				if (p.playerID() == this.proxy.getUserId())
 				{
+					System.out.println("Setting player ID to be "+p.playerIndex());
 					this.myPlayerIndex = p.playerIndex();
 					break;
 				}
@@ -770,7 +775,7 @@ public class ClientGameManager extends GameManager
 		{
 			gameState = newgamestate;
 			//handle the logic from this
-			System.out.println("STATE Refreshed to "+newstate);
+			System.out.println("STATE Refreshed to "+newstate+ " current player:"+newgamestate.activePlayerIndex);
 			System.out.println("Old TS: "+oldTurnState+" New: "+this.turnState);
 			this.notifyCenter.notify(ModelNotification.STATE);
 			
@@ -821,7 +826,6 @@ public class ClientGameManager extends GameManager
 			this.notifyCenter.notify(ModelNotification.ALL);
 		
 		this.version = model.getVersion();
-		System.out.println("Refresh finished");
 		//throw new ModelException();
 	}
 
