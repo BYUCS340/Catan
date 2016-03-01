@@ -453,12 +453,13 @@ public class ClientGameManager extends GameManager
 	public boolean PlayYearOfPlenty(ResourceType resource1, ResourceType resource2)
 	{
 		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.ROAD_BUILD))
-			return;
+			return false;
 		try 
 		{
 			//TODO implement
 			NetGameModel model = proxy.yearOfPlentyCard(resource1, resource2);
 			this.reloadGame(model, true);
+			return true;
 		} 
 		catch (ModelException e) 
 		{
@@ -468,6 +469,7 @@ public class ClientGameManager extends GameManager
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	
