@@ -329,12 +329,13 @@ public class ClientGameManager extends GameManager
 	/**
 	 * Buys a dev card for the current player
 	 */
-	public void BuyDevCard()
+	public boolean BuyDevCard()
 	{
 		try
 		{
 			NetGameModel newmodel = proxy.buyDevCard();
 			this.reloadGame(newmodel,true);
+			return true;
 		} 
 		catch (ServerProxyException e) 
 		{
@@ -346,21 +347,23 @@ public class ClientGameManager extends GameManager
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	/**
 	 * Plays the monopoly card for the current player
 	 * @param resource
 	 */
-	public void PlayMonopoly(ResourceType resource)
+	public boolean PlayMonopoly(ResourceType resource)
 	{
 		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.MONOPOLY))
-			return;
+			return false;
 		try 
 		{
 			this.playDevCard(this.myPlayerIndex, DevCardType.MONOPOLY);
 			NetGameModel model = proxy.monopolyCard(resource);
 			this.reloadGame(model, true);
+			return true;
 		} 
 		catch (ModelException e) 
 		{
@@ -370,30 +373,37 @@ public class ClientGameManager extends GameManager
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	/**
 	 * Plays the monopoly card for the current player
 	 * @param resource
 	 */
-	public void PlaySolider()
+	public boolean PlaySolider()
 	{
+		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.SOLDIER))
+			return false;
 		System.out.println("NO SOLIDER PLAYED");
 		//TODO IMPLEMENT
+		this.turnState = TurnState.SOLIDER_CARD;
+		this.notifyCenter.notify(ModelNotification.STATE);
+		return true;
 	}
 	
 	/**
 	 * Plays the monument card for the current player
 	 * @param resource
 	 */
-	public void PlayMonument()
+	public boolean PlayMonument()
 	{
 		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.MONUMENT))
-			return;
+			return false;
 		try 
 		{
 			NetGameModel model = proxy.monumentCard();
 			this.reloadGame(model, true);
+			return true;
 		} 
 		catch (ModelException e) 
 		{
@@ -403,16 +413,21 @@ public class ClientGameManager extends GameManager
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	/**
 	 * Plays the road builder card for the current player
 	 * @param resource
 	 */
-	public void PlayRoadBuilder()
+	public boolean PlayRoadBuilder()
 	{
 		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.ROAD_BUILD))
-			return;
+			return false;
+	
+		this.turnState = TurnState.ROAD_BUILDER;
+		this.notifyCenter.notify(ModelNotification.STATE);
+		return true;
 		/*try 
 		{
 			
@@ -435,7 +450,7 @@ public class ClientGameManager extends GameManager
 	 * Plays the road builder card for the current player
 	 * @param resource
 	 */
-	public void PlayYearOfPlenty(ResourceType resource1, ResourceType resource2)
+	public boolean PlayYearOfPlenty(ResourceType resource1, ResourceType resource2)
 	{
 		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.ROAD_BUILD))
 			return;
@@ -925,7 +940,6 @@ public class ClientGameManager extends GameManager
 		
 		//  give the player the bought resource
 		gameBank.getResource(outputResource, 1);
-		this.players.get(this.CurrentPlayersTurn()).playerBank.giveResource(outputResource, 1);
 		this.players.get(this.myPlayerIndex).playerBank.giveResource(outputResource, 1);
 		
 		this.notifyCenter.notify(ModelNotification.RESOURCES);

@@ -85,24 +85,30 @@ public class DevCardController extends Controller implements IDevCardController,
 	public void playMonopolyCard(ResourceType resource)
 	{
 		System.out.println("Playing Monopoly");
-		ClientGame.getGame().PlayMonopoly(resource);
+		if (ClientGame.getGame().PlayMonopoly(resource))
+			cancelPlayCard();
 	}
 
 	@Override
 	public void playMonumentCard()
 	{
-			ClientGame.getGame().PlayMonument();
+		if (ClientGame.getGame().PlayMonument())
+			cancelPlayCard();
 	}
 
 	@Override
 	public void playRoadBuildCard()
 	{
+		if (ClientGame.getGame().PlayRoadBuilder())
+			cancelPlayCard();
 		roadAction.execute();
 	}
 
 	@Override
 	public void playSoldierCard()
 	{
+		if (ClientGame.getGame().PlayRoadBuilder())
+			cancelPlayCard();
 		soldierAction.execute();
 	}
 
