@@ -115,7 +115,8 @@ public class DevCardController extends Controller implements IDevCardController,
 	@Override
 	public void playYearOfPlentyCard(ResourceType resource1, ResourceType resource2)
 	{
-			ClientGame.getGame().PlayYearOfPlenty(resource1, resource2);
+		if (ClientGame.getGame().PlayYearOfPlenty(resource1, resource2))
+			cancelPlayCard();
 	}
 
 	@Override
