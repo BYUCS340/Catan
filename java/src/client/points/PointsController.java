@@ -26,7 +26,8 @@ public class PointsController extends Controller implements IPointsController, M
 		super(view);
 		
 		setFinishedView(finishedView);
-		ClientGame.getGame().startListening(this, ModelNotification.ALL );
+		ClientGame.getGame().startListening(this, ModelNotification.STATE );
+		ClientGame.getGame().startListening(this, ModelNotification.SCORE );
 		
 		updateFromModel();
 	}
