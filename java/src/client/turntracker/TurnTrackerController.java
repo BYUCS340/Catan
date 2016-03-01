@@ -173,7 +173,8 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		@Override
 		public void alert()
 		{
-			String soundName = "images"+File.separator+"yourTurn.wav";    
+			if (ClientGame.getGame().getChat().lastChatter() == ClientGame.getGame().myPlayerIndex()) return;
+			String soundName = "images"+File.separator+"chat.wav";    
 			AudioInputStream audioInputStream;
 			audioInputStream = null;
 			try {
