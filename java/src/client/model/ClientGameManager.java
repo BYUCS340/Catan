@@ -921,11 +921,12 @@ public class ClientGameManager extends GameManager
 		
 		//  give bank the player's resources
 		gameBank.giveResource(inputResource, ratio);
-		this.players.get(this.CurrentPlayersTurn()).playerBank.getResource(inputResource, ratio);
+		this.players.get(this.myPlayerIndex).playerBank.getResource(inputResource, ratio);
 		
 		//  give the player the bought resource
 		gameBank.getResource(outputResource, 1);
 		this.players.get(this.CurrentPlayersTurn()).playerBank.giveResource(outputResource, 1);
+		this.players.get(this.myPlayerIndex).playerBank.giveResource(outputResource, 1);
 		
 		this.notifyCenter.notify(ModelNotification.RESOURCES);
 		this.proxy.maritimeTrade(ratio, inputResource, outputResource);
