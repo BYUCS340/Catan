@@ -113,7 +113,7 @@ public class Coordinate {
 	 */
 	public boolean isLeftHandCoordinate()
 	{
-		return (x + y) % 2 == 1;
+		return Math.abs((x + y) % 2) == 1;
 	}
 	
 	/**
