@@ -22,4 +22,9 @@ public class RoadSetupState implements IMapState
 		return true;
 	}
 
+	@Override
+	public Boolean AllowCancel()
+	{
+		return false;
+	}
 }

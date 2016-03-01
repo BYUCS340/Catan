@@ -73,6 +73,7 @@ public class CityDropObject extends DropObject
 	@Override
 	public void Click()
 	{
+		controller.CancelMove();
 		controller.PlaceCity(vertex);
 	}
 }

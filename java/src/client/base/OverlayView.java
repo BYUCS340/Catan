@@ -176,7 +176,12 @@ public class OverlayView extends PanelView implements IOverlayView
 			
 			this.overlayPanel = overlayPanel;
 		}
+
+		@Override
+		public String toString() 
+		{
+			return overlayView.toString();
+		}
 	}
-	
 }
 

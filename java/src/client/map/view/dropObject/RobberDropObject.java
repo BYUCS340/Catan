@@ -48,6 +48,7 @@ public class RobberDropObject extends DropObject
 	@Override
 	public void Click()
 	{
+		controller.CancelMove();
 		controller.PlaceRobber(hexPoint);
 	}
 }

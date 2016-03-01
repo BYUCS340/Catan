@@ -76,6 +76,7 @@ public class RoadDropObject extends DropObject
 	@Override
 	public void Click()
 	{
+		controller.CancelMove();
 		controller.PlaceRoad(p1, p2);
 	}
 }

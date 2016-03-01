@@ -42,8 +42,8 @@ public class MapController extends Controller implements IMapController
 		this.dropObject = new NoDrop();
 		this.state = new NormalState(PieceType.NONE);
 		
-		ClientGame.getGame().startListening(modelObserver, ModelNotification.MAP);
-		ClientGame.getGame().startListening(stateObserver, ModelNotification.STATE);
+		ClientGame.getGame().startListening(observer, ModelNotification.MAP);
+		ClientGame.getGame().startListening(observer, ModelNotification.STATE);
 	}
 	
 	public IMapView getView()
@@ -237,25 +237,13 @@ public class MapController extends Controller implements IMapController
 			break;
 		}
 	}
-
-	private ModelObserver modelObserver = new ModelObserver()
-	{
-		@Override
-		public void alert()
-		{
-			
-		}
-	};
 	
-	private ModelObserver stateObserver = new ModelObserver()
+	private ModelObserver observer = new ModelObserver()
 	{
 		@Override
 		public void alert()
 		{
 			TurnState gameState = ClientGame.getGame().getTurnState();
-			
-			System.out.print("Map controller handling state: ");
-			System.out.println(gameState.toString());
 			
 			boolean setup = false;
 			
@@ -269,6 +257,8 @@ public class MapController extends Controller implements IMapController
 				break;
 			case FIRST_ROUND_MY_TURN:
 			case SECOND_ROUND_MY_TURN:
+				//Sometimes we get multiple alerts. Only change state if we aren't
+				//already in a placement state.
 				if (!state.IsSetup())
 					state = new SettlementSetupState();
 				//No break desired. This is intended to drop through.
@@ -288,7 +278,7 @@ public class MapController extends Controller implements IMapController
 			ClientGame.getGame().GetMapModel().SetupPhase(setup);
 			
 			StartMove(state.GetPieceType());
-			StartDrag(!state.IsSetup());
+			StartDrag(state.AllowCancel());
 		}
 	};
 }
