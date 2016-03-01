@@ -23,11 +23,12 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 /**
  * Implementation for the turn tracker controller
  */
-public class TurnTrackerController extends Controller implements ITurnTrackerController, ModelObserver {
-	
+public class TurnTrackerController extends Controller implements ITurnTrackerController, ModelObserver 
+{	
 	private int isInitializedTo;
 
-	public TurnTrackerController(ITurnTrackerView view) {
+	public TurnTrackerController(ITurnTrackerView view) 
+	{
 		super(view);
 		ClientGame.getGame().startListening(this, ModelNotification.STATE);
 		ClientGame.getGame().startListening(this, ModelNotification.SCORE);
@@ -38,13 +39,14 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	}
 	
 	@Override
-	public ITurnTrackerView getView() {
-		
+	public ITurnTrackerView getView() 
+	{	
 		return (ITurnTrackerView)super.getView();
 	}
 
 	@Override
-	public void endTurn() {
+	public void endTurn() 
+	{
 		ClientGame.getGame().endTurn();
 	}
 	
@@ -62,7 +64,8 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		getView().setLocalPlayerColor(myColor);
 	}
 	
-	private void updateFromModel() {
+	private void updateFromModel() 
+	{
 		ClientGameManager game = ClientGame.getGame();
 		int myIndex = game.myPlayerIndex();
 		VictoryPointManager vp = game.getVictoryPointManager();
@@ -111,27 +114,18 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			String soundName = "images"+File.separator+"yourTurn.wav";    
 			AudioInputStream audioInputStream;
 			audioInputStream = null;
-			try {
+			try 
+			{
 				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
-			} catch (UnsupportedAudioFileException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			Clip clip;
-			try {
-				clip = AudioSystem.getClip();
+				
+				Clip clip = AudioSystem.getClip();
 				clip.open(audioInputStream);
 				clip.start();
-			} catch (LineUnavailableException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
 			}
-			catch (IOException e) {
-				// TODO Auto-generated catch block
+			catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
+			{
 				e.printStackTrace();
-			}
-			
+			}	
 		}
 
 
@@ -159,13 +153,10 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		ClientGameManager game = ClientGame.getGame();
 		
 		//OJO if the version number wraps around to -1, THIS WILL NOT WORK
-		//System.out.println("Trying to update on turn tracker");
 		if(game.hasGameStarted())
 		{
-			//System.out.println("Update on turn tracker");
 			this.updateFromModel();
 		}
-
 	}
 	
 	private ModelObserver chatObserver = new ModelObserver()
@@ -173,32 +164,25 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		@Override
 		public void alert()
 		{
-			if (ClientGame.getGame().getChat().lastChatter() == ClientGame.getGame().myPlayerIndex()) return;
-			String soundName = "images"+File.separator+"chat.wav";    
+			if (ClientGame.getGame().getChat().lastChatter() == ClientGame.getGame().myPlayerIndex()) 
+				return;
+			
+			String soundName = "images" + File.separator + "chat.wav";    
 			AudioInputStream audioInputStream;
 			audioInputStream = null;
-			try {
+			try 
+			{
 				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
-			} catch (UnsupportedAudioFileException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			Clip clip;
-			try {
-				clip = AudioSystem.getClip();
+				
+				Clip clip = AudioSystem.getClip();
 				clip.open(audioInputStream);
 				clip.start();
-			} catch (LineUnavailableException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
 			}
-			catch (IOException e) {
-				// TODO Auto-generated catch block
+			catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
+			{
 				e.printStackTrace();
 			}
 		}
 	};
-
 }
 
