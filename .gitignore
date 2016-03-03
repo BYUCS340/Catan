@@ -135,3 +135,8 @@ java/dist/catan-client.jar
 java/dist/catan-server.jar
 
 *.log
+tester/*
+
+tester/images/building/card.jpg
+
+tester.zip
