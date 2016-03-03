@@ -40,6 +40,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		giveResource = null;
 		resourcesPlayerCanGive = new ArrayList<ResourceType>();
 		resourcesPlayerCanGet = new ArrayList<ResourceType>();
+		getTradeView().enableMaritimeTrade(false);
 		ClientGame.getGame().startListening(this, ModelNotification.STATE);
 	}
 	
