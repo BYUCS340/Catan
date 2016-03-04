@@ -1,8 +1,5 @@
 package client.join;
 
-import shared.definitions.CatanColor;
-import shared.networking.transport.NetGame;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
@@ -10,11 +7,18 @@ import java.util.List;
 
 import javax.swing.Timer;
 
-import client.base.*;
-import client.data.*;
-import client.misc.*;
+import client.base.Controller;
+import client.base.IAction;
+import client.data.ClientDataTranslator;
+import client.data.GameInfo;
+import client.data.PlayerInfo;
+import client.misc.IMessageView;
 import client.model.ClientGame;
 import client.networking.ServerProxyException;
+import shared.definitions.CatanColor;
+import shared.model.ModelObserver;
+import shared.networking.transport.NetGame;
+import shared.networking.transport.NetPlayer;
 
 
 /**
@@ -27,6 +31,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private IMessageView messageView;
 	private IAction joinAction;
 	private Timer timer;
+	List<NetGame> allGames;
 
 
 	/**
@@ -121,7 +126,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	{
 		try
 		{
-			List<NetGame> allGames = ClientGame.getCurrentProxy().listGames();
+			allGames = ClientGame.getCurrentProxy().listGames();
 
 			//Get the number of players currently joined to a game
 			int currentPlayerCount = 0;
@@ -209,6 +214,9 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		{
 			joinGame(mycolor);
 		}
+		
+		//attach as listener
+		
 	}
 
 	@Override
@@ -247,13 +255,45 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		boolean showing = this.getJoinGameView().isModalShowing() && !this.getNewGameView().isModalShowing() && !this.getSelectColorView().isModalShowing();
-		if (showing)
+		boolean jGameShowing = this.getJoinGameView().isModalShowing() && !this.getNewGameView().isModalShowing() && !this.getSelectColorView().isModalShowing();
+		if (jGameShowing)
 			this.getJoinGameView().closeModal();
 
 		this.refreshGameList();
-		if (showing)
+		if (jGameShowing)
 			this.getJoinGameView().showModal();
 
+		
+		//refresh the colors panel to avoid race conditions where 2 players get the same color
+		boolean colorsShowing = this.getSelectColorView().isModalShowing();
+		if(colorsShowing)
+		{
+			this.getSelectColorView().closeModal();
+		}
+		
+		NetGame mGame = null;
+		if(lastGameSelected != null)
+		{
+			for(NetGame g: allGames)
+			{
+				if(g.getId() == lastGameSelected.getId())
+					mGame = g;
+			}
+			
+			//disable all of the colors from the matching game
+			if(mGame != null){
+				List<NetPlayer> players = mGame.getNetPlayers();
+				for (int i=0;i< players.size(); i++)
+				{
+					NetPlayer play = players.get(i);
+					getSelectColorView().setColorEnabled(play.getColor(), false);
+				}
+			}
+		}
+		if(colorsShowing)
+		{
+			this.getSelectColorView().showModal();
+		}
+		
 	}
 }

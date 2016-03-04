@@ -23,6 +23,11 @@ public class RobPlayerInfo extends PlayerInfo
 		super();
 	}
 	
+	public RobPlayerInfo(PlayerInfo info)
+	{
+		super(info.getName(), info.getColor(), info.getPlayerIndex());
+	}
+	
 	public int getNumCards()
 	{
 		return numCards;

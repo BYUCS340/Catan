@@ -470,6 +470,33 @@ public class MapModel implements IMapModel {
 	}
 	
 	@Override
+	public Iterator<CatanColor> GetOccupiedVertices(Coordinate hexPoint)
+	{
+		Set<CatanColor> color = new HashSet<CatanColor>();
+		
+		try 
+		{
+			Hex hex = GetHex(hexPoint);
+			
+			Iterator<Vertex> vertices = GetVertices(hex);
+			while (vertices.hasNext())
+			{
+				Vertex vertex = vertices.next();
+				
+				if (vertex.getType() != PieceType.NONE)
+					color.add(vertex.getColor());
+			}
+		}
+		catch (MapException e) 
+		{
+			//Shouldn't occur
+			e.printStackTrace();
+		}
+		
+		return java.util.Collections.unmodifiableSet(color).iterator();
+	}
+	
+	@Override
 	public Iterator<Entry<Edge, Hex>> GetPorts()
 	{
 		return ports.GetPorts();

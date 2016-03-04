@@ -9,4 +9,6 @@ public interface IMapState
 	public IMapState GetNextMapState();
 	
 	public Boolean IsSetup();
+	
+	public Boolean AllowCancel();
 }

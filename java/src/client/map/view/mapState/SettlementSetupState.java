@@ -16,11 +16,15 @@ public class SettlementSetupState implements IMapState
 		return new RoadSetupState();
 	}
 
-	@Override
+	@Override 
 	public Boolean IsSetup()
 	{
 		return true;
 	}
 	
-
+	@Override
+	public Boolean AllowCancel()
+	{
+		return false;
+	}
 }

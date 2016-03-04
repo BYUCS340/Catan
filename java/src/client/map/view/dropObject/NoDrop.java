@@ -28,7 +28,8 @@ public class NoDrop extends DropObject
 	}
 
 	@Override
-	public void Click() {
+	public void Click() 
+	{
 		return;
 	}
 }

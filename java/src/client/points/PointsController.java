@@ -26,7 +26,8 @@ public class PointsController extends Controller implements IPointsController, M
 		super(view);
 		
 		setFinishedView(finishedView);
-		ClientGame.getGame().startListening(this, ModelNotification.STATE);
+		ClientGame.getGame().startListening(this, ModelNotification.STATE );
+		ClientGame.getGame().startListening(this, ModelNotification.SCORE );
 		
 		updateFromModel();
 	}
@@ -57,7 +58,7 @@ public class PointsController extends Controller implements IPointsController, M
 			
 			//If we're the winner, show the right modal!
 			int winnerIdx = game.getVictoryPointManager().winner();
-			this.getFinishedView().setWinner(game.getPlayerNameByIndex(winnerIdx), winnerIdx == game.getVictoryPointManager().winner());
+			this.getFinishedView().setWinner(game.getPlayerNameByIndex(winnerIdx), winnerIdx == game.myPlayerIndex());
 			this.getFinishedView().showModal();
 		}
 		

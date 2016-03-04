@@ -11,6 +11,7 @@ import java.util.*;
 import shared.definitions.PieceType;
 import client.base.*;
 import client.data.*;
+import client.model.ClientGame;
 
 
 /**
@@ -31,8 +32,8 @@ public class RobView extends OverlayView implements IRobView {
 	RobPlayerInfo[] victims;
 	private ArrayList<JButton> victimButtons;
 
-	public RobView() {
-		
+	public RobView() 
+	{	
 		this.setOpaque(true);
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createLineBorder(Color.black, BORDER_WIDTH));
@@ -66,35 +67,39 @@ public class RobView extends OverlayView implements IRobView {
 		this.add(buttonPanel, BorderLayout.CENTER);
 	}
 
-	private ActionListener actionListener = new ActionListener() {
+	private ActionListener actionListener = new ActionListener()
+	{
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			
-			if (e.getSource() == defaultButton) {
+		public void actionPerformed(ActionEvent e)
+		{	
+			if (e.getSource() == defaultButton) 
+			{
 				closeModal();
 			}
-			else{
-				
-				for(int i = 0; i < victimButtons.size(); i++){
-					if(e.getSource() == victimButtons.get(i)){
+			else
+			{	
+				for(int i = 0; i < victimButtons.size(); i++)
+				{
+					if(e.getSource() == victimButtons.get(i))
+					{
 						closeModal();
-						//TODO Figure out how this works.
-						//getController().robPlayer(victims[i]);
+						
+						ClientGame.getGame().RobVictim(victims[i].getPlayerIndex());
 					}
 				}
-				
 			}
 		}	
 	};
 
 	@Override
-	public IMapController getController() {
-
+	public IMapController getController() 
+	{
 		return (IMapController)super.getController();
 	}
 
 	@Override
-	public void setPlayers(RobPlayerInfo[] candidateVictims) {
+	public void setPlayers(RobPlayerInfo[] candidateVictims) 
+	{
 		victims = candidateVictims;
 		
 		int numberOfPlayers = 0;
@@ -130,7 +135,6 @@ public class RobView extends OverlayView implements IRobView {
 			}
 		}
 	}
-
 }
 
 

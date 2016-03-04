@@ -42,8 +42,8 @@ public class MapController extends Controller implements IMapController
 		this.dropObject = new NoDrop();
 		this.state = new NormalState(PieceType.NONE);
 		
-		ClientGame.getGame().startListening(modelObserver, ModelNotification.MAP);
-		ClientGame.getGame().startListening(stateObserver, ModelNotification.STATE);
+		ClientGame.getGame().startListening(observer, ModelNotification.MAP);
+		ClientGame.getGame().startListening(observer, ModelNotification.STATE);
 	}
 	
 	public IMapView getView()
@@ -155,9 +155,7 @@ public class MapController extends Controller implements IMapController
 	@Override
 	public void PlaceRobber(Coordinate point)
 	{
-		//TODO figure out the victim
-		ClientGame.getGame().PlaceRobber(1,point);
-		
+		ClientGame.getGame().PlaceRobber(point);	
 	}
 
 	@Override
@@ -239,35 +237,28 @@ public class MapController extends Controller implements IMapController
 			break;
 		}
 	}
-
-	private ModelObserver modelObserver = new ModelObserver()
-	{
-		@Override
-		public void alert()
-		{
-			
-		}
-	};
 	
-	private ModelObserver stateObserver = new ModelObserver()
+	private ModelObserver observer = new ModelObserver()
 	{
 		@Override
 		public void alert()
 		{
 			TurnState gameState = ClientGame.getGame().getTurnState();
 			
-			if (gameState == null)
-				gameState = TurnState.WAITING;
-			
 			boolean setup = false;
 			
 			switch (gameState)
 			{
-				case PLACING_PIECE:
-					state = new NormalState(ClientGame.getGame().myPlayerLastPiece());
-					break;
+			case PLACING_PIECE:
+				state = new NormalState(ClientGame.getGame().myPlayerLastPiece());
+				break;
+			case ROAD_BUILDER:
+				state = new NormalState(PieceType.ROAD);
+				break;
 			case FIRST_ROUND_MY_TURN:
 			case SECOND_ROUND_MY_TURN:
+				//Sometimes we get multiple alerts. Only change state if we aren't
+				//already in a placement state.
 				if (!state.IsSetup())
 					state = new SettlementSetupState();
 				//No break desired. This is intended to drop through.
@@ -275,9 +266,9 @@ public class MapController extends Controller implements IMapController
 			case SECOND_ROUND_WAITING:
 				setup = true;
 				break;
+			case SOLIDER_CARD:
 			case ROBBING:
-				System.out.println(">>>We robbing");
-				state = new RobbingState();
+				state = new NormalState(PieceType.ROBBER);
 				break;
 			default:
 				state = new NormalState(PieceType.NONE);
@@ -287,7 +278,7 @@ public class MapController extends Controller implements IMapController
 			ClientGame.getGame().GetMapModel().SetupPhase(setup);
 			
 			StartMove(state.GetPieceType());
-			StartDrag(!state.IsSetup());
+			StartDrag(state.AllowCancel());
 		}
 	};
 }
