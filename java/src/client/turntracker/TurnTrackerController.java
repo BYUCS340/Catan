@@ -133,8 +133,13 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			
 		}
 
-
-		if(game.CanFinishTurn() && currPlayerIndex == myIndex)
+		//check first to see if the game is over
+		// if so, don't let the player finish his turn
+		// because he shouldn't be playing the game anymore
+		if(game.getVictoryPointManager().anyWinner()){
+			this.getView().updateGameState("Game Over!", false);			
+		}
+		else if(game.CanFinishTurn() && currPlayerIndex == myIndex)
 		{
 			this.getView().updateGameState("Finish Turn", true);
 		}
