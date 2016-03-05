@@ -161,6 +161,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 				
 			}
 		}
+		System.out.println("Player with Trade offer: " + game.getPlayerIndexWithTradeOffer());
 		if(game.getPlayerIndexWithTradeOffer() == -1){
 			//  if there is no existing trade then close the waiting regardless, if it's open
 			if(this.getWaitOverlay().isModalShowing())
