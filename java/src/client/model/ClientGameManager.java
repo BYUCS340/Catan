@@ -570,12 +570,6 @@ public class ClientGameManager extends GameManager
 				}
 			}
 			
-			if (toRob.size() == 0)
-			{
-				RobVictim(-1);
-				return;
-			}
-			
 			RobPlayerInfo[] robArray = new RobPlayerInfo[toRob.size()];
 			for (int i = 0; i < toRob.size(); i++)
 			{
