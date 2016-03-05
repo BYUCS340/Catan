@@ -703,7 +703,7 @@ public class GameManager implements ModelSubject
 	}
 	
 	/**
-	 * Can do method for determinign wheter a player can martitime trade
+	 * Can do method for determining whether a player can maritime trade
 	 * @param playerIndex
 	 * @return
 	 */

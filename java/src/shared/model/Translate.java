@@ -151,6 +151,28 @@ public class Translate
 			{
 				player.playerBank.giveDevCard(DevCardType.YEAR_OF_PLENTY);
 			}
+			
+			//NEW DEV CARDS
+			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumMonopoly(); i++)
+			{
+				player.playerBank.giveNewDevCard(DevCardType.MONOPOLY);
+			}
+			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumMonument(); i++)
+			{
+				player.playerBank.giveNewDevCard(DevCardType.MONUMENT);
+			}
+			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumRoadBuilding(); i++)
+			{
+				player.playerBank.giveNewDevCard(DevCardType.ROAD_BUILD);
+			}
+			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumSoldier(); i++)
+			{
+				player.playerBank.giveNewDevCard(DevCardType.SOLDIER);
+			}
+			for (int i = 0; i < netPlayer.getNewNetDevCardList().getNumYearOfPlenty(); i++)
+			{
+				player.playerBank.giveNewDevCard(DevCardType.YEAR_OF_PLENTY);
+			}
 		}
 		catch (ModelException e)
 		{

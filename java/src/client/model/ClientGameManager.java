@@ -115,7 +115,18 @@ public class ClientGameManager extends GameManager
 	{
 		return this.players.get(this.myPlayerIndex).playerBank.getDevCardCount(type);
 	}
-
+	
+	
+	//TEMP DEV CARD STUFF  ===========================================
+	//This is needed to get the view right without allowing these
+	//cards to be played.
+	public int playerNewDevCardCount(DevCardType type)
+	{
+		return this.players.get(this.myPlayerIndex).playerBank.getNewDevCardCount(type);
+	}
+	//TEMP DEV CARD STUFF  ===========================================
+	
+	
 	/**
 	 * Gets the number of devCards for the current player
 	 * @param type

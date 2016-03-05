@@ -127,11 +127,27 @@ public class DevCardController extends Controller implements IDevCardController,
 	
 	public void updateDevCards()
 	{
-		getPlayCardView().setCardAmount(DevCardType.SOLDIER, ClientGame.getGame().playerDevCardCount(DevCardType.SOLDIER));
-		getPlayCardView().setCardAmount(DevCardType.YEAR_OF_PLENTY, ClientGame.getGame().playerDevCardCount(DevCardType.YEAR_OF_PLENTY));
-		getPlayCardView().setCardAmount(DevCardType.MONOPOLY, ClientGame.getGame().playerDevCardCount(DevCardType.MONOPOLY));
-		getPlayCardView().setCardAmount(DevCardType.ROAD_BUILD, ClientGame.getGame().playerDevCardCount(DevCardType.ROAD_BUILD));
-		getPlayCardView().setCardAmount(DevCardType.MONUMENT, ClientGame.getGame().playerDevCardCount(DevCardType.MONUMENT));
+		//get number of cards by type (including new cards)
+		int soldierCount = ClientGame.getGame().playerDevCardCount(DevCardType.SOLDIER) + ClientGame.getGame().playerNewDevCardCount(DevCardType.SOLDIER);
+		int yearOfPlentyCount = ClientGame.getGame().playerDevCardCount(DevCardType.YEAR_OF_PLENTY) + ClientGame.getGame().playerNewDevCardCount(DevCardType.YEAR_OF_PLENTY);
+		int monopolyCount = ClientGame.getGame().playerDevCardCount(DevCardType.MONOPOLY) + ClientGame.getGame().playerNewDevCardCount(DevCardType.MONOPOLY);
+		int roadBuildCount = ClientGame.getGame().playerDevCardCount(DevCardType.ROAD_BUILD) + ClientGame.getGame().playerNewDevCardCount(DevCardType.ROAD_BUILD);
+		int monumentCount = ClientGame.getGame().playerDevCardCount(DevCardType.MONUMENT) + ClientGame.getGame().playerNewDevCardCount(DevCardType.MONUMENT);
+		
+		//update view amounts (including new cards)
+		getPlayCardView().setCardAmount(DevCardType.SOLDIER, soldierCount);
+		getPlayCardView().setCardAmount(DevCardType.YEAR_OF_PLENTY, yearOfPlentyCount);
+		getPlayCardView().setCardAmount(DevCardType.MONOPOLY, monopolyCount);
+		getPlayCardView().setCardAmount(DevCardType.ROAD_BUILD, roadBuildCount);
+		getPlayCardView().setCardAmount(DevCardType.MONUMENT, monumentCount);
+		
+		//enable/disable (including only old cards)
+		int playerIndex = ClientGame.getGame().myPlayerIndex();
+		getPlayCardView().setCardEnabled(DevCardType.SOLDIER, ClientGame.getGame().CanUseSoldier(playerIndex));
+		getPlayCardView().setCardEnabled(DevCardType.YEAR_OF_PLENTY, ClientGame.getGame().CanUseYearOfPlenty(playerIndex));
+		getPlayCardView().setCardEnabled(DevCardType.MONOPOLY, ClientGame.getGame().CanUseMonopoly(playerIndex));
+		getPlayCardView().setCardEnabled(DevCardType.ROAD_BUILD, ClientGame.getGame().CanUseRoadBuilder(playerIndex));
+		getPlayCardView().setCardEnabled(DevCardType.MONUMENT, ClientGame.getGame().CanUseMonument(playerIndex));
 	}
 
 }
