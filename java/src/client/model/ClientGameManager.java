@@ -574,8 +574,11 @@ public class ClientGameManager extends GameManager
 				CatanColor color = colors.next();
 				int index = getPlayerIndexByColor(color);
 				
-				toRob.add(infoArray[index]);
-				playerInfo.add(players.get(index));
+				if (infoArray[index].getPlayerIndex() != myPlayerIndex)
+				{
+					toRob.add(infoArray[index]);
+					playerInfo.add(players.get(index));
+				}
 			}
 			
 			RobPlayerInfo[] robArray = new RobPlayerInfo[toRob.size()];

@@ -20,7 +20,7 @@ public class NormalState implements IMapState
 	@Override
 	public IMapState GetNextMapState()
 	{
-		return this;
+		return new NormalState(PieceType.NONE);
 	}
 
 	@Override
