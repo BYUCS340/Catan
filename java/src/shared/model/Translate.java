@@ -214,7 +214,7 @@ public class Translate
 				armySize = soliders;
 		}
 
-		VictoryPointManager victoryPointManager = new VictoryPointManager(points[0], points[1], points[2], points[2], longRoad, largeArmy,armySize);
+		VictoryPointManager victoryPointManager = new VictoryPointManager(points[0], points[1], points[2], points[3], longRoad, largeArmy,armySize);
 		//TODO - finish this
 		return victoryPointManager;
 	}

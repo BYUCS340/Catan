@@ -21,7 +21,6 @@ public class DiscardController extends Controller implements IDiscardController,
 	
 	private IWaitView waitView;
 	private List<Integer> resourceList;
-	private TurnState lTurnState;
 	
 	/**
 	 * DiscardController constructor
@@ -34,7 +33,6 @@ public class DiscardController extends Controller implements IDiscardController,
 		this.waitView = waitView;
 		this.initResourceList();
 		ClientGame.getGame().startListening(this, ModelNotification.STATE);
-		lTurnState = null;
 	}
 
 	public IDiscardView getDiscardView() {
@@ -181,7 +179,6 @@ public class DiscardController extends Controller implements IDiscardController,
 		{
 			if(this.getNumResourceCards() <= 7)
 			{
-				lTurnState = game.getTurnState();
 				game.DiscardCards(resourceList);
 				game.doneDiscarding();
 			}
@@ -200,7 +197,6 @@ public class DiscardController extends Controller implements IDiscardController,
 		}
 		else if (this.getWaitView().isModalShowing())
 			this.getWaitView().closeModal();
-		lTurnState = game.getTurnState();
 	}
 	
 	private void initDiscardView()
