@@ -801,12 +801,20 @@ public class ClientGameManager extends GameManager
 	 * @param forced if true, the version number won't be checked
 	 * @throws ModelException
 	 */
+	private boolean updateInProgress = false;
 	private void reloadGame(NetGameModel model, boolean forced) throws ModelException
 	{
 		if (forced == false && model.getVersion() == this.version && this.version > 0 )
 		{
 			return;
 		}
+		if (updateInProgress && !forced)
+		{
+			System.out.println("\n--------------------- UPDATE IN PROGRESS -------------------------");
+			return;
+		}
+		updateInProgress = true;
+
 		System.out.println("\n--------------------- Refresh: "+this.refreshCount+" -------------------------");
 		/*if (forced)
 			System.out.println("Forced update of game");
@@ -917,10 +925,6 @@ public class ClientGameManager extends GameManager
 						this.turnState = TurnState.DISCARDING;
 						
 					}
-//					if(players.get(this.myPlayerIndex).totalResources() > 7)
-//						this.turnState = TurnState.DISCARDING;
-//					else
-//						this.turnState = TurnState.DISCARDED_WAITING;
 					break;
 				case PLAYING:
 					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
@@ -1017,12 +1021,16 @@ public class ClientGameManager extends GameManager
 				System.out.println("Resources: " + resourceToTrade);
 				
 				this.notifyCenter.notify(ModelNotification.STATE);
+				this.notifyCenter.notify(ModelNotification.TRADE);
 			}
-		}else{
+		}
+		else
+		{
 			playerIndexWithTradeOffer = -2;
 			playerIndexSendingOffer = -2;
 			resourceToTrade = null;
 		}
+		updateInProgress = false;
 	}
 
 	public void LoadGame(NetGame model) throws ModelException
@@ -1040,9 +1048,10 @@ public class ClientGameManager extends GameManager
 	{
 		if(this.gameState.state == GameRound.DISCARDING)
 		{
-			this.turnState = TurnState.DISCARDED_WAITING;
+			
+			this.setTurnState(TurnState.DISCARDED_WAITING);
 		}
-		notifyCenter.notify(ModelNotification.STATE);
+		
 	}
 
 	/**

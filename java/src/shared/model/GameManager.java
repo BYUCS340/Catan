@@ -237,7 +237,7 @@ public class GameManager implements ModelSubject
 	}
 	
 	/**
-	 * Gets the number of devCards for the current player
+	 * Gets the number of pieces for the current player
 	 * @param playerIndex
 	 * @param type
 	 * @return
