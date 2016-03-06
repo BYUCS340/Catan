@@ -248,7 +248,7 @@ public class ClientGameManager extends GameManager
 			//If we are rejoining then don't add ourselves
 			if (!rejoining)
 			{
-				this.myPlayerIndex = newplayers.size();
+				this.myPlayerIndex = players.size();
 				newplayers.add(new Player(proxy.getUserName(), players.size(), color, true));
 				System.out.println("Joined with player index:"+this.myPlayerIndex);
 				
@@ -800,13 +800,13 @@ public class ClientGameManager extends GameManager
 			this.notifyCenter.notify(ModelNotification.PLAYERS);
 		}
 		
-		int oldresources = ClientDataTranslator.totalPlayerResouces(newplayers);
-		int newresources = ClientDataTranslator.totalPlayerResouces(oldplayers);
 		
+		Bank oldPlayerbank = this.players.get(this.myPlayerIndex).playerBank;
+		Bank newPlayerbank = newplayers.get(this.myPlayerIndex).playerBank;
 		//check if resources have changed
-		if (oldresources != newresources)
+		if (!newPlayerbank.equals(oldPlayerbank) && newPlayerbank != null)
 		{
-			this.SetPlayers(newplayers);
+			this.players.get(this.myPlayerIndex).playerBank = newPlayerbank;
 			this.notifyCenter.notify(ModelNotification.RESOURCES);
 		}
 		
