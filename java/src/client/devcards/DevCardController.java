@@ -37,6 +37,7 @@ public class DevCardController extends Controller implements IDevCardController,
 		this.roadAction = roadAction;
 		
 		ClientGame.getGame().startListening(this, ModelNotification.RESOURCES);
+		ClientGame.getGame().startListening(this, ModelNotification.STATE);
 	}
 
 	public IPlayDevCardView getPlayCardView() {
@@ -77,8 +78,8 @@ public class DevCardController extends Controller implements IDevCardController,
 
 	@Override
 	public void cancelPlayCard() {
-
-		getPlayCardView().closeModal();
+		if (getPlayCardView().isModalShowing())
+			getPlayCardView().closeModal();
 	}
 
 	@Override
@@ -107,7 +108,7 @@ public class DevCardController extends Controller implements IDevCardController,
 	@Override
 	public void playSoldierCard()
 	{
-		if (ClientGame.getGame().PlayRoadBuilder())
+		if (ClientGame.getGame().PlaySolider())
 			cancelPlayCard();
 		soldierAction.execute();
 	}

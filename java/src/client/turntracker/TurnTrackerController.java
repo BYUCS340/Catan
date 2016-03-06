@@ -142,6 +142,14 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		{
 			this.getView().updateGameState("Discarding...", false);
 		}
+		else if(game.getTurnState() == TurnState.ROAD_BUILDER)
+		{
+			this.getView().updateGameState("Place First Free Road...", false);
+		}
+		else if(game.getTurnState() == TurnState.ROAD_BUILDER_SECOND)
+		{
+			this.getView().updateGameState("Place Second Free Road...", false);
+		}
 		else if(game.getTurnState() == TurnState.ROBBING)
 		{
 			this.getView().updateGameState("Robbing...", false);

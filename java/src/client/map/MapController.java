@@ -253,7 +253,8 @@ public class MapController extends Controller implements IMapController
 				state = new NormalState(ClientGame.getGame().myPlayerLastPiece());
 				break;
 			case ROAD_BUILDER:
-				state = new NormalState(PieceType.ROAD);
+			case ROAD_BUILDER_SECOND:
+				state = new RoadBuilderState();
 				break;
 			case FIRST_ROUND_MY_TURN:
 			case SECOND_ROUND_MY_TURN:
