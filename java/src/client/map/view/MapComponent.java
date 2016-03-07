@@ -432,7 +432,7 @@ public class MapComponent extends JComponent
 				Point2D hexPoint = getHexCenterPoint(robber.GetDropLocation());
 				
 				if (robber.IsAllowed())
-					drawImage(g2, ImageHandler.getRobberImage(), hexPoint);
+					drawImage(g2, ImageHandler.getRobberImage(), hexPoint, Dimensions.ROBBER_WIDTH, Dimensions.ROBBER_HEIGHT);
 				else
 					drawDisallowImage(g2, hexPoint);
 			}
