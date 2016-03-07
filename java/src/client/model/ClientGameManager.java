@@ -789,13 +789,20 @@ public class ClientGameManager extends GameManager
 		int oldresources = ClientDataTranslator.totalPlayerResouces(newplayers);
 		int newresources = ClientDataTranslator.totalPlayerResouces(oldplayers);
 		
-		//check if resources have changed
-		if (oldresources != newresources)
+//		//check if resources have changed
+//		if (oldresources != newresources)
+//		{
+//			System.out.println("Resource changed: " + newresources);
+//			this.SetPlayers(newplayers);
+//			this.notifyCenter.notify(ModelNotification.RESOURCES);
+//		}
+
+		if (ClientGame.getGame().CurrentState() == GameRound.PLAYING)
 		{
 			this.SetPlayers(newplayers);
 			this.notifyCenter.notify(ModelNotification.RESOURCES);
 		}
-		
+
 
 		//Update our chat
 		if (game.waterCooler.size() > this.waterCooler.size())
@@ -933,12 +940,12 @@ public class ClientGameManager extends GameManager
 
 		//  check for trade offer, set to -1 if there is no trade in process
 		NetTradeOffer offer = model.getNetTradeOffer();
-		System.out.println("Offer: " + offer);
+//		System.out.println("Offer: " + offer);
 		if(offer != null){
 			playerIndexWithTradeOffer =  offer.getReceiver();
 			playerIndexSendingOffer = offer.getSender();
-			System.out.println("Receiver: " + playerIndexWithTradeOffer);
-			System.out.println("Sender: " + playerIndexSendingOffer);
+//			System.out.println("Receiver: " + playerIndexWithTradeOffer);
+//			System.out.println("Sender: " + playerIndexSendingOffer);
 			if(playerIndexWithTradeOffer == this.myPlayerIndex()){
 				//  if the player has a trade waiting for them, get resources, then notify
 				NetResourceList resourcesForTrade = offer.getNetResourceList();
@@ -949,14 +956,29 @@ public class ClientGameManager extends GameManager
 				resourceToTrade[3] = resourcesForTrade.getNumWheat();
 				resourceToTrade[4] = resourcesForTrade.getNumWood();
 
-				System.out.println("Resources: " + resourceToTrade);
+//				System.out.println("Resources: " + resourceToTrade);
 				
 				this.notifyCenter.notify(ModelNotification.STATE);
 			}
 		}else{
-			playerIndexWithTradeOffer = -2;
-			playerIndexSendingOffer = -2;
-			resourceToTrade = null;
+//			System.out.println("with offer: " + playerIndexWithTradeOffer);
+//			System.out.println("sending offer: " + playerIndexSendingOffer);
+//			System.out.println("resources1; " + resourceToTrade);
+			//  if the offer previously existed then send out a noficication as you update
+			if(playerIndexWithTradeOffer >= 0){
+//				System.out.println("resources2; " + resourceToTrade);
+				playerIndexWithTradeOffer = -2;
+				playerIndexSendingOffer = -2;
+				resourceToTrade = null;
+				this.notifyCenter.notify(ModelNotification.STATE);
+			}else{
+				//  set them all the the default if there is not offer just to be safe
+				playerIndexWithTradeOffer = -2;
+				playerIndexSendingOffer = -2;
+				resourceToTrade = null;
+			}
+//			System.out.println("resources3; " + resourceToTrade);
+
 		}
 	}
 
@@ -1049,7 +1071,7 @@ public class ClientGameManager extends GameManager
 	 * @throws ServerProxyException 
 	 */
 	public void maritimeTradeCurrentPlayer(int ratio, ResourceType inputResource, ResourceType outputResource) throws ModelException, ServerProxyException{
-		System.out.println("In taking from bank: The bank has" + gameBank.getResourceCount(inputResource) + " of " + inputResource);
+//		System.out.println("In taking from bank: The bank has" + gameBank.getResourceCount(inputResource) + " of " + inputResource);
 		
 		//  give bank the player's resources
 		gameBank.giveResource(inputResource, ratio);
