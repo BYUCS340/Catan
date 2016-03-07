@@ -865,15 +865,12 @@ public class ClientGameManager extends GameManager
 			}
 		}
 		
+		if (this.players.size() != 4)
+		{
+			this.updateInProgress = false;
+			return;
+		}
 		
-//		//check if resources have changed
-//		if (oldresources != newresources)
-//		{
-//			System.out.println("Resource changed: " + newresources);
-//			this.SetPlayers(newplayers);
-//			this.notifyCenter.notify(ModelNotification.RESOURCES);
-//		}
-//		if (ClientGame.getGame().CurrentState() == GameRound.PLAYING)
 		Bank oldPlayerbank = this.players.get(this.myPlayerIndex).playerBank;
 		Bank newPlayerbank = newplayers.get(this.myPlayerIndex).playerBank;
 		//check if resources have changed
