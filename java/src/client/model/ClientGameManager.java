@@ -902,6 +902,7 @@ public class ClientGameManager extends GameManager
 		else if(this.getVictoryPointManager().anyWinner())
 		{
 			this.turnState = TurnState.GAME_OVER;
+			this.gameState.endGame();
 		}
 		//TODO implement trade offer turnstate
 		//TODO implement placing piece turnstate
@@ -955,6 +956,12 @@ public class ClientGameManager extends GameManager
 					this.turnState = TurnState.WAITING;
 					break;
 			}
+		}
+		
+		//If the game is over the game better stay over
+		if (oldTurnState == TurnState.GAME_OVER || this.victoryPointManager.anyWinner())
+		{
+			this.turnState = TurnState.GAME_OVER;
 		}
 		
 		if (this.turnState != oldTurnState || (!this.gameState.equals(newgamestate) && newstate != null))
