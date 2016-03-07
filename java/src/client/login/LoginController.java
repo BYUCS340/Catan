@@ -123,6 +123,20 @@ public class LoginController extends Controller implements ILoginController {
 			return;
 		}
 		
+		//check to make sure there is an actual password
+		if (password.equals("") || password.length() < 5)
+		{
+			this.showMessage("Bad Password");
+			return;
+		}
+		
+		//check to make there is a real username
+		if (username.equals("") || username.length() < 3 || username.length() > 7)
+		{
+			this.showMessage("Bad Username");
+			return;
+		}
+		
 		try 
 		{
 			if (!ClientGame.getCurrentProxy().registerUser(username, password))

@@ -219,6 +219,9 @@ public class MapModel implements IMapModel {
 		{
 			Hex hex = hexes.GetHex(point);
 			
+			if (robber.isOnHex(hex))
+				return false;
+			
 			return hex.getType() != HexType.WATER;
 		}
 		catch (MapException e)

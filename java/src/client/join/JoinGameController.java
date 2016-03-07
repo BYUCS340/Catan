@@ -2,7 +2,6 @@ package client.join;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.Timer;
@@ -16,9 +15,7 @@ import client.misc.IMessageView;
 import client.model.ClientGame;
 import client.networking.ServerProxyException;
 import shared.definitions.CatanColor;
-import shared.model.ModelObserver;
 import shared.networking.transport.NetGame;
-import shared.networking.transport.NetPlayer;
 
 
 /**
@@ -31,7 +28,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private IMessageView messageView;
 	private IAction joinAction;
 	private Timer timer;
-	List<NetGame> allGames;
+	GameInfo[] games;
 
 
 	/**
@@ -120,36 +117,22 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	/**
 	 * Refreshes the view's game list from the proxy
 	 */
-	private int gameCount = 0;
-	private int joinedPlayerCount = 0;
 	private void refreshGameList()
 	{
 		try
 		{
-			allGames = ClientGame.getCurrentProxy().listGames();
-
-			//Get the number of players currently joined to a game
-			int currentPlayerCount = 0;
-			Iterator<NetGame> gameIter = allGames.iterator();
-			while (gameIter.hasNext())
-				currentPlayerCount += gameIter.next().getNetPlayers().size();
-			//If there is no need to update, don't
-			if (allGames.size() <= gameCount && joinedPlayerCount != currentPlayerCount) return;
+			List<NetGame> allGames = ClientGame.getCurrentProxy().listGames();
 
 			//Get the games
-			GameInfo[] games = new GameInfo[allGames.size()];
+			games = new GameInfo[allGames.size()];
 			for (int i=0; i< allGames.size(); i++)
-			{
 				games[i] = ClientDataTranslator.convertGame(allGames.get(i));
-			}
+
 			//Create the current player
 			PlayerInfo localPlayer = new PlayerInfo();
 			localPlayer.setName(ClientGame.getCurrentProxy().getUserName());
 			localPlayer.setId(ClientGame.getCurrentProxy().getUserId());
 			getJoinGameView().setGames(games, localPlayer);
-			//update the game count and player count
-			gameCount = games.length;
-			joinedPlayerCount = currentPlayerCount;
 		}
 		catch (ServerProxyException e)
 		{
@@ -174,6 +157,12 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void createNewGame()
 	{
 		String name = getNewGameView().getTitle();
+		if (name.equals(""))
+		{
+			getMessageView().setMessage("Unable to create game with blank title");
+			getMessageView().showModal();
+			return;
+		}
 		boolean randomTiles = getNewGameView().getRandomlyPlaceHexes();
 		boolean randomNumbers = getNewGameView().getRandomlyPlaceNumbers();
 		boolean randomPorts = getNewGameView().getUseRandomPorts();
@@ -229,7 +218,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	@Override
 	public void joinGame(CatanColor color)
 	{
-		if (lastGameSelected == null) return;
+		if (lastGameSelected == null) 
+			return;
 
 		if (!ClientGame.getGame().joinGame(lastGameSelected, color))
 		{
@@ -244,7 +234,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 		timer.stop();
 		timer.setRepeats(false);
-		System.out.println("joining game "+lastGameSelected);
+		System.out.println("joining game " + lastGameSelected);
 
 		joinAction.execute();
 	}
@@ -271,22 +261,20 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			this.getSelectColorView().closeModal();
 		}
 		
-		NetGame mGame = null;
 		if(lastGameSelected != null)
 		{
-			for(NetGame g: allGames)
+			for(GameInfo g: games)
 			{
 				if(g.getId() == lastGameSelected.getId())
-					mGame = g;
-			}
-			
-			//disable all of the colors from the matching game
-			if(mGame != null){
-				List<NetPlayer> players = mGame.getNetPlayers();
-				for (int i=0;i< players.size(); i++)
 				{
-					NetPlayer play = players.get(i);
-					getSelectColorView().setColorEnabled(play.getColor(), false);
+					List<PlayerInfo> players = g.getPlayers();
+					for (int i=0;i< players.size(); i++)
+					{
+						PlayerInfo play = players.get(i);
+						getSelectColorView().setColorEnabled(play.getColor(), false);
+						
+						lastGameSelected = g;
+					}
 				}
 			}
 		}

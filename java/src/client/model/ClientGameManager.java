@@ -49,6 +49,7 @@ public class ClientGameManager extends GameManager
 	private CatanColor myPlayerColor;
 	
 	private PieceType lastSelectedPiece = null;
+	private EdgeLocation lastRoadBuilt  = null;
 	/**
 	 * Creates the client game manager with the proxy
 	 * @param clientProxy
@@ -57,7 +58,7 @@ public class ClientGameManager extends GameManager
 	{
 		super();
 		this.proxy = clientProxy;
-		turnState = null;
+		turnState = TurnState.WAITING_FOR_PLAYERS;
 	}
 
 	/**
@@ -115,7 +116,18 @@ public class ClientGameManager extends GameManager
 	{
 		return this.players.get(this.myPlayerIndex).playerBank.getDevCardCount(type);
 	}
-
+	
+	
+	//TEMP DEV CARD STUFF  ===========================================
+	//This is needed to get the view right without allowing these
+	//cards to be played.
+	public int playerNewDevCardCount(DevCardType type)
+	{
+		return this.players.get(this.myPlayerIndex).playerBank.getNewDevCardCount(type);
+	}
+	//TEMP DEV CARD STUFF  ===========================================
+	
+	
 	/**
 	 * Gets the number of devCards for the current player
 	 * @param type
@@ -237,7 +249,7 @@ public class ClientGameManager extends GameManager
 			//If we are rejoining then don't add ourselves
 			if (!rejoining)
 			{
-				this.myPlayerIndex = newplayers.size();
+				this.myPlayerIndex = players.size();
 				newplayers.add(new Player(proxy.getUserName(), players.size(), color, true));
 				System.out.println("Joined with player index:"+this.myPlayerIndex);
 				
@@ -306,7 +318,16 @@ public class ClientGameManager extends GameManager
 		}
 		return roll;
 	}
-
+	
+	/**
+	 * Sets the turn state and calls the notification center
+	 * @param newstate
+	 */
+	private void setTurnState(TurnState newstate){
+		this.turnState = newstate;
+		this.notifyCenter.notify(ModelNotification.STATE);
+	}
+	
 	/**
 	 * Builds a road for the current player
 	 * @param start
@@ -321,12 +342,26 @@ public class ClientGameManager extends GameManager
 			//TODOD This logic will need added to
 			if (turnState == TurnState.FIRST_ROUND_MY_TURN || turnState == TurnState.SECOND_ROUND_MY_TURN)
 				free = true;
+			else if (turnState == TurnState.ROAD_BUILDER_SECOND || turnState == TurnState.ROAD_BUILDER)
+				free = true;
 			
 			this.BuildRoad(myPlayerIndex, start, end, free);
 
 			EdgeLocation location = Translate.GetEdgeLocation(start, end);
-			
-			proxy.buildRoad(location, free);
+			System.out.println("Building a road in state "+this.turnState);
+			if (turnState == TurnState.ROAD_BUILDER_SECOND)
+			{
+				proxy.roadBuildingCard(lastRoadBuilt, location);
+				this.setTurnState(TurnState.PLAYING);
+			}
+			else if (turnState != TurnState.ROAD_BUILDER)
+			{
+				proxy.buildRoad(location, free);
+			}
+			else{
+				this.setTurnState(TurnState.ROAD_BUILDER_SECOND);
+			}
+			lastRoadBuilt = location;
 
 		}
 		catch (ModelException e)
@@ -430,10 +465,8 @@ public class ClientGameManager extends GameManager
 	{
 		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.SOLDIER))
 			return false;
-		System.out.println("NO SOLIDER PLAYED");
-		//TODO IMPLEMENT
-		this.turnState = TurnState.SOLIDER_CARD;
-		this.notifyCenter.notify(ModelNotification.STATE);
+		System.out.println("Playing Solider Card");
+		this.setTurnState(TurnState.SOLIDER_CARD);
 		return true;
 	}
 	
@@ -498,11 +531,10 @@ public class ClientGameManager extends GameManager
 	 */
 	public boolean PlayYearOfPlenty(ResourceType resource1, ResourceType resource2)
 	{
-		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.ROAD_BUILD))
+		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.YEAR_OF_PLENTY))
 			return false;
 		try 
 		{
-			//TODO implement
 			NetGameModel model = proxy.yearOfPlentyCard(resource1, resource2);
 			this.reloadGame(model, true);
 			return true;
@@ -563,8 +595,11 @@ public class ClientGameManager extends GameManager
 				CatanColor color = colors.next();
 				int index = getPlayerIndexByColor(color);
 				
-				toRob.add(infoArray[index]);
-				playerInfo.add(players.get(index));
+				if (infoArray[index].getPlayerIndex() != myPlayerIndex)
+				{
+					toRob.add(infoArray[index]);
+					playerInfo.add(players.get(index));
+				}
 			}
 			
 			RobPlayerInfo[] robArray = new RobPlayerInfo[toRob.size()];
@@ -589,7 +624,22 @@ public class ClientGameManager extends GameManager
 	
 	public void RobVictim(int victimIndex)
 	{
-		if (super.CanPlaceRobber(this.myPlayerIndex))
+		if (this.turnState == TurnState.SOLIDER_CARD)
+		{
+			//Play a solider card
+			try{
+				turnState = TurnState.PLAYING;
+				notifyCenter.notify(ModelNotification.STATE);
+				HexLocation location = Translate.GetHexLocation(map.GetRobberLocation().getPoint());
+				NetGameModel newmodel = this.proxy.soldierCard(victimIndex, location);
+				this.reloadGame(newmodel,true);
+			}
+			catch (ServerProxyException | ModelException e) 
+			{
+				e.printStackTrace();
+			} 
+		}
+		else if (super.CanPlaceRobber(this.myPlayerIndex))
 		{
 			try 
 			{
@@ -607,6 +657,7 @@ public class ClientGameManager extends GameManager
 				e.printStackTrace();
 			} 
 		}
+		
 	}
 
 	/**
@@ -691,6 +742,18 @@ public class ClientGameManager extends GameManager
 		return false;
 	}
 	
+	@Override
+	public boolean CanPlaceRobber(int playerIndex)
+	{	
+		
+		if (super.CanPlaceRobber(playerIndex))
+			return true;
+		//Check if we've played a solider card
+		if (this.turnState == TurnState.SOLIDER_CARD)
+			return true;
+		return false;
+	}
+	
 	/**
 	 * Starts building a piece
 	 * @param road
@@ -698,9 +761,7 @@ public class ClientGameManager extends GameManager
 	public void startBuilding(PieceType piece) {
 		// TODO Auto-generated method stub
 		this.lastSelectedPiece = piece;
-		this.turnState = TurnState.PLACING_PIECE;
-		this.notifyCenter.notify(ModelNotification.STATE);
-		
+		this.setTurnState(TurnState.PLACING_PIECE);
 	}
 	
 	
@@ -740,12 +801,20 @@ public class ClientGameManager extends GameManager
 	 * @param forced if true, the version number won't be checked
 	 * @throws ModelException
 	 */
+	private boolean updateInProgress = false;
 	private void reloadGame(NetGameModel model, boolean forced) throws ModelException
 	{
 		if (forced == false && model.getVersion() == this.version && this.version > 0 )
 		{
 			return;
 		}
+		if (updateInProgress && !forced)
+		{
+			System.out.println("\n--------------------- UPDATE IN PROGRESS -------------------------");
+			return;
+		}
+		updateInProgress = true;
+
 		System.out.println("\n--------------------- Refresh: "+this.refreshCount+" -------------------------");
 		/*if (forced)
 			System.out.println("Forced update of game");
@@ -786,8 +855,6 @@ public class ClientGameManager extends GameManager
 			this.notifyCenter.notify(ModelNotification.PLAYERS);
 		}
 		
-		int oldresources = ClientDataTranslator.totalPlayerResouces(newplayers);
-		int newresources = ClientDataTranslator.totalPlayerResouces(oldplayers);
 		
 //		//check if resources have changed
 //		if (oldresources != newresources)
@@ -796,10 +863,13 @@ public class ClientGameManager extends GameManager
 //			this.SetPlayers(newplayers);
 //			this.notifyCenter.notify(ModelNotification.RESOURCES);
 //		}
-
-		if (ClientGame.getGame().CurrentState() == GameRound.PLAYING)
+//		if (ClientGame.getGame().CurrentState() == GameRound.PLAYING)
+		Bank oldPlayerbank = this.players.get(this.myPlayerIndex).playerBank;
+		Bank newPlayerbank = newplayers.get(this.myPlayerIndex).playerBank;
+		//check if resources have changed
+		if (!newPlayerbank.equals(oldPlayerbank) && newPlayerbank != null)
 		{
-			this.SetPlayers(newplayers);
+			this.players.get(this.myPlayerIndex).playerBank = newPlayerbank;
 			this.notifyCenter.notify(ModelNotification.RESOURCES);
 		}
 
@@ -863,16 +933,16 @@ public class ClientGameManager extends GameManager
 						this.turnState = TurnState.DISCARDING;
 						
 					}
-//					if(players.get(this.myPlayerIndex).totalResources() > 7)
-//						this.turnState = TurnState.DISCARDING;
-//					else
-//						this.turnState = TurnState.DISCARDED_WAITING;
 					break;
 				case PLAYING:
 					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
 						this.turnState = TurnState.PLAYING;
 					else
 						this.turnState = TurnState.WAITING;
+					
+					if (this.playerIndexSendingOffer == this.myPlayerIndex)
+						this.turnState = TurnState.OFFERED_TRADE;
+					
 					break;
 				default:
 					this.turnState = TurnState.WAITING;
@@ -959,6 +1029,7 @@ public class ClientGameManager extends GameManager
 //				System.out.println("Resources: " + resourceToTrade);
 				
 				this.notifyCenter.notify(ModelNotification.STATE);
+				this.notifyCenter.notify(ModelNotification.TRADE);
 			}
 		}else{
 //			System.out.println("with offer: " + playerIndexWithTradeOffer);
@@ -978,8 +1049,8 @@ public class ClientGameManager extends GameManager
 				resourceToTrade = null;
 			}
 //			System.out.println("resources3; " + resourceToTrade);
-
 		}
+		updateInProgress = false;
 	}
 
 	public void LoadGame(NetGame model) throws ModelException
@@ -997,9 +1068,10 @@ public class ClientGameManager extends GameManager
 	{
 		if(this.gameState.state == GameRound.DISCARDING)
 		{
-			this.turnState = TurnState.DISCARDED_WAITING;
+			
+			this.setTurnState(TurnState.DISCARDED_WAITING);
 		}
-		notifyCenter.notify(ModelNotification.STATE);
+		
 	}
 
 	/**

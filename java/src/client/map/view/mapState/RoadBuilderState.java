@@ -2,25 +2,18 @@ package client.map.view.mapState;
 
 import shared.definitions.PieceType;
 
-public class NormalState implements IMapState
+public class RoadBuilderState implements IMapState
 {
-	private PieceType type;
-	
-	public NormalState(PieceType type)
-	{
-		this.type = type;
-	}
-	
 	@Override
 	public PieceType GetPieceType()
 	{
-		return type;
+		return PieceType.ROAD;
 	}
 
 	@Override
 	public IMapState GetNextMapState()
 	{
-		return new NormalState(PieceType.NONE);
+		return new RoadBuilderState();
 	}
 
 	@Override
@@ -28,13 +21,10 @@ public class NormalState implements IMapState
 	{
 		return false;
 	}
-	
+
 	@Override
 	public Boolean AllowCancel()
 	{
-		if (type == PieceType.ROBBER)
-			return false;
-		else
-			return true;
+		return false;
 	}
 }

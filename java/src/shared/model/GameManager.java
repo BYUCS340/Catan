@@ -237,7 +237,7 @@ public class GameManager implements ModelSubject
 	}
 	
 	/**
-	 * Gets the number of devCards for the current player
+	 * Gets the number of pieces for the current player
 	 * @param playerIndex
 	 * @param type
 	 * @return
@@ -494,14 +494,17 @@ public class GameManager implements ModelSubject
 		//If we aren't in the building phase and this player isn't their turn
 		if (this.gameState.activePlayerIndex != playerIndex)
 		{
+			//System.out.println("Cannot play since the current player is "+this.gameState.activePlayerIndex);
 			return false;
 		}
 		else if (this.gameState.state != GameRound.FIRSTROUND && this.gameState.state != GameRound.SECONDROUND && this.gameState.state != GameRound.PLAYING)
 		{
+			//System.out.println("Player cannot play because we are in the "+this.gameState.state);
 			return false;
 		}
 		else
 		{
+			
 			return true;
 		}
 	}
@@ -693,6 +696,8 @@ public class GameManager implements ModelSubject
 				players.get(i).playerBank.giveResource(ResourceType.SHEEP, 5);
 				players.get(i).playerBank.giveResource(ResourceType.WOOD, 5);
 				players.get(i).playerBank.giveResource(ResourceType.WHEAT, 5);
+				players.get(i).playerBank.givePiece(PieceType.ROAD,2);
+				players.get(i).playerBank.givePiece(PieceType.SETTLEMENT,2);
 			} 
 			catch (ModelException e) 
 			{
@@ -703,7 +708,7 @@ public class GameManager implements ModelSubject
 	}
 	
 	/**
-	 * Can do method for determinign wheter a player can martitime trade
+	 * Can do method for determining whether a player can maritime trade
 	 * @param playerIndex
 	 * @return
 	 */
@@ -811,9 +816,10 @@ public class GameManager implements ModelSubject
 	 */
 	public boolean CanUseRoadBuilder (int playerIndex)
 	{
-		if (!this.CanPlayerPlay(playerIndex)) 
+		if (!this.CanPlayerPlay(playerIndex) || !this.PlayerHasADevCard(playerIndex, DevCardType.ROAD_BUILD))
 			return false;
-		return this.PlayerHasADevCard(playerIndex, DevCardType.ROAD_BUILD);
+		
+		return this.playerPieceCount(playerIndex, PieceType.ROAD) >= 2;
 	}
 	
 	/**

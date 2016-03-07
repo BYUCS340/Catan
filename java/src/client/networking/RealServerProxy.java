@@ -1044,7 +1044,8 @@ public class RealServerProxy implements ServerProxy
 		try
 		{
 			postData = serializer.sDiscardCardsReq(userIndex, resourceList);
-		} catch (Exception e)
+		} 
+		catch (Exception e)
 		{
 			throw new ServerProxyException(e.getMessage(), e.getCause());
 		}
