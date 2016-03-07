@@ -160,6 +160,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		}
 	}
 
+	private boolean welcomeToJungleExtraCredit = false;
 	@Override
 	public void alert()
 	{
@@ -168,10 +169,33 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//OJO if the version number wraps around to -1, THIS WILL NOT WORK
 		if(game.hasGameStarted())
 		{
+			if (!this.welcomeToJungleExtraCredit)
+			{
+				welcomeToTheJungle();
+				this.welcomeToJungleExtraCredit = true;	
+			}
 			this.updateFromModel();
 		}
 	}
 	
+	private void welcomeToTheJungle()
+	{
+		String soundName = "images"+File.separator+"welcomeToJungle.wav";    
+		AudioInputStream audioInputStream;
+		audioInputStream = null;
+		try 
+		{
+			audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+			
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+			clip.start();
+		}
+		catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
+		{
+			e.printStackTrace();
+		}	
+	}
 	private ModelObserver chatObserver = new ModelObserver()
 	{
 		@Override
