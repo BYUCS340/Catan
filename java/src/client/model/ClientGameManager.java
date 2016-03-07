@@ -279,25 +279,26 @@ public class ClientGameManager extends GameManager
 	 * @param name
 	 * @return
 	 */
-	public boolean createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
+	public NetGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
 	{
 		try
 		{
 			NetGame game = proxy.createGame(randomTiles, randomNumbers, randomPorts, name);
 			this.LoadGame(game);
+			return game;
 		}
 		catch (ServerProxyException e)
 		{
 			e.printStackTrace();
-			return false;
+			
 		}
 		catch (ModelException e)
 		{
 			e.printStackTrace();
-			return false;
+			
 		}
 
-		return true;
+		return null;
 	}
 	/**
 	 * Notifies the server after rolling the dice

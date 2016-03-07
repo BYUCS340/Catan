@@ -153,6 +153,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		getNewGameView().closeModal();
 	}
 
+	private boolean createdGame = false;
 	@Override
 	public void createNewGame()
 	{
@@ -166,24 +167,32 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		boolean randomTiles = getNewGameView().getRandomlyPlaceHexes();
 		boolean randomNumbers = getNewGameView().getRandomlyPlaceNumbers();
 		boolean randomPorts = getNewGameView().getUseRandomPorts();
-		if (!ClientGame.getGame().createGame(randomTiles, randomNumbers, randomPorts, name))
+		NetGame newgame = ClientGame.getGame().createGame(randomTiles, randomNumbers, randomPorts, name); 
+		if (newgame == null)
 		{
 			getMessageView().setMessage("Unable to create game: "+name);
 			getMessageView().showModal();
 			return;
 		}
-		this.refreshGameList();
+		
+		//this.refreshGameList();
 		getNewGameView().closeModal();
+		GameInfo newgameinfo = ClientDataTranslator.convertGame(newgame);
+		
+		createdGame = true;
+		startJoinGame(newgameinfo);
 
 		//Open the games list
-		getJoinGameView().showModal();
+		//getJoinGameView().showModal();
 	}
 
 	private GameInfo lastGameSelected = null;
 	@Override
 	public void startJoinGame(GameInfo game)
 	{
-		getJoinGameView().closeModal();
+		if (getJoinGameView().isModalShowing())
+			getJoinGameView().closeModal();
+		
 		lastGameSelected = game;
 		List<PlayerInfo> players = game.getPlayers();
 		CatanColor mycolor = null;
@@ -212,6 +221,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void cancelJoinGame()
 	{
 		lastGameSelected = null;
+		createdGame = false;
 		getSelectColorView().closeModal();
 	}
 
@@ -220,7 +230,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	{
 		if (lastGameSelected == null) 
 			return;
-
+		
 		if (!ClientGame.getGame().joinGame(lastGameSelected, color))
 		{
 			getMessageView().setMessage("Unable to join game: #"+lastGameSelected);
@@ -231,6 +241,13 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		
 		if (getJoinGameView().isModalShowing())
 			getJoinGameView().closeModal();
+		
+		if (createdGame){
+			getJoinGameView().showModal();
+			createdGame = false;
+			return;
+		}
+		createdGame = false;
 
 		timer.stop();
 		timer.setRepeats(false);
