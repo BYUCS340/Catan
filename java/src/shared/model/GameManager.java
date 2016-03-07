@@ -696,6 +696,8 @@ public class GameManager implements ModelSubject
 				players.get(i).playerBank.giveResource(ResourceType.SHEEP, 5);
 				players.get(i).playerBank.giveResource(ResourceType.WOOD, 5);
 				players.get(i).playerBank.giveResource(ResourceType.WHEAT, 5);
+				players.get(i).playerBank.givePiece(PieceType.ROAD,2);
+				players.get(i).playerBank.givePiece(PieceType.SETTLEMENT,2);
 			} 
 			catch (ModelException e) 
 			{
