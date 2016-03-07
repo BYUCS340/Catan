@@ -228,8 +228,8 @@ public class ClientGameManager extends GameManager
 			proxy.joinGame(game.getId(), color);
 			this.gameID = game.getId();
 			this.gameTitle = game.getTitle();
+			this.myPlayerIndex = -1;
 			this.myPlayerColor = color;
-			boolean rejoining = false;
 			List<Player> newplayers = new ArrayList<>();
 			Iterator<PlayerInfo> iter = game.getPlayers().iterator();
 			while(iter.hasNext())
@@ -240,20 +240,14 @@ public class ClientGameManager extends GameManager
 				{
 					System.out.println("Joined with player index:"+newplay.getPlayerIndex());
 					this.myPlayerIndex = newplay.getPlayerIndex();
-					rejoining = true;
+					
 				}
 				Player play = ClientDataTranslator.convertPlayerInfo(newplay);
 				newplayers.add(play);
 
 			}
-			//If we are rejoining then don't add ourselves
-			if (!rejoining)
-			{
-				this.myPlayerIndex = players.size();
-				newplayers.add(new Player(proxy.getUserName(), players.size(), color, true));
-				System.out.println("Joined with player index:"+this.myPlayerIndex);
-				
-			}
+			
+			//set the players correctly
 			this.SetPlayers(newplayers);
 			
 			System.out.println("Joiing a game with playerIndex:"+this.myPlayerIndex);
@@ -856,6 +850,21 @@ public class ClientGameManager extends GameManager
 			this.notifyCenter.notify(ModelNotification.PLAYERS);
 		}
 		
+		//If we don't have a player index
+		if (this.myPlayerIndex == -1 && this.players.size() == 4)
+		{
+			for (int i=0;i<4; i++)
+			{
+				Player p = this.players.get(i);
+				if (p.playerID() == this.proxy.getUserId())
+				{
+					this.myPlayerIndex = i;
+					System.out.println("===Received new player Index of "+this.myPlayerIndex+" ===");
+					break;
+				}
+			}
+		}
+		
 		
 //		//check if resources have changed
 //		if (oldresources != newresources)
@@ -1032,7 +1041,9 @@ public class ClientGameManager extends GameManager
 				this.notifyCenter.notify(ModelNotification.STATE);
 				this.notifyCenter.notify(ModelNotification.TRADE);
 			}
-		}else{
+		}
+		else
+		{
 //			System.out.println("with offer: " + playerIndexWithTradeOffer);
 //			System.out.println("sending offer: " + playerIndexSendingOffer);
 //			System.out.println("resources1; " + resourceToTrade);
@@ -1043,7 +1054,9 @@ public class ClientGameManager extends GameManager
 				playerIndexSendingOffer = -2;
 				resourceToTrade = null;
 				this.notifyCenter.notify(ModelNotification.STATE);
-			}else{
+			}
+			else
+			{
 				//  set them all the the default if there is not offer just to be safe
 				playerIndexWithTradeOffer = -2;
 				playerIndexSendingOffer = -2;
