@@ -10,15 +10,30 @@ import shared.model.map.*;
 import shared.model.map.model.IMapModel;
 import shared.model.map.objects.*;
 
+/**
+ * Handles the placement of settlements on the map.
+ * @author Jonathan Sadler
+ *
+ */
 public class SettlementDropObject extends DropObject 
 {
 	private Coordinate vertex = null;
 	
+	/**
+	 * Creates a SettlementDropObject.
+	 * @param controller The controller associated with the object.
+	 * @param color The color of the object.
+	 */
 	public SettlementDropObject(IMapController controller, CatanColor color) 
 	{
 		super(controller, color);
 	}
 	
+	/**
+	 * Gets the vertex associated with the object.
+	 * @return The vertex of the object.
+	 * @throws MapException Thrown if the vertex isn't valid.
+	 */
 	public Vertex GetDropLocation() throws MapException
 	{
 		return controller.GetModel().GetVertex(vertex);

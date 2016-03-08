@@ -219,6 +219,9 @@ public class MapModel implements IMapModel {
 		{
 			Hex hex = hexes.GetHex(point);
 			
+			if (robber.isOnHex(hex))
+				return false;
+			
 			return hex.getType() != HexType.WATER;
 		}
 		catch (MapException e)
@@ -259,11 +262,7 @@ public class MapModel implements IMapModel {
 		if (force || CanPlaceRoad(p1, p2, color))
 			edges.AddRoad(p1, p2, color);
 		else
-		{
 			throw new MapException("Attempt to place road where not allowed");
-			//System.out.println("Cannot place road for "+color+" at "+p1+", "+p2);
-			//return;
-		}
 		
 		Set<Edge> handledEdges = new HashSet<Edge>();
 		Set<Edge> allHandledEdges = new HashSet<Edge>();

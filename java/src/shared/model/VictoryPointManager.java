@@ -51,7 +51,10 @@ public class VictoryPointManager
 	/**
 	 * Generic default contructor
 	 */
-	public VictoryPointManager() { }
+	public VictoryPointManager() 
+	{
+		
+	}
 	
 	/**
 	 * Gets the current number of victory points the current player has

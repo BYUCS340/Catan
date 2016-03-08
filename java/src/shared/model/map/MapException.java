@@ -1,8 +1,8 @@
 package shared.model.map;
 
 @SuppressWarnings("serial")
-public class MapException extends Exception {
-
+public class MapException extends Exception
+{
 	public MapException()
 	{
 		super();

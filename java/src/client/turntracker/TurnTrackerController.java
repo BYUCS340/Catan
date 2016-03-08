@@ -128,14 +128,27 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			}	
 		}
 
-
-		if(game.CanFinishTurn() && currPlayerIndex == myIndex)
+		//check first to see if the game is over
+		// if so, don't let the player finish his turn
+		// because he shouldn't be playing the game anymore
+		if(game.getVictoryPointManager().anyWinner()){
+			this.getView().updateGameState("Game Over!", false);			
+		}
+		else if(game.CanFinishTurn() && currPlayerIndex == myIndex)
 		{
 			this.getView().updateGameState("Finish Turn", true);
 		}
 		else if(game.getTurnState() == TurnState.DISCARDING)
 		{
 			this.getView().updateGameState("Discarding...", false);
+		}
+		else if(game.getTurnState() == TurnState.ROAD_BUILDER)
+		{
+			this.getView().updateGameState("Place First Free Road...", false);
+		}
+		else if(game.getTurnState() == TurnState.ROAD_BUILDER_SECOND)
+		{
+			this.getView().updateGameState("Place Second Free Road...", false);
 		}
 		else if(game.getTurnState() == TurnState.ROBBING)
 		{
@@ -147,6 +160,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		}
 	}
 
+	private boolean welcomeToJungleExtraCredit = false;
 	@Override
 	public void alert()
 	{
@@ -155,10 +169,33 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//OJO if the version number wraps around to -1, THIS WILL NOT WORK
 		if(game.hasGameStarted())
 		{
+			if (!this.welcomeToJungleExtraCredit)
+			{
+				welcomeToTheJungle();
+				this.welcomeToJungleExtraCredit = true;	
+			}
 			this.updateFromModel();
 		}
 	}
 	
+	private void welcomeToTheJungle()
+	{
+		String soundName = "images"+File.separator+"welcomeToJungle.wav";    
+		AudioInputStream audioInputStream;
+		audioInputStream = null;
+		try 
+		{
+			audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+			
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+			clip.start();
+		}
+		catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
+		{
+			e.printStackTrace();
+		}	
+	}
 	private ModelObserver chatObserver = new ModelObserver()
 	{
 		@Override

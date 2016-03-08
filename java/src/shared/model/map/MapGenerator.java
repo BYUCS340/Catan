@@ -9,8 +9,18 @@ import shared.definitions.PortType;
 import shared.model.map.handlers.HexHandler;
 import shared.model.map.model.MapModel;
 
+/**
+ * Sets up the map.
+ * @author Jonathan Sadler
+ *
+ */
 public class MapGenerator
 {
+	/**
+	 * Creates a beginner map. Essentially, setups up the same map every time.
+	 * Kind of boring, yet useful.
+	 * @param model The model to initialize.
+	 */
 	public static void BeginnerMap(MapModel model)
 	{
 		BeginnerLandSetup(model);
@@ -19,11 +29,10 @@ public class MapGenerator
 		PlacePips(model);
 	}
 	
-//	private static void RandomSetup(MapModel model)
-//	{
-//		TODO Setup
-//	}
-	
+	/**
+	 * Initializes the water pieces on the map.
+	 * @param model The model to initialize.
+	 */
 	public static void WaterSetup(MapModel model)
 	{
 		PlaceWater(model);

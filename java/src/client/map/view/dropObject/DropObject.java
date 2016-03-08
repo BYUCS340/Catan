@@ -11,6 +11,11 @@ import shared.definitions.CatanColor;
 import shared.model.map.Coordinate;
 import shared.model.map.objects.*;
 
+/**
+ * This class handles objects that can be dragged and dropped onto the map.
+ * @author Jonathan Sadler
+ *
+ */
 public abstract class DropObject
 {
 	protected IMapController controller;
@@ -23,17 +28,37 @@ public abstract class DropObject
 		this.color = color;
 	}
 	
+	/**
+	 * Gets the color of the object being placed.
+	 * @return The CatanColor of the object.
+	 */
 	public CatanColor GetColor()
 	{
 		return color;
 	}
 	
+	/**
+	 * Returns if the location of the object is a valid location.
+	 * @return True if valid, else false.
+	 */
 	public abstract boolean IsValid();
 	
+	/**
+	 * Returns if the object can be placed at the current location.
+	 * @return True if yes, else false.
+	 */
 	public abstract boolean IsAllowed();
 	
+	/**
+	 * Used to handle mouse movement. Gets the associated data with the new
+	 * coordinate.
+	 * @param point The location of the mouse.
+	 */
 	public abstract void Handle(Point2D point);
 	
+	/**
+	 * Indicates the mouse button was pressed.
+	 */
 	public abstract void Click();
 	
 	protected Coordinate GetClosestHexCoordinate(Point2D point)

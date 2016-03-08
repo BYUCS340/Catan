@@ -2,6 +2,12 @@ package client.map.view.mapState;
 
 import shared.definitions.PieceType;
 
+/**
+ * Road setup state is during the intial setup phase of the game when a road is being
+ * placed.
+ * @author Jonathan Sadler
+ *
+ */
 public class RoadSetupState implements IMapState
 {
 	@Override

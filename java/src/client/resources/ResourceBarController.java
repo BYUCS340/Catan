@@ -8,6 +8,7 @@ import client.model.ClientGameManager;
 import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
+import shared.definitions.TurnState;
 import shared.model.ModelObserver;
 
 
@@ -87,6 +88,9 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 	private void updateResources()
 	{
 		ClientGameManager game = ClientGame.getGame();
+		
+		if (game.getTurnState() == TurnState.WAITING_FOR_PLAYERS) 
+			return;
 		this.getView().setElementAmount(ResourceBarElement.BRICK, game.playerResourceCount(ResourceType.BRICK));
 		this.getView().setElementAmount(ResourceBarElement.ORE,   game.playerResourceCount(ResourceType.ORE));
 		this.getView().setElementAmount(ResourceBarElement.SHEEP, game.playerResourceCount(ResourceType.SHEEP));
@@ -107,6 +111,14 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 	public void alert()
 	{
 		updateResources();
+		
+		if (ClientGame.getGame().getTurnState() == TurnState.GAME_OVER)
+		{
+			this.getView().setElementEnabled(ResourceBarElement.BUY_CARD, false);
+			this.getView().setElementEnabled(ResourceBarElement.ROAD, false);
+			this.getView().setElementEnabled(ResourceBarElement.SETTLEMENT, false);
+			this.getView().setElementEnabled(ResourceBarElement.CITY, false);
+		}
 	}
 
 }
