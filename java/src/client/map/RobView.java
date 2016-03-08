@@ -75,6 +75,8 @@ public class RobView extends OverlayView implements IRobView {
 			if (e.getSource() == defaultButton) 
 			{
 				closeModal();
+				
+				ClientGame.getGame().RobVictim(-1);
 			}
 			else
 			{	

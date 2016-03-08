@@ -63,7 +63,7 @@ public class DomesticTradeOverlay extends OverlayView implements IDomesticTradeO
 
 		this.add(label, BorderLayout.NORTH);
 		this.add(this.setupResourceTradePanel(), BorderLayout.CENTER);
-		this.add(this.setupUserSelectPanel(), BorderLayout.SOUTH);		
+		this.add(this.setupUserSelectPanel(), BorderLayout.SOUTH);
 	}
 
 	private JPanel setupResourceTradePanel() {
@@ -359,6 +359,7 @@ public class DomesticTradeOverlay extends OverlayView implements IDomesticTradeO
 		this.removeAll();
 		this.buildView();
 		this.setPlayers(this.players);
+		this.setPreferredSize(this.getPreferredSize());
 	}
 
 	@Override

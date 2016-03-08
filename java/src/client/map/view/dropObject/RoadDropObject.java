@@ -12,16 +12,31 @@ import shared.model.map.objects.Edge;
 import shared.model.map.objects.Hex;
 import shared.model.map.objects.Vertex;
 
+/**
+ * Creates a object used for placing roads.
+ * @author Jonathan Sadler
+ *
+ */
 public class RoadDropObject extends DropObject
 {
 	private Coordinate p1 = null;
 	private Coordinate p2 = null;
 	
+	/**
+	 * Creates a RoadDropObject.
+	 * @param controller The controller associated with the object.
+	 * @param color The color of the object.
+	 */
 	public RoadDropObject(IMapController controller, CatanColor color)
 	{
 		super(controller, color);
 	}
 	
+	/**
+	 * Gets the edge associated with the object.
+	 * @return The associated edge.
+	 * @throws MapException Thrown if the edge doesn't exist.
+	 */
 	public Edge GetDropLocation() throws MapException
 	{
 		return controller.GetModel().GetEdge(p1, p2);

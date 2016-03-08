@@ -1,12 +1,17 @@
 package client.map.view.helpers;
 
+/**
+ * This class stores the dimensions used by the map component. It's easier to read and access
+ * in a seperate class.
+ * @author Jonathan Sadler
+ *
+ */
 public class Dimensions
 {
 	public static final int HEX_IMAGE_WIDTH = 298;
 	public static final int HEX_IMAGE_HEIGHT = 258;
 	
-	public static final int WORLD_WIDTH = HEX_IMAGE_WIDTH * 5
-										   + HEX_IMAGE_WIDTH / 2;
+	public static final int WORLD_WIDTH = HEX_IMAGE_WIDTH * 5 + HEX_IMAGE_WIDTH / 2;
 	public static final int WORLD_HEIGHT = HEX_IMAGE_HEIGHT * 7;
 	
 	public static final int ROBBER_WIDTH = 200;

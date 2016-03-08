@@ -21,7 +21,6 @@ public class DiscardController extends Controller implements IDiscardController,
 	
 	private IWaitView waitView;
 	private List<Integer> resourceList;
-	private TurnState lTurnState;
 	
 	/**
 	 * DiscardController constructor
@@ -34,7 +33,6 @@ public class DiscardController extends Controller implements IDiscardController,
 		this.waitView = waitView;
 		this.initResourceList();
 		ClientGame.getGame().startListening(this, ModelNotification.STATE);
-		lTurnState = null;
 	}
 
 	public IDiscardView getDiscardView() {
@@ -49,6 +47,8 @@ public class DiscardController extends Controller implements IDiscardController,
 	public void increaseAmount(ResourceType resource) {
 		IDiscardView dView = getDiscardView();
 		int resourceIdx = -1;
+		
+		//get which resource is being increased
 		switch(resource)
 		{
 			case BRICK:
@@ -75,6 +75,7 @@ public class DiscardController extends Controller implements IDiscardController,
 				return;
 		}
 		
+		//update UI elements
 		int maxAmt = ClientGame.getGame().playerResourceCount(resource);
 		int currAmt = resourceList.get(resourceIdx);
 		boolean increase = (currAmt < maxAmt);
@@ -88,6 +89,8 @@ public class DiscardController extends Controller implements IDiscardController,
 	public void decreaseAmount(ResourceType resource) {
 		IDiscardView dView = getDiscardView();
 		int resourceIdx = -1;
+		
+		//get which resource is being decremented
 		switch(resource)
 		{
 			case BRICK:
@@ -114,6 +117,8 @@ public class DiscardController extends Controller implements IDiscardController,
 				return;
 		}	
 		
+		
+		//update UI elements
 		int maxAmt = ClientGame.getGame().playerResourceCount(resource);
 		int currAmt = resourceList.get(resourceIdx);
 		boolean decrease = currAmt > 0;		
@@ -142,8 +147,11 @@ public class DiscardController extends Controller implements IDiscardController,
 		
 		int discardAmt = this.getNumResourceCards() / 2;
 		
+		//update discard button
 		getDiscardView().setStateMessage("" + total + "/" + discardAmt);
 		getDiscardView().setDiscardButtonEnabled(total == discardAmt);
+		
+		//update arrows
 		if(total >= discardAmt)
 		{
 			getDiscardView().setResourceAmountChangeEnabled(ResourceType.BRICK, false, resourceList.get(0) > 0);
@@ -167,7 +175,11 @@ public class DiscardController extends Controller implements IDiscardController,
 	public void discard() {
 		getDiscardView().closeModal();
 		ClientGame.getGame().DiscardCards(resourceList);
+		
+		//change game state to waiting
 		ClientGame.getGame().doneDiscarding();
+		
+		//zero our the resource list
 		initResourceList();
 			
 	}
@@ -177,14 +189,19 @@ public class DiscardController extends Controller implements IDiscardController,
 	{
 		TurnState cTurnState = ClientGame.getGame().getTurnState();
 		ClientGameManager game = ClientGame.getGame();
+		
+		//if we are discarding, take action
 		if(cTurnState == TurnState.DISCARDING)
 		{
+			//if we have less than 7 resource, don't ask to discard
+			//but make the server happy by discarding 0
 			if(this.getNumResourceCards() <= 7)
 			{
-				lTurnState = game.getTurnState();
 				game.DiscardCards(resourceList);
 				game.doneDiscarding();
 			}
+			
+			//Otherwise, we have to discard so get the modal up
 			else
 			{
 				//at this point, we know that we have more than 7 cards and need to 
@@ -193,14 +210,17 @@ public class DiscardController extends Controller implements IDiscardController,
 				this.getDiscardView().showModal();
 			}
 		}
+		
+		//if we're waiting on the discard, show a waiting modal
 		else if(cTurnState == TurnState.DISCARDED_WAITING)
 		{
 			if(!this.getWaitView().isModalShowing())
 				this.getWaitView().showModal();
 		}
+		
+		//if we shouldn't have a modal up, close the waiting modal
 		else if (this.getWaitView().isModalShowing())
 			this.getWaitView().closeModal();
-		lTurnState = game.getTurnState();
 	}
 	
 	private void initDiscardView()

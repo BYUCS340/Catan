@@ -9,7 +9,7 @@ import shared.definitions.HexType;
 import shared.definitions.PortType;
 
 /**
- * Class for storing images necessary for the map.
+ * Class for storing images necessary for the map component.
  * @author Jonathan Sadler
  *
  */
@@ -81,6 +81,13 @@ public class ImageHandler
 		return GetHandler().HEX_IMAGES.get(hexType);
 	}
 	
+	/**
+	 * Gets the port image at a specified angle. Ports are stored at the following angles:
+	 * 0, 60, 120, 180, 240, 300 (degrees)
+	 * This prevents the need for rotation at runtime, thus aligning ports better.
+	 * @param angle The desired angle.
+	 * @return The associated image.
+	 */
 	public static BufferedImage getPortImage(int angle)
 	{
 		return GetHandler().PORT_IMAGES.get(angle);

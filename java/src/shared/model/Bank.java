@@ -491,6 +491,20 @@ public class Bank
 		}
 	}
 	
+	//TEMP DEV CARD STUFF  ==========================================
+	//This is needed in order to get the counts correct on the view
+	//without allowing these new cards to be played.
+	private int[] newDevCards = new int[numberDevCardTypes];
+	public int getNewDevCardCount(DevCardType type)
+	{
+		return this.newDevCards[type.ordinal()];
+	}
+	public void giveNewDevCard(DevCardType type)
+	{
+		this.newDevCards[type.ordinal()]++;
+	}
+	//TEMP DEV CARD STUFF  ==========================================
+	
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
