@@ -53,6 +53,8 @@ public class RollController extends Controller implements IRollController, Model
 		int roll = ClientGame.getGame().RollDice();
 		getResultView().setRollValue(roll);
 		getResultView().showModal();
+		
+		//the timer should be stopped
 		if(timer.isRunning())
 		{
 			timer.stop();
@@ -62,11 +64,15 @@ public class RollController extends Controller implements IRollController, Model
 	@Override
 	public void alert()
 	{
+		//the modal should only be shown during the rolling state
 		if(ClientGame.getGame().getTurnState() == TurnState.ROLLING)
 		{
 			this.getRollView().showModal();
 			timer.start();
 		}	
+		
+		//if we're not rolling, why the heck is the roll view showing?
+		//tell it to stop.
 		else if(this.getRollView().isModalShowing())
 		{
 			this.getRollView().closeModal();
