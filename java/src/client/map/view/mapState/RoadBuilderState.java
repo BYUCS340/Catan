@@ -2,6 +2,12 @@ package client.map.view.mapState;
 
 import shared.definitions.PieceType;
 
+/**
+ * Road builder state is associated with the road builder card. It allows for consecutive
+ * placement of roads.
+ * @author Matthew Carlson
+ *
+ */
 public class RoadBuilderState implements IMapState
 {
 	@Override

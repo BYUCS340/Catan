@@ -2,6 +2,12 @@ package client.map.view.mapState;
 
 import shared.definitions.PieceType;
 
+/**
+ * Settlement setup is used when settlements are being placed during the setup phase
+ * of the game.
+ * @author Jonathan Sadler
+ *
+ */
 public class SettlementSetupState implements IMapState
 {
 	@Override

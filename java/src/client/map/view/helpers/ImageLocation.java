@@ -4,7 +4,7 @@ import shared.definitions.HexType;
 import shared.definitions.PortType;
 
 /**
- * This class stores the location of the image files for the map.
+ * This class stores the disk location of the image files for the map.
  * @author Jonathan Sadler
  *
  */
