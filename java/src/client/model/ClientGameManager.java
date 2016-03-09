@@ -10,7 +10,7 @@ import client.data.PlayerInfo;
 import client.data.RobPlayerInfo;
 import client.map.RobView;
 import client.networking.RealServerProxy;
-import client.networking.ServerProxy;
+import client.networking.JSONServerProxy;
 import client.networking.ServerProxyException;
 
 import shared.definitions.CatanColor;
@@ -38,7 +38,7 @@ import shared.networking.transport.NetTradeOffer;
 
 public class ClientGameManager extends GameManager
 {
-	private ServerProxy proxy;
+	private JSONServerProxy proxy;
 	private int myPlayerIndex = -1;
 	private TurnState turnState;
 	private int playerIndexWithTradeOffer = -2;
@@ -54,7 +54,7 @@ public class ClientGameManager extends GameManager
 	 * Creates the client game manager with the proxy
 	 * @param clientProxy
 	 */
-	public ClientGameManager(ServerProxy clientProxy)
+	public ClientGameManager(JSONServerProxy clientProxy)
 	{
 		super();
 		this.proxy = clientProxy;

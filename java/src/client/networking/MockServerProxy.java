@@ -36,7 +36,7 @@ import shared.networking.transport.NetTurnTracker;
  * @author cFortuna
  *
  */
-public class MockServerProxy implements ServerProxy
+public class MockServerProxy implements JSONServerProxy
 {
 
 	/**
