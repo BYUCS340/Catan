@@ -574,6 +574,10 @@ public class ClientGameManager extends GameManager
 		}
 	}
 	
+	/**
+	 * 
+	 * @param point
+	 */
 	public void PlaceRobber(Coordinate point)
 	{
 		try
@@ -617,6 +621,10 @@ public class ClientGameManager extends GameManager
 		}
 	}
 	
+	/**
+	 * 
+	 * @param victimIndex
+	 */
 	public void RobVictim(int victimIndex)
 	{
 		if (this.turnState == TurnState.SOLIDER_CARD)
@@ -1024,13 +1032,14 @@ public class ClientGameManager extends GameManager
 
 		//  check for trade offer, set to -1 if there is no trade in process
 		NetTradeOffer offer = model.getNetTradeOffer();
-//		System.out.println("Offer: " + offer);
-		if(offer != null){
+
+		if(offer != null)
+		{
 			playerIndexWithTradeOffer =  offer.getReceiver();
 			playerIndexSendingOffer = offer.getSender();
-//			System.out.println("Receiver: " + playerIndexWithTradeOffer);
-//			System.out.println("Sender: " + playerIndexSendingOffer);
-			if(playerIndexWithTradeOffer == this.myPlayerIndex()){
+
+			if(playerIndexWithTradeOffer == this.myPlayerIndex())
+			{
 				//  if the player has a trade waiting for them, get resources, then notify
 				NetResourceList resourcesForTrade = offer.getNetResourceList();
 				resourceToTrade = new int[5];
@@ -1039,8 +1048,6 @@ public class ClientGameManager extends GameManager
 				resourceToTrade[2] = resourcesForTrade.getNumSheep();
 				resourceToTrade[3] = resourcesForTrade.getNumWheat();
 				resourceToTrade[4] = resourcesForTrade.getNumWood();
-
-//				System.out.println("Resources: " + resourceToTrade);
 				
 				this.notifyCenter.notify(ModelNotification.STATE);
 				this.notifyCenter.notify(ModelNotification.TRADE);
@@ -1048,12 +1055,9 @@ public class ClientGameManager extends GameManager
 		}
 		else
 		{
-//			System.out.println("with offer: " + playerIndexWithTradeOffer);
-//			System.out.println("sending offer: " + playerIndexSendingOffer);
-//			System.out.println("resources1; " + resourceToTrade);
 			//  if the offer previously existed then send out a noficication as you update
-			if(playerIndexWithTradeOffer >= 0){
-//				System.out.println("resources2; " + resourceToTrade);
+			if(playerIndexWithTradeOffer >= 0)
+			{
 				playerIndexWithTradeOffer = -2;
 				playerIndexSendingOffer = -2;
 				resourceToTrade = null;
@@ -1066,11 +1070,15 @@ public class ClientGameManager extends GameManager
 				playerIndexSendingOffer = -2;
 				resourceToTrade = null;
 			}
-//			System.out.println("resources3; " + resourceToTrade);
 		}
 		updateInProgress = false;
 	}
 
+	/**
+	 * Loads the game from the model recieved from the server
+	 * @param model
+	 * @throws ModelException
+	 */
 	public void LoadGame(NetGame model) throws ModelException
 	{
 		this.reset();
@@ -1082,6 +1090,9 @@ public class ClientGameManager extends GameManager
 		//TODO  make sure I assign the colors correctly
 	}
 	
+	/**
+	 * Uses to let the discarding state to finish
+	 */
 	public void doneDiscarding()
 	{
 		if(this.gameState.state == GameRound.DISCARDING)
@@ -1107,20 +1118,24 @@ public class ClientGameManager extends GameManager
 	public void RefreshFromServer() throws ModelException
 	{
 
-		try {
+		try 
+		{
 			if (proxy == null)
 			{
 				System.err.println("Proxy was null");
 				return;
 			}
 			NetGameModel model = proxy.getGameModel();
-			if (model == null) {
+			if (model == null) 
+			{
 				System.err.println("Model was null from the server");
 				throw new ModelException("Model was null from server");
 			}
 			//Refresh the game
 			this.reloadGame(model);
-		} catch (ServerProxyException e) {
+		} 
+		catch (ServerProxyException e) 
+		{
 			System.err.println("Wasn't able to update");
 			e.printStackTrace();
 			throw new ModelException("Server proxy wasn't able to update");
@@ -1138,18 +1153,28 @@ public class ClientGameManager extends GameManager
 		return turnState;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public IMapModel GetMapModel()
 	{
 		return new UnmodifiableMapModel(map);
 	}
 	
-	
-	public void offerTrade(List<Integer> resourceList, int receiver) throws ServerProxyException{
-		
+	/**
+	 * Offers a trade to a player
+	 * @param resourceList the resources to trade
+	 * @param receiver the player index getting the offer
+	 * @throws ServerProxyException
+	 */
+	public void offerTrade(List<Integer> resourceList, int receiver) throws ServerProxyException
+	{
 		//  TODO:  Fix this!
-		
+		//if (!super.CanOfferTrade(this.myPlayerIndex))
+		//	return;
 		this.proxy.offerTrade(resourceList, receiver);
-//		this.proxy.acceptTrade(false);
+
 	}
 
 	
@@ -1160,8 +1185,8 @@ public class ClientGameManager extends GameManager
 	 * @throws ModelException
 	 * @throws ServerProxyException 
 	 */
-	public void maritimeTradeCurrentPlayer(int ratio, ResourceType inputResource, ResourceType outputResource) throws ModelException, ServerProxyException{
-//		System.out.println("In taking from bank: The bank has" + gameBank.getResourceCount(inputResource) + " of " + inputResource);
+	public void maritimeTradeCurrentPlayer(int ratio, ResourceType inputResource, ResourceType outputResource) throws ModelException, ServerProxyException
+	{
 		
 		//  give bank the player's resources
 		gameBank.giveResource(inputResource, ratio);
