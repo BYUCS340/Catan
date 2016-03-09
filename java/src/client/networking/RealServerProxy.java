@@ -39,7 +39,7 @@ import shared.networking.transport.NetPlayer;
  * @author pbridd
  *
  */
-public class RealServerProxy implements ServerProxy
+public class RealServerProxy implements JSONServerProxy
 {
 	private UserCookie userCookie;
 	private int gameID;
