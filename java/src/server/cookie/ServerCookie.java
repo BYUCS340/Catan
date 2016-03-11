@@ -28,7 +28,12 @@ public class ServerCookie implements Cookie
 		return this.playerID;
 	}
 	
-	public boolean equals(String cookieText)
+	/**
+	 * Checks if the cookie matches the sa,e 
+	 * @param cookieText
+	 * @return
+	 */
+	public boolean matchs(String cookieText)
 	{
 		return this.getCookieText().equals(cookieText);
 	}
