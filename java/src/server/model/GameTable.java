@@ -1,5 +1,7 @@
 package server.model;
 
+import java.util.Map;
+
 /**
  * This keeps traack of the different games in the game
  * @author matthewcarlson
@@ -7,7 +9,7 @@ package server.model;
  */
 public class GameTable 
 {
-	
+	private Map<Integer, ServerGameManager> games;
 	/**
 	 * Creates a new game on the server 
 	 * @return the id of the new game created -1 if unable to create
@@ -36,7 +38,7 @@ public class GameTable
 	 */
 	private void SetGame(ServerGameManager sgm, int id)
 	{
-		
+		games.put(id, sgm);
 	}
 	
 	/**
