@@ -22,7 +22,7 @@ public class HTTPHandler implements HttpHandler
 	@Override
 	public void handle(HttpExchange exchange) throws IOException 
 	{
-		StringBuilder uri = new StringBuilder(exchange.getRequestURI().toString());
+		StringBuilder uri = new StringBuilder(exchange.getRequestURI().toString().toUpperCase());
 		BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), "utf-8"));
 		
 		String line = null;

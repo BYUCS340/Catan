@@ -22,8 +22,8 @@ public class UserCommandFactory extends Factory
 	{
 		builders = new HashMap<String, ICommandBuilder>(2);
 		
-		builders.put("login", new LoginBuilder());
-		builders.put("register", new RegisterBuilder());
+		builders.put("LOGIN", new LoginBuilder());
+		builders.put("REGISTER", new RegisterBuilder());
 	}
 	
 	@Override

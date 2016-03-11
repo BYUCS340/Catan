@@ -37,11 +37,11 @@ public class CommandFactory extends Factory
 	{
 		factories = new HashMap<String, Factory>(5);
 		
-		factories.put("game", new GameCommandFactory());
-		factories.put("games", new GamesCommandFactory());
-		factories.put("moves", new MovesCommandFactory());
-		factories.put("user", new UserCommandFactory());
-		factories.put("util", new UtilCommandFactory());
+		factories.put("GAME", new GameCommandFactory());
+		factories.put("GAMES", new GamesCommandFactory());
+		factories.put("MOVES", new MovesCommandFactory());
+		factories.put("USER", new UserCommandFactory());
+		factories.put("UTIL", new UtilCommandFactory());
 	}
 
 	@Override
