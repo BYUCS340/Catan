@@ -8,14 +8,16 @@ package server.commands;
 public interface ICommand 
 {
 	/**
-	 * Executes a command.
+	 * Executes a command
+	 * @return True if successful, else false.
 	 */
-	public void Execute();
+	public boolean Execute();
 	
 	/**
 	 * Unexecutes a command.
+	 * @return True if successful, else false.
 	 */
-	public void Unexecute();
+	public boolean Unexecute();
 	
 	/**
 	 * Gets the response for the server.

@@ -18,7 +18,7 @@ public class UtilCommandFactory extends Factory
 	}
 
 	@Override
-	public ICommand GetCommand(StringBuilder param, String object)
+	public ICommand GetCommand(StringBuilder param, int playerID, String object)
 	{
 		// TODO Auto-generated method stub
 		return null;

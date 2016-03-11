@@ -1,5 +1,10 @@
 package server.commands;
 
+/**
+ * Exception for dealing with factory input data.
+ * @author Jonathan Sadler
+ *
+ */
 @SuppressWarnings("serial")
 public class InvalidFactoryParameterException extends Exception 
 {

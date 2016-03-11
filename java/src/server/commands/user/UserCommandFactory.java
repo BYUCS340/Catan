@@ -27,7 +27,7 @@ public class UserCommandFactory extends Factory
 	}
 	
 	@Override
-	public ICommand GetCommand(StringBuilder param, String object) throws InvalidFactoryParameterException 
+	public ICommand GetCommand(StringBuilder param, int playerID, String object) throws InvalidFactoryParameterException 
 	{
 		String key = PopToken(param);
 		
@@ -43,31 +43,37 @@ public class UserCommandFactory extends Factory
 
 	private class LoginBuilder implements ICommandBuilder
 	{
+		private String username = null;
+		private String password = null;
+		
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new LoginCommand();
+			return new UserLoginCommand(username, password);
 		}
 
 		@Override
 		public void SetData(String object)
 		{
-			//Deserialize object from string
+			//TODO Get username and password from serialized object
 		}
 	}
 	
 	private class RegisterBuilder implements ICommandBuilder
 	{
+		private String username;
+		private String password;
+		
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new RegisterCommand();
+			return new UserRegisterCommand(username, password);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			//Deserialize object from string
+			//TODO Get username and password from serialized object
 		}
 	}
 }
