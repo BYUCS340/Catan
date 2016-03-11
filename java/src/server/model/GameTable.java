@@ -32,7 +32,7 @@ public class GameTable
 	 * Gets the cookieTreeHouse
 	 * @return
 	 */
-	public CookieHouse getCookies()
+	public CookieHouse GetCookies()
 	{
 		return this.cookieTreeHouse;
 	}
@@ -56,10 +56,10 @@ public class GameTable
 	 * @param gameID
 	 * @param color the color if they haven't already
 	 */
-	public void joinPlayer(int playerID, int gameID, CatanColor color)
+	public void JoinPlayer(int playerID, int gameID, CatanColor color)
 	{
 		//Check to make sure that the player is 
-		if (!isPlayerJoined(playerID, gameID))
+		if (!IsPlayerJoined(playerID, gameID))
 		{
 			//TODO join the player to the game
 		}
@@ -71,7 +71,7 @@ public class GameTable
 	 * @param gameID the game id
 	 * @return true or false if the player has joined a game
 	 */
-	public Boolean isPlayerJoined(int playerID, int gameID)
+	public Boolean IsPlayerJoined(int playerID, int gameID)
 	{
 		return false;
 	}
@@ -82,7 +82,7 @@ public class GameTable
 	 * @param gameID
 	 * @return the player color and index
 	 */
-	public Player playerInGame(int playerID, int gameID)
+	public Player PlayerInGame(int playerID, int gameID)
 	{
 		return null;
 	}
@@ -92,7 +92,7 @@ public class GameTable
 	 * @param playerID
 	 * @return
 	 */
-	public Player playerInServer(int playerID)
+	public Player PlayerInServer(int playerID)
 	{
 		return null;
 	}
@@ -102,7 +102,7 @@ public class GameTable
 	 * @param name
 	 * @return
 	 */
-	public Player playerInServer(String name)
+	public Player PlayerInServer(String name)
 	{
 		return null;
 	}
