@@ -1,6 +1,7 @@
 package server.commands.util;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import server.commands.ICommand;
 
@@ -11,7 +12,10 @@ import server.commands.ICommand;
  */
 public class UtilChangeLogLevelCommand implements ICommand 
 {
+	private Logger logger;
+	
 	private Level level;
+	private Level previousLevel;
 	
 	/**
 	 * Creates a command to change the log level.
@@ -19,27 +23,31 @@ public class UtilChangeLogLevelCommand implements ICommand
 	 */
 	public UtilChangeLogLevelCommand(Level level)
 	{
+		this.logger = Logger.getLogger("CatanServer");
+		
 		this.level = level;
 	}
 
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
-		return false;
+		previousLevel = logger.getLevel();
+		logger.setLevel(level);
+		
+		return true;
 	}
 
 	@Override
 	public boolean Unexecute() 
 	{
-		// TODO Auto-generated method stub
-		return false;
+		logger.setLevel(previousLevel);
+		
+		return true;
 	}
 
 	@Override
 	public String Response() 
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
