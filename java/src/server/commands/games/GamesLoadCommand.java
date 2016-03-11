@@ -7,7 +7,7 @@ import server.commands.ICommand;
  * @author Jonathan Sadler
  *
  */
-public class GameLoadCommand implements ICommand 
+public class GamesLoadCommand implements ICommand 
 {
 	private String name;
 	
@@ -15,7 +15,7 @@ public class GameLoadCommand implements ICommand
 	 * Creates a command object to load a game.
 	 * @param name The name of the saved game file.
 	 */
-	public GameLoadCommand(String name)
+	public GamesLoadCommand(String name)
 	{
 		this.name = name;
 	}

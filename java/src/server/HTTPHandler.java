@@ -51,6 +51,7 @@ public class HTTPHandler implements HttpHandler
 			}
 			else
 			{
+				logger.warning("Bad request received");
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, -1);
 			}
 		}

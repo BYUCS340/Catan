@@ -13,17 +13,17 @@ import server.commands.*;
  */
 public class UserCommandFactory extends Factory 
 {
-	private Map<String, ICommandBuilder> builders;
+	private Map<String, ICommandDirector> directors;
 	
 	/**
 	 * Creates a UserCommandFactory.
 	 */
 	public UserCommandFactory() 
 	{
-		builders = new HashMap<String, ICommandBuilder>(2);
+		directors = new HashMap<String, ICommandDirector>(2);
 		
-		builders.put("LOGIN", new LoginBuilder());
-		builders.put("REGISTER", new RegisterBuilder());
+		directors.put("LOGIN", new LoginDirector());
+		directors.put("REGISTER", new RegisterDirector());
 	}
 	
 	@Override
@@ -31,14 +31,34 @@ public class UserCommandFactory extends Factory
 	{
 		String key = PopToken(param);
 		
-		if (!builders.containsKey(key))
+		if (!directors.containsKey(key))
 		{
 			InvalidFactoryParameterException e = new InvalidFactoryParameterException("Key doesn't exist: " + key);
 			Logger.getLogger("CatanServer").throwing("UserCommandFactory", "GetCommand", e);
 			throw e;
 		}
 		
-		return builders.get(key).BuildCommand();
+		ICommandBuilder builder = directors.get(key).GetBuilder();
+		builder.SetData(object);
+		return builder.BuildCommand();
+	}
+	
+	private class LoginDirector implements ICommandDirector
+	{
+		@Override
+		public ICommandBuilder GetBuilder()
+		{
+			return new LoginBuilder();
+		}
+	}
+	
+	private class RegisterDirector implements ICommandDirector
+	{
+		@Override
+		public ICommandBuilder GetBuilder() 
+		{
+			return new RegisterBuilder();
+		}	
 	}
 
 	private class LoginBuilder implements ICommandBuilder
