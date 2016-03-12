@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import shared.data.DataTranslator;
+import shared.data.PlayerInfo;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
@@ -24,7 +26,7 @@ import shared.model.chat.ChatBox;
 public class GameManager implements ModelSubject
 {
 	protected int gameID;
-	public String gameTitle;
+	protected String gameTitle;
 	protected GameState gameState;
 	protected Bank gameBank;
 	protected List<Player> players;
@@ -182,6 +184,33 @@ public class GameManager implements ModelSubject
 	public int getNumberPlayers()
 	{
 		return players.size();
+	}
+	
+	/**
+	 *
+	 * @return
+	 */
+	public PlayerInfo[] allCurrentPlayers()
+	{
+		PlayerInfo[] allplayers = new PlayerInfo[this.players.size()];
+		for (int i=0; i< this.players.size(); i++)
+		{
+			allplayers[i] = DataTranslator.convertPlayerInfo(players.get(i));
+		}
+
+		return allplayers;
+	}
+
+	/**
+	 *
+	 * @param playerIndex
+	 */
+	public String getPlayerNameByIndex(int playerIndex)
+	{
+		if(playerIndex > 3 || playerIndex < 0)
+			return null;
+
+		return players.get(playerIndex).name;
 	}
 	
 	/**
@@ -986,6 +1015,24 @@ public class GameManager implements ModelSubject
 	public boolean hasGameStarted()
 	{
 		return gameState.state != GameRound.WAITING;
+	}
+	
+	/**
+	 * Returns the game's title
+	 * @return
+	 */
+	public String GetGameTitle()
+	{
+		return this.gameTitle;
+	}
+	
+	/**
+	 * Returns the ID of the game
+	 * @return
+	 */
+	public int GetGameID()
+	{
+		return this.gameID;
 	}
 	
     /**

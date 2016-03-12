@@ -1,12 +1,17 @@
 package server.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import server.cookie.CookieHouse;
 import server.cookie.ServerCookie;
 import shared.definitions.CatanColor;
 import shared.model.Player;
+import shared.data.GameInfo;
+import shared.data.DataTranslator;
 
 /**
  * This keeps traack of the different games in the game
@@ -36,6 +41,32 @@ public class GameTable
 		ServerGameManager sgm = new ServerGameManager(name, randomTiles, randomNumbers, randomPorts, index);
 		games.put(index,sgm);
 		return index;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public int GetNumberGames()
+	{
+		return games.size();
+	}
+	
+	public List<GameInfo> GetAllGames()
+	{
+		List<GameInfo> gamelist = new ArrayList<>(); 
+		Iterator<ServerGameManager> iter = games.values().iterator();
+		while(iter.hasNext())
+		{
+			ServerGameManager sgm = iter.next();
+			GameInfo gi = new GameInfo();
+			gi.setId(sgm.GetGameID());
+			gi.setTitle(sgm.GetGameTitle());
+			gi.setPlayers(sgm.allCurrentPlayers());
+			//DataTranslator.convertPlayerInfo(player);
+		}
+		return gamelist;
+		 
 	}
 	
 	/**
@@ -87,7 +118,7 @@ public class GameTable
 	 */
 	public ServerGameManager GetGame (int id) throws GameException
 	{
-		if (games.containsKey(id))
+		if (!games.containsKey(id))
 			throw new GameException("Game "+id+" not found");
 		else
 			return games.get(id);

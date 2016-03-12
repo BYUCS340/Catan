@@ -3,9 +3,9 @@ package client.join;
 
 
 import client.base.*;
-import client.data.PlayerInfo;
 import client.model.ClientGame;
 import client.networking.ServerProxyException;
+import shared.data.PlayerInfo;
 import shared.definitions.AIType;
 import shared.definitions.ModelNotification;
 import shared.model.ModelException;

@@ -1,4 +1,4 @@
-package client.data;
+package shared.data;
 
 import shared.definitions.*;
 
