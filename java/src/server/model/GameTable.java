@@ -1,8 +1,10 @@
 package server.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import server.cookie.CookieHouse;
+import server.cookie.ServerCookie;
 import shared.definitions.CatanColor;
 import shared.model.Player;
 
@@ -15,28 +17,67 @@ public class GameTable
 {
 	private Map<Integer, ServerGameManager> games;
 	private CookieHouse cookieTreeHouse;
+	private PlayerDen playerTable;
 	//TODO thing that manages players objects
 	
-	
+	public GameTable()
+	{
+		games = new HashMap<>();
+		cookieTreeHouse = new CookieHouse();
+		playerTable = new PlayerDen();
+	}
 	/**
 	 * Creates a new game on the server 
 	 * @return the id of the new game created -1 if unable to create
 	 */
-	public int CreateGame(String name)
+	public int CreateGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
 	{
-		return -1;
+		int index = games.size();
+		ServerGameManager sgm = new ServerGameManager(name, randomTiles, randomNumbers, randomPorts, index);
+		games.put(index,sgm);
+		return index;
+	}
+	
+	/**
+	 * Checks a cookie
+	 * @param text
+	 * @return the player if found
+	 * @throws GameException if the cookie is invalid
+	 */
+	public ServerPlayer CookieCheck(String text) throws GameException
+	{
+		ServerCookie sc = cookieTreeHouse.checkCookie(text);
+		if (sc.isExpired()) throw new GameException("Cookie is expired");
+		return playerTable.GetPlayerID(sc.getPlayerID());
+	}
+	
+	/**
+	 * Logins a player
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws GameException if the player ID wasn't found
+	 */
+	public ServerCookie Login(String username, String password) throws GameException
+	{
+		int playerID = playerTable.CheckLogin(username, password);
+		if (playerID == -1) throw new GameException("Player isn't registered");
+		return this.cookieTreeHouse.bakeCookie(playerID);
 	}
 	
 	
 	/**
-	 * Gets the cookieTreeHouse
-	 * @return
+	 * Registers the user
+	 * @param username
+	 * @param password
+	 * @return the server cookie
+	 * @throws GameException if username is in use
 	 */
-	public CookieHouse GetCookies()
+	public ServerCookie RegisterPlayer(String username, String password) throws GameException
 	{
-		return this.cookieTreeHouse;
+		int playerID = playerTable.RegisterPlayer(username, password);
+		return this.cookieTreeHouse.bakeCookie(playerID);
 	}
-	
 	
 	/**
 	 * Gets a game object
@@ -46,7 +87,10 @@ public class GameTable
 	 */
 	public ServerGameManager GetGame (int id) throws GameException
 	{
-		throw new GameException("Game "+id+" not found");
+		if (games.containsKey(id))
+			throw new GameException("Game "+id+" not found");
+		else
+			return games.get(id);
 		
 	}
 	
@@ -56,13 +100,16 @@ public class GameTable
 	 * @param gameID
 	 * @param color the color if they haven't already
 	 */
-	public void JoinPlayer(int playerID, int gameID, CatanColor color)
+	public void JoinGame(int playerID, int gameID, CatanColor color)
 	{
 		//Check to make sure that the player is 
 		if (!IsPlayerJoined(playerID, gameID))
 		{
 			//TODO join the player to the game
 		}
+		
+		//TODO check if game ID has opening
+		//TODO add to cookie
 	}
 	
 	/**
@@ -75,6 +122,7 @@ public class GameTable
 	{
 		return false;
 	}
+	
 	
 	/**
 	 * Gets a player object in the game instead

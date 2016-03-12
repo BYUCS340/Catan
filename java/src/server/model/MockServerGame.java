@@ -8,9 +8,13 @@ package server.model;
  */
 public class MockServerGame extends ServerGameManager {
 
-	public MockServerGame()
+	public MockServerGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts, int index) 
 	{
+		super(name, randomTiles, randomNumbers, randomPorts, index);
+		// TODO Auto-generated constructor stub
+	}
+	
 		//TODO fill with fake data
 		
-	}
+	
 }
