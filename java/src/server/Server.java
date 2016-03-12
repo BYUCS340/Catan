@@ -1,5 +1,6 @@
 package server;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -10,6 +11,8 @@ import java.util.logging.*;
 
 import com.sun.net.httpserver.*;
 
+import server.swagger.SwaggerHandlers;
+
 public class Server 
 {
 	private static final int DEFAULT_PORT = 8081;
@@ -18,26 +21,52 @@ public class Server
 	private static final Level DEFAULT_CONSOLE_LEVEL = Level.FINEST;
 	private static final String DEFAULT_LOG_FILE = "CatanServer.log";
 	
+	private static String SwaggerPath = "";
+	
 	private Logger logger;
 	
 	public static void main(final String[] args) 
 	{
-		if (args.length == 1)
+		int port = DEFAULT_PORT;
+		
+		if (args.length >= 1)
 		{
-			try
+			int tempPort = TrySettingPort(args[0]);
+			
+			if (tempPort == -1)
 			{
-				int port = Integer.parseInt(args[0]);
-				new Server().Initialize(port);
+				TrySettingSwaggerPath(args[0]);
 			}
-			catch (NumberFormatException ex)
+			else
 			{
-				System.out.println("Unable to get port from input argument");
+				port = tempPort;
+				
+				if (args.length == 2)
+					TrySettingSwaggerPath(args[1]);
 			}
 		}
-		else
+		
+		new Server().Initialize(port);
+	}
+	
+	private static int TrySettingPort(String value)
+	{
+		try
 		{
-			new Server().Initialize(DEFAULT_PORT);
+			return Integer.parseInt(value);
 		}
+		catch (NumberFormatException ex) 
+		{ 
+			return -1;
+		}
+	}
+	
+	private static void TrySettingSwaggerPath(String value)
+	{
+		File file = new File(value);
+		
+		if (file.isDirectory())
+			SwaggerPath = file.getPath() + "\\";
 	}
 	
 	private void Initialize(int port)
@@ -52,6 +81,9 @@ public class Server
 			HttpServer server = HttpServer.create(new InetSocketAddress(port), MAX_WAITING);
 			
 			server.createContext("/", new HTTPHandler());
+			server.createContext("/docs/api/data", new SwaggerHandlers.JSONAppender());
+			server.createContext("/docs/api/view", new SwaggerHandlers.BasicFile());
+			SwaggerHandlers.SetRootPath(SwaggerPath);
 			
 			server.start();
 			

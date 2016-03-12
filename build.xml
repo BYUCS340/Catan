@@ -88,6 +88,7 @@
 	<property name="java.build" location="${java.dir}/build"/>
 	<property name="java.dist" location="${java.dir}/dist"/>
 	<property name="java.lib" location="${java.dir}/lib"/>
+	<property name="java.swagger" location="${java.src}/server/docs"/>
 		
 	<target name="clean" description="clean build files" >
 		<delete dir="${java.build}"/>
@@ -116,6 +117,12 @@
 		<mkdir dir="${java.dist}/images"/>
 		<copy todir="${java.dist}/images">
 			<fileset dir="${java.images}">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${java.dist}/docs"/>
+		<copy todir="${java.dist}/docs">
+			<fileset dir="${java.swagger}">
 				<include name="**"/>
 			</fileset>
 		</copy>
