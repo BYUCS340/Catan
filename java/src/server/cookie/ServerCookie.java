@@ -46,7 +46,40 @@ public class ServerCookie implements Cookie
 	{
 		long currentTime = System.currentTimeMillis();
 		long expiredTime = this.created + (minutesValid * 1000 * 60);
-		return currentTime  < expiredTime;
+		return currentTime  > expiredTime;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() 
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (cookieID ^ (cookieID >>> 32));
+		result = prime * result + playerID;
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof ServerCookie))
+			return false;
+		ServerCookie other = (ServerCookie) obj;
+		if (cookieID != other.cookieID)
+			return false;
+		if (playerID != other.playerID)
+			return false;
+		return true;
 	}
 
 }
