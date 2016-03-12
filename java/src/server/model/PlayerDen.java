@@ -1,6 +1,7 @@
 package server.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,17 +13,18 @@ import java.util.Map;
  */
 public class PlayerDen 
 {
-	private List<ServerPlayer> players;
+	private Map<Integer,ServerPlayer> players;
 	private List<String> playerNames;
 	private Map<String,Integer> playerLogin;
-	private int numberPlayers = 0;
+	private int numberPlayers = 1;
 	
 	
 	public PlayerDen()
 	{
-		players = new ArrayList<>();
+		players = new HashMap<>();
 		playerLogin = new HashMap<>();
 		playerNames = new ArrayList<>();
+		
 	}
 	
 	/**
@@ -52,12 +54,16 @@ public class PlayerDen
 		//Check to make sure the player isn't already registered
 		if (playerNames.contains(username))
 			throw new GameException("This username is already in use");
-		
+		playerNames.add(username);
 		String key = username+password;
 		
 		int index = numberPlayers++;
 		ServerPlayer sp = new ServerPlayer(username,password,index);
+		//Add the login credentials
 		playerLogin.put(key, index);
+		//add the player
+		
+		players.put(index, sp);
 		return index;
 	}
 	
@@ -69,7 +75,7 @@ public class PlayerDen
 	 */
 	public ServerPlayer GetPlayerID(int playerID) throws GameException
 	{
-		if (playerID < 0 || playerID >= players.size())
+		if (!players.containsKey(playerID))
 			throw new GameException("Player ID doesn't exist: "+playerID);
 		return players.get(playerID);
 	}
