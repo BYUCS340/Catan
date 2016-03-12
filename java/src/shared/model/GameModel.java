@@ -12,6 +12,7 @@ import shared.model.map.model.MapModel;
  */
 public class GameModel
 {
+	public int gameID = -1;
 	public MapModel mapModel;
 	public GameState gameState;
 	public Bank gameBank;

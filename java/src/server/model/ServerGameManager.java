@@ -2,6 +2,7 @@ package server.model;
 
 import shared.model.GameManager;
 import shared.model.GameModel;
+import shared.model.map.model.MapModel;
 
 /**
  * Special formation of the game manager 
@@ -9,7 +10,20 @@ import shared.model.GameModel;
  *
  */
 public class ServerGameManager extends GameManager {
+	private	boolean randomTiles;
+	private boolean randomNumbers;
+	private boolean randomPorts;
 	
+	public ServerGameManager(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts, int index) {
+		// TODO Auto-generated constructor stub
+		super();
+		this.gameTitle = name;
+		this.gameID = index;
+		this.randomNumbers = randomNumbers;
+		this.randomPorts = randomPorts;
+		this.randomTiles = randomTiles;
+	}
+
 	/**
 	 * Updates the version when doing an action
 	 */

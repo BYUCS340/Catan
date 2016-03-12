@@ -26,19 +26,28 @@ public class CookieHouse {
 	 */
 	public ServerCookie bakeCookie(int playerID)
 	{
-		return null;
-		
+		ServerCookie newcookie = new ServerCookie(playerID);
+		cookies.put(newcookie.getCookieText(), newcookie);
+		return newcookie;
 	}
 	
 	/**
 	 * Gets the cookie for the cookie text
 	 * @param cookieText
-	 * @return
-	 * @throws GameException 
+	 * @return the cookie 
+	 * @throws GameException if the cookie isn't found or stale 
 	 */
 	public ServerCookie checkCookie(String cookieText) throws GameException 
 	{
-		//TODO either create new exception type or return null
-		throw new GameException("This cookie is bad");
+		//Check to see if the cookie map has this particular cookie text
+		if (!cookies.containsKey(cookieText))
+			throw new GameException("No cookie found");
+		ServerCookie sc =  cookies.get(cookieText);
+		if (sc.isExpired())
+		{
+			cookies.remove(cookieText);
+			throw new GameException("Cookie has gone stale!");
+		}
+		return sc;
 	}
 }
