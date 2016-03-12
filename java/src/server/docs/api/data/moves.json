@@ -331,12 +331,18 @@
     }
   ],
   "models": {
-    "HexLocation":{
-        "id":"HexLocation",
+	"Edge": {
+      "id": "Edge","required":["start","end"],
+      "properties": {
+        "start": {"type": "Coordinate"},
+        "end": {"type": "Coordinate"}
+      }
+    },"Coordinate":{
+        "id":"Coordinate",
         "required":["x","y"],
         "properties":{
-            "x": {"type":"string"},
-            "y": {"type":"string"}
+            "x": {"type":"integer"},
+            "y": {"type":"integer"}
         }
     },"ResourceList": {
       "id": "ResourceList",
@@ -347,41 +353,6 @@
         "sheep":    { "type": "integer"},
         "wheat":    { "type": "integer"},
         "wood":     { "type": "integer"}
-      }
-    },"VertexLocation": {
-      "id": "VertexLocation",
-      "required":["x","y","direction"],
-      "properties": {
-        "x": {"type": "integer"},
-        "y": {"type": "integer"},
-        "direction": {
-          "type": "string",
-          "enum": [
-            "SW",
-            "SE",
-            "E",
-            "NE",
-            "NW",
-            "W"
-          ]
-        }
-      }
-    },"EdgeLocation": {
-      "id": "EdgeLocation","required":["x","y","direction"],
-      "properties": {
-        "x": {"type": "integer"},
-        "y": {"type": "integer"},
-        "direction": {
-          "type": "string",
-          "enum": [
-            "SW",
-            "SE",
-            "S",
-            "NE",
-            "NW",
-            "N"
-          ]
-        }
       }
     },
     "FinishTurn":
@@ -475,7 +446,7 @@
             "type":         {"type":"robPlayer"},
             "playerIndex":  {"type":"integer","description":"Who's doing the robbing"},
             "victimIndex":  {"type":"integer",      "description":"The order index of the player to rob"},
-            "location":   {"type":"HexLocation",  "description":"the new location of the robber"}
+            "location":   {"type":"Coordinate",  "description":"the new location of the robber"}
         }
     },
     "Soldier_":{
@@ -485,7 +456,7 @@
             "type":         {"type":"Soldier"},
             "playerIndex":  {"type":"integer","description":"Who's playing this dev card"},
             "victimIndex":  {"type":"integer",      "description":"The index of the player to rob"},
-            "location":   {"type":"HexLocation",  "description":"the new location of the robber"}
+            "location":   {"type":"Coordinate",  "description":"the new location of the robber"}
         }
     },
     "Road_Building_":{
@@ -494,8 +465,8 @@
         "properties":{
             "type": {"type":"Road_Building"},
             "playerIndex":  {"type":"integer","description":"Who's placing the roads"},
-            "spot1":  {"type":"EdgeLocation"},
-            "spot2": {"type":"EdgeLocation"}
+            "spot1":  {"type":"Edge"},
+            "spot2": {"type":"Edge"}
         }
     },"BuildRoad":{
         "id": "BuildRoad",
@@ -503,25 +474,25 @@
         "properties":{
             "type": {"type":"buildRoad"},
             "playerIndex":  {"type":"integer","description":"Who's placing the road"},
-            "roadLocation": {"type":"EdgeLocation"},
+            "roadLocation": {"type":"Edge"},
             "free": {"type":"Boolean","description":"Whether this is placed for free (setup)"}
         }
     },"BuildSettlement":{
         "id": "BuildSettlement",
-        "required":["type","playerIndex","vertexLocation","free"],
+        "required":["type","playerIndex","Coordinate","free"],
         "properties":{
             "type": {"type":"buildSettlement"},
             "playerIndex":  {"type":"integer","description":"Who's placing the settlement"},
-            "vertexLocation": {"type":"VertexLocation"},
+            "Coordinate": {"type":"Coordinate"},
             "free": {"type":"Boolean","description":"Whether this is placed for free (setup)"}
         }
     },"BuildCity":{
         "id": "BuildCity",
-        "required":["type","playerIndex","vertexLocation","free"],
+        "required":["type","playerIndex","Coordinate","free"],
         "properties":{
             "type": {"type":"buildCity"},
             "playerIndex": {"type":"integer","description":"Who's placing the city"},
-            "vertexLocation": {"type":"VertexLocation"}
+            "Coordinate": {"type":"Coordinate"}
         }
     },"OfferTrade":{
         "id": "OfferTrade",
