@@ -1,0 +1,555 @@
+{
+  "apiVersion": "1",
+  "swaggerVersion": "1.2",
+  "basePath": "http:\/\/localhost:8081",
+  "resourcePath": "\/moves",
+  "apis": [
+    {
+      "path": "\/moves\/sendChat",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Sends a chat message.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "sendChat",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "sendChat command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "SendChat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "\/moves\/rollNumber",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Used to roll a number at the beginning of your turn.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "rollNumber",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "rollNumber command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "RollNumber"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/robPlayer",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Moves the robber, selecting the new robber position and player to rob.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "robPlayer",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "robPlayer command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "RobPlayer"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/finishTurn",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Used to finish your turn.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "finishTurn",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "finishTurn command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "FinishTurn"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/buyDevCard",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Used to buy a development card.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "buyDevCard",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "buyDevCard command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "BuyDevCard"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/Year_of_Plenty",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Plays a 'Year of Plenty' card from your hand to gain the two specified resources.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "Year_of_Plenty",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "Year_of_Plenty command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "Year_of_Plenty_"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/Road_Building",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Plays a 'Road Building' card from your hand to build two roads at the specified locations.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "Road_Building",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "Road_Building command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "Road_Building_"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/Soldier",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Plays a 'Soldier' from your hand, selecting the new robber position and player to rob.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "Soldier",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "Soldier command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "Soldier_"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/Monopoly",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Plays a 'Monopoly' card from your hand to monopolize the specified resource.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "Monopoly",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "Monopoly command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "Monopoly_"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/Monument",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Plays a 'Monument' card from your hand to give you a victory point.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "Monument",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "Monument command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "Monument_"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/buildRoad",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Builds a road at the specified location. (Set 'free' to true during initial setup.)",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "buildRoad",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "buildRoad command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "BuildRoad"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/buildSettlement",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Builds a settlement at the specified location. (Set 'free' to true during initial setup.)",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "buildSettlement",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "buildSettlement command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "BuildSettlement"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/buildCity",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Builds a city at the specified location.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "buildCity",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "buildCity command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "BuildCity"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/offerTrade",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Offers a domestic trade to another player.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "offerTrade",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "offerTrade command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "OfferTrade"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/acceptTrade",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Used to accept or reject a trade offered to you.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "acceptTrade",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "acceptTrade command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "AcceptTrade"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/maritimeTrade",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Used to execute a maritime trade.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "maritimeTrade",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "maritimeTrade command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "MaritimeTrade"
+            }
+          ]
+        }
+      ]
+    },{
+      "path": "\/moves\/discardCards",
+      "operations": [
+        {
+          "httpMethod": "POST",
+          "summary": "Discards the specified resource cards.",
+          "responseClass": "Returns the client model JSON (identical to /game/model)",
+          "nickname": "discardCards",
+          "consumes":"application/json",
+          "parameters": [
+          {
+            "description": "discardCards command object",
+            "paramType": "body",
+            "required": true,
+            "dataType": "DiscardCards"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "models": {
+    "HexLocation":{
+        "id":"HexLocation",
+        "required":["x","y"],
+        "properties":{
+            "x": {"type":"string"},
+            "y": {"type":"string"}
+        }
+    },"ResourceList": {
+      "id": "ResourceList",
+      "required":["brick","ore","sheep","wheat","wood"],
+      "properties": {
+        "brick":    { "type": "integer"},
+        "ore":      { "type": "integer"},
+        "sheep":    { "type": "integer"},
+        "wheat":    { "type": "integer"},
+        "wood":     { "type": "integer"}
+      }
+    },"VertexLocation": {
+      "id": "VertexLocation",
+      "required":["x","y","direction"],
+      "properties": {
+        "x": {"type": "integer"},
+        "y": {"type": "integer"},
+        "direction": {
+          "type": "string",
+          "enum": [
+            "SW",
+            "SE",
+            "E",
+            "NE",
+            "NW",
+            "W"
+          ]
+        }
+      }
+    },"EdgeLocation": {
+      "id": "EdgeLocation","required":["x","y","direction"],
+      "properties": {
+        "x": {"type": "integer"},
+        "y": {"type": "integer"},
+        "direction": {
+          "type": "string",
+          "enum": [
+            "SW",
+            "SE",
+            "S",
+            "NE",
+            "NW",
+            "N"
+          ]
+        }
+      }
+    },
+    "FinishTurn":
+        {
+            "id":"FinishMove",
+            "properties":{
+                "type":{
+                    "type":"finishTurn",
+                    "required":true
+                },
+                "playerIndex":  {"type":"integer","description":"Who's sending this command (0-3)","required":true}
+            }
+        },
+    "RollNumber":{
+        "type":"object",
+        "id":"RollNumber",
+        "required":["type","playerIndex","number"],
+        "properties":{
+            "type":{
+                "type": "rollNumber"
+            },
+            "playerIndex":  {"type":"integer","description":"Who's sending this command (0-3)"},
+            "number": {
+                "type": "integer",
+                "format": "int32",
+                "description": "what number was rolled (2-12)",
+                "minimum": 2,
+                "maximum": 12
+            }
+        }
+    },
+    "SendChat":{
+        "id":"SendChat",
+        "required":["type","playerIndex","content"],
+        "properties":{
+            "type": {"type":"sendChat" },
+            "playerIndex":  {"type":"integer","description":"Who's sending this chat message"},
+            "content": {"type":"string"}
+            }
+    },
+    "AcceptTrade":{
+        "id":"AcceptTrade",
+        "required":["type","playerIndex","willAccept"],
+        "properties":{
+            "type": {"type":"acceptTrade"},
+            "playerIndex":  {"type":"integer","description":"Who's accepting / rejecting this trade"},
+            "willAccept": {
+              "type":"boolean",
+              "description":"Whether you accept the trade or not"
+              }
+        }
+    },
+    "BuyDevCard":{
+        "id":"BuyDevCard",
+        "properties":{
+            "type": {
+              "type":"buyDevCard",
+              "required":true
+            },
+            "playerIndex":  {"type":"integer","description":"Who's playing this dev card","required":true}
+        }
+    },
+    "Year_of_Plenty_":{
+        "id": "Year_of_Plenty_",
+        "required":["type","playerIndex","resource1","resource2"],
+        "properties":{
+          "type": {"type":"Year_of_Plenty"},
+          "playerIndex":  {"type":"integer","description":"Who's playing this dev card"},
+          "resource1": {"type":"Resource"},
+          "resource2": {"type":"Resource"}
+        }
+    },"Monopoly_":{
+        "id": "Monopoly_",
+        "required":["type","playerIndex","resource"],
+        "properties":{
+            "type": {"type":"Monopoly"},
+            "resource": {"type":"string"},
+            "playerIndex":  {"type":"integer","description":"Who's playing this dev card"}
+        }
+    },"Monument_":{
+        "id": "Monument_",
+        "required":["type","playerIndex"],
+        "properties":{
+            "type": {"type":"Monument" },
+            "playerIndex":  {"type":"integer","description":"Who's playing this dev card"}
+        }
+    },"RobPlayer":{
+        "id": "RobPlayer",
+        "required":["type","playerIndex","victimIndex","location"],
+        "properties":{
+            "type":         {"type":"robPlayer"},
+            "playerIndex":  {"type":"integer","description":"Who's doing the robbing"},
+            "victimIndex":  {"type":"integer",      "description":"The order index of the player to rob"},
+            "location":   {"type":"HexLocation",  "description":"the new location of the robber"}
+        }
+    },
+    "Soldier_":{
+        "id": "Soldier_",
+        "required":["type","playerIndex","victimIndex","location"],
+        "properties":{
+            "type":         {"type":"Soldier"},
+            "playerIndex":  {"type":"integer","description":"Who's playing this dev card"},
+            "victimIndex":  {"type":"integer",      "description":"The index of the player to rob"},
+            "location":   {"type":"HexLocation",  "description":"the new location of the robber"}
+        }
+    },
+    "Road_Building_":{
+        "id": "Road_Building_",
+        "required":["type","playerIndex","spot1","spot2"],
+        "properties":{
+            "type": {"type":"Road_Building"},
+            "playerIndex":  {"type":"integer","description":"Who's placing the roads"},
+            "spot1":  {"type":"EdgeLocation"},
+            "spot2": {"type":"EdgeLocation"}
+        }
+    },"BuildRoad":{
+        "id": "BuildRoad",
+        "required":["type","playerIndex","roadLocation","free"],
+        "properties":{
+            "type": {"type":"buildRoad"},
+            "playerIndex":  {"type":"integer","description":"Who's placing the road"},
+            "roadLocation": {"type":"EdgeLocation"},
+            "free": {"type":"Boolean","description":"Whether this is placed for free (setup)"}
+        }
+    },"BuildSettlement":{
+        "id": "BuildSettlement",
+        "required":["type","playerIndex","vertexLocation","free"],
+        "properties":{
+            "type": {"type":"buildSettlement"},
+            "playerIndex":  {"type":"integer","description":"Who's placing the settlement"},
+            "vertexLocation": {"type":"VertexLocation"},
+            "free": {"type":"Boolean","description":"Whether this is placed for free (setup)"}
+        }
+    },"BuildCity":{
+        "id": "BuildCity",
+        "required":["type","playerIndex","vertexLocation","free"],
+        "properties":{
+            "type": {"type":"buildCity"},
+            "playerIndex": {"type":"integer","description":"Who's placing the city"},
+            "vertexLocation": {"type":"VertexLocation"}
+        }
+    },"OfferTrade":{
+        "id": "OfferTrade",
+        "required":["type","playerIndex","offer","receiver"],
+        "properties":{
+            "type": {"type":"offerTrade"},
+            "playerIndex": {"type":"integer","description":"Who's sending the offer"},
+            "offer": {"type":"ResourceList","description":"What you get (+) and what you give (-)"},
+            "receiver": {"type":"integer","description":"Who you're offering the trade to (0-3)"}
+        }
+    },"MaritimeTrade":{
+        "id": "MaritimeTrade",
+        "required":["type","playerIndex","offer"],
+        "properties":{
+            "type": {"type":"maritimeTrade"},
+            "playerIndex": {"type":"integer","description":"Who's doing the trading"},
+            "ratio": {"type":"integer","description":"The ratio of the trade your doing as an integer (ie. put 3 for a 3:1 trade)"},
+            "inputResource": {"type":"String","description":"What type of resource you're giving."},
+            "outputResource": {"type":"String","description":"What type of resource you're getting."}
+        }
+    },"DiscardCards":{
+        "id": "DiscardCards",
+        "required":["type","playerIndex","discardedCards"],
+        "properties":{
+            "type": {"type":"discardCards"},
+            "playerIndex": {"type":"integer","description":"Who's discarding"},
+            "discardedCards": {"type":"ResourceList"}
+        }
+    }
+  }
+}
