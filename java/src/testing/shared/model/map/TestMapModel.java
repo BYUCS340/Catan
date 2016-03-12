@@ -15,6 +15,7 @@ import shared.definitions.HexType;
 import shared.definitions.PieceType;
 import shared.definitions.PortType;
 import shared.model.map.*;
+import shared.model.map.model.MapGenerator;
 import shared.model.map.model.MapModel;
 import shared.model.map.objects.*;
 
@@ -25,7 +26,7 @@ public class TestMapModel
 	@Before
 	public void setUp() throws Exception
 	{
-		model = new MapModel();
+		model = MapGenerator.BeginnerMap();
 	}
 
 	@After
@@ -35,22 +36,11 @@ public class TestMapModel
 	}
 
 	/**
-	 * The Robber has not been initialized yet.
-	 */
-	@Test
-	public void testIsRobberInitialized_False()
-	{
-		assertFalse(model.IsRobberInitialized());
-	}
-
-	/**
 	 * By running the map generator, the robber should get initialized.
 	 */
 	@Test
 	public void testIsRobberInitialized_True()
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		assertTrue(model.IsRobberInitialized());
 	}
 	
@@ -137,18 +127,6 @@ public class TestMapModel
 		
 		assertTrue(model.ContainsVertex(point));
 	}
-
-	/**
-	 * Hexes need to be initialized according to the data from the 
-	 * server. If not, the hex will not exist.
-	 */
-	@Test
-	public void testHexExists_Uninitialized()
-	{
-		Coordinate point = new Coordinate(1,0);
-		
-		assertFalse(model.ContainsHex(point));
-	}
 	
 	/**
 	 * Map generator initializes the hexes. Passing in a valid coordinate
@@ -157,7 +135,6 @@ public class TestMapModel
 	@Test
 	public void testHexExists_Initialized()
 	{
-		MapGenerator.BeginnerMap(model);
 		Coordinate point = new Coordinate(1, 0);
 		
 		assertTrue(model.ContainsHex(point));
@@ -171,7 +148,6 @@ public class TestMapModel
 	@Test
 	public void testContainsHex_InvalidHex()
 	{
-		MapGenerator.BeginnerMap(model);
 		Coordinate point = new Coordinate(1, 1);
 		
 		assertFalse(model.ContainsHex(point));
@@ -387,8 +363,6 @@ public class TestMapModel
 	@Test
 	public void testCanPlaceRobber_False()
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Coordinate point = new Coordinate(0, 1);
 		assertFalse(model.CanPlaceRobber(point));
 	}
@@ -400,8 +374,6 @@ public class TestMapModel
 	@Test
 	public void testCanPlaceRobber_Invalid()
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Coordinate point = new Coordinate(0, 0);
 		assertFalse(model.CanPlaceRobber(point));
 	}
@@ -412,8 +384,6 @@ public class TestMapModel
 	@Test
 	public void testCanPlaceRobber_Valid()
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Coordinate point = new Coordinate(1,0);
 		assertTrue(model.CanPlaceRobber(point));
 	}
@@ -424,8 +394,6 @@ public class TestMapModel
 	@Test
 	public void testCanPlacePip_False()
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Coordinate point = new Coordinate(0, 1);
 		assertFalse(model.CanPlacePip(point));
 	}
@@ -445,8 +413,6 @@ public class TestMapModel
 	@Test
 	public void testCanPlacePip_Invalid()
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Coordinate point = new Coordinate(0, 0);
 		assertFalse(model.CanPlacePip(point));
 	}
@@ -457,8 +423,6 @@ public class TestMapModel
 	@Test
 	public void testCanPlacePip_True()
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Coordinate point = new Coordinate(1, 0);
 		assertTrue(model.CanPlacePip(point));
 	}
@@ -696,8 +660,6 @@ public class TestMapModel
 	@Test(expected=MapException.class)
 	public void testPlacePort_DryPort() throws MapException
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Coordinate mainPoint = new Coordinate(3, 0);
 		Coordinate helpPoint = new Coordinate(3, 1);
 		
@@ -713,8 +675,6 @@ public class TestMapModel
 	@Test(expected=MapException.class)
 	public void testPlacePort_InvalidVertices() throws MapException
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Coordinate mainPoint = new Coordinate(0, 1);
 		Coordinate helpPoint = new Coordinate(0, 2);
 		
@@ -726,8 +686,6 @@ public class TestMapModel
 	@Test
 	public void testSetPort_Valid() throws MapException
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Coordinate mainPoint = new Coordinate(0, 1);
 		Coordinate p1 = new Coordinate(1, 1);
 		Coordinate p2 = new Coordinate(1, 2);
@@ -742,8 +700,6 @@ public class TestMapModel
 	@Test(expected=MapException.class)
 	public void testPlaceRobber_Fail() throws MapException
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Coordinate point = new Coordinate(0, 1);
 		
 		model.PlaceRobber(point);
@@ -757,47 +713,11 @@ public class TestMapModel
 	@Test
 	public void testPlaceRobber() throws MapException
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Coordinate point = new Coordinate(1, 0);
 		
 		model.PlaceRobber(point);
 		
 		assertTrue(model.GetRobberLocation().getPoint().equals(point));
-	}
-
-	/**
-	 * Ensures pips can be placed.
-	 * @throws MapException Shouldn't occur.
-	 */
-	@Test
-	public void testPlacePip() throws MapException
-	{
-		Coordinate point = new Coordinate(1, 0);
-		model.PlaceHex(HexType.BRICK, point);
-		Hex hex = model.GetHex(point);
-		
-		model.PlacePip(2, point);
-		Iterator<Entry<Integer, List<Hex>>> pips = model.GetPips();
-		
-		Entry<Integer,List<Hex>> entry = pips.next();
-		
-		assertTrue(entry.getKey() == 2);
-		assertTrue(entry.getValue().get(0).equals(hex));
-	}
-
-	/**
-	 * Should throw an exception when not initialized.
-	 * @throws MapException Thrown attempting to get hex.
-	 */
-	@Test(expected=MapException.class)
-	public void testGetHex_Uninitialized() throws MapException
-	{
-		Coordinate point = new Coordinate(1, 0);
-		
-		model.GetHex(point);
-		
-		fail("Reach code that should not have been reached");
 	}
 	
 	/**
@@ -808,7 +728,6 @@ public class TestMapModel
 	public void testGetHex_InvalidHex() throws MapException
 	{
 		Coordinate point = new Coordinate(1, 1);
-		MapGenerator.BeginnerMap(model);
 		
 		model.GetHex(point);
 	}
@@ -821,7 +740,6 @@ public class TestMapModel
 	public void testGetHex_Valid() throws MapException
 	{
 		Coordinate point = new Coordinate(1, 0);
-		MapGenerator.BeginnerMap(model);
 		
 		Hex hex = model.GetHex(point);
 		
@@ -847,7 +765,6 @@ public class TestMapModel
 	@Test
 	public void testGetHexes_Initialized()
 	{
-		MapGenerator.BeginnerMap(model);
 		Iterator<Hex> hexes = model.GetHexes();
 		
 		assertNotNull(hexes);
@@ -975,8 +892,6 @@ public class TestMapModel
 	@Test
 	public void testGetVerticiesHex_Interior() throws MapException
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Coordinate point = new Coordinate(1, 0);
 		Hex hex = model.GetHex(point);
 		
@@ -1002,8 +917,6 @@ public class TestMapModel
 	@Test
 	public void testGetVerticiesHex_Exterior() throws MapException
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Coordinate point = new Coordinate(0, 1);
 		Hex hex = model.GetHex(point);
 		
@@ -1053,8 +966,6 @@ public class TestMapModel
 	@Test
 	public void testGetPorts()
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Iterator<Entry<Edge, Hex>> ports = model.GetPorts();
 		
 		int count = 0;
@@ -1074,8 +985,6 @@ public class TestMapModel
 	@Test
 	public void testGetPips()
 	{
-		MapGenerator.BeginnerMap(model);
-		
 		Iterator<Entry<Integer, List<Hex>>> pips = model.GetPips();
 		
 		int count = 0;

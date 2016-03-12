@@ -43,7 +43,7 @@ public class MapModel implements IMapModel {
 	/**
 	 * Creates a new Map Model object.
 	 */
-	public MapModel()
+	MapModel()
 	{
 		force = false;
 		setup = false;

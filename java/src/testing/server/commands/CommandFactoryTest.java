@@ -222,9 +222,29 @@ public class CommandFactoryTest
 	}
 	
 	@Test
+	public void TestMovesYear_Of_Plenty() throws InvalidFactoryParameterException
+	{
+		String url = "moves/year_of_plenty";
+		StringBuilder param = new StringBuilder(url.toUpperCase());
+		ICommand command = factory.GetCommand(param, playerID, object);
+		
+		assertTrue(command.getClass() == MovesYearOfPlentyCommand.class);
+	}
+	
+	@Test
 	public void TestMovesRoadBuilding() throws InvalidFactoryParameterException
 	{
 		String url = "moves/roadbuilding";
+		StringBuilder param = new StringBuilder(url.toUpperCase());
+		ICommand command = factory.GetCommand(param, playerID, object);
+		
+		assertTrue(command.getClass() == MovesRoadBuildingCommand.class);
+	}
+	
+	@Test
+	public void TestMovesRoad_Builder() throws InvalidFactoryParameterException
+	{
+		String url = "moves/road_building";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		ICommand command = factory.GetCommand(param, playerID, object);
 		

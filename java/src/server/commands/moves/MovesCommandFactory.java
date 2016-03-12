@@ -23,7 +23,7 @@ public class MovesCommandFactory extends Factory
 	 */
 	public MovesCommandFactory() 
 	{
-		directors = new HashMap<String, ICommandDirector>(17);
+		directors = new HashMap<String, ICommandDirector>(19);
 		
 		directors.put("ACCEPTTRADE", new AcceptTradeDirector());
 		directors.put("BUILDCITY", new BuildCityDirector());
@@ -37,11 +37,13 @@ public class MovesCommandFactory extends Factory
 		directors.put("MONUMENT", new MonumentDirector());
 		directors.put("OFFERTRADE", new OfferTradeDirector());
 		directors.put("ROADBUILDING", new RoadBuildingDirector());
+		directors.put("ROAD_BUILDING", directors.get("ROADBUILDING"));
 		directors.put("ROBPLAYER", new RobPlayerDirector());
 		directors.put("ROLLNUMBER", new RollNumberDirector());
 		directors.put("SENDCHAT", new SendChatDirector());
 		directors.put("SOLDIER", new SoldierDirector());
 		directors.put("YEAROFPLENTY", new YearOfPlentyDirector());
+		directors.put("YEAR_OF_PLENTY", directors.get("YEAROFPLENTY"));
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.map.*;
+import shared.model.map.model.MapGenerator;
 import shared.model.map.model.MapModel;
 import shared.model.chat.ChatBox;
 
@@ -74,8 +75,7 @@ public class GameManager implements ModelSubject
 		gameBank.resetToBankDefaults();
 		
 		//Create map and fill with default data.
-		map = new MapModel();
-		MapGenerator.BeginnerMap(map);
+		map = MapGenerator.BeginnerMap();
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public class GameManager implements ModelSubject
 		players = new ArrayList<>();
 		gameBank = new Bank();
 		gameState = new GameState();
-		map = new MapModel();
+		map = MapGenerator.BeginnerMap();
 		victoryPointManager = new VictoryPointManager();
 		playerColors = new int[10];
 		//fill the array with -1 by default

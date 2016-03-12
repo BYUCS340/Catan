@@ -9,6 +9,7 @@ import com.sun.net.httpserver.*;
 import server.commands.CommandFactory;
 import server.commands.ICommand;
 import server.commands.InvalidFactoryParameterException;
+import server.swagger.SwaggerHandlers;
 
 /**
  * Handles HTTP requests.
@@ -22,7 +23,19 @@ public class HTTPHandler implements HttpHandler
 	@Override
 	public void handle(HttpExchange exchange) throws IOException 
 	{
-		StringBuilder uri = new StringBuilder(exchange.getRequestURI().toString().toUpperCase());
+		String request = exchange.getRequestURI().toString();
+		
+		//If the request contains a period or is less than 1, then it is for swagger and should
+		//be redirected there.
+		if (request.lastIndexOf('.') != -1 || request.length() <= 1)
+		{
+			SwaggerHandlers.BasicFile swagger = new SwaggerHandlers.BasicFile();
+			swagger.handleRedirect(exchange);
+			return;
+		}
+		
+		StringBuilder uri = new StringBuilder(request.toUpperCase());
+		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), "utf-8"));
 		
 		String line = null;
