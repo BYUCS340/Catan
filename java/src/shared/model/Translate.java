@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import shared.model.map.*;
+import shared.model.map.model.MapGenerator;
 import shared.model.map.model.MapModel;
 import shared.model.map.objects.Edge;
 import shared.definitions.*;
@@ -292,7 +293,7 @@ public class Translate
 	 */
 	public MapModel fromNetMap(NetMap netMap, List<NetPlayer> players)
 	{
-		MapModel model = new MapModel();
+		MapModel model = MapGenerator.CreateMapModel();
 		model.ForceUpdate(true);
 		MapGenerator.WaterSetup(model);
 
