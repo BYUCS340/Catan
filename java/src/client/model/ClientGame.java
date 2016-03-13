@@ -2,7 +2,7 @@ package client.model;
 
 import client.networking.Poller;
 import client.networking.RealServerProxy;
-import client.networking.JSONServerProxy;
+import client.networking.EarlyServerProxy;
 import shared.model.GameManager;
 import shared.model.ModelException;
 
@@ -37,7 +37,7 @@ public class ClientGame {
 	 * Starting the game for testing purposes
 	 * @param proxy
 	 */
-	static public void startGameWithProxy(JSONServerProxy proxy)
+	static public void startGameWithProxy(EarlyServerProxy proxy)
 	{
 		ClientGame.game = new ClientGameManager(proxy);
 		ClientGame.poller = new Poller();
