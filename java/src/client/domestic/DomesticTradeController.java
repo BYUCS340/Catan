@@ -1,12 +1,12 @@
 package client.domestic;
 
+import shared.data.PlayerInfo;
 import shared.definitions.*;
 import shared.model.ModelObserver;
 
 import java.util.ArrayList;
 
 import client.base.*;
-import client.data.PlayerInfo;
 import client.misc.*;
 import client.model.ClientGame;
 import client.model.ClientGameManager;

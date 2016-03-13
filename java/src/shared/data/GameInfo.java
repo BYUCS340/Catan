@@ -1,4 +1,4 @@
-package client.data;
+package shared.data;
 
 import java.util.*;
 
@@ -49,6 +49,20 @@ public class GameInfo
 	public void addPlayer(PlayerInfo newPlayer)
 	{
 		players.add(newPlayer);
+	}
+	
+	public void setPlayers(List<PlayerInfo> newPlayers)
+	{
+		players = newPlayers;
+	}
+	
+	public void setPlayers(PlayerInfo[] newPlayers)
+	{
+		players.clear();
+		for (int i=0; i< newPlayers.length; i++)
+		{
+			players.add(newPlayers[i]);
+		}
 	}
 	
 	public List<PlayerInfo> getPlayers()
