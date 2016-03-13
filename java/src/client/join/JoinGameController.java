@@ -8,12 +8,12 @@ import javax.swing.Timer;
 
 import client.base.Controller;
 import client.base.IAction;
-import client.data.ClientDataTranslator;
-import client.data.GameInfo;
-import client.data.PlayerInfo;
 import client.misc.IMessageView;
 import client.model.ClientGame;
 import client.networking.ServerProxyException;
+import shared.data.DataTranslator;
+import shared.data.GameInfo;
+import shared.data.PlayerInfo;
 import shared.definitions.CatanColor;
 import shared.networking.transport.NetGame;
 
@@ -126,7 +126,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			//Get the games
 			games = new GameInfo[allGames.size()];
 			for (int i=0; i< allGames.size(); i++)
-				games[i] = ClientDataTranslator.convertGame(allGames.get(i));
+				games[i] = DataTranslator.convertGame(allGames.get(i));
 
 			//Create the current player
 			PlayerInfo localPlayer = new PlayerInfo();
@@ -177,7 +177,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		
 		//this.refreshGameList();
 		getNewGameView().closeModal();
-		GameInfo newgameinfo = ClientDataTranslator.convertGame(newgame);
+		GameInfo newgameinfo = DataTranslator.convertGame(newgame);
 		
 		createdGame = true;
 		startJoinGame(newgameinfo);
