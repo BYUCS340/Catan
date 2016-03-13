@@ -1,0 +1,276 @@
+{
+    "apiVersion": "1",
+    "swaggerVersion": "1.2",
+    "basePath": "http://localhost:8081",
+    "resourcePath": "/games",
+    "apis": [
+        {
+            "path": "/games/list",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "Get a list of all games in progress.",
+                    "nickname": "list",
+                    "parameters": [],
+                    "type": "array",
+                    "items": { "$ref": "Game" }
+                }
+            ]
+        },
+        {
+            "path": "/games/create",
+            "description": "Creates a game",
+            "operations": [
+                {
+                    "httpMethod": "POST",
+                    "summary": "Creates a new game.",
+                    "responseClass": "NewGame",
+                    "nickname": "create",
+                    "consumes":"application/json",
+                    "parameters": [
+                    {
+                        "description": "The name and settings to use for the new game. Can be sent as form encoded key-value pairs as well. The new game's ID can be read from the response.",
+                        "paramType": "body",
+                        "required": true,
+                        "dataType": "CreateGameRequest"
+                    }
+                  ]
+                }
+            ]
+        },
+        {
+            "path": "/games/join",
+            "operations": [
+                {
+                    "httpMethod": "POST",
+                    "summary": "Adds (or re-adds) the player to the specified game, and sets their catan.game HTTP cookie",
+                    "responseClass": "void",
+                    "nickname": "join",
+                    "consumes":"application/json","parameters": [{
+                        "description": "The ID of the game the player wants to join, and the color they want.",
+                        "paramType": "body",
+                        "required": true,
+                        "dataType": "JoinGameRequest"
+                    }]
+                }
+            ]
+        },
+        {
+            "path": "/games/save",
+            "operations": [
+                {
+                    "httpMethod": "POST",
+                    "summary": "Saves the current state of the specified game to a file.",
+					"notes": "This method is for testing and debugging purposes.  When a bug is found, you can use the /games/save method to save the state of the game to a file, and attach the file to a bug report.  A developer can later restore the state of the game when the bug occurred by loading the previously saved file using the /games/load method. Game files are saved to and loaded from the server's saves/ directory.",
+                    "responseClass": "void",
+                    "nickname": "save",
+                    "consumes":"application/json",
+                    "parameters": [{
+                        "description": "The id of the game to save and the save file name (no extensions please).",
+                        "paramType": "body",
+                        "required": true,
+                        "dataType": "SaveGameRequest"
+                    }]
+                }
+            ]
+        },
+        {
+            "path": "/games/load",
+            "operations": [
+                {
+                    "httpMethod": "POST",
+                    "summary": "Loads a previously saved game file to restore the state of a game.",
+					"notes": "This method is for testing and debugging purposes.  When a bug is found, you can use the /games/save method to save the state of the game to a file, and attach the file to a bug report.  A developer can later restore the state of the game when the bug occurred by loading the previously saved file using the /games/load method. Game files are saved to and loaded from the server's saves/ directory.",
+                    "responseClass": "void",
+                    "nickname": "load",
+                    "consumes":"application/json",
+                    "parameters": [{
+                        "description": "The game file to load.",
+                        "paramType": "body",
+                        "required": true,
+                        "dataType": "LoadGameRequest"
+                    }]
+                }
+            ]
+        }
+    ],
+    "models": {
+      "Player": {
+            "id": "Player",
+            "description": "A stub for player representation",
+            "required": [
+                "color",
+                "name",
+                "id"
+            ],
+            "properties": {
+                "color": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "EmptyPlayer": {
+            "id": "EmptyPlayer",
+            "description": "Empty player object",
+            "required": [
+            ],
+            "properties": {
+            }
+        },
+        "JoinGameRequest": {
+          "id": "JoinGameRequest",
+          "required":["id","color"],
+          "properties": {
+            "id": {
+              "description": "The ID of the game to join",
+              "type": "integer"
+            },
+            "color": {
+              "description": "What color you want to join (or rejoin) as.",
+              "type": "string",
+              "enum": [
+                "red",
+                "green",
+                "blue",
+                "yellow",
+                "puce",
+                "brown",
+                "white",
+                "purple",
+                "orange"
+              ]
+            }
+          }
+        },
+        "SaveGameRequest": {
+          "id": "SaveGameRequest",
+          "required":["id","name"],
+          "properties": {
+            "id": {
+              "description": "The ID of the game to save",
+              "type": "integer"
+            },
+            "name": {
+              "description": "The file name you want to save it under",
+              "type": "string"
+            }
+          }
+        },
+        "LoadGameRequest": {
+          "id": "LoadGameRequest",
+          "required":["name"],
+          "properties": {
+            "name": {
+              "description": "The name of the saved game file that you want to load. (The game's ID is restored as well.)",
+              "type": "string"
+            }
+          }
+        },
+        "Game": {
+            "id": "Game",
+            "description": "Information about a game",
+            "required": [
+                "id",
+                "title",
+                "players"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "players": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "Player"
+                    }
+                }
+            }
+        },
+        "NewGame": {
+            "id": "NewGame",
+            "description": "Information about a new game",
+            "required": [
+                "id",
+                "title",
+                "players"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "players": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "EmptyPlayer"
+                    }
+                }
+            }
+        },
+        "GameJoinRequest": {
+            "id": "GameJoinRequest",
+            "description": "A request to join a game",
+            "required": [
+                "id",
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "players": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "Player"
+                    }
+                }
+            }
+        },
+        "CreateGameRequest": {
+            "id": "CreateGameRequest",
+            "description": "A game creation request.",
+            "required": [
+                "name",
+                "randomTiles",
+                "randomPorts",
+                "randomNumbers"
+            ],
+            "properties": { 
+                        "randomTiles":{
+                            "description": "whether the tiles should be randomly placed",
+                            "type": "boolean"
+                        },
+                        "randomNumbers":{
+                            "description": "whether the numbers should be randomly placed",
+                            "type": "boolean"
+                        },
+                        "randomPorts":{
+                            "description": "whether the port should be randomly placed",
+                            "type":"boolean"
+                        },
+                        "name":{
+                            "description": "The name of the game",
+                            "type": "string"
+                        }
+            }
+        }
+    }
+}

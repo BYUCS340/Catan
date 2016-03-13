@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import shared.model.Translate;
 import shared.model.map.Coordinate;
-import shared.model.map.MapGenerator;
+import shared.model.map.model.MapGenerator;
 import shared.model.map.model.MapModel;
 import shared.model.map.objects.Edge;
 import shared.model.map.objects.Hex;
@@ -23,8 +23,7 @@ public class TestTranslate
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception 
 	{
-		model = new MapModel();
-		MapGenerator.BeginnerMap(model);		
+		model = MapGenerator.BeginnerMap();		
 	}
 
 	@AfterClass

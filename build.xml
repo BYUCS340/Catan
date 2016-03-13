@@ -88,6 +88,7 @@
 	<property name="java.build" location="${java.dir}/build"/>
 	<property name="java.dist" location="${java.dir}/dist"/>
 	<property name="java.lib" location="${java.dir}/lib"/>
+	<property name="java.swagger" location="${java.src}/server/docs"/>
 		
 	<target name="clean" description="clean build files" >
 		<delete dir="${java.build}"/>
@@ -119,6 +120,12 @@
 				<include name="**"/>
 			</fileset>
 		</copy>
+		<mkdir dir="${java.dist}/docs"/>
+		<copy todir="${java.dist}/docs">
+			<fileset dir="${java.swagger}">
+				<include name="**"/>
+			</fileset>
+		</copy>
  		<jar jarfile="${java.dist}/catan-client.jar" basedir="${java.build}">
 			<manifest>
 				<attribute name="Main-Class" value="client.main.Catan"/>
@@ -128,7 +135,7 @@
 		</jar>
  		<jar jarfile="${java.dist}/catan-server.jar" basedir="${java.build}">
 			<manifest>
-				<attribute name="Main-Class" value="PUT THE NAME OF YOUR SERVER'S MAIN CLASS HERE"/>
+				<attribute name="Main-Class" value="server.Server"/>
 				<attribute name="Class-Path" 
 					value="lib/java-json.jar" />
 			</manifest>
@@ -148,6 +155,7 @@
  	
 	<target name="our-server" depends="package" description="compiles, packages, and runs the student server">
 		<java jar="${java.dist}/catan-server.jar" dir="${java.dist}" fork="yes">
+			<arg value="${port}"/>
 			<sysproperty key="com.sun.management.jmxremote" value=""/>
 			<assertions>
 				<enable/>

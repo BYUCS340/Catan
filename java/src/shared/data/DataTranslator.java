@@ -1,4 +1,4 @@
-package client.data;
+package shared.data;
 
 import java.util.Iterator;
 import java.util.List;
@@ -8,7 +8,7 @@ import shared.model.Player;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetPlayer;
 
-public class ClientDataTranslator {
+public class DataTranslator {
 	
 	/**
 	 * Converts the net player into the player info
@@ -79,7 +79,7 @@ public class ClientDataTranslator {
 		for (int i=0; i< players.size(); i++)
 		{
 			//Add each player
-			gi.addPlayer(ClientDataTranslator.convertPlayerInfo(players.get(i)));
+			gi.addPlayer(DataTranslator.convertPlayerInfo(players.get(i)));
 		}
 		return gi;
 		

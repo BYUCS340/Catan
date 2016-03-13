@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import client.data.ClientDataTranslator;
-import client.data.GameInfo;
-import client.data.PlayerInfo;
 import client.data.RobPlayerInfo;
 import client.map.RobView;
 import client.networking.RealServerProxy;
@@ -24,6 +21,9 @@ import shared.model.GameManager;
 import shared.model.ModelException;
 import shared.model.Player;
 import shared.model.Translate;
+import shared.data.DataTranslator;
+import shared.data.GameInfo;
+import shared.data.PlayerInfo;
 import shared.definitions.*;
 import shared.locations.*;
 import shared.model.*;
@@ -145,35 +145,6 @@ public class ClientGameManager extends GameManager
 			return 0;
 		}
 	}
-	
-
-	/**
-	 *
-	 * @return
-	 */
-	public PlayerInfo[] allCurrentPlayers()
-	{
-		PlayerInfo[] allplayers = new PlayerInfo[this.players.size()];
-		for (int i=0; i< this.players.size(); i++)
-		{
-			allplayers[i] = ClientDataTranslator.convertPlayerInfo(players.get(i));
-		}
-
-		return allplayers;
-	}
-
-	/**
-	 *
-	 * @param playerIndex
-	 */
-	public String getPlayerNameByIndex(int playerIndex)
-	{
-		if(playerIndex > 3 || playerIndex < 0)
-			return null;
-
-		return players.get(playerIndex).name;
-	}
-
 
 	/**
 	 * 
@@ -242,7 +213,7 @@ public class ClientGameManager extends GameManager
 					this.myPlayerIndex = newplay.getPlayerIndex();
 					
 				}
-				Player play = ClientDataTranslator.convertPlayerInfo(newplay);
+				Player play = DataTranslator.convertPlayerInfo(newplay);
 				newplayers.add(play);
 
 			}
