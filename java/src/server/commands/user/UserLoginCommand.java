@@ -38,7 +38,7 @@ public class UserLoginCommand implements ICommand
 		catch (GameException e) 
 		{
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			response = "failure";
 			return false;
 		}
