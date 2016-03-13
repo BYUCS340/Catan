@@ -37,7 +37,6 @@ public class UserLoginCommand implements ICommand
 		} 
 		catch (GameException e) 
 		{
-			e.printStackTrace();
 			response = "failure";
 			return false;
 		}
