@@ -1,6 +1,7 @@
 package server.model;
 
-public class GameArcade {
+public class GameArcade 
+{
 	private static GameTable games = null;
 	
 	public static GameTable games()
