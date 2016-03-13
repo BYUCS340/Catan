@@ -32,12 +32,11 @@ public class UserRegisterCommand implements ICommand
 	{
 		try 
 		{
-			response =GameArcade.games().RegisterPlayer(username, password);
+			response = GameArcade.games().RegisterPlayer(username, password);
 			return true;
 		} 
 		catch (GameException e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -58,7 +57,7 @@ public class UserRegisterCommand implements ICommand
 		{
 			return "error";
 		}
-		return response.getCookieText();
 		
+		return response.getCookieText();
 	}
 }
