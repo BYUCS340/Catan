@@ -1,6 +1,9 @@
 package server.commands.user;
 
 import server.commands.ICommand;
+import server.cookie.ServerCookie;
+import server.model.GameArcade;
+import server.model.GameException;
 
 /**
  * Handles registering a user.
@@ -11,6 +14,7 @@ public class UserRegisterCommand implements ICommand
 {
 	private String username;
 	private String password;
+	private ServerCookie response = null;
 	
 	/**
 	 * Creates a command to register a user.
@@ -26,9 +30,19 @@ public class UserRegisterCommand implements ICommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
-		return false;
+		try 
+		{
+			response =GameArcade.games().RegisterPlayer(username, password);
+			return true;
+		} 
+		catch (GameException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
+
 
 	@Override
 	public boolean Unexecute() 
@@ -40,7 +54,11 @@ public class UserRegisterCommand implements ICommand
 	@Override
 	public String Response() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if (response == null)
+		{
+			return "error";
+		}
+		return response.getCookieText();
+		
 	}
 }
