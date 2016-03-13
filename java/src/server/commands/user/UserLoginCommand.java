@@ -1,6 +1,8 @@
 package server.commands.user;
 
 import server.commands.ICommand;
+import server.model.GameArcade;
+import server.model.GameException;
 
 /**
  * Handles logging in to the game.
@@ -11,6 +13,7 @@ public class UserLoginCommand implements ICommand
 {
 	private String username;
 	private String password;
+	private String response;
 	
 	/**
 	 * Creates a command to log in the user.
@@ -26,8 +29,19 @@ public class UserLoginCommand implements ICommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
-		return false;
+		try 
+		{
+			GameArcade.games().Login(username, password);
+			response = "success";
+			return true;
+		} 
+		catch (GameException e) 
+		{
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			response = "failure";
+			return false;
+		}
 	}
 
 	@Override
@@ -41,7 +55,7 @@ public class UserLoginCommand implements ICommand
 	public String Response() 
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return this.response;
 	}
 
 }
