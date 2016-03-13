@@ -19,7 +19,7 @@ public class GSONUtils
 		return retStr;
 	}
 	
-	public static Serializable deserialize(String json, java.lang.Class<?> objClass)
+	public static Serializable deserialize(String json, java.lang.Class<Serializable> objClass)
 	{
 		Gson gson = new Gson();
 		Serializable retObj = gson.fromJson(json, objClass);
