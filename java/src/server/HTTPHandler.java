@@ -55,6 +55,10 @@ public class HTTPHandler implements HttpHandler
 			
 			if (command.Execute())
 			{
+				//Set the content type to be JSON
+				Headers responseHeaders = exchange.getResponseHeaders();
+				responseHeaders.set("Content-Type", "application/json");
+				
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 				OutputStream oStream = exchange.getResponseBody();
 				OutputStreamWriter writer = new OutputStreamWriter(oStream, "UTF-8");
