@@ -30,7 +30,6 @@ public class GameTable
 		games = new HashMap<>();
 		cookieTreeHouse = new CookieHouse();
 		playerTable = new PlayerDen();
-		this.CreateGame("Default Game", false, false, false);
 	}
 	/**
 	 * Creates a new game on the server 
