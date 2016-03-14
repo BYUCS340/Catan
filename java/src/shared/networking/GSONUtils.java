@@ -35,9 +35,9 @@ public class GSONUtils
 		return retStr;
 	}
 	
-	public static Serializable deserialize(String json, java.lang.Class<Serializable> objClass)
+	public static <T extends Serializable> T deserialize(String json, java.lang.Class<T> objClass)
 	{
-		Serializable retObj = GSONUtils.gson().fromJson(json, objClass);
+		T retObj = GSONUtils.gson().fromJson(json, objClass);
 		
 		return retObj;
 	}

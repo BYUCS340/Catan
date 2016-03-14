@@ -12,6 +12,8 @@ import server.commands.games.*;
 import server.commands.moves.*;
 import server.commands.user.*;
 import server.commands.util.*;
+import shared.networking.GSONUtils;
+import shared.networking.parameter.*;
 
 public class CommandFactoryTest 
 {
@@ -46,6 +48,12 @@ public class CommandFactoryTest
 	{
 		String url = "user/login";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PCredentials credentials = new PCredentials();
+		credentials.setUsername("Jon");
+		credentials.setPassword("Sadler");
+		
+		String object = GSONUtils.serialize(credentials);
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == UserLoginCommand.class);
@@ -56,6 +64,12 @@ public class CommandFactoryTest
 	{
 		String url = "user/register";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PCredentials credentials = new PCredentials();
+		credentials.setUsername("Jon");
+		credentials.setPassword("Sadler");
+		
+		String object = GSONUtils.serialize(credentials);
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == UserRegisterCommand.class);
