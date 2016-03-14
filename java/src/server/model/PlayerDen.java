@@ -35,6 +35,11 @@ public class PlayerDen
 	 */
 	public int CheckLogin(String username, String password)
 	{
+		if (username == null || password == null)
+			return -1;
+		if (username.length() < 4 || password.length() < 4)
+			return -1;
+		
 		String key = username+password;
 		if (!playerLogin.containsKey(key))
 			return -1;

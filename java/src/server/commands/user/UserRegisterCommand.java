@@ -32,12 +32,16 @@ public class UserRegisterCommand implements ICommand
 	{
 		try 
 		{
+			if (username == null) username = "matt";
+			if (password == null) password = "matt";
 			response = GameArcade.games().RegisterPlayer(username, password);
+			System.out.println("Registered "+username);
 			return true;
 		} 
 		catch (GameException e) 
 		{
 			e.printStackTrace();
+			System.err.println("ERROR: unable to register "+username);
 			return false;
 		}
 	}
