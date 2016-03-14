@@ -43,8 +43,6 @@ public class GamesListCommand implements ICommand
 	@Override
 	public String Response() 
 	{
-		Iterator<GameInfo> iter = games.iterator();
-		while (iter.hasNext()) System.out.println(iter.next());
 		System.out.println(games);
 		return GSONUtils.serialize(games);
 	}
