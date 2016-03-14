@@ -4,6 +4,7 @@ import server.commands.ICommand;
 import server.cookie.ServerCookie;
 import server.model.GameArcade;
 import server.model.GameException;
+import shared.networking.GSONUtils;
 
 /**
  * Handles registering a user.
@@ -59,9 +60,9 @@ public class UserRegisterCommand implements ICommand
 	{
 		if (response == null)
 		{
-			return "error";
+			return GSONUtils.serialize("error");
 		}
 		
-		return response.getCookieText();
+		return GSONUtils.serialize(response.getCookieText());
 	}
 }
