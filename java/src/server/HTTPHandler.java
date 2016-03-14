@@ -2,7 +2,6 @@ package server;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.util.logging.Logger;
 
 import com.sun.net.httpserver.*;
 
@@ -17,9 +16,7 @@ import server.swagger.SwaggerHandlers;
  *
  */
 public class HTTPHandler implements HttpHandler
-{
-	private static Logger logger = Logger.getLogger("CatanServer");
-	
+{	
 	@Override
 	public void handle(HttpExchange exchange) throws IOException 
 	{
@@ -45,7 +42,7 @@ public class HTTPHandler implements HttpHandler
 		
 		uri.delete(0, 1);
 		
-		logger.finest("Handling: " + uri);
+		Log.GetLog().finest("Handling: " + uri);
 		
 		int playerID = -1; //TODO We need to get this from the cookie;
 		
@@ -68,13 +65,13 @@ public class HTTPHandler implements HttpHandler
 			}
 			else
 			{
-				logger.warning("Bad request received");
+				Log.GetLog().warning("Bad request received");
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, -1);
 			}
 		}
 		catch (InvalidFactoryParameterException e) 
 		{
-			logger.severe("Unable to find needed key");
+			Log.GetLog().severe("Unable to find needed key");
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, -1);
 		} 
 	}
