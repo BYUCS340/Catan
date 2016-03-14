@@ -37,8 +37,6 @@ public class UserLoginCommand implements ICommand
 		} 
 		catch (GameException e) 
 		{
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			response = "failure";
 			return false;
 		}
@@ -54,7 +52,6 @@ public class UserLoginCommand implements ICommand
 	@Override
 	public String Response() 
 	{
-		// TODO Auto-generated method stub
 		return this.response;
 	}
 

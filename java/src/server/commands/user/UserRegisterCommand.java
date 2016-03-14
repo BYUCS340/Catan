@@ -4,6 +4,7 @@ import server.commands.ICommand;
 import server.cookie.ServerCookie;
 import server.model.GameArcade;
 import server.model.GameException;
+import shared.networking.GSONUtils;
 
 /**
  * Handles registering a user.
@@ -32,13 +33,16 @@ public class UserRegisterCommand implements ICommand
 	{
 		try 
 		{
-			response =GameArcade.games().RegisterPlayer(username, password);
+			if (username == null) username = "matt";
+			if (password == null) password = "matt";
+			response = GameArcade.games().RegisterPlayer(username, password);
+			System.out.println("Registered "+username);
 			return true;
 		} 
 		catch (GameException e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.err.println("ERROR: unable to register "+username);
 			return false;
 		}
 	}
@@ -56,9 +60,9 @@ public class UserRegisterCommand implements ICommand
 	{
 		if (response == null)
 		{
-			return "error";
+			return GSONUtils.serialize("error");
 		}
-		return response.getCookieText();
 		
+		return GSONUtils.serialize(response.getCookieText());
 	}
 }
