@@ -61,18 +61,21 @@ public class HTTPHandler implements HttpHandler
 			
 			if (command.Execute())
 			{
-				Headers responseHeaders = exchange.getResponseHeaders();	
-				responseHeaders.set("Content-Type", "application/json");
-				
+				String response = command.GetResponse();
 				String cookieHeader = command.GetHeader();
+				
+				Headers responseHeaders = exchange.getResponseHeaders();
+				if (response.startsWith("{"))
+					responseHeaders.set("Content-Type", "application/json");
+				else
+					responseHeaders.set("Content-Type", "text/html");
+				
 				if (cookieHeader != null)
 					responseHeaders.set("Set-cookie", cookieHeader);
 				
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 				OutputStream oStream = exchange.getResponseBody();
-				OutputStreamWriter writer = new OutputStreamWriter(oStream, "UTF-8");
-				writer.write(command.GetResponse());
-				writer.close();
+				oStream.write(response.getBytes());
 				exchange.getResponseBody().close();
 			}
 			else
