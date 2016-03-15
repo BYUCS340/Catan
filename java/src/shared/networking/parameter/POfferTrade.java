@@ -18,6 +18,22 @@ public class POfferTrade implements Serializable
 	private static final long serialVersionUID = 5083072181763641916L;
 	private List<Integer> resourceList;
 	private int receiver;
+	
+	public POfferTrade()
+	{
+		
+	}
+	
+	/**
+	 * @param resourceList
+	 * @param receiver
+	 */
+	public POfferTrade(List<Integer> resourceList, int receiver)
+	{
+		super();
+		this.resourceList = resourceList;
+		this.receiver = receiver;
+	}
 	/**
 	 * @return the resourceList
 	 */

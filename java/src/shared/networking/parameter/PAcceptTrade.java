@@ -16,6 +16,21 @@ public class PAcceptTrade implements Serializable {
 	private static final long serialVersionUID = -4381267533270491034L;
 	private boolean willAccept;
 
+	public PAcceptTrade()
+	{
+		
+	}
+	
+	/**
+	 * 
+	 * @param willAccept
+	 */
+	public PAcceptTrade(boolean willAccept)
+	{
+		super();
+		this.willAccept = willAccept;
+	}
+	
 	/**
 	 * @return the willAccept
 	 */

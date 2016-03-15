@@ -12,6 +12,21 @@ public class PBuildCity implements Serializable
 	private static final long serialVersionUID = -9091624117293202149L;
 	private Coordinate location;
 
+	public PBuildCity()
+	{
+		
+	}
+	
+	/**
+	 * 
+	 * @param location
+	 */
+	public PBuildCity(Coordinate location)
+	{
+		super();
+		this.location = location;
+	}
+	
 	/**
 	 * @return the vertexLocation
 	 */

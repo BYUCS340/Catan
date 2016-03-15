@@ -13,6 +13,22 @@ public class PJoinGame implements Serializable
 	private static final long serialVersionUID = 1732160358083131845L;
 	private int id;
 	private CatanColor color;
+	
+	public PJoinGame()
+	{
+		
+	}
+	
+	/**
+	 * @param id
+	 * @param color
+	 */
+	public PJoinGame(int id, CatanColor color)
+	{
+		super();
+		this.id = id;
+		this.color = color;
+	}
 	/**
 	 * @return the id
 	 */

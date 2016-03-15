@@ -12,6 +12,27 @@ public class PCreateGame implements Serializable
 	private boolean randomNumbers;
 	private boolean randomPorts;
 	private String name;
+	
+	public PCreateGame()
+	{
+		
+	}
+	
+	/**
+	 * @param randomTiles
+	 * @param randomNumbers
+	 * @param randomPorts
+	 * @param name
+	 */
+	public PCreateGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
+	{
+		super();
+		this.randomTiles = randomTiles;
+		this.randomNumbers = randomNumbers;
+		this.randomPorts = randomPorts;
+		this.name = name;
+	}
+	
 	/**
 	 * @return the randomTiles
 	 */

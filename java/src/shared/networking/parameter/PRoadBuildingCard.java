@@ -2,7 +2,6 @@ package shared.networking.parameter;
 
 import java.io.Serializable;
 
-import shared.locations.EdgeLocation;
 import shared.model.map.Coordinate;
 
 /**
@@ -20,6 +19,26 @@ public class PRoadBuildingCard implements Serializable
 	private Coordinate start2;
 	private Coordinate end1;
 	private Coordinate end2;
+	
+	public PRoadBuildingCard()
+	{
+		
+	}
+	
+	/**
+	 * @param start1
+	 * @param start2
+	 * @param end1
+	 * @param end2
+	 */
+	public PRoadBuildingCard(Coordinate start1, Coordinate start2, Coordinate end1, Coordinate end2)
+	{
+		super();
+		this.start1 = start1;
+		this.start2 = start2;
+		this.end1 = end1;
+		this.end2 = end2;
+	}
 	/**
 	 * @return the start1
 	 */

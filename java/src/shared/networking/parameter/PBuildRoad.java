@@ -13,7 +13,24 @@ public class PBuildRoad implements Serializable
 	Coordinate start;
 	Coordinate end;
 	boolean free;
-
+		
+	public PBuildRoad()
+	{
+		
+	}
+	
+	/**
+	 * @param start
+	 * @param end
+	 * @param free
+	 */
+	public PBuildRoad(Coordinate start, Coordinate end, boolean free)
+	{
+		super();
+		this.start = start;
+		this.end = end;
+		this.free = free;
+	}
 	
 	/**
 	 * @return the free

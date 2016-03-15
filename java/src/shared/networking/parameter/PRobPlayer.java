@@ -12,6 +12,22 @@ public class PRobPlayer implements Serializable
 	private static final long serialVersionUID = -4306868465316221465L;
 	private int victimIndex;
 	private Coordinate location;
+	
+	public PRobPlayer()
+	{
+		
+	}
+	
+	/**
+	 * @param victimIndex
+	 * @param location
+	 */
+	public PRobPlayer(int victimIndex, Coordinate location)
+	{
+		super();
+		this.victimIndex = victimIndex;
+		this.location = location;
+	}
 	/**
 	 * @return the victimIndex
 	 */

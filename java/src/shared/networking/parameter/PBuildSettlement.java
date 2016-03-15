@@ -11,6 +11,23 @@ public class PBuildSettlement implements Serializable {
 	private static final long serialVersionUID = 778817440625963270L;
 	private Coordinate location;
 	private boolean free;
+	
+	public PBuildSettlement()
+	{
+		
+	}
+	
+	/**
+	 * @param location
+	 * @param free
+	 */
+	public PBuildSettlement(Coordinate location, boolean free)
+	{
+		super();
+		this.location = location;
+		this.free = free;
+	}
+	
 	/**
 	 * @return the location
 	 */
