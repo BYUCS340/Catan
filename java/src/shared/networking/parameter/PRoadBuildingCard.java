@@ -3,39 +3,78 @@ package shared.networking.parameter;
 import java.io.Serializable;
 
 import shared.locations.EdgeLocation;
+import shared.model.map.Coordinate;
 
+/**
+ * 
+ * @author pbridd
+ *
+ */
 public class PRoadBuildingCard implements Serializable 
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2284077430240273139L;
-	private EdgeLocation location1;
-	private EdgeLocation location2;
+	private Coordinate start1;
+	private Coordinate start2;
+	private Coordinate end1;
+	private Coordinate end2;
 	/**
-	 * @return the location1
+	 * @return the start1
 	 */
-	public EdgeLocation getLocation1() {
-		return location1;
+	public Coordinate getStart1()
+	{
+		return start1;
 	}
 	/**
-	 * @param location1 the location1 to set
+	 * @param start1 the start1 to set
 	 */
-	public void setLocation1(EdgeLocation location1) {
-		this.location1 = location1;
+	public void setStart1(Coordinate start1)
+	{
+		this.start1 = start1;
 	}
 	/**
-	 * @return the location2
+	 * @return the start2
 	 */
-	public EdgeLocation getLocation2() {
-		return location2;
+	public Coordinate getStart2()
+	{
+		return start2;
 	}
 	/**
-	 * @param location2 the location2 to set
+	 * @param start2 the start2 to set
 	 */
-	public void setLocation2(EdgeLocation location2) {
-		this.location2 = location2;
+	public void setStart2(Coordinate start2)
+	{
+		this.start2 = start2;
 	}
-	
-	
+	/**
+	 * @return the end1
+	 */
+	public Coordinate getEnd1()
+	{
+		return end1;
+	}
+	/**
+	 * @param end1 the end1 to set
+	 */
+	public void setEnd1(Coordinate end1)
+	{
+		this.end1 = end1;
+	}
+	/**
+	 * @return the end2
+	 */
+	public Coordinate getEnd2()
+	{
+		return end2;
+	}
+	/**
+	 * @param end2 the end2 to set
+	 */
+	public void setEnd2(Coordinate end2)
+	{
+		this.end2 = end2;
+	}
+		
 }

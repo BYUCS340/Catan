@@ -19,7 +19,7 @@ public class PAcceptTrade implements Serializable {
 	/**
 	 * @return the willAccept
 	 */
-	public boolean isWillAccept() {
+	public boolean willAccept() {
 		return willAccept;
 	}
 

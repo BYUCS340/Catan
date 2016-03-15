@@ -2,7 +2,7 @@ package shared.networking.parameter;
 
 import java.io.Serializable;
 
-import shared.locations.EdgeLocation;
+import shared.model.map.Coordinate;
 
 public class PBuildRoad implements Serializable 
 {
@@ -10,20 +10,11 @@ public class PBuildRoad implements Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = 5960849814196160677L;
-	EdgeLocation edgeLocation;
+	Coordinate start;
+	Coordinate end;
 	boolean free;
-	/**
-	 * @return the edgeLocation
-	 */
-	public EdgeLocation getEdgeLocation() {
-		return edgeLocation;
-	}
-	/**
-	 * @param edgeLocation the edgeLocation to set
-	 */
-	public void setEdgeLocation(EdgeLocation edgeLocation) {
-		this.edgeLocation = edgeLocation;
-	}
+
+	
 	/**
 	 * @return the free
 	 */
@@ -35,5 +26,33 @@ public class PBuildRoad implements Serializable
 	 */
 	public void setFree(boolean free) {
 		this.free = free;
+	}
+	/**
+	 * @return the start
+	 */
+	public Coordinate getStart()
+	{
+		return start;
+	}
+	/**
+	 * @param start the start to set
+	 */
+	public void setStart(Coordinate start)
+	{
+		this.start = start;
+	}
+	/**
+	 * @return the end
+	 */
+	public Coordinate getEnd()
+	{
+		return end;
+	}
+	/**
+	 * @param end the end to set
+	 */
+	public void setEnd(Coordinate end)
+	{
+		this.end = end;
 	}
 }
