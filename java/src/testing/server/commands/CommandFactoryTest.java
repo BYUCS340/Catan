@@ -42,10 +42,12 @@ import server.commands.moves.MovesYearOfPlentyCommand;
 import server.commands.user.UserLoginCommand;
 import server.commands.user.UserRegisterCommand;
 import server.commands.util.UtilChangeLogLevelCommand;
+import shared.definitions.AIType;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
 import shared.networking.GSONUtils;
 import shared.networking.parameter.PAcceptTrade;
+import shared.networking.parameter.PAddAI;
 import shared.networking.parameter.PBuildCity;
 import shared.networking.parameter.PBuildRoad;
 import shared.networking.parameter.PBuildSettlement;
@@ -206,6 +208,10 @@ public class CommandFactoryTest
 	{
 		String url = "game/addai";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PAddAI addai = new PAddAI(AIType.LARGEST_ARMY);
+		String object = GSONUtils.serialize(addai);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == GameAddAICommand.class);

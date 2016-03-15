@@ -1,6 +1,7 @@
 package server.commands.game;
 
 import server.commands.CookieCommand;
+import shared.definitions.AIType;
 
 /**
  * Command object that adds an AI to a game.
@@ -9,14 +10,14 @@ import server.commands.CookieCommand;
  */
 public class GameAddAICommand extends CookieCommand 
 {
-	private String type;
+	private AIType type;
 	
 	/**
 	 * Creates a command to add a certain type of AI to the game.
 	 * @param playerID The ID of the player.
 	 * @param type The type of AI to add.
 	 */
-	public GameAddAICommand(int playerID, String type) 
+	public GameAddAICommand(int playerID, AIType type) 
 	{
 		super(playerID);
 		this.type = type;

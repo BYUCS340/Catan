@@ -5,11 +5,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import server.commands.*;
+import server.commands.CookieBuilder;
+import server.commands.Factory;
+import server.commands.ICommand;
+import server.commands.ICommandBuilder;
+import server.commands.ICommandDirector;
+import server.commands.InvalidFactoryParameterException;
+import shared.definitions.AIType;
+import shared.networking.GSONUtils;
+import shared.networking.parameter.PAddAI;
 
 /**
  * Creates game command objects.
- * @author Jonathan Sadler
+ * @author Jonathan Sadler and Parker Ridd
  *
  */
 public class GameCommandFactory extends Factory 
@@ -94,7 +102,7 @@ public class GameCommandFactory extends Factory
 
 	private class AddAIBuilder extends CookieBuilder
 	{
-		private String type;
+		private AIType type;
 		
 		@Override
 		public ICommand BuildCommand() 
@@ -105,8 +113,8 @@ public class GameCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
-			
+			PAddAI addai = GSONUtils.deserialize(object, PAddAI.class);
+			type = addai.getAiType();			
 		}
 	}
 	
