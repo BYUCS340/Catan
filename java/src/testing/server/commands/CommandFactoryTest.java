@@ -52,6 +52,7 @@ import shared.networking.parameter.PAcceptTrade;
 import shared.networking.parameter.PBuildCity;
 import shared.networking.parameter.PBuildRoad;
 import shared.networking.parameter.PBuildSettlement;
+import shared.networking.parameter.PCreateGame;
 import shared.networking.parameter.PCredentials;
 import shared.networking.parameter.PDiscardCards;
 import shared.networking.parameter.PMaritimeTrade;
@@ -69,7 +70,7 @@ public class CommandFactoryTest
 	private static CommandFactory factory;
 	
 	private NetworkCookie cookie;
-	private String object = null; 
+	private String object; 
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception 
@@ -87,12 +88,14 @@ public class CommandFactoryTest
 	public void setUp() throws Exception
 	{
 		cookie = new NetworkCookie("username", "password", 1);
+		object = null;
 	}
 	
 	@After
 	public void tearDown() throws Exception
 	{
 		cookie = null;
+		object = null;
 	}
 	
 	
@@ -114,7 +117,7 @@ public class CommandFactoryTest
 		credentials.setUsername("Jon");
 		credentials.setPassword("Sadler");
 		
-		String object = GSONUtils.serialize(credentials);
+		object = GSONUtils.serialize(credentials);
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
 		assertTrue(command.getClass() == UserLoginCommand.class);
@@ -151,6 +154,10 @@ public class CommandFactoryTest
 	{
 		String url = "games/create";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PCreateGame create = new PCreateGame(false, false, false, "TheGame");
+		object = GSONUtils.serialize(create);
+		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
 		assertTrue(command.getClass() == GamesCreateCommand.class);

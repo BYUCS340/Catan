@@ -5,7 +5,9 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import server.commands.*;
+import shared.networking.GSONUtils;
 import shared.networking.cookie.NetworkCookie;
+import shared.networking.parameter.PCreateGame;
 
 /**
  * Creates games (notice the s) command objects.
@@ -108,8 +110,11 @@ public class GamesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
-			
+			PCreateGame create = GSONUtils.deserialize(object, PCreateGame.class);
+			randomTiles = create.isRandomTiles();
+			randomNumbers = create.isRandomNumbers();
+			randomPorts = create.isRandomPorts();
+			name = create.getName();
 		}
 	}
 	

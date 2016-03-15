@@ -2,25 +2,27 @@ package server.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import server.cookie.CookieHouse;
 import server.cookie.ServerCookie;
 import shared.definitions.CatanColor;
 import shared.model.Player;
 import shared.data.GameInfo;
-import shared.data.DataTranslator;
 
 /**
- * This keeps traack of the different games in the game
+ * This keeps track of the different games in the game
  * @author matthewcarlson
  *
  */
 public class GameTable 
 {
 	private Map<Integer, ServerGameManager> games;
+	private Set<String> gameNames;
 	private CookieHouse cookieTreeHouse;
 	private PlayerDen playerTable;
 	//TODO thing that manages players objects
@@ -28,19 +30,26 @@ public class GameTable
 	public GameTable()
 	{
 		games = new HashMap<>();
-		cookieTreeHouse = new CookieHouse();
+		gameNames = new HashSet<String>();
 		playerTable = new PlayerDen();
 	}
 	/**
 	 * Creates a new game on the server 
-	 * @return the id of the new game created -1 if unable to create
+	 * @return the game ifno of the new game created. Null if unable to create.
 	 */
-	public int CreateGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
+	public GameInfo CreateGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
 	{
+		if (gameNames.contains(name))
+			return null;
+		
 		int index = games.size();
 		ServerGameManager sgm = new ServerGameManager(name, randomTiles, randomNumbers, randomPorts, index);
-		games.put(index,sgm);
-		return index;
+		games.put(index, sgm);
+		
+		GameInfo info = new GameInfo();
+		info.setId(index);
+		info.setTitle(name);
+		return info;
 	}
 	
 	/**
@@ -68,19 +77,6 @@ public class GameTable
 		}
 		return gamelist;
 		 
-	}
-	
-	/**
-	 * Checks a cookie
-	 * @param text
-	 * @return the player if found
-	 * @throws GameException if the cookie is invalid
-	 */
-	public ServerPlayer CookieCheck(String text) throws GameException
-	{
-		ServerCookie sc = cookieTreeHouse.checkCookie(text);
-		if (sc.isExpired()) throw new GameException("Cookie is expired");
-		return playerTable.GetPlayerID(sc.getPlayerID());
 	}
 	
 	/**

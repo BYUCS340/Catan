@@ -1,5 +1,6 @@
 package shared.data;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -13,7 +14,7 @@ import java.util.*;
  * </ul>
  * 
  */
-public class GameInfo
+public class GameInfo implements Serializable
 {
 	private int id;
 	private String title;

@@ -47,5 +47,4 @@ public class GamesListCommand implements ICommand
 	{
 		return null;
 	}
-
 }
