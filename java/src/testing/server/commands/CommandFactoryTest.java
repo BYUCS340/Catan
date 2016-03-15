@@ -43,6 +43,7 @@ import server.commands.user.UserLoginCommand;
 import server.commands.user.UserRegisterCommand;
 import server.commands.util.UtilChangeLogLevelCommand;
 import shared.definitions.AIType;
+import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
 import shared.networking.GSONUtils;
@@ -51,8 +52,10 @@ import shared.networking.parameter.PAddAI;
 import shared.networking.parameter.PBuildCity;
 import shared.networking.parameter.PBuildRoad;
 import shared.networking.parameter.PBuildSettlement;
+import shared.networking.parameter.PCreateGame;
 import shared.networking.parameter.PCredentials;
 import shared.networking.parameter.PDiscardCards;
+import shared.networking.parameter.PJoinGame;
 import shared.networking.parameter.PMaritimeTrade;
 import shared.networking.parameter.PMonopolyCard;
 import shared.networking.parameter.POfferTrade;
@@ -138,6 +141,10 @@ public class CommandFactoryTest
 	{
 		String url = "games/create";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PCreateGame create = new PCreateGame(false, false, true, "hellotest");
+		String object = GSONUtils.serialize(create);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == GamesCreateCommand.class);
@@ -148,6 +155,10 @@ public class CommandFactoryTest
 	{
 		String url = "games/join";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PJoinGame join = new PJoinGame(0, CatanColor.BLUE);
+		String object = GSONUtils.serialize(join);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == GamesJoinCommand.class);

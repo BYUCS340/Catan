@@ -1,6 +1,7 @@
 package server.commands.games;
 
 import server.commands.ICommand;
+import shared.definitions.CatanColor;
 
 /**
  * Command to handle joining an existing game.
@@ -10,14 +11,14 @@ import server.commands.ICommand;
 public class GamesJoinCommand implements ICommand 
 {
 	private int id;
-	private String color;
+	private CatanColor color;
 	
 	/**
 	 * Creates a command to join a game.
 	 * @param id The ID of the game to join.
 	 * @param color The desired piece color.
 	 */
-	public GamesJoinCommand(int id, String color) 
+	public GamesJoinCommand(int id, CatanColor color) 
 	{
 		this.id = id;
 		this.color = color;

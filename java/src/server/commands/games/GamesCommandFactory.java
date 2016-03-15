@@ -4,7 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import server.commands.*;
+import server.commands.Factory;
+import server.commands.ICommand;
+import server.commands.ICommandBuilder;
+import server.commands.ICommandDirector;
+import server.commands.InvalidFactoryParameterException;
+import shared.definitions.CatanColor;
+import shared.networking.GSONUtils;
+import shared.networking.parameter.PCreateGame;
+import shared.networking.parameter.PJoinGame;
 
 /**
  * Creates games (notice the s) command objects.
@@ -107,15 +115,18 @@ public class GamesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
-			
+			PCreateGame creategame = GSONUtils.deserialize(object, PCreateGame.class);
+			randomTiles = creategame.isRandomTiles();
+			randomNumbers = creategame.isRandomNumbers();
+			randomPorts = creategame.isRandomPorts();
+			name = creategame.getName();			
 		}
 	}
 	
 	private class JoinBuilder implements ICommandBuilder
 	{
 		private int id;
-		private String color;
+		private CatanColor color;
 		
 		@Override
 		public ICommand BuildCommand() 
@@ -126,7 +137,9 @@ public class GamesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PJoinGame join = GSONUtils.deserialize(object, PJoinGame.class);
+			id = join.getId();
+			color = join.getColor(); 
 			
 		}
 	}
