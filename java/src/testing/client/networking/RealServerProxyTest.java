@@ -23,7 +23,7 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
-import shared.networking.UserCookie;
+import shared.networking.cookie.UserCookie;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 import shared.networking.transport.NetResourceList;

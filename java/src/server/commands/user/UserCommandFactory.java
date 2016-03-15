@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import server.commands.*;
 import shared.networking.GSONUtils;
+import shared.networking.cookie.NetworkCookie;
 import shared.networking.parameter.PCredentials;
 
 /**
@@ -29,7 +30,7 @@ public class UserCommandFactory extends Factory
 	}
 	
 	@Override
-	public ICommand GetCommand(StringBuilder param, int playerID, String object) throws InvalidFactoryParameterException 
+	public ICommand GetCommand(StringBuilder param, NetworkCookie cookie, String object) throws InvalidFactoryParameterException 
 	{
 		String key = PopToken(param);
 		

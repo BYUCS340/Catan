@@ -9,6 +9,7 @@ import server.commands.games.GamesCommandFactory;
 import server.commands.moves.MovesCommandFactory;
 import server.commands.user.UserCommandFactory;
 import server.commands.util.UtilCommandFactory;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * The command factory generates command objects necessary for performing operations.
@@ -45,7 +46,7 @@ public class CommandFactory extends Factory
 	}
 
 	@Override
-	public ICommand GetCommand(StringBuilder param, int playerID, String object) throws InvalidFactoryParameterException 
+	public ICommand GetCommand(StringBuilder param, NetworkCookie cookie, String object) throws InvalidFactoryParameterException 
 	{
 		String key = PopToken(param);
 		
@@ -56,6 +57,6 @@ public class CommandFactory extends Factory
 			throw e;
 		}
 		
-		return factories.get(key).GetCommand(param, playerID, object);
+		return factories.get(key).GetCommand(param, cookie, object);
 	}
 }

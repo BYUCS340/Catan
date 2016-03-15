@@ -14,6 +14,7 @@ import server.commands.InvalidFactoryParameterException;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
 import shared.networking.GSONUtils;
+import shared.networking.cookie.NetworkCookie;
 import shared.networking.parameter.PAcceptTrade;
 import shared.networking.parameter.PBuildCity;
 import shared.networking.parameter.PBuildRoad;
@@ -67,7 +68,7 @@ public class MovesCommandFactory extends Factory
 	}
 
 	@Override
-	public ICommand GetCommand(StringBuilder param, int playerID, String object) throws InvalidFactoryParameterException 
+	public ICommand GetCommand(StringBuilder param, NetworkCookie cookie, String object) throws InvalidFactoryParameterException 
 	{
 		String key = PopToken(param);
 		
@@ -80,7 +81,7 @@ public class MovesCommandFactory extends Factory
 		
 		CookieBuilder builder = (CookieBuilder)directors.get(key).GetBuilder();
 		builder.SetData(object);
-		builder.SetPlayerData(playerID);
+		builder.SetCookie(cookie);
 		return builder.BuildCommand();
 	}
 	
@@ -245,7 +246,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesAcceptTradeCommand(playerID, playerIndex, willAccept);
+			return new MovesAcceptTradeCommand(cookie, playerIndex, willAccept);
 		}
 
 		@Override
@@ -266,7 +267,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesBuildCityCommand(playerID, playerIndex, point);
+			return new MovesBuildCityCommand(cookie, playerIndex, point);
 		}
 
 		@Override
@@ -282,7 +283,6 @@ public class MovesCommandFactory extends Factory
 	
 	private class BuildRoadBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private Coordinate start;
 		private Coordinate end;
 		private boolean free;
@@ -290,7 +290,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand()
 		{
-			return new MovesBuildRoadCommand(playerID, playerIndex, start, end, free);
+			return new MovesBuildRoadCommand(cookie, playerIndex, start, end, free);
 		}
 
 		@Override
@@ -314,7 +314,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesBuildSettlementCommand(playerID, playerIndex, point, free);
+			return new MovesBuildSettlementCommand(cookie, playerIndex, point, free);
 		}
 
 		@Override
@@ -335,7 +335,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesBuyDevCardCommand(playerID, playerIndex);
+			return new MovesBuyDevCardCommand(cookie, playerIndex);
 		}
 
 		@Override
@@ -353,7 +353,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesDiscardCardsCommand(playerID, playerIndex, toDiscard);
+			return new MovesDiscardCardsCommand(cookie, playerIndex, toDiscard);
 		}
 
 		@Override
@@ -373,7 +373,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesFinishTurnCommand(playerID, playerIndex);
+			return new MovesFinishTurnCommand(cookie, playerIndex);
 		}
 
 		@Override
@@ -393,7 +393,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesMaritimeTradeCommand(playerID, playerIndex, ratio, input, output);
+			return new MovesMaritimeTradeCommand(cookie, playerIndex, ratio, input, output);
 		}
 
 		@Override
@@ -416,7 +416,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesMonopolyCommand(playerID, playerIndex, resource);
+			return new MovesMonopolyCommand(cookie, playerIndex, resource);
 		}
 
 		@Override
@@ -436,7 +436,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesMonumentCommand(playerID, playerIndex);
+			return new MovesMonumentCommand(cookie, playerIndex);
 		}
 
 		@Override
@@ -455,7 +455,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesOfferTradeCommand(playerID, playerIndex, receiverIndex, offer);
+			return new MovesOfferTradeCommand(cookie, playerIndex, receiverIndex, offer);
 		}
 
 		@Override
@@ -480,7 +480,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesRoadBuildingCommand(playerID, playerIndex, start1, end1, start2, end2);
+			return new MovesRoadBuildingCommand(cookie, playerIndex, start1, end1, start2, end2);
 		}
 
 		@Override
@@ -505,7 +505,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesRobPlayerCommand(playerID, playerIndex, victimIndex, point);
+			return new MovesRobPlayerCommand(cookie, playerIndex, victimIndex, point);
 		}
 
 		@Override
@@ -527,7 +527,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesRollNumberCommand(playerID, playerIndex, roll);
+			return new MovesRollNumberCommand(cookie, playerIndex, roll);
 		}
 
 		@Override
@@ -548,7 +548,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesSendChatCommand(playerID, playerIndex, message);
+			return new MovesSendChatCommand(cookie, playerIndex, message);
 		}
 
 		@Override
@@ -570,7 +570,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesSoldierCommand(playerID, playerIndex, victimIndex, point);
+			return new MovesSoldierCommand(cookie, playerIndex, victimIndex, point);
 		}
 
 		@Override
@@ -593,7 +593,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesYearOfPlentyCommand(playerID, playerIndex, resource1, resource2);
+			return new MovesYearOfPlentyCommand(cookie, playerIndex, resource1, resource2);
 		}
 
 		@Override

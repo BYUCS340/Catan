@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import server.commands.*;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Creates game command objects.
@@ -30,7 +31,7 @@ public class GameCommandFactory extends Factory
 	}
 
 	@Override
-	public ICommand GetCommand(StringBuilder param, int playerID, String object) throws InvalidFactoryParameterException 
+	public ICommand GetCommand(StringBuilder param, NetworkCookie cookie, String object) throws InvalidFactoryParameterException 
 	{
 		String key = PopToken(param);
 		
@@ -43,7 +44,7 @@ public class GameCommandFactory extends Factory
 		
 		CookieBuilder builder = (CookieBuilder)directors.get(key).GetBuilder();
 		builder.SetData(object);
-		builder.SetPlayerData(playerID);
+		builder.SetCookie(cookie);
 		return builder.BuildCommand();
 	}
 	
@@ -99,7 +100,7 @@ public class GameCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new GameAddAICommand(playerID, type);
+			return new GameAddAICommand(cookie, type);
 		}
 
 		@Override
@@ -117,7 +118,7 @@ public class GameCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new GameCommandsCommand(playerID, commands);
+			return new GameCommandsCommand(cookie, commands);
 		}
 
 		@Override
@@ -133,7 +134,7 @@ public class GameCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new GameListAICommand(playerID);
+			return new GameListAICommand(cookie);
 		}
 
 		@Override
@@ -150,7 +151,7 @@ public class GameCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new GameModelCommand(playerID, version);
+			return new GameModelCommand(cookie, version);
 		}
 
 		@Override
@@ -166,7 +167,7 @@ public class GameCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new GameResetCommand(playerID);
+			return new GameResetCommand(cookie);
 		}
 
 		@Override

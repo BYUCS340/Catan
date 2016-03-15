@@ -1,6 +1,7 @@
 package server.commands.moves;
 
 import shared.model.map.Coordinate;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Command that handles the building up of cities.
@@ -17,9 +18,9 @@ public class MovesBuildCityCommand extends MovesCommand
 	 * @param playerIndex The player index.
 	 * @param point The point to build the city at.
 	 */
-	public MovesBuildCityCommand(int playerID, int playerIndex, Coordinate point)
+	public MovesBuildCityCommand(NetworkCookie cookie, int playerIndex, Coordinate point)
 	{
-		super(playerID, playerIndex);
+		super(cookie, playerIndex);
 		this.point = point;
 	}
 
@@ -38,10 +39,15 @@ public class MovesBuildCityCommand extends MovesCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return null;
+	}
 }

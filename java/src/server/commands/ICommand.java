@@ -23,5 +23,11 @@ public interface ICommand
 	 * Gets the response for the server.
 	 * @return The serialized response from the server.
 	 */
-	public String Response();
+	public String GetResponse();
+	
+	/**
+	 * Gets the new server header associated with the request.
+	 * @return Returns the header if applicable, else null.
+	 */
+	public String GetHeader();
 }

@@ -1,6 +1,7 @@
 package server.commands.moves;
 
 import shared.model.map.Coordinate;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Command that handles the building of settlements.
@@ -20,9 +21,9 @@ public class MovesBuildSettlementCommand extends MovesCommand
 	 * @param point The point to build the settlement.
 	 * @param free True if free, else false. (Used during setup).
 	 */
-	public MovesBuildSettlementCommand(int playerID, int playerIndex, Coordinate point, boolean free)
+	public MovesBuildSettlementCommand(NetworkCookie cookie, int playerIndex, Coordinate point, boolean free)
 	{
-		super(playerID, playerIndex);
+		super(cookie, playerIndex);
 		this.point = point;
 		this.free = free;
 	}
@@ -42,10 +43,15 @@ public class MovesBuildSettlementCommand extends MovesCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return null;
+	}
 }

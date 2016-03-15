@@ -38,9 +38,15 @@ public class GamesJoinCommand implements ICommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String GetHeader() 
+	{
 		return null;
 	}
 

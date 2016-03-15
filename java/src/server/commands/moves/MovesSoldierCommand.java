@@ -1,6 +1,7 @@
 package server.commands.moves;
 
 import shared.model.map.Coordinate;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Command object that handles playing of the soldier card.
@@ -19,9 +20,9 @@ public class MovesSoldierCommand extends MovesCommand
 	 * @param victimIndex The victim index.
 	 * @param point The coordinate to place the robber at.
 	 */
-	public MovesSoldierCommand(int playerID, int playerIndex, int victimIndex, Coordinate point) 
+	public MovesSoldierCommand(NetworkCookie cookie, int playerIndex, int victimIndex, Coordinate point) 
 	{
-		super(playerID, playerIndex);
+		super(cookie, playerIndex);
 		this.victimIndex = victimIndex;
 		this.point = point;
 	}
@@ -41,10 +42,15 @@ public class MovesSoldierCommand extends MovesCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return null;
+	}
 }

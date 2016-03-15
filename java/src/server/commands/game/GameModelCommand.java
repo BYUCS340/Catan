@@ -1,6 +1,7 @@
 package server.commands.game;
 
 import server.commands.CookieCommand;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Command object that gets game models from the server.
@@ -15,9 +16,9 @@ public class GameModelCommand extends CookieCommand
 	 * Gets a game model from the server.
 	 * @param version The version number as had by the client.
 	 */
-	public GameModelCommand(int playerID, int version) 
+	public GameModelCommand(NetworkCookie cookie, int version) 
 	{
-		super(playerID);
+		super(cookie);
 		this.version = version;
 	}
 
@@ -36,9 +37,15 @@ public class GameModelCommand extends CookieCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String GetHeader() 
+	{
 		return null;
 	}
 }

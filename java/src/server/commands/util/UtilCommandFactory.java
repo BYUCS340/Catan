@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import server.commands.*;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Creates util command objects.
@@ -28,7 +29,7 @@ public class UtilCommandFactory extends Factory
 	}
 
 	@Override
-	public ICommand GetCommand(StringBuilder param, int playerID, String object) throws InvalidFactoryParameterException
+	public ICommand GetCommand(StringBuilder param, NetworkCookie cookie, String object) throws InvalidFactoryParameterException
 	{
 		String key = PopToken(param);
 		

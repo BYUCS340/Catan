@@ -1,6 +1,7 @@
 package server.commands.moves;
 
 import shared.definitions.ResourceType;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Command object that allows the playing of the Year of Plenty card.
@@ -19,9 +20,9 @@ public class MovesYearOfPlentyCommand extends MovesCommand
 	 * @param resource1 The resource type of card 1.
 	 * @param resource2 The resource type of card 2.
 	 */
-	public MovesYearOfPlentyCommand(int playerID, int playerIndex, ResourceType resource1, ResourceType resource2) 
+	public MovesYearOfPlentyCommand(NetworkCookie cookie, int playerIndex, ResourceType resource1, ResourceType resource2) 
 	{
-		super(playerID, playerIndex);
+		super(cookie, playerIndex);
 		this.resource1 = resource1;
 		this.resource2 = resource2;
 	}
@@ -41,10 +42,15 @@ public class MovesYearOfPlentyCommand extends MovesCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return null;
+	}
 }

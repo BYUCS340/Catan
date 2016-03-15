@@ -1,5 +1,7 @@
 package server.commands.moves;
 
+import shared.networking.cookie.NetworkCookie;
+
 /**
  * Class that handles finishing a turn.
  * @author Jonathan Sadler
@@ -12,9 +14,9 @@ public class MovesFinishTurnCommand extends MovesCommand
 	 * @param playerID The player ID.
 	 * @param playerIndex The player index.
 	 */
-	public MovesFinishTurnCommand(int playerID, int playerIndex) 
+	public MovesFinishTurnCommand(NetworkCookie cookie, int playerIndex) 
 	{
-		super(playerID, playerIndex);
+		super(cookie, playerIndex);
 	}
 
 	@Override
@@ -32,10 +34,15 @@ public class MovesFinishTurnCommand extends MovesCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return null;
+	}
 }
