@@ -5,9 +5,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import server.commands.*;
+import server.commands.CookieBuilder;
+import server.commands.Factory;
+import server.commands.ICommand;
+import server.commands.ICommandBuilder;
+import server.commands.ICommandDirector;
+import server.commands.InvalidFactoryParameterException;
 import shared.definitions.ResourceType;
+import shared.locations.HexLocation;
 import shared.model.map.Coordinate;
+import shared.networking.GSONUtils;
+import shared.networking.parameter.PBuildCity;
 
 /**
  * Creates moves command objects.
@@ -250,7 +258,10 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			//get the correct hex location from the input object 
+			PBuildCity pbcity = GSONUtils.deserialize(object, PBuildCity.class);
+			HexLocation temploc = pbcity.getVertexLocation().getNormalizedLocation().getHexLoc();
+			point = new Coordinate(temploc.getX(), temploc.getY());
 			
 		}
 	}
