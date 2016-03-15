@@ -10,6 +10,20 @@ public class PSendChat implements Serializable
 	private static final long serialVersionUID = -4882417109550917720L;
 	private String content;
 
+	public PSendChat()
+	{
+		
+	}
+	
+	/**
+	 * @param content
+	 */
+	public PSendChat(String content)
+	{
+		super();
+		this.content = content;
+	}
+
 	/**
 	 * @return the content
 	 */

@@ -11,6 +11,20 @@ public class PMonopolyCard implements Serializable {
 	private static final long serialVersionUID = 608532874973153784L;
 	private ResourceType resource;
 
+	public PMonopolyCard()
+	{
+		
+	}
+	
+	/**
+	 * @param resource
+	 */
+	public PMonopolyCard(ResourceType resource)
+	{
+		super();
+		this.resource = resource;
+	}
+
 	/**
 	 * @return the resource
 	 */

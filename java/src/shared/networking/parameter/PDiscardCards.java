@@ -17,6 +17,20 @@ public class PDiscardCards implements Serializable
 	 */
 	private static final long serialVersionUID = 7996669937596791352L;
 	List<Integer> resourceList;
+	
+	public PDiscardCards()
+	{
+		
+	}
+
+	/**
+	 * @param resourceList
+	 */
+	public PDiscardCards(List<Integer> resourceList)
+	{
+		super();
+		this.resourceList = resourceList;
+	}
 
 	/**
 	 * @return the resourceList

@@ -1,19 +1,65 @@
 package testing.server.commands;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import server.commands.*;
-import server.commands.game.*;
-import server.commands.games.*;
-import server.commands.moves.*;
-import server.commands.user.*;
-import server.commands.util.*;
+import server.commands.CommandFactory;
+import server.commands.ICommand;
+import server.commands.InvalidFactoryParameterException;
+import server.commands.game.GameAddAICommand;
+import server.commands.game.GameCommandsCommand;
+import server.commands.game.GameListAICommand;
+import server.commands.game.GameModelCommand;
+import server.commands.game.GameResetCommand;
+import server.commands.games.GamesCreateCommand;
+import server.commands.games.GamesJoinCommand;
+import server.commands.games.GamesListCommand;
+import server.commands.games.GamesLoadCommand;
+import server.commands.games.GamesSaveCommand;
+import server.commands.moves.MovesAcceptTradeCommand;
+import server.commands.moves.MovesBuildCityCommand;
+import server.commands.moves.MovesBuildRoadCommand;
+import server.commands.moves.MovesBuildSettlementCommand;
+import server.commands.moves.MovesBuyDevCardCommand;
+import server.commands.moves.MovesDiscardCardsCommand;
+import server.commands.moves.MovesFinishTurnCommand;
+import server.commands.moves.MovesMaritimeTradeCommand;
+import server.commands.moves.MovesMonopolyCommand;
+import server.commands.moves.MovesMonumentCommand;
+import server.commands.moves.MovesOfferTradeCommand;
+import server.commands.moves.MovesRoadBuildingCommand;
+import server.commands.moves.MovesRobPlayerCommand;
+import server.commands.moves.MovesRollNumberCommand;
+import server.commands.moves.MovesSendChatCommand;
+import server.commands.moves.MovesSoldierCommand;
+import server.commands.moves.MovesYearOfPlentyCommand;
+import server.commands.user.UserLoginCommand;
+import server.commands.user.UserRegisterCommand;
+import server.commands.util.UtilChangeLogLevelCommand;
+import shared.definitions.ResourceType;
+import shared.model.map.Coordinate;
 import shared.networking.GSONUtils;
-import shared.networking.parameter.*;
+import shared.networking.parameter.PAcceptTrade;
+import shared.networking.parameter.PBuildCity;
+import shared.networking.parameter.PBuildRoad;
+import shared.networking.parameter.PBuildSettlement;
+import shared.networking.parameter.PCredentials;
+import shared.networking.parameter.PDiscardCards;
+import shared.networking.parameter.PMaritimeTrade;
+import shared.networking.parameter.PMonopolyCard;
+import shared.networking.parameter.POfferTrade;
+import shared.networking.parameter.PRoadBuildingCard;
+import shared.networking.parameter.PRobPlayer;
+import shared.networking.parameter.PRollDice;
+import shared.networking.parameter.PSendChat;
+import shared.networking.parameter.PSoldierCard;
+import shared.networking.parameter.PYearOfPlentyCard;
 
 public class CommandFactoryTest 
 {
@@ -180,6 +226,11 @@ public class CommandFactoryTest
 	{
 		String url = "moves/sendchat";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PSendChat chat = new PSendChat();
+		chat.setContent("I'm a lasagna hog");
+		String object = GSONUtils.serialize(chat);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesSendChatCommand.class);
@@ -190,6 +241,10 @@ public class CommandFactoryTest
 	{
 		String url = "moves/rollnumber";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PRollDice dice = new PRollDice(5);
+		String object = GSONUtils.serialize(dice);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesRollNumberCommand.class);
@@ -200,6 +255,12 @@ public class CommandFactoryTest
 	{
 		String url = "moves/robplayer";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PRobPlayer robber = new PRobPlayer();
+		robber.setLocation(new Coordinate(6,8));
+		robber.setVictimIndex(2);
+		String object = GSONUtils.serialize(robber);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesRobPlayerCommand.class);
@@ -209,7 +270,7 @@ public class CommandFactoryTest
 	public void TestMovesFinishTurn() throws InvalidFactoryParameterException
 	{
 		String url = "moves/finishturn";
-		StringBuilder param = new StringBuilder(url.toUpperCase());
+		StringBuilder param = new StringBuilder(url.toUpperCase());		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesFinishTurnCommand.class);
@@ -230,6 +291,10 @@ public class CommandFactoryTest
 	{
 		String url = "moves/yearofplenty";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PYearOfPlentyCard plenty = new PYearOfPlentyCard(ResourceType.BRICK, ResourceType.WOOD);
+		String object = GSONUtils.serialize(plenty);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesYearOfPlentyCommand.class);
@@ -240,6 +305,10 @@ public class CommandFactoryTest
 	{
 		String url = "moves/year_of_plenty";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PYearOfPlentyCard plenty = new PYearOfPlentyCard(ResourceType.BRICK, ResourceType.WOOD);
+		String object = GSONUtils.serialize(plenty);		
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesYearOfPlentyCommand.class);
@@ -250,6 +319,14 @@ public class CommandFactoryTest
 	{
 		String url = "moves/roadbuilding";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PRoadBuildingCard rbcard = new PRoadBuildingCard();
+		rbcard.setStart1(new Coordinate(0,0));
+		rbcard.setStart2(new Coordinate(5,5));
+		rbcard.setEnd1(new Coordinate(1,1));
+		rbcard.setEnd2(new Coordinate(6,6));
+		String object = GSONUtils.serialize(rbcard);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesRoadBuildingCommand.class);
@@ -260,6 +337,14 @@ public class CommandFactoryTest
 	{
 		String url = "moves/road_building";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PRoadBuildingCard rbcard = new PRoadBuildingCard();
+		rbcard.setStart1(new Coordinate(0,0));
+		rbcard.setStart2(new Coordinate(5,5));
+		rbcard.setEnd1(new Coordinate(1,1));
+		rbcard.setEnd2(new Coordinate(6,6));
+		String object = GSONUtils.serialize(rbcard);	
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesRoadBuildingCommand.class);
@@ -270,6 +355,12 @@ public class CommandFactoryTest
 	{
 		String url = "moves/soldier";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PSoldierCard soldiercard = new PSoldierCard();
+		soldiercard.setLocation(new Coordinate(0,0));
+		soldiercard.setVictimIndex(0);
+		String object = GSONUtils.serialize(soldiercard);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesSoldierCommand.class);
@@ -280,6 +371,10 @@ public class CommandFactoryTest
 	{
 		String url = "moves/monopoly";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PMonopolyCard mon = new PMonopolyCard(ResourceType.BRICK);
+		String object = GSONUtils.serialize(mon);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesMonopolyCommand.class);
@@ -300,6 +395,10 @@ public class CommandFactoryTest
 	{
 		String url = "moves/buildroad";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PBuildRoad road = new PBuildRoad(new Coordinate(0,0), new Coordinate(1,1), false);
+		String object = GSONUtils.serialize(road);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesBuildRoadCommand.class);
@@ -310,6 +409,10 @@ public class CommandFactoryTest
 	{
 		String url = "moves/buildsettlement";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PBuildSettlement settle = new PBuildSettlement(new Coordinate(0,0), true);
+		String object = GSONUtils.serialize(settle);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesBuildSettlementCommand.class);
@@ -320,6 +423,10 @@ public class CommandFactoryTest
 	{
 		String url = "moves/buildcity";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PBuildCity city = new PBuildCity(new Coordinate(0,0));
+		String object = GSONUtils.serialize(city);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesBuildCityCommand.class);
@@ -330,6 +437,18 @@ public class CommandFactoryTest
 	{
 		String url = "moves/offertrade";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		POfferTrade trade = new POfferTrade();
+		trade.setReceiver(0);
+		List<Integer> rList = new ArrayList<Integer>();
+		rList.add(0);
+		rList.add(1);
+		rList.add(-1);
+		rList.add(0);
+		rList.add(0);
+		trade.setResourceList(rList);
+		String object = GSONUtils.serialize(trade);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesOfferTradeCommand.class);
@@ -340,6 +459,10 @@ public class CommandFactoryTest
 	{
 		String url = "moves/accepttrade";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PAcceptTrade acc = new PAcceptTrade(false);
+		String object = GSONUtils.serialize(acc);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesAcceptTradeCommand.class);
@@ -350,6 +473,12 @@ public class CommandFactoryTest
 	{
 		String url = "moves/maritimetrade";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		PMaritimeTrade trade = new PMaritimeTrade();
+		trade.setInputResource(ResourceType.BRICK);
+		trade.setOutputResource(ResourceType.ORE);
+		trade.setRatio(3);
+		String object = GSONUtils.serialize(trade);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesMaritimeTradeCommand.class);
@@ -360,6 +489,16 @@ public class CommandFactoryTest
 	{
 		String url = "moves/discardcards";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		PDiscardCards discard = new PDiscardCards();
+		List<Integer> rList = new ArrayList<Integer>();
+		rList.add(0);
+		rList.add(1);
+		rList.add(3);
+		rList.add(0);
+		rList.add(0);
+		discard.setResourceList(rList);
+		String object = GSONUtils.serialize(discard);
+		
 		ICommand command = factory.GetCommand(param, playerID, object);
 		
 		assertTrue(command.getClass() == MovesDiscardCardsCommand.class);

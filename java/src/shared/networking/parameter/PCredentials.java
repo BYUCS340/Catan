@@ -10,6 +10,22 @@ public class PCredentials implements Serializable
 	private static final long serialVersionUID = 4487298504220720762L;
 	private String username;
 	private String password;
+	
+	public PCredentials()
+	{
+		
+	}
+	
+	/**
+	 * @param username
+	 * @param password
+	 */
+	public PCredentials(String username, String password)
+	{
+		super();
+		this.username = username;
+		this.password = password;
+	}
 	/**
 	 * @return the username
 	 */
