@@ -35,6 +35,11 @@ public class PlayerDen
 	 */
 	public int CheckLogin(String username, String password)
 	{
+		if (username == null || password == null)
+			return -1;
+		if (username.length() < 4 || password.length() < 4)
+			return -1;
+		
 		String key = username+password;
 		if (!playerLogin.containsKey(key))
 			return -1;
@@ -51,6 +56,11 @@ public class PlayerDen
 	 */
 	public int RegisterPlayer(String username, String password) throws GameException
 	{
+		if (username == null || password == null)
+			throw new GameException("Invalid username/password");
+		if (username.length() < 4 || password.length() < 4)
+			throw new GameException("Username or password too short");
+		
 		//Check to make sure the player isn't already registered
 		if (playerNames.contains(username))
 			throw new GameException("This username is already in use");

@@ -63,6 +63,7 @@ public class GameTable
 			gi.setId(sgm.GetGameID());
 			gi.setTitle(sgm.GetGameTitle());
 			gi.setPlayers(sgm.allCurrentPlayers());
+			gamelist.add(gi);
 			//DataTranslator.convertPlayerInfo(player);
 		}
 		return gamelist;

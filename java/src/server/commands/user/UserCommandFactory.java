@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import server.commands.*;
+import shared.networking.GSONUtils;
+import shared.networking.parameter.PCredentials;
 
 /**
  * Creates user command objects.
@@ -75,7 +77,9 @@ public class UserCommandFactory extends Factory
 		@Override
 		public void SetData(String object)
 		{
-			//TODO Get username and password from serialized object
+			PCredentials creds = GSONUtils.deserialize(object, PCredentials.class);
+			username = creds.getUsername();
+			password = creds.getPassword();
 		}
 	}
 	
@@ -93,7 +97,9 @@ public class UserCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			//TODO Get username and password from serialized object
+			PCredentials creds = GSONUtils.deserialize(object, PCredentials.class);
+			username = creds.getUsername();
+			password = creds.getPassword();
 		}
 	}
 }

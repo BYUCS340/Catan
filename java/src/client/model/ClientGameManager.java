@@ -7,7 +7,7 @@ import java.util.List;
 import client.data.RobPlayerInfo;
 import client.map.RobView;
 import client.networking.RealServerProxy;
-import client.networking.JSONServerProxy;
+import client.networking.EarlyServerProxy;
 import client.networking.ServerProxyException;
 
 import shared.definitions.CatanColor;
@@ -38,7 +38,7 @@ import shared.networking.transport.NetTradeOffer;
 
 public class ClientGameManager extends GameManager
 {
-	private JSONServerProxy proxy;
+	private EarlyServerProxy proxy;
 	private int myPlayerIndex = -1;
 	private TurnState turnState;
 	private int playerIndexWithTradeOffer = -2;
@@ -54,7 +54,7 @@ public class ClientGameManager extends GameManager
 	 * Creates the client game manager with the proxy
 	 * @param clientProxy
 	 */
-	public ClientGameManager(JSONServerProxy clientProxy)
+	public ClientGameManager(EarlyServerProxy clientProxy)
 	{
 		super();
 		this.proxy = clientProxy;

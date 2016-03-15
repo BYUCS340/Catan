@@ -5,13 +5,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import server.commands.*;
+import server.commands.CookieBuilder;
+import server.commands.Factory;
+import server.commands.ICommand;
+import server.commands.ICommandBuilder;
+import server.commands.ICommandDirector;
+import server.commands.InvalidFactoryParameterException;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
+import shared.networking.GSONUtils;
+import shared.networking.parameter.PAcceptTrade;
+import shared.networking.parameter.PBuildCity;
+import shared.networking.parameter.PBuildRoad;
+import shared.networking.parameter.PBuildSettlement;
+import shared.networking.parameter.PDiscardCards;
+import shared.networking.parameter.PMaritimeTrade;
+import shared.networking.parameter.PMonopolyCard;
+import shared.networking.parameter.POfferTrade;
+import shared.networking.parameter.PRoadBuildingCard;
+import shared.networking.parameter.PRobPlayer;
+import shared.networking.parameter.PRollDice;
+import shared.networking.parameter.PSendChat;
+import shared.networking.parameter.PSoldierCard;
+import shared.networking.parameter.PYearOfPlentyCard;
 
 /**
  * Creates moves command objects.
- * @author Jonathan Sadler
+ * @author Jonathan Sadler and Parker Ridd
  *
  */
 public class MovesCommandFactory extends Factory 
@@ -231,8 +251,10 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PAcceptTrade acctrade = GSONUtils.deserialize(object, PAcceptTrade.class);
+			willAccept = acctrade.willAccept();
 			
+			//TODO get the playerIndex
 		}
 	}
 	
@@ -250,8 +272,11 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			//get the correct hex location from the input object 
+			PBuildCity pbcity = GSONUtils.deserialize(object, PBuildCity.class);
+			point = pbcity.getLocation();
 			
+			//TODO get the playerIndex
 		}
 	}
 	
@@ -271,8 +296,12 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PBuildRoad broad = GSONUtils.deserialize(object, PBuildRoad.class);
+			start = broad.getStart();
+			end = broad.getEnd();
+			free = broad.isFree();
 			
+			//TODO get playerIndex			
 		}
 	}
 	
@@ -291,8 +320,11 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PBuildSettlement pbsettlement = GSONUtils.deserialize(object, PBuildSettlement.class);
+			point = pbsettlement.getLocation();
+			free = pbsettlement.isFree();
 			
+			//TODO get playerIndex		
 		}
 	}
 	
@@ -327,8 +359,10 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PDiscardCards pdiscard = GSONUtils.deserialize(object, PDiscardCards.class);
+			toDiscard = pdiscard.getResourceList();
 			
+			//TODO get playerIndex
 		}
 	}
 	
@@ -353,8 +387,8 @@ public class MovesCommandFactory extends Factory
 	{
 		private int playerIndex;
 		private int ratio;
-		private String input;
-		private String output;
+		private ResourceType input;
+		private ResourceType output;
 
 		@Override
 		public ICommand BuildCommand() 
@@ -365,8 +399,12 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PMaritimeTrade pmaritime = GSONUtils.deserialize(object, PMaritimeTrade.class);
+			ratio = pmaritime.getRatio();
+			input = pmaritime.getInputResource();
+			output = pmaritime.getOutputReseource();
 			
+			//TODO get playerIndex
 		}
 	}
 	
@@ -384,8 +422,10 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PMonopolyCard pmonopoly = GSONUtils.deserialize(object, PMonopolyCard.class);
+			resource = pmonopoly.getResource();
 			
+			//TODO get playerIndex
 		}
 	}
 	
@@ -402,7 +442,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			//TODO get playerIndex
 		}
 	}
 	
@@ -421,8 +461,11 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			POfferTrade poffertrade = GSONUtils.deserialize(object, POfferTrade.class);
+			receiverIndex = poffertrade.getReceiver();
+			offer = poffertrade.getResourceList();
 			
+			//TODO get playerIndex			
 		}
 	}
 	
@@ -443,8 +486,13 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PRoadBuildingCard prbc = GSONUtils.deserialize(object, PRoadBuildingCard.class);
+			start1 = prbc.getStart1();
+			start2 = prbc.getStart2();
+			end1 = prbc.getEnd1();
+			end2 = prbc.getEnd2();
 			
+			//TODO get playerIndex		
 		}
 	}
 	
@@ -463,8 +511,11 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PRobPlayer prob = GSONUtils.deserialize(object, PRobPlayer.class);
+			victimIndex = prob.getVictimIndex();
+			point = prob.getLocation();
 			
+			//TODO get playerIndex		
 		}
 	}
 	
@@ -482,8 +533,10 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PRollDice proll = GSONUtils.deserialize(object, PRollDice.class);
+			roll = proll.getRoll();
 			
+			//TODO get playerIndex
 		}
 	}
 	
@@ -501,8 +554,10 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PSendChat pchat = GSONUtils.deserialize(object, PSendChat.class);
+			message = pchat.getContent();
 			
+			//TODO get playerIndex			
 		}
 	}
 	
@@ -521,8 +576,11 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PSoldierCard psoldier = GSONUtils.deserialize(object, PSoldierCard.class);
+			victimIndex = psoldier.getVictimIndex();
+			point = psoldier.getLocation();
 			
+			//TODO get playerIndex		
 		}
 	}
 	
@@ -541,8 +599,11 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object)
 		{
-			// TODO Auto-generated method stub
+			PYearOfPlentyCard pyear = GSONUtils.deserialize(object, PYearOfPlentyCard.class);
+			resource1 = pyear.getResource1();
+			resource2 = pyear.getResource2();
 			
+			//TODO get playerIndex
 		}
 	}
 }
