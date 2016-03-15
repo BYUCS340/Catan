@@ -87,14 +87,16 @@ public class GameTable
 	 * Logins a player
 	 * @param username
 	 * @param password
-	 * @return
+	 * @return The player ID of the user.
 	 * @throws GameException if the player ID wasn't found
 	 */
-	public ServerCookie Login(String username, String password) throws GameException
+	public int Login(String username, String password) throws GameException
 	{
 		int playerID = playerTable.CheckLogin(username, password);
-		if (playerID == -1) throw new GameException("Player isn't registered");
-		return this.cookieTreeHouse.bakeCookie(playerID);
+		if (playerID == -1) 
+			throw new GameException("Player isn't registered");
+		
+		return playerID;
 	}
 	
 	
@@ -102,13 +104,12 @@ public class GameTable
 	 * Registers the user
 	 * @param username
 	 * @param password
-	 * @return the server cookie
+	 * @return the player ID
 	 * @throws GameException if username is in use
 	 */
-	public ServerCookie RegisterPlayer(String username, String password) throws GameException
+	public int RegisterPlayer(String username, String password) throws GameException
 	{
-		int playerID = playerTable.RegisterPlayer(username, password);
-		return this.cookieTreeHouse.bakeCookie(playerID);
+		return playerTable.RegisterPlayer(username, password);
 	}
 	
 	/**

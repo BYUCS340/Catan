@@ -1,6 +1,7 @@
 package server.commands.moves;
 
 import shared.definitions.ResourceType;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Command for handling the monopoly card.
@@ -17,9 +18,9 @@ public class MovesMonopolyCommand extends MovesCommand
 	 * @param playerIndex The player index.
 	 * @param resource The resource type to monopolize.
 	 */
-	public MovesMonopolyCommand(int playerID, int playerIndex, ResourceType resource) 
+	public MovesMonopolyCommand(NetworkCookie cookie, int playerIndex, ResourceType resource) 
 	{
-		super(playerID, playerIndex);
+		super(cookie, playerIndex);
 		this.resource = resource;
 	}
 
@@ -38,10 +39,15 @@ public class MovesMonopolyCommand extends MovesCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return null;
+	}
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import server.commands.*;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Creates games (notice the s) command objects.
@@ -30,7 +31,7 @@ public class GamesCommandFactory extends Factory
 	}
 
 	@Override
-	public ICommand GetCommand(StringBuilder param, int playerID, int gameID, String object) throws InvalidFactoryParameterException 
+	public ICommand GetCommand(StringBuilder param, NetworkCookie cookie, String object) throws InvalidFactoryParameterException 
 	{
 		String key = PopToken(param);
 		

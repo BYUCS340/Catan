@@ -1,6 +1,7 @@
 package server.commands.game;
 
 import server.commands.CookieCommand;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Command object that adds an AI to a game.
@@ -16,9 +17,9 @@ public class GameAddAICommand extends CookieCommand
 	 * @param playerID The ID of the player.
 	 * @param type The type of AI to add.
 	 */
-	public GameAddAICommand(int playerID, String type) 
+	public GameAddAICommand(NetworkCookie cookie, String type) 
 	{
-		super(playerID);
+		super(cookie);
 		this.type = type;
 	}
 
@@ -37,10 +38,15 @@ public class GameAddAICommand extends CookieCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader()
+	{
+		return null;
+	}
 }

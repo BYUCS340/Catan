@@ -9,6 +9,8 @@ import server.commands.CommandFactory;
 import server.commands.ICommand;
 import server.commands.InvalidFactoryParameterException;
 import server.swagger.SwaggerHandlers;
+import shared.networking.GSONUtils;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Handles HTTP requests.
@@ -44,23 +46,32 @@ public class HTTPHandler implements HttpHandler
 		
 		Log.GetLog().finest("Handling: " + uri);
 		
-		int playerID = -1; //TODO We need to get this from the cookie;
-		int gameID = -1; //TODO We need to get this from the cookie;
+		
+		NetworkCookie cookie = null;
+		Headers headers = exchange.getRequestHeaders();
+		if (headers.containsKey("Cookie"))
+		{
+			String jsonCookie = headers.get("Cookie").get(0);
+			cookie = GSONUtils.deserialize(jsonCookie, NetworkCookie.class);
+		}
 		
 		try 
 		{
-			ICommand command = CommandFactory.GetCommandFactory().GetCommand(uri, playerID, gameID, object.toString());
+			ICommand command = CommandFactory.GetCommandFactory().GetCommand(uri, cookie, object.toString());
 			
 			if (command.Execute())
 			{
-				//Set the content type to be JSON
-				Headers responseHeaders = exchange.getResponseHeaders();
+				Headers responseHeaders = exchange.getResponseHeaders();	
 				responseHeaders.set("Content-Type", "application/json");
+				
+				String cookieHeader = command.GetHeader();
+				if (cookieHeader != null)
+					responseHeaders.set("Set-cookie", cookieHeader);
 				
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 				OutputStream oStream = exchange.getResponseBody();
 				OutputStreamWriter writer = new OutputStreamWriter(oStream, "UTF-8");
-				writer.write(command.Response());
+				writer.write(command.GetResponse());
 				writer.close();
 				exchange.getResponseBody().close();
 			}

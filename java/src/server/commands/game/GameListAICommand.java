@@ -1,6 +1,7 @@
 package server.commands.game;
 
 import server.commands.CookieCommand;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Command object that returns a list of available AI
@@ -13,9 +14,9 @@ public class GameListAICommand extends CookieCommand
 	 * Creates a command to get the available AI list.
 	 * @param playerID The player ID.
 	 */
-	public GameListAICommand(int playerID) 
+	public GameListAICommand(NetworkCookie cookie) 
 	{
-		super(playerID);
+		super(cookie);
 	}
 
 	@Override
@@ -33,9 +34,15 @@ public class GameListAICommand extends CookieCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String GetHeader() 
+	{
 		return null;
 	}
 

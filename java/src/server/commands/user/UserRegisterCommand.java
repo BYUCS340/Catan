@@ -1,10 +1,9 @@
 package server.commands.user;
 
+import server.Log;
 import server.commands.ICommand;
-import server.cookie.ServerCookie;
 import server.model.GameArcade;
 import server.model.GameException;
-import shared.networking.GSONUtils;
 
 /**
  * Handles registering a user.
@@ -15,7 +14,8 @@ public class UserRegisterCommand implements ICommand
 {
 	private String username;
 	private String password;
-	private ServerCookie response = null;
+	
+	private String response;
 	
 	/**
 	 * Creates a command to register a user.
@@ -33,16 +33,15 @@ public class UserRegisterCommand implements ICommand
 	{
 		try 
 		{
-			if (username == null) username = "matt";
-			if (password == null) password = "matt";
-			response = GameArcade.games().RegisterPlayer(username, password);
-			System.out.println("Registered "+username);
+			GameArcade.games().RegisterPlayer(username, password);
+			Log.GetLog().finer("Registered: " + username);
+			response = "Success";
 			return true;
 		} 
 		catch (GameException e) 
 		{
-			e.printStackTrace();
-			System.err.println("ERROR: unable to register "+username);
+			Log.GetLog().finer("Unable to register: " + username);
+			response = "Failed";
 			return false;
 		}
 	}
@@ -56,13 +55,15 @@ public class UserRegisterCommand implements ICommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
-		if (response == null)
-		{
-			return GSONUtils.serialize("error");
-		}
-		
-		return GSONUtils.serialize(response.getCookieText());
+		return response;
+	}
+
+	@Override
+	public String GetHeader() 
+	{
+		//Response isn't necessary as it will be followed by a login command.
+		return null;
 	}
 }

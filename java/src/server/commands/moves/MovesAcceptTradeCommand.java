@@ -1,5 +1,7 @@
 package server.commands.moves;
 
+import shared.networking.cookie.NetworkCookie;
+
 /**
  * Command that handles accepting of trades.
  * @author Jonathan Sadler
@@ -15,9 +17,9 @@ public class MovesAcceptTradeCommand extends MovesCommand
 	 * @param playerIndex The index of the player who is accepting.
 	 * @param willAccept True if they accept, else false.
 	 */
-	public MovesAcceptTradeCommand(int playerID, int playerIndex, boolean willAccept)
+	public MovesAcceptTradeCommand(NetworkCookie cookie, int playerIndex, boolean willAccept)
 	{
-		super(playerID, playerIndex);
+		super(cookie, playerIndex);
 		this.willAccept = willAccept;
 	}
 
@@ -36,10 +38,15 @@ public class MovesAcceptTradeCommand extends MovesCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return null;
+	}
 }

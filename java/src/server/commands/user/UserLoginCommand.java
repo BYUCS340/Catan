@@ -3,6 +3,8 @@ package server.commands.user;
 import server.commands.ICommand;
 import server.model.GameArcade;
 import server.model.GameException;
+import shared.networking.GSONUtils;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Handles logging in to the game.
@@ -13,6 +15,8 @@ public class UserLoginCommand implements ICommand
 {
 	private String username;
 	private String password;
+	private int playerID;
+	
 	private String response;
 	
 	/**
@@ -24,6 +28,7 @@ public class UserLoginCommand implements ICommand
 	{
 		this.username = username;
 		this.password = password;
+		this.response = null;
 	}
 
 	@Override
@@ -31,7 +36,7 @@ public class UserLoginCommand implements ICommand
 	{
 		try 
 		{
-			GameArcade.games().Login(username, password);
+			playerID = GameArcade.games().Login(username, password);
 			response = "success";
 			return true;
 		} 
@@ -50,9 +55,15 @@ public class UserLoginCommand implements ICommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		return this.response;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		NetworkCookie cookie = new NetworkCookie(username, password, playerID);
+		return GSONUtils.serialize(cookie);
+	}
 }

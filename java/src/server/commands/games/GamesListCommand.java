@@ -1,8 +1,5 @@
 package server.commands.games;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import server.commands.ICommand;
@@ -23,13 +20,12 @@ public class GamesListCommand implements ICommand
 	private List<GameInfo> games;
 	public GamesListCommand()
 	{
-		
+		return;
 	}
 
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
 		games = GameArcade.games().GetAllGames();
 		return true;
 	}
@@ -41,10 +37,15 @@ public class GamesListCommand implements ICommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
-		System.out.println(games);
 		return GSONUtils.serialize(games);
+	}
+
+	@Override
+	public String GetHeader() 
+	{
+		return null;
 	}
 
 }

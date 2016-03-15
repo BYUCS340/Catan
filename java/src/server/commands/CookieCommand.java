@@ -1,11 +1,15 @@
 package server.commands;
 
+import shared.networking.cookie.NetworkCookie;
+
 public abstract class CookieCommand implements ICommand 
 {
 	protected int playerID;
+	protected int gameID;
 	
-	protected CookieCommand(int playerID)
+	protected CookieCommand(NetworkCookie cookie)
 	{
-		this.playerID = playerID;
+		this.playerID = cookie.getPlayerID();
+		this.gameID = cookie.getGameID();
 	}
 }
