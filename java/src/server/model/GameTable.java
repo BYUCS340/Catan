@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import server.cookie.CookieHouse;
-import server.cookie.ServerCookie;
 import shared.definitions.CatanColor;
 import shared.model.Player;
 import shared.data.GameInfo;

@@ -1,6 +1,8 @@
 package server.commands.games;
 
 import server.commands.ICommand;
+import server.model.GameArcade;
+import shared.definitions.CatanColor;
 
 /**
  * Command to handle joining an existing game.
@@ -9,24 +11,27 @@ import server.commands.ICommand;
  */
 public class GamesJoinCommand implements ICommand 
 {
-	private int id;
-	private String color;
+	private int playerID;
+	private int gameID;
+	private CatanColor color;
 	
 	/**
 	 * Creates a command to join a game.
-	 * @param id The ID of the game to join.
+	 * @param playerID The id of the joining player.
+	 * @param gameId The ID of the game to join.
 	 * @param color The desired piece color.
 	 */
-	public GamesJoinCommand(int id, String color) 
+	public GamesJoinCommand(int playerID, int gameID, CatanColor color) 
 	{
-		this.id = id;
+		this.playerID = playerID;
+		this.gameID = gameID;
 		this.color = color;
 	}
 
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
+		GameArcade.games().JoinGame(playerID, gameID, color);
 		return false;
 	}
 
