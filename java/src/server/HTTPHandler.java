@@ -45,10 +45,11 @@ public class HTTPHandler implements HttpHandler
 		Log.GetLog().finest("Handling: " + uri);
 		
 		int playerID = -1; //TODO We need to get this from the cookie;
+		int gameID = -1; //TODO We need to get this from the cookie;
 		
 		try 
 		{
-			ICommand command = CommandFactory.GetCommandFactory().GetCommand(uri, playerID, object.toString());
+			ICommand command = CommandFactory.GetCommandFactory().GetCommand(uri, playerID, gameID, object.toString());
 			
 			if (command.Execute())
 			{

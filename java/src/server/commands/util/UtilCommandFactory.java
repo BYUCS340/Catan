@@ -28,7 +28,7 @@ public class UtilCommandFactory extends Factory
 	}
 
 	@Override
-	public ICommand GetCommand(StringBuilder param, int playerID, String object) throws InvalidFactoryParameterException
+	public ICommand GetCommand(StringBuilder param, int playerID, int gameID, String object) throws InvalidFactoryParameterException
 	{
 		String key = PopToken(param);
 		

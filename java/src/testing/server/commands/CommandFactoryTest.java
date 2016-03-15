@@ -66,6 +66,7 @@ public class CommandFactoryTest
 	private static CommandFactory factory;
 	
 	private int playerID = -1;
+	private int gameID = -1;
 	private String object = null; 
 	
 	@BeforeClass
@@ -86,7 +87,7 @@ public class CommandFactoryTest
 	{
 		String url = "invalid";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		factory.GetCommand(param, playerID, object);
+		factory.GetCommand(param, playerID, gameID, object);
 	}
 
 	@Test
@@ -100,7 +101,7 @@ public class CommandFactoryTest
 		credentials.setPassword("Sadler");
 		
 		String object = GSONUtils.serialize(credentials);
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == UserLoginCommand.class);
 	}
@@ -116,7 +117,7 @@ public class CommandFactoryTest
 		credentials.setPassword("Sadler");
 		
 		String object = GSONUtils.serialize(credentials);
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == UserRegisterCommand.class);
 	}
@@ -126,7 +127,7 @@ public class CommandFactoryTest
 	{
 		String url = "games/list";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == GamesListCommand.class);
 	}
@@ -136,7 +137,7 @@ public class CommandFactoryTest
 	{
 		String url = "games/create";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == GamesCreateCommand.class);
 	}
@@ -146,7 +147,7 @@ public class CommandFactoryTest
 	{
 		String url = "games/join";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == GamesJoinCommand.class);
 	}
@@ -156,7 +157,7 @@ public class CommandFactoryTest
 	{
 		String url = "games/save";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == GamesSaveCommand.class);
 	}
@@ -166,7 +167,7 @@ public class CommandFactoryTest
 	{
 		String url = "games/load";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == GamesLoadCommand.class);
 	}
@@ -176,7 +177,7 @@ public class CommandFactoryTest
 	{
 		String url = "game/model";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == GameModelCommand.class);
 	}
@@ -186,7 +187,7 @@ public class CommandFactoryTest
 	{
 		String url = "game/reset";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == GameResetCommand.class);
 	}
@@ -196,7 +197,7 @@ public class CommandFactoryTest
 	{
 		String url = "game/commands";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == GameCommandsCommand.class);
 	}
@@ -206,7 +207,7 @@ public class CommandFactoryTest
 	{
 		String url = "game/addai";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == GameAddAICommand.class);
 	}
@@ -216,7 +217,7 @@ public class CommandFactoryTest
 	{
 		String url = "game/listai";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == GameListAICommand.class);
 	}
@@ -231,7 +232,7 @@ public class CommandFactoryTest
 		chat.setContent("I'm a lasagna hog");
 		String object = GSONUtils.serialize(chat);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesSendChatCommand.class);
 	}
@@ -245,7 +246,7 @@ public class CommandFactoryTest
 		PRollDice dice = new PRollDice(5);
 		String object = GSONUtils.serialize(dice);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesRollNumberCommand.class);
 	}
@@ -261,7 +262,7 @@ public class CommandFactoryTest
 		robber.setVictimIndex(2);
 		String object = GSONUtils.serialize(robber);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesRobPlayerCommand.class);
 	}
@@ -271,7 +272,7 @@ public class CommandFactoryTest
 	{
 		String url = "moves/finishturn";
 		StringBuilder param = new StringBuilder(url.toUpperCase());		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesFinishTurnCommand.class);
 	}
@@ -281,7 +282,7 @@ public class CommandFactoryTest
 	{
 		String url = "moves/buydevcard";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesBuyDevCardCommand.class);
 	}
@@ -295,7 +296,7 @@ public class CommandFactoryTest
 		PYearOfPlentyCard plenty = new PYearOfPlentyCard(ResourceType.BRICK, ResourceType.WOOD);
 		String object = GSONUtils.serialize(plenty);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesYearOfPlentyCommand.class);
 	}
@@ -309,7 +310,7 @@ public class CommandFactoryTest
 		PYearOfPlentyCard plenty = new PYearOfPlentyCard(ResourceType.BRICK, ResourceType.WOOD);
 		String object = GSONUtils.serialize(plenty);		
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesYearOfPlentyCommand.class);
 	}
@@ -327,7 +328,7 @@ public class CommandFactoryTest
 		rbcard.setEnd2(new Coordinate(6,6));
 		String object = GSONUtils.serialize(rbcard);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesRoadBuildingCommand.class);
 	}
@@ -345,7 +346,7 @@ public class CommandFactoryTest
 		rbcard.setEnd2(new Coordinate(6,6));
 		String object = GSONUtils.serialize(rbcard);	
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesRoadBuildingCommand.class);
 	}
@@ -361,7 +362,7 @@ public class CommandFactoryTest
 		soldiercard.setVictimIndex(0);
 		String object = GSONUtils.serialize(soldiercard);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesSoldierCommand.class);
 	}
@@ -375,7 +376,7 @@ public class CommandFactoryTest
 		PMonopolyCard mon = new PMonopolyCard(ResourceType.BRICK);
 		String object = GSONUtils.serialize(mon);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesMonopolyCommand.class);
 	}
@@ -385,7 +386,7 @@ public class CommandFactoryTest
 	{
 		String url = "moves/monument";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesMonumentCommand.class);
 	}
@@ -399,7 +400,7 @@ public class CommandFactoryTest
 		PBuildRoad road = new PBuildRoad(new Coordinate(0,0), new Coordinate(1,1), false);
 		String object = GSONUtils.serialize(road);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesBuildRoadCommand.class);
 	}
@@ -413,7 +414,7 @@ public class CommandFactoryTest
 		PBuildSettlement settle = new PBuildSettlement(new Coordinate(0,0), true);
 		String object = GSONUtils.serialize(settle);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesBuildSettlementCommand.class);
 	}
@@ -427,7 +428,7 @@ public class CommandFactoryTest
 		PBuildCity city = new PBuildCity(new Coordinate(0,0));
 		String object = GSONUtils.serialize(city);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesBuildCityCommand.class);
 	}
@@ -449,7 +450,7 @@ public class CommandFactoryTest
 		trade.setResourceList(rList);
 		String object = GSONUtils.serialize(trade);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesOfferTradeCommand.class);
 	}
@@ -463,7 +464,7 @@ public class CommandFactoryTest
 		PAcceptTrade acc = new PAcceptTrade(false);
 		String object = GSONUtils.serialize(acc);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesAcceptTradeCommand.class);
 	}
@@ -479,7 +480,7 @@ public class CommandFactoryTest
 		trade.setRatio(3);
 		String object = GSONUtils.serialize(trade);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesMaritimeTradeCommand.class);
 	}
@@ -499,7 +500,7 @@ public class CommandFactoryTest
 		discard.setResourceList(rList);
 		String object = GSONUtils.serialize(discard);
 		
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == MovesDiscardCardsCommand.class);
 	}
@@ -509,7 +510,7 @@ public class CommandFactoryTest
 	{
 		String url = "util/changeloglevel";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, playerID, object);
+		ICommand command = factory.GetCommand(param, playerID, gameID, object);
 		
 		assertTrue(command.getClass() == UtilChangeLogLevelCommand.class);
 	}
