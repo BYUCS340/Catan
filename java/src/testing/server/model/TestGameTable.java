@@ -11,6 +11,7 @@ import server.model.GameException;
 import server.model.GameTable;
 import server.model.ServerGameManager;
 import server.model.ServerPlayer;
+import shared.data.GameInfo;
 
 public class TestGameTable 
 {
@@ -89,26 +90,6 @@ public class TestGameTable
 			fail("We shouldn't be able to register the player again");
 		}
 		catch (GameException e){}
-		
-		
-		//Check to make sure the games run properly
-		assertEquals(gt.GetNumberGames(),0);
-		String gameName = "BrawlRoyal";
-		int gameID = gt.CreateGame(gameName, false, false, false);
-		assertEquals(gt.GetNumberGames(),1);
-		ServerGameManager sgm = null;
-		try 
-		{
-			sgm = gt.GetGame(gameID);
-			assertEquals(gameName,sgm.GetGameTitle());
-		}
-		catch (GameException e) 
-		{
-			//e.printStackTrace();
-			fail("We should have found the game");
-		}
-		
-		
 	}
 
 }

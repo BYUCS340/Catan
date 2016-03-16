@@ -33,8 +33,7 @@ public class HTTPHandler implements HttpHandler
 			return;
 		}
 		
-		StringBuilder uri = new StringBuilder(request.toUpperCase());
-		
+		//Read in data from request body
 		BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), "utf-8"));
 		
 		String line = null;
@@ -42,11 +41,12 @@ public class HTTPHandler implements HttpHandler
 		while ((line = reader.readLine()) != null)
 		    object.append(line + "\n");
 		
+		//Get request type
+		StringBuilder uri = new StringBuilder(request.toUpperCase());
 		uri.delete(0, 1);
-		
 		Log.GetLog().finest("Handling: " + uri);
 		
-		
+		//Handle user cookie
 		NetworkCookie cookie = null;
 		Headers headers = exchange.getRequestHeaders();
 		if (headers.containsKey("Cookie"))
@@ -64,6 +64,10 @@ public class HTTPHandler implements HttpHandler
 				String response = command.GetResponse();
 				String cookieHeader = command.GetHeader();
 				
+				if (response == null)
+					response = "";
+				
+				//Content-Type is need for Swagger. It gets mad otherwise.
 				Headers responseHeaders = exchange.getResponseHeaders();
 				if (response.startsWith("{"))
 					responseHeaders.set("Content-Type", "application/json");
