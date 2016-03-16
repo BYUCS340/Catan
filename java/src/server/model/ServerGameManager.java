@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import shared.definitions.CatanColor;
+import shared.definitions.GameRound;
 import shared.definitions.ResourceType;
 import shared.model.GameManager;
 import shared.model.GameModel;
@@ -92,7 +93,7 @@ public class ServerGameManager extends GameManager {
 		int playerIndex = GetPlayerIndexByID(playerID);
 		if (!super.CanRollNumber(playerIndex)) 
 			return false;
-		//Roll the dice
+		
 		try 
 		{
 			super.DiceRoll(number);
@@ -117,6 +118,15 @@ public class ServerGameManager extends GameManager {
 	 */
 	public boolean ServerRobPlayer(int playerID, int playerIndex, Coordinate hex)
 	{
+		if (gameState.state != GameRound.ROBBING) 
+			return false;
+		
+		//Check if it's this player's turn
+		int currentPlayer = this.GetPlayerIndexByID(playerID);
+		if (super.CurrentPlayersTurn() != currentPlayer) 
+			return false;
+		
+		
 		return false;
 	}
 	
@@ -127,7 +137,11 @@ public class ServerGameManager extends GameManager {
 	 */
 	public boolean ServerFinishTurn(int playerID)
 	{
-		return false;
+		int currentPlayer = this.GetPlayerIndexByID(playerID);
+		if (super.CurrentPlayersTurn() != currentPlayer) 
+			return false;
+		//Go to the next turn
+		return gameState.nextTurn();
 	}
 	
 	/**
@@ -137,6 +151,24 @@ public class ServerGameManager extends GameManager {
 	 */
 	public boolean ServerBuyDevCard(int playerID)
 	{
+		int currentPlayer = this.GetPlayerIndexByID(playerID);
+		if (super.CurrentPlayersTurn() != currentPlayer) 
+			return false;
+		
+		if (!super.CanBuyDevCard(currentPlayer))
+			return false;
+		
+		//Buy the dev card
+		try 
+		{
+			super.BuyDevCard(currentPlayer);
+			return true;
+		}
+		catch (ModelException e) //they didn't have the resources 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
 	
@@ -168,9 +200,10 @@ public class ServerGameManager extends GameManager {
 	 * 
 	 * @param playerID
 	 * @param p1
+	 * @param playerIndex the victim
 	 * @return
 	 */
-	public boolean ServerSolider(int playerID, Coordinate p1)
+	public boolean ServerSolider(int playerID, Coordinate p1, int playerIndex)
 	{
 		return false;
 	}
