@@ -1,9 +1,17 @@
-package server.ai.types;
+package server.ai;
 
 import shared.definitions.AIType;
 
-public class B_Groot extends AI {
-
+/**
+ * Groot AI.
+ * @author Jonathan Sadler
+ *
+ */
+public class B_Groot extends AI 
+{
+	/**
+	 * Plants Groot.
+	 */
 	public B_Groot() 
 	{
 		super(AIType.BEGINNER);
@@ -16,7 +24,7 @@ public class B_Groot extends AI {
 	}
 
 	@Override
-	void TakeTurn() 
+	void TakeTurn(int gameID) 
 	{
 		
 	}
