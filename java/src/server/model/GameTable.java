@@ -1,12 +1,8 @@
 package server.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import server.Log;
 import shared.definitions.CatanColor;
@@ -22,15 +18,13 @@ import shared.data.PlayerInfo;
  */
 public class GameTable 
 {
-	private Map<Integer, ServerGameManager> games;
-	private Set<String> gameNames;
+	private GameHandler games;
 	private PlayerDen playerTable;
 	//TODO thing that manages players objects
 	
 	public GameTable()
 	{
-		games = new HashMap<>();
-		gameNames = new HashSet<String>();
+		games = new GameHandler();
 		playerTable = new PlayerDen();
 	}
 	
@@ -69,7 +63,7 @@ public class GameTable
 	public List<GameInfo> GetAllGames()
 	{
 		List<GameInfo> gamelist = new ArrayList<>(); 
-		Iterator<ServerGameManager> iter = games.values().iterator();
+		Iterator<ServerGameManager> iter = games.GetAllGames().iterator();
 		while(iter.hasNext())
 		{
 			ServerGameManager sgm = iter.next();
@@ -88,17 +82,10 @@ public class GameTable
 	 */
 	public GameInfo CreateGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
 	{
-		if (gameNames.contains(name))
+		if (games.ContainsGame(name))
 			return null;
 		
-		int index = games.size();
-		ServerGameManager sgm = new ServerGameManager(name, randomTiles, randomNumbers, randomPorts, index);
-		games.put(index, sgm);
-		
-		GameInfo info = new GameInfo();
-		info.setId(index);
-		info.setTitle(name);
-		return info;
+		return games.AddGame(name, randomTiles, randomNumbers, randomPorts);
 	}
 	
 	/**
@@ -111,7 +98,7 @@ public class GameTable
 	{
 		try 
 		{
-			ServerGameManager manager = GetGame(gameID);
+			ServerGameManager manager = games.GetGame(gameID);
 			if (IsPlayerJoined(playerID, manager))
 			{
 				return true;
@@ -202,30 +189,5 @@ public class GameTable
 	private Player PlayerInServer(String name)
 	{
 		return null;
-	}
-	
-	/**
-	 * Gets a game object
-	 * @param id the 
-	 * @return
-	 * @throws GameException if the game is not found
-	 */
-	private ServerGameManager GetGame (int id) throws GameException
-	{
-		if (!games.containsKey(id))
-			throw new GameException("Game "+id+" not found");
-		else
-			return games.get(id);
-		
-	}
-	
-	/**
-	 * Sets the game to the index
-	 * @param sgm
-	 * @param id
-	 */
-	private void SetGame(ServerGameManager sgm, int id)
-	{
-		games.put(id, sgm);
 	}
 }
