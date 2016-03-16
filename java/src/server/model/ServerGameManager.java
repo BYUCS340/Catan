@@ -93,9 +93,19 @@ public class ServerGameManager extends GameManager {
 		if (!super.CanRollNumber(playerIndex)) 
 			return false;
 		//Roll the dice
-		super.DiceRoll(number);
-		this.updateVersion();
-		return true;
+		try 
+		{
+			super.DiceRoll(number);
+			this.updateVersion();
+			return true;
+		}
+		catch (ModelException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 	
 	/**

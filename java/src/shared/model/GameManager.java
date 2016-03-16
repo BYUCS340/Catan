@@ -336,10 +336,14 @@ public class GameManager implements ModelSubject
 	/**
 	 * Handles the roll of a die
 	 * @param roll
+	 * @throws ModelException 
 	 */
-	protected void DiceRoll(int diceRoll){
+	protected void DiceRoll(int diceRoll) throws ModelException{
 		
 		//check if we can move the robber
+		if (diceRoll < 2 || diceRoll > 12 ) 
+			throw new ModelException("Bad Dice Value");
+		
 		if (diceRoll == 7 )
 		{
 			this.playerCanMoveRobber = this.CurrentPlayersTurn();
@@ -382,8 +386,7 @@ public class GameManager implements ModelSubject
 				System.err.println(trans.getColor());
 			}
 		}
-		return diceRoll; // chosen by fair dice roll
-						// guaranteed to be random
+		
 	}
 	
 	
