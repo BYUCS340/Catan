@@ -1,7 +1,6 @@
 package server.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ public class PlayerDen
 		players = new HashMap<>();
 		playerLogin = new HashMap<>();
 		playerNames = new ArrayList<>();
-		
 	}
 	
 	/**
@@ -77,6 +75,17 @@ public class PlayerDen
 		//add the player
 		
 		players.put(index, sp);
+		return index;
+	}
+	
+	public int RegisterAI(String username)
+	{
+		playerNames.add(username);
+		
+		int index = numberPlayers++;
+		ServerPlayer sp = new ServerPlayer(username, "AI", index);
+		players.put(index, sp);
+		
 		return index;
 	}
 	

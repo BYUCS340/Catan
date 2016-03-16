@@ -11,6 +11,7 @@ import server.commands.ICommand;
 import server.commands.ICommandBuilder;
 import server.commands.ICommandDirector;
 import server.commands.InvalidFactoryParameterException;
+import server.model.GameException;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
 import shared.networking.GSONUtils;
@@ -79,10 +80,19 @@ public class MovesCommandFactory extends Factory
 			throw e;
 		}
 		
-		CookieBuilder builder = (CookieBuilder)directors.get(key).GetBuilder();
-		builder.SetData(object);
-		builder.SetCookie(cookie);
-		return builder.BuildCommand();
+		try
+		{
+			CookieBuilder builder = (CookieBuilder)directors.get(key).GetBuilder();
+			builder.SetData(object);
+			builder.SetCookie(cookie);
+			return builder.BuildCommand();
+		}
+		catch (GameException e)
+		{
+			InvalidFactoryParameterException e1 = new InvalidFactoryParameterException("Invalid cookie", e);
+			Logger.getLogger("CatanServer").throwing("MovesCommandFactory", "GetCommand", e1);
+			throw e1;
+		}
 	}
 	
 	private class AcceptTradeDirector implements ICommandDirector

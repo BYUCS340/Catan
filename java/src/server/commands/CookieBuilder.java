@@ -1,6 +1,7 @@
 package server.commands;
 
 import server.model.GameArcade;
+import server.model.GameException;
 import shared.model.Player;
 import shared.networking.cookie.NetworkCookie;
 
@@ -17,15 +18,13 @@ public abstract class CookieBuilder implements ICommandBuilder
 	/**
 	 * Data to be set from the cookie.
 	 * @param playerID The player ID.
+	 * @throws GameException Thrown when there is an issue getting the player index
 	 */
-	public final void SetCookie(NetworkCookie cookie)
+	public final void SetCookie(NetworkCookie cookie) throws GameException
 	{
 		this.cookie = cookie;
 		
 		if (cookie.getGameID() != -1)
-		{
-			Player player = GameArcade.games().PlayerInGame(cookie.getPlayerID(), cookie.getGameID());
-			playerIndex = player.playerIndex();
-		}
+			playerIndex = GameArcade.games().GetPlayerIndex(cookie.getPlayerID(), cookie.getGameID());
 	}
 }

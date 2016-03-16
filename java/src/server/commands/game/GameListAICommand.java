@@ -1,6 +1,11 @@
 package server.commands.game;
 
+import java.util.List;
+
+import server.ai.AIHandler;
 import server.commands.CookieCommand;
+import server.model.GameArcade;
+import shared.networking.GSONUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -10,6 +15,8 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class GameListAICommand extends CookieCommand 
 {
+	List<String> types;
+	
 	/**
 	 * Creates a command to get the available AI list.
 	 * @param playerID The player ID.
@@ -22,22 +29,20 @@ public class GameListAICommand extends CookieCommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
-		return false;
+		types = GameArcade.games().ListAI();
+		return true;
 	}
 
 	@Override
 	public boolean Unexecute() 
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public String GetResponse() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return GSONUtils.serialize(types);
 	}
 
 	@Override

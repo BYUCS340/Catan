@@ -2,25 +2,36 @@ package shared.definitions;
 
 public enum AIType
 {
-	LARGEST_ARMY;
+	BEGINNER, MODERATE, EXPERT, RANDOM, OBNOXIOUS;
 	
 	public static String toString(AIType type)
 	{
 		switch(type)
 		{
-			case LARGEST_ARMY : return "LARGEST_ARMY";
+		case BEGINNER: return "BEGINNER";
+		case MODERATE: return "MODERATE";
+		case EXPERT: return "EXPERT";
+		case RANDOM: return "RANDOM";
+		case OBNOXIOUS: return "OBNOXIOUS";
 		}
+		
+		assert false;
 		return "unknown";
 	}
 	
 	public static AIType fromString(String type)
 	{
-		switch(type.toLowerCase())
+		switch(type.toUpperCase())
 		{
-			case "LARGEST_ARMY": return AIType.LARGEST_ARMY;
+		case "BEGINNER": return BEGINNER;
+		case "MODERATE": return MODERATE;
+		case "EXPERT": return EXPERT;
+		case "RANDOM": return RANDOM;
+		case "OBNOXIOUS": return OBNOXIOUS;
 		}
 		
-		return AIType.LARGEST_ARMY;
+		assert false;
+		return null;
 	}
 	
 	
