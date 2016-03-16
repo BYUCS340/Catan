@@ -2,7 +2,7 @@ package shared.definitions;
 
 public enum AIType
 {
-	BEGINNER, MODERATE, EXPERT, RANDOM, OBNOXIOUS;
+	BEGINNER, MODERATE, EXPERT, RANDOM, OBNOXIOUS, JOHNCENA;
 	
 	public static String toString(AIType type)
 	{
@@ -13,6 +13,7 @@ public enum AIType
 		case EXPERT: return "EXPERT";
 		case RANDOM: return "RANDOM";
 		case OBNOXIOUS: return "OBNOXIOUS";
+		case JOHNCENA: return "JOHN CENA";
 		}
 		
 		assert false;
@@ -28,6 +29,7 @@ public enum AIType
 		case "EXPERT": return EXPERT;
 		case "RANDOM": return RANDOM;
 		case "OBNOXIOUS": return OBNOXIOUS;
+		case "JOHN CENA": return JOHNCENA;
 		}
 		
 		assert false;
