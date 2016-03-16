@@ -108,10 +108,10 @@ public class JSONSerializerTest
 	public void testSAddAIReq() throws Exception
 	{
 		Serializer testS = new JSONSerializer(); 
-		String results = testS.sAddAIReq(AIType.LARGEST_ARMY);
+		String results = testS.sAddAIReq(AIType.BEGINNER);
 		
 		JSONObject obj = new JSONObject(results);
-		assertTrue(obj.getString("AIType").equalsIgnoreCase("largest_army"));
+		assertTrue(obj.getString("AIType").equalsIgnoreCase("beginner"));
 	}
 
 	

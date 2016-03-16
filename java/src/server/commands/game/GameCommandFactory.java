@@ -6,7 +6,11 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import server.commands.*;
+import server.model.GameException;
+import shared.definitions.AIType;
+import shared.networking.GSONUtils;
 import shared.networking.cookie.NetworkCookie;
+import shared.networking.parameter.PAddAI;
 
 /**
  * Creates game command objects.
@@ -42,10 +46,19 @@ public class GameCommandFactory extends Factory
 			throw e;
 		}
 		
-		CookieBuilder builder = (CookieBuilder)directors.get(key).GetBuilder();
-		builder.SetData(object);
-		builder.SetCookie(cookie);
-		return builder.BuildCommand();
+		try
+		{
+			CookieBuilder builder = (CookieBuilder)directors.get(key).GetBuilder();
+			builder.SetData(object);
+			builder.SetCookie(cookie);
+			return builder.BuildCommand();
+		}
+		catch (GameException e)
+		{
+			InvalidFactoryParameterException e1 = new InvalidFactoryParameterException("Invalid cookie", e);
+			Logger.getLogger("CatanServer").throwing("GameCommandFactory", "GetCommand", e1);
+			throw e1;
+		}
 	}
 	
 	private class AddAIDirector implements ICommandDirector
@@ -95,7 +108,7 @@ public class GameCommandFactory extends Factory
 
 	private class AddAIBuilder extends CookieBuilder
 	{
-		private String type;
+		private AIType type;
 		
 		@Override
 		public ICommand BuildCommand() 
@@ -106,8 +119,8 @@ public class GameCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
-			
+			PAddAI add = GSONUtils.deserialize(object, PAddAI.class);
+			type = add.getAiType();
 		}
 	}
 	

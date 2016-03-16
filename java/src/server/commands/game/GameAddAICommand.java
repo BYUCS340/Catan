@@ -1,6 +1,8 @@
 package server.commands.game;
 
 import server.commands.CookieCommand;
+import server.model.GameArcade;
+import shared.definitions.AIType;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -10,14 +12,14 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class GameAddAICommand extends CookieCommand 
 {
-	private String type;
+	private AIType type;
 	
 	/**
 	 * Creates a command to add a certain type of AI to the game.
 	 * @param playerID The ID of the player.
 	 * @param type The type of AI to add.
 	 */
-	public GameAddAICommand(NetworkCookie cookie, String type) 
+	public GameAddAICommand(NetworkCookie cookie, AIType type) 
 	{
 		super(cookie);
 		this.type = type;
@@ -26,8 +28,7 @@ public class GameAddAICommand extends CookieCommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return GameArcade.games().AddAI(playerID, gameID, type);
 	}
 
 	@Override
@@ -40,7 +41,6 @@ public class GameAddAICommand extends CookieCommand
 	@Override
 	public String GetResponse() 
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 

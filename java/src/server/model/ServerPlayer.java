@@ -11,7 +11,7 @@ public class ServerPlayer {
 	private String password;
 	
 		
-	public ServerPlayer(String name, String password,int index)
+	public ServerPlayer(String name, String password, int index)
 	{
 		this.name = name;
 		this.password = password;

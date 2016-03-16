@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import server.commands.*;
+import server.model.GameException;
 import shared.definitions.CatanColor;
 import shared.networking.GSONUtils;
 import shared.networking.cookie.NetworkCookie;
@@ -46,10 +47,19 @@ public class GamesCommandFactory extends Factory
 			throw e;
 		}
 		
-		CookieBuilder builder = (CookieBuilder)directors.get(key).GetBuilder();
-		builder.SetData(object);
-		builder.SetCookie(cookie);
-		return builder.BuildCommand();
+		try
+		{
+			CookieBuilder builder = (CookieBuilder)directors.get(key).GetBuilder();
+			builder.SetData(object);
+			builder.SetCookie(cookie);
+			return builder.BuildCommand();
+		}
+		catch (GameException e)
+		{
+			InvalidFactoryParameterException e1 = new InvalidFactoryParameterException("Invalid cookie", e);
+			Logger.getLogger("CatanServer").throwing("GamesCommandFactory", "GetCommand", e1);
+			throw e1;
+		}
 	}
 	
 	private class CreateDirector implements ICommandDirector

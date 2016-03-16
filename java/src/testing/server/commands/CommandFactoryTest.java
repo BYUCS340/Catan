@@ -44,12 +44,14 @@ import server.commands.moves.MovesYearOfPlentyCommand;
 import server.commands.user.UserLoginCommand;
 import server.commands.user.UserRegisterCommand;
 import server.commands.util.UtilChangeLogLevelCommand;
+import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
 import shared.networking.GSONUtils;
 import shared.networking.cookie.NetworkCookie;
 import shared.networking.parameter.PAcceptTrade;
+import shared.networking.parameter.PAddAI;
 import shared.networking.parameter.PBuildCity;
 import shared.networking.parameter.PBuildRoad;
 import shared.networking.parameter.PBuildSettlement;
@@ -233,6 +235,9 @@ public class CommandFactoryTest
 	{
 		String url = "game/addai";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		
+		PAddAI addAI = new PAddAI(AIType.BEGINNER);
+		object = GSONUtils.serialize(addAI);
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
 		assertTrue(command.getClass() == GameAddAICommand.class);

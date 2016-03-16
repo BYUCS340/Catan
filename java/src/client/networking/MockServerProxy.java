@@ -779,7 +779,7 @@ public class MockServerProxy implements EarlyServerProxy
 	public List<AIType> listAI()
 	{
 		ArrayList<AIType> aiList = new ArrayList<AIType>();
-		aiList.add(AIType.LARGEST_ARMY);
+		aiList.add(AIType.BEGINNER);
 		return aiList;
 	}
 

@@ -1,10 +1,15 @@
 package server.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import server.Log;
+import server.ai.AIHandler;
+import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.model.ModelException;
 import shared.model.Player;
@@ -18,6 +23,7 @@ import shared.data.PlayerInfo;
  */
 public class GameTable 
 {
+	private AIHandler ais;
 	private GameHandler games;
 	private PlayerDen playerTable;
 	//TODO thing that manages players objects
@@ -26,6 +32,14 @@ public class GameTable
 	{
 		games = new GameHandler();
 		playerTable = new PlayerDen();
+		
+		ais = new AIHandler();
+		Set<String> aiNames = ais.GetNames();
+		for (String name : aiNames)
+		{
+			int index = playerTable.RegisterAI(name);
+			ais.RegisterAI(name, index);
+		}
 	}
 	
 	/**
@@ -122,6 +136,48 @@ public class GameTable
 	}
 	
 	/**
+	 * Gets the available list of AIs.
+	 * @return List of AIs.
+	 */
+	public List<String> ListAI()
+	{
+		return ais.GetTypes();
+	}
+	
+	/**
+	 * Adds an AI to the game
+	 * @param playerID The player ID performing the add.
+	 * @param gameID The game ID to add to.
+	 * @param type The type of player.
+	 */
+	public boolean AddAI(int playerID, int gameID, AIType type)
+	{
+		try
+		{
+			ServerGameManager manager = games.GetGame(gameID);
+			if (!IsPlayerJoined(playerID, manager))
+				return false;
+			
+			Set<CatanColor> notAvailable = new HashSet<CatanColor>();
+			int num = manager.getNumberPlayers();
+			for (int i = 0; i < num; i++)
+				notAvailable.add(manager.getPlayerColorByIndex(i));
+				
+			int aiID = ais.GetAI(type);
+			String name = ais.GetName(aiID);
+			CatanColor color = ais.PickColor(aiID, notAvailable);
+			manager.AddPlayer(name, color, false, aiID);
+			
+			return true;
+		}
+		catch (GameException | ModelException e)
+		{
+			Log.GetLog().throwing("GameTable", "AddAI", e);
+			return false;
+		}
+	}
+	
+	/**
 	 * Loads a game
 	 * @param filePath 
 	 * @return
@@ -147,10 +203,23 @@ public class GameTable
 	 * @param playerID
 	 * @param gameID
 	 * @return the player color and index
+	 * @throws GameException 
 	 */
-	public Player PlayerInGame(int playerID, int gameID)
+	public int GetPlayerIndex(int playerID, int gameID) throws GameException
 	{
-		return null;
+		ServerGameManager manager = games.GetGame(gameID);
+		if (!IsPlayerJoined(playerID, manager))
+			throw new GameException("Player not in game");
+		
+		List<PlayerInfo> info = Arrays.asList(manager.allCurrentPlayers());
+		for (PlayerInfo i : info)
+		{
+			if (i.getId() == playerID)
+				return i.getPlayerIndex();
+		}
+		
+		assert false;
+		return -1;
 	}
 	
 	/**
