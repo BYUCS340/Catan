@@ -64,6 +64,9 @@ public class HTTPHandler implements HttpHandler
 				String response = command.GetResponse();
 				String cookieHeader = command.GetHeader();
 				
+				if (response == null)
+					response = "";
+				
 				Headers responseHeaders = exchange.getResponseHeaders();
 				if (response.startsWith("{"))
 					responseHeaders.set("Content-Type", "application/json");

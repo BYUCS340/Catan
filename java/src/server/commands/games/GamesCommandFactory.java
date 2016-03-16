@@ -129,7 +129,7 @@ public class GamesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new GamesJoinCommand(cookie.getPlayerID(), gameID, color);
+			return new GamesJoinCommand(cookie, gameID, color);
 		}
 
 		@Override
