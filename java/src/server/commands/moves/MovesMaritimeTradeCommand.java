@@ -1,15 +1,18 @@
 package server.commands.moves;
 
+import shared.definitions.ResourceType;
+import shared.networking.cookie.NetworkCookie;
+
 /**
  * Command that handles maritime trade.
- * @author Jonathan Sadler
+ * @author Jonathan Sadler and Parker Ridd
  *
  */
 public class MovesMaritimeTradeCommand extends MovesCommand 
 {
 	private int ratio;
-	private String input;
-	private String output;
+	private ResourceType input;
+	private ResourceType output;
 	
 	/**
 	 * Creates a command to perform a maritime trade.
@@ -19,9 +22,9 @@ public class MovesMaritimeTradeCommand extends MovesCommand
 	 * @param input The input (what is being turned in by the player).
 	 * @param output The output (what is being received).
 	 */
-	public MovesMaritimeTradeCommand(int playerID, int playerIndex, int ratio, String input, String output)
+	public MovesMaritimeTradeCommand(NetworkCookie cookie, int playerIndex, int ratio, ResourceType input, ResourceType output)
 	{
-		super(playerID, playerIndex);
+		super(cookie, playerIndex);
 		this.ratio = ratio;
 		this.input = input;
 		this.output = output;
@@ -42,10 +45,15 @@ public class MovesMaritimeTradeCommand extends MovesCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return null;
+	}
 }

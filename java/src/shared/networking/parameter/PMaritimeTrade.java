@@ -19,6 +19,24 @@ public class PMaritimeTrade implements Serializable {
 	private int ratio;
 	private ResourceType inputResource;
 	private ResourceType outputReseource;
+	
+	public PMaritimeTrade()
+	{
+		
+	}
+	
+	/**
+	 * @param ratio
+	 * @param inputResource
+	 * @param outputReseource
+	 */
+	public PMaritimeTrade(int ratio, ResourceType inputResource, ResourceType outputReseource)
+	{
+		super();
+		this.ratio = ratio;
+		this.inputResource = inputResource;
+		this.outputReseource = outputReseource;
+	}
 	/**
 	 * @return the ratio
 	 */
@@ -52,7 +70,7 @@ public class PMaritimeTrade implements Serializable {
 	/**
 	 * @param outputReseource the outputReseource to set
 	 */
-	public void setOutputReseource(ResourceType outputReseource) {
+	public void setOutputResource(ResourceType outputReseource) {
 		this.outputReseource = outputReseource;
 	}
 }

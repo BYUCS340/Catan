@@ -1,6 +1,10 @@
 package server.commands.games;
 
 import server.commands.ICommand;
+import server.model.GameArcade;
+import shared.definitions.CatanColor;
+import shared.networking.GSONUtils;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Command to handle joining an existing game.
@@ -9,25 +13,32 @@ import server.commands.ICommand;
  */
 public class GamesJoinCommand implements ICommand 
 {
-	private int id;
-	private String color;
+	private NetworkCookie cookie;
+	private int gameID;
+	private CatanColor color;
 	
 	/**
 	 * Creates a command to join a game.
-	 * @param id The ID of the game to join.
+	 * @param playerID The id of the joining player.
+	 * @param gameId The ID of the game to join.
 	 * @param color The desired piece color.
 	 */
-	public GamesJoinCommand(int id, String color) 
+	public GamesJoinCommand(NetworkCookie cookie, int gameID, CatanColor color) 
 	{
-		this.id = id;
+		this.cookie = cookie;
+		this.gameID = gameID;
 		this.color = color;
 	}
 
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
-		return false;
+		boolean result = GameArcade.games().JoinGame(cookie.getPlayerID(), gameID, color);
+		
+		if (result)
+			cookie.setGameID(gameID);
+		
+		return result;
 	}
 
 	@Override
@@ -38,10 +49,14 @@ public class GamesJoinCommand implements ICommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return GSONUtils.serialize(cookie);
+	}
 }

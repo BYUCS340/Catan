@@ -2,7 +2,7 @@ package shared.networking.parameter;
 
 import java.io.Serializable;
 
-import shared.locations.HexLocation;
+import shared.model.map.Coordinate;
 
 public class PRobPlayer implements Serializable 
 {
@@ -11,7 +11,23 @@ public class PRobPlayer implements Serializable
 	 */
 	private static final long serialVersionUID = -4306868465316221465L;
 	private int victimIndex;
-	private HexLocation location;
+	private Coordinate location;
+	
+	public PRobPlayer()
+	{
+		
+	}
+	
+	/**
+	 * @param victimIndex
+	 * @param location
+	 */
+	public PRobPlayer(int victimIndex, Coordinate location)
+	{
+		super();
+		this.victimIndex = victimIndex;
+		this.location = location;
+	}
 	/**
 	 * @return the victimIndex
 	 */
@@ -27,15 +43,18 @@ public class PRobPlayer implements Serializable
 	/**
 	 * @return the location
 	 */
-	public HexLocation getLocation() {
+	public Coordinate getLocation()
+	{
 		return location;
 	}
 	/**
 	 * @param location the location to set
 	 */
-	public void setLocation(HexLocation location) {
+	public void setLocation(Coordinate location)
+	{
 		this.location = location;
 	}
+
 	
 	
 }

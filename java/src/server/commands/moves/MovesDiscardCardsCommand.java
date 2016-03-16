@@ -2,6 +2,8 @@ package server.commands.moves;
 
 import java.util.List;
 
+import shared.networking.cookie.NetworkCookie;
+
 /**
  * Command that handles discarding cards.
  * @author Jonathan Sadler
@@ -17,9 +19,9 @@ public class MovesDiscardCardsCommand extends MovesCommand
 	 * @param playerIndex The player index.
 	 * @param toDiscard The quantity of cards to discard (brick, ore, sheep, wheat, wood).
 	 */
-	public MovesDiscardCardsCommand(int playerID, int playerIndex, List<Integer> toDiscard)
+	public MovesDiscardCardsCommand(NetworkCookie cookie, int playerIndex, List<Integer> toDiscard)
 	{
-		super(playerID, playerIndex);
+		super(cookie, playerIndex);
 		this.toDiscard = toDiscard;
 	}
 
@@ -36,9 +38,14 @@ public class MovesDiscardCardsCommand extends MovesCommand
 	}
 
 	@Override
-	public String Response() {
+	public String GetResponse() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return null;
+	}
 }

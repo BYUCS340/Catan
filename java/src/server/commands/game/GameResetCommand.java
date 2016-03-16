@@ -1,6 +1,7 @@
 package server.commands.game;
 
 import server.commands.CookieCommand;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Command to reset the command history of the current game.
@@ -13,9 +14,9 @@ public class GameResetCommand extends CookieCommand
 	 * Creates a command that allows the game to be reset.
 	 * @param playerID The player ID executing the reset.
 	 */
-	public GameResetCommand(int playerID) 
+	public GameResetCommand(NetworkCookie cookie) 
 	{
-		super(playerID);
+		super(cookie);
 	}
 
 	@Override
@@ -33,9 +34,15 @@ public class GameResetCommand extends CookieCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String GetHeader() 
+	{
 		return null;
 	}
 }

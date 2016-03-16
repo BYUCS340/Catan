@@ -13,6 +13,21 @@ public class PYearOfPlentyCard implements Serializable
 	private ResourceType resource1;
 	private ResourceType resource2;
 	
+	public PYearOfPlentyCard()
+	{
+		
+	}
+	
+	/**
+	 * @param resource1
+	 * @param resource2
+	 */
+	public PYearOfPlentyCard(ResourceType resource1, ResourceType resource2)
+	{
+		super();
+		this.resource1 = resource1;
+		this.resource2 = resource2;
+	}
 	/**
 	 * @return the resource1
 	 */

@@ -46,7 +46,13 @@ public class UtilChangeLogLevelCommand implements ICommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
+	{
+		return null;
+	}
+
+	@Override
+	public String GetHeader() 
 	{
 		return null;
 	}

@@ -1,4 +1,4 @@
-package shared.networking;
+package shared.networking.cookie;
 
 public class GameCookie implements Cookie
 {

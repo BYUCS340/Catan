@@ -2,7 +2,7 @@ package shared.networking.parameter;
 
 import java.io.Serializable;
 
-import shared.locations.VertexLocation;
+import shared.model.map.Coordinate;
 
 public class PBuildCity implements Serializable
 {
@@ -10,20 +10,35 @@ public class PBuildCity implements Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = -9091624117293202149L;
-	private VertexLocation vertexLocation;
+	private Coordinate location;
 
+	public PBuildCity()
+	{
+		
+	}
+	
+	/**
+	 * 
+	 * @param location
+	 */
+	public PBuildCity(Coordinate location)
+	{
+		super();
+		this.location = location;
+	}
+	
 	/**
 	 * @return the vertexLocation
 	 */
-	public VertexLocation getVertexLocation() {
-		return vertexLocation;
+	public Coordinate getLocation() {
+		return location;
 	}
 
 	/**
-	 * @param vertexLocation the vertexLocation to set
+	 * @param location the vertexLocation to set
 	 */
-	public void setVertexLocation(VertexLocation vertexLocation) {
-		this.vertexLocation = vertexLocation;
+	public void setLocation(Coordinate location) {
+		this.location = location;
 	}
 	
 }

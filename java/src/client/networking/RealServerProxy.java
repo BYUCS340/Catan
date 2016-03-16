@@ -15,7 +15,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Scanner;
-import org.junit.Assert.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +29,7 @@ import shared.networking.Deserializer;
 import shared.networking.JSONDeserializer;
 import shared.networking.JSONSerializer;
 import shared.networking.Serializer;
-import shared.networking.UserCookie;
+import shared.networking.cookie.UserCookie;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 import shared.networking.transport.NetPlayer;

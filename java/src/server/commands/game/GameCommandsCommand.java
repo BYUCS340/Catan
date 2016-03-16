@@ -3,6 +3,7 @@ package server.commands.game;
 import java.util.List;
 
 import server.commands.*;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Command class that allows commands to be executed on the server. Seems sketchy.
@@ -19,9 +20,9 @@ public class GameCommandsCommand extends CookieCommand
 	 * @param playerID The ID of the player.
 	 * @param commands The command list.
 	 */
-	public GameCommandsCommand(int playerID, List<ICommand> commands) 
+	public GameCommandsCommand(NetworkCookie cookie, List<ICommand> commands) 
 	{
-		super(playerID);
+		super(cookie);
 		this.commands = commands;
 	}
 
@@ -41,9 +42,15 @@ public class GameCommandsCommand extends CookieCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String GetHeader() 
+	{
 		return null;
 	}
 

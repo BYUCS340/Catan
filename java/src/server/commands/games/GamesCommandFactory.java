@@ -5,6 +5,11 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import server.commands.*;
+import shared.definitions.CatanColor;
+import shared.networking.GSONUtils;
+import shared.networking.cookie.NetworkCookie;
+import shared.networking.parameter.PCreateGame;
+import shared.networking.parameter.PJoinGame;
 
 /**
  * Creates games (notice the s) command objects.
@@ -30,7 +35,7 @@ public class GamesCommandFactory extends Factory
 	}
 
 	@Override
-	public ICommand GetCommand(StringBuilder param, int playerID, String object) throws InvalidFactoryParameterException 
+	public ICommand GetCommand(StringBuilder param, NetworkCookie cookie, String object) throws InvalidFactoryParameterException 
 	{
 		String key = PopToken(param);
 		
@@ -41,8 +46,9 @@ public class GamesCommandFactory extends Factory
 			throw e;
 		}
 		
-		ICommandBuilder builder = directors.get(key).GetBuilder();
+		CookieBuilder builder = (CookieBuilder)directors.get(key).GetBuilder();
 		builder.SetData(object);
+		builder.SetCookie(cookie);
 		return builder.BuildCommand();
 	}
 	
@@ -91,7 +97,7 @@ public class GamesCommandFactory extends Factory
 		}
 	}
 	
-	private class CreateBuilder implements ICommandBuilder
+	private class CreateBuilder extends CookieBuilder
 	{
 		private boolean randomTiles;
 		private boolean randomNumbers;
@@ -107,31 +113,35 @@ public class GamesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
-			
+			PCreateGame create = GSONUtils.deserialize(object, PCreateGame.class);
+			randomTiles = create.isRandomTiles();
+			randomNumbers = create.isRandomNumbers();
+			randomPorts = create.isRandomPorts();
+			name = create.getName();
 		}
 	}
 	
-	private class JoinBuilder implements ICommandBuilder
+	private class JoinBuilder extends CookieBuilder
 	{
-		private int id;
-		private String color;
+		private int gameID;
+		private CatanColor color;
 		
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new GamesJoinCommand(id, color);
+			return new GamesJoinCommand(cookie, gameID, color);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
-			
+			PJoinGame join = GSONUtils.deserialize(object, PJoinGame.class);
+			gameID = join.getId();
+			color = join.getColor();
 		}
 	}
 	
-	private class ListBuilder implements ICommandBuilder
+	private class ListBuilder extends CookieBuilder
 	{
 		@Override
 		public ICommand BuildCommand() 
@@ -146,7 +156,7 @@ public class GamesCommandFactory extends Factory
 		}
 	}
 	
-	private class LoadBuilder implements ICommandBuilder
+	private class LoadBuilder extends CookieBuilder
 	{
 		private String name;
 		
@@ -164,7 +174,7 @@ public class GamesCommandFactory extends Factory
 		}
 	}
 	
-	private class SaveBuilder implements ICommandBuilder
+	private class SaveBuilder extends CookieBuilder
 	{
 		private int id;
 		private String name;

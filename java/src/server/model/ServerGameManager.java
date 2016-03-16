@@ -2,6 +2,7 @@ package server.model;
 
 import shared.model.GameManager;
 import shared.model.GameModel;
+import shared.model.map.model.MapGenerator;
 import shared.model.map.model.MapModel;
 
 /**
@@ -14,14 +15,16 @@ public class ServerGameManager extends GameManager {
 	private boolean randomNumbers;
 	private boolean randomPorts;
 	
-	public ServerGameManager(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts, int index) {
-		// TODO Auto-generated constructor stub
+	public ServerGameManager(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts, int index) 
+	{
 		super();
 		this.gameTitle = name;
 		this.gameID = index;
 		this.randomNumbers = randomNumbers;
 		this.randomPorts = randomPorts;
 		this.randomTiles = randomTiles;
+		
+		this.map = MapGenerator.GenerateMap(randomTiles, randomNumbers, randomPorts);
 	}
 
 	/**
@@ -29,7 +32,7 @@ public class ServerGameManager extends GameManager {
 	 */
 	private void updateVersion()
 	{
-		this.version ++;
+		this.version++;
 	}
 	
 	/**

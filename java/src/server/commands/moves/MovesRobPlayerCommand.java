@@ -1,6 +1,7 @@
 package server.commands.moves;
 
 import shared.model.map.Coordinate;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Class that handles robbing a player.
@@ -19,9 +20,9 @@ public class MovesRobPlayerCommand extends MovesCommand
 	 * @param victimIndex The index of the victim.
 	 * @param point The hex coordinate to place the robber.
 	 */
-	public MovesRobPlayerCommand(int playerID, int playerIndex, int victimIndex, Coordinate point) 
+	public MovesRobPlayerCommand(NetworkCookie cookie, int playerIndex, int victimIndex, Coordinate point) 
 	{
-		super(playerID, playerIndex);
+		super(cookie, playerIndex);
 		this.victimIndex = victimIndex;
 		this.point = point;
 	}
@@ -41,10 +42,15 @@ public class MovesRobPlayerCommand extends MovesCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return null;
+	}
 }

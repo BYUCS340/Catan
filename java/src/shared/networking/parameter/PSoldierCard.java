@@ -2,7 +2,7 @@ package shared.networking.parameter;
 
 import java.io.Serializable;
 
-import shared.locations.HexLocation;
+import shared.model.map.Coordinate;
 
 public class PSoldierCard implements Serializable {
 	/**
@@ -10,7 +10,23 @@ public class PSoldierCard implements Serializable {
 	 */
 	private static final long serialVersionUID = 7427874189043352063L;
 	private int victimIndex;
-	private HexLocation hexLocation;
+	private Coordinate location;
+	
+	public PSoldierCard()
+	{
+		
+	}
+	
+	/**
+	 * @param victimIndex
+	 * @param location
+	 */
+	public PSoldierCard(int victimIndex, Coordinate location)
+	{
+		super();
+		this.victimIndex = victimIndex;
+		this.location = location;
+	}
 	/**
 	 * @return the victimIndex
 	 */
@@ -24,16 +40,16 @@ public class PSoldierCard implements Serializable {
 		this.victimIndex = victimIndex;
 	}
 	/**
-	 * @return the hexLocation
+	 * @return the location
 	 */
-	public HexLocation getHexLocation() {
-		return hexLocation;
+	public Coordinate getLocation() {
+		return location;
 	}
 	/**
-	 * @param hexLocation the hexLocation to set
+	 * @param location the location to set
 	 */
-	public void setHexLocation(HexLocation hexLocation) {
-		this.hexLocation = hexLocation;
+	public void setLocation(Coordinate location) {
+		this.location = location;
 	}
 	
 }

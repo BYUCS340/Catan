@@ -1,5 +1,6 @@
 package server.commands.moves;
 
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Command object updates the water cooler.
@@ -16,9 +17,9 @@ public class MovesSendChatCommand extends MovesCommand
 	 * @param playerIndex The player index.
 	 * @param message The message being sent.
 	 */
-	public MovesSendChatCommand(int playerID, int playerIndex, String message) 
+	public MovesSendChatCommand(NetworkCookie cookie, int playerIndex, String message) 
 	{
-		super(playerID, playerIndex);
+		super(cookie, playerIndex);
 		this.playerIndex = playerIndex;
 		this.message = message;
 	}
@@ -38,10 +39,15 @@ public class MovesSendChatCommand extends MovesCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return null;
+	}
 }

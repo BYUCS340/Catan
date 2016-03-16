@@ -5,13 +5,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import server.commands.*;
+import server.commands.CookieBuilder;
+import server.commands.Factory;
+import server.commands.ICommand;
+import server.commands.ICommandBuilder;
+import server.commands.ICommandDirector;
+import server.commands.InvalidFactoryParameterException;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
+import shared.networking.GSONUtils;
+import shared.networking.cookie.NetworkCookie;
+import shared.networking.parameter.PAcceptTrade;
+import shared.networking.parameter.PBuildCity;
+import shared.networking.parameter.PBuildRoad;
+import shared.networking.parameter.PBuildSettlement;
+import shared.networking.parameter.PDiscardCards;
+import shared.networking.parameter.PMaritimeTrade;
+import shared.networking.parameter.PMonopolyCard;
+import shared.networking.parameter.POfferTrade;
+import shared.networking.parameter.PRoadBuildingCard;
+import shared.networking.parameter.PRobPlayer;
+import shared.networking.parameter.PRollDice;
+import shared.networking.parameter.PSendChat;
+import shared.networking.parameter.PSoldierCard;
+import shared.networking.parameter.PYearOfPlentyCard;
 
 /**
  * Creates moves command objects.
- * @author Jonathan Sadler
+ * @author Jonathan Sadler and Parker Ridd
  *
  */
 public class MovesCommandFactory extends Factory 
@@ -47,7 +68,7 @@ public class MovesCommandFactory extends Factory
 	}
 
 	@Override
-	public ICommand GetCommand(StringBuilder param, int playerID, String object) throws InvalidFactoryParameterException 
+	public ICommand GetCommand(StringBuilder param, NetworkCookie cookie, String object) throws InvalidFactoryParameterException 
 	{
 		String key = PopToken(param);
 		
@@ -60,7 +81,7 @@ public class MovesCommandFactory extends Factory
 		
 		CookieBuilder builder = (CookieBuilder)directors.get(key).GetBuilder();
 		builder.SetData(object);
-		builder.SetPlayerData(playerID);
+		builder.SetCookie(cookie);
 		return builder.BuildCommand();
 	}
 	
@@ -225,14 +246,16 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesAcceptTradeCommand(playerID, playerIndex, willAccept);
+			return new MovesAcceptTradeCommand(cookie, playerIndex, willAccept);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PAcceptTrade acctrade = GSONUtils.deserialize(object, PAcceptTrade.class);
+			willAccept = acctrade.willAccept();
 			
+			//TODO get the playerIndex
 		}
 	}
 	
@@ -244,20 +267,22 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesBuildCityCommand(playerID, playerIndex, point);
+			return new MovesBuildCityCommand(cookie, playerIndex, point);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			//get the correct hex location from the input object 
+			PBuildCity pbcity = GSONUtils.deserialize(object, PBuildCity.class);
+			point = pbcity.getLocation();
 			
+			//TODO get the playerIndex
 		}
 	}
 	
 	private class BuildRoadBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private Coordinate start;
 		private Coordinate end;
 		private boolean free;
@@ -265,14 +290,18 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand()
 		{
-			return new MovesBuildRoadCommand(playerID, playerIndex, start, end, free);
+			return new MovesBuildRoadCommand(cookie, playerIndex, start, end, free);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PBuildRoad broad = GSONUtils.deserialize(object, PBuildRoad.class);
+			start = broad.getStart();
+			end = broad.getEnd();
+			free = broad.isFree();
 			
+			//TODO get playerIndex			
 		}
 	}
 	
@@ -285,14 +314,17 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesBuildSettlementCommand(playerID, playerIndex, point, free);
+			return new MovesBuildSettlementCommand(cookie, playerIndex, point, free);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PBuildSettlement pbsettlement = GSONUtils.deserialize(object, PBuildSettlement.class);
+			point = pbsettlement.getLocation();
+			free = pbsettlement.isFree();
 			
+			//TODO get playerIndex		
 		}
 	}
 	
@@ -303,7 +335,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesBuyDevCardCommand(playerID, playerIndex);
+			return new MovesBuyDevCardCommand(cookie, playerIndex);
 		}
 
 		@Override
@@ -321,14 +353,16 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesDiscardCardsCommand(playerID, playerIndex, toDiscard);
+			return new MovesDiscardCardsCommand(cookie, playerIndex, toDiscard);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PDiscardCards pdiscard = GSONUtils.deserialize(object, PDiscardCards.class);
+			toDiscard = pdiscard.getResourceList();
 			
+			//TODO get playerIndex
 		}
 	}
 	
@@ -339,7 +373,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesFinishTurnCommand(playerID, playerIndex);
+			return new MovesFinishTurnCommand(cookie, playerIndex);
 		}
 
 		@Override
@@ -353,20 +387,24 @@ public class MovesCommandFactory extends Factory
 	{
 		private int playerIndex;
 		private int ratio;
-		private String input;
-		private String output;
+		private ResourceType input;
+		private ResourceType output;
 
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesMaritimeTradeCommand(playerID, playerIndex, ratio, input, output);
+			return new MovesMaritimeTradeCommand(cookie, playerIndex, ratio, input, output);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PMaritimeTrade pmaritime = GSONUtils.deserialize(object, PMaritimeTrade.class);
+			ratio = pmaritime.getRatio();
+			input = pmaritime.getInputResource();
+			output = pmaritime.getOutputReseource();
 			
+			//TODO get playerIndex
 		}
 	}
 	
@@ -378,14 +416,16 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesMonopolyCommand(playerID, playerIndex, resource);
+			return new MovesMonopolyCommand(cookie, playerIndex, resource);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PMonopolyCard pmonopoly = GSONUtils.deserialize(object, PMonopolyCard.class);
+			resource = pmonopoly.getResource();
 			
+			//TODO get playerIndex
 		}
 	}
 	
@@ -396,13 +436,13 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesMonumentCommand(playerID, playerIndex);
+			return new MovesMonumentCommand(cookie, playerIndex);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			//TODO get playerIndex
 		}
 	}
 	
@@ -415,14 +455,17 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesOfferTradeCommand(playerID, playerIndex, receiverIndex, offer);
+			return new MovesOfferTradeCommand(cookie, playerIndex, receiverIndex, offer);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			POfferTrade poffertrade = GSONUtils.deserialize(object, POfferTrade.class);
+			receiverIndex = poffertrade.getReceiver();
+			offer = poffertrade.getResourceList();
 			
+			//TODO get playerIndex			
 		}
 	}
 	
@@ -437,14 +480,19 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesRoadBuildingCommand(playerID, playerIndex, start1, end1, start2, end2);
+			return new MovesRoadBuildingCommand(cookie, playerIndex, start1, end1, start2, end2);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PRoadBuildingCard prbc = GSONUtils.deserialize(object, PRoadBuildingCard.class);
+			start1 = prbc.getStart1();
+			start2 = prbc.getStart2();
+			end1 = prbc.getEnd1();
+			end2 = prbc.getEnd2();
 			
+			//TODO get playerIndex		
 		}
 	}
 	
@@ -457,14 +505,17 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesRobPlayerCommand(playerID, playerIndex, victimIndex, point);
+			return new MovesRobPlayerCommand(cookie, playerIndex, victimIndex, point);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PRobPlayer prob = GSONUtils.deserialize(object, PRobPlayer.class);
+			victimIndex = prob.getVictimIndex();
+			point = prob.getLocation();
 			
+			//TODO get playerIndex		
 		}
 	}
 	
@@ -476,14 +527,16 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesRollNumberCommand(playerID, playerIndex, roll);
+			return new MovesRollNumberCommand(cookie, playerIndex, roll);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PRollDice proll = GSONUtils.deserialize(object, PRollDice.class);
+			roll = proll.getRoll();
 			
+			//TODO get playerIndex
 		}
 	}
 	
@@ -495,14 +548,16 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesSendChatCommand(playerID, playerIndex, message);
+			return new MovesSendChatCommand(cookie, playerIndex, message);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PSendChat pchat = GSONUtils.deserialize(object, PSendChat.class);
+			message = pchat.getContent();
 			
+			//TODO get playerIndex			
 		}
 	}
 	
@@ -515,14 +570,17 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesSoldierCommand(playerID, playerIndex, victimIndex, point);
+			return new MovesSoldierCommand(cookie, playerIndex, victimIndex, point);
 		}
 
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PSoldierCard psoldier = GSONUtils.deserialize(object, PSoldierCard.class);
+			victimIndex = psoldier.getVictimIndex();
+			point = psoldier.getLocation();
 			
+			//TODO get playerIndex		
 		}
 	}
 	
@@ -535,14 +593,17 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new MovesYearOfPlentyCommand(playerID, playerIndex, resource1, resource2);
+			return new MovesYearOfPlentyCommand(cookie, playerIndex, resource1, resource2);
 		}
 
 		@Override
 		public void SetData(String object)
 		{
-			// TODO Auto-generated method stub
+			PYearOfPlentyCard pyear = GSONUtils.deserialize(object, PYearOfPlentyCard.class);
+			resource1 = pyear.getResource1();
+			resource2 = pyear.getResource2();
 			
+			//TODO get playerIndex
 		}
 	}
 }

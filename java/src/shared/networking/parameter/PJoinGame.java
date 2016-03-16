@@ -12,31 +12,53 @@ public class PJoinGame implements Serializable
 	 */
 	private static final long serialVersionUID = 1732160358083131845L;
 	private int id;
-	private CatanColor color;
+	private String color;
+	
+	public PJoinGame()
+	{
+		
+	}
+	
+	/**
+	 * @param id
+	 * @param color
+	 */
+	public PJoinGame(int id, CatanColor color)
+	{
+		super();
+		this.id = id;
+		this.color = CatanColor.toString(color);
+	}
+	
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public int getId() 
+	{
 		return id;
 	}
+	
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public void setId(int id) 
+	{
 		this.id = id;
 	}
+	
 	/**
 	 * @return the color
 	 */
-	public CatanColor getColor() {
-		return color;
+	public CatanColor getColor() 
+	{
+		return CatanColor.fromString(color);
 	}
+	
 	/**
 	 * @param color the color to set
 	 */
-	public void setColor(CatanColor color) {
-		this.color = color;
+	public void setColor(CatanColor color) 
+	{
+		this.color = CatanColor.toString(color);
 	}
-	
-	
 }

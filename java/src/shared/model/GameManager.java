@@ -129,15 +129,16 @@ public class GameManager implements ModelSubject
 		return true;
 	}
 	
-	
-	
 	/**
-	 * Adds a player to the game
-	 * @param name
-	 * @return the player index number 
-	 * @throws ModelException if there are too many players already in the game or if that color has been used
+	 * Adds a players to the game
+	 * @param name The name of the player
+	 * @param color The piece color
+	 * @param isHuman True if human, else AI
+	 * @param playerID The id of the player
+	 * @return the player index
+	 * @throws ModelException Thrown if the player can't be added
 	 */
-	public int AddPlayer(String name, CatanColor color, boolean isHuman) throws ModelException
+	public int AddPlayer(String name, CatanColor color, boolean isHuman, int playerID) throws ModelException
 	{
 		//check if that color has already been used
 		if (playerColors[color.ordinal()] != -1)
@@ -148,11 +149,22 @@ public class GameManager implements ModelSubject
 		{
 			throw new ModelException("Too many players already to add another");
 		}
-		Player newPlayer = new Player(name, newIndex, color, isHuman);
+		Player newPlayer = new Player(name, newIndex, color, isHuman, playerID);
 		players.add(newPlayer);
 		
 		playerColors[color.ordinal()] = newIndex;
 		return newIndex;
+	}
+	
+	/**
+	 * Adds a player to the game
+	 * @param name
+	 * @return the player index number 
+	 * @throws ModelException if there are too many players already in the game or if that color has been used
+	 */
+	public int AddPlayer(String name, CatanColor color, boolean isHuman) throws ModelException
+	{
+		return this.AddPlayer(name, color, isHuman, -1);
 	}
 	
 	/**

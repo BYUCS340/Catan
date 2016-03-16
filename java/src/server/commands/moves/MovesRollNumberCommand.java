@@ -1,5 +1,7 @@
 package server.commands.moves;
 
+import shared.networking.cookie.NetworkCookie;
+
 /**
  * Command that deals with the rolling of dice.
  * @author Jonathan Sadler
@@ -15,9 +17,9 @@ public class MovesRollNumberCommand extends MovesCommand
 	 * @param playerIndex The player index.
 	 * @param roll The value on the dice.
 	 */
-	public MovesRollNumberCommand(int playerID, int playerIndex, int roll) 
+	public MovesRollNumberCommand(NetworkCookie cookie, int playerIndex, int roll) 
 	{
-		super(playerID, playerIndex);
+		super(cookie, playerIndex);
 		this.roll = roll;
 	}
 
@@ -36,10 +38,15 @@ public class MovesRollNumberCommand extends MovesCommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return null;
+	}
 }

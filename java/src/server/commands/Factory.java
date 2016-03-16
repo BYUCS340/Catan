@@ -1,5 +1,7 @@
 package server.commands;
 
+import shared.networking.cookie.NetworkCookie;
+
 /**
  * Abstract class used by factories.
  * @author Jonathan Sadler
@@ -14,7 +16,7 @@ public abstract class Factory
 	 * @return The associated command object.
 	 * @throws InvalidFactoryParameterException Thrown if there isn't a command associated with param.
 	 */
-	public abstract ICommand GetCommand(StringBuilder param, int playerID, String object) throws InvalidFactoryParameterException;
+	public abstract ICommand GetCommand(StringBuilder param, NetworkCookie cookie, String object) throws InvalidFactoryParameterException;
 	
 	protected String PopToken(StringBuilder param)
 	{
