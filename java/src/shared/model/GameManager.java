@@ -329,6 +329,15 @@ public class GameManager implements ModelSubject
 		//Correctly rolls the dice
 		Random randomGen = new Random();
 		int diceRoll = randomGen.nextInt(5) + randomGen.nextInt(5) + 2;
+		DiceRoll(diceRoll);
+		return diceRoll;
+	}
+	
+	/**
+	 * Handles the roll of a die
+	 * @param roll
+	 */
+	protected void DiceRoll(int diceRoll){
 		
 		//check if we can move the robber
 		if (diceRoll == 7 )
