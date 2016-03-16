@@ -90,26 +90,6 @@ public class TestGameTable
 			fail("We shouldn't be able to register the player again");
 		}
 		catch (GameException e){}
-		
-		
-		//Check to make sure the games run properly
-		assertEquals(gt.GetNumberGames(),0);
-		String gameName = "BrawlRoyal";
-		GameInfo gameInfo = gt.CreateGame(gameName, false, false, false);
-		assertEquals(gt.GetNumberGames(),1);
-		ServerGameManager sgm = null;
-		try 
-		{
-			sgm = gt.GetGame(gameInfo.getId());
-			assertEquals(gameName,sgm.GetGameTitle());
-		}
-		catch (GameException e) 
-		{
-			//e.printStackTrace();
-			fail("We should have found the game");
-		}
-		
-		
 	}
 
 }
