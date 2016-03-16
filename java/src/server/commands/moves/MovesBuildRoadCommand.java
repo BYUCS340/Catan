@@ -1,6 +1,7 @@
 package server.commands.moves;
 
 import shared.model.map.Coordinate;
+import shared.networking.cookie.NetworkCookie;
 
 /**
  * Command class that handles building roads.
@@ -21,9 +22,9 @@ public class MovesBuildRoadCommand extends MovesCommand
 	 * @param end The end of the road.
 	 * @param free True if free, else false. (Free for setup).
 	 */
-	public MovesBuildRoadCommand(int playerID, int playerIndex, Coordinate start, Coordinate end, boolean free)
+	public MovesBuildRoadCommand(NetworkCookie cookie, int playerIndex, Coordinate start, Coordinate end, boolean free)
 	{
-		super(playerID, playerIndex);
+		super(cookie, playerIndex);
 		this.start = start;
 		this.end = end;
 		this.free = free;
@@ -44,10 +45,15 @@ public class MovesBuildRoadCommand extends MovesCommand
 	}
 
 	@Override
-	public String Response()
+	public String GetResponse()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String GetHeader() 
+	{
+		return null;
+	}
 }

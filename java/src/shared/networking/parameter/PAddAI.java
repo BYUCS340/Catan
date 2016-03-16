@@ -10,7 +10,7 @@ public class PAddAI implements Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = -464336451681336425L;
-	private AIType aiType;
+	private String AIType;
 
 	public PAddAI()
 	{
@@ -24,20 +24,22 @@ public class PAddAI implements Serializable
 	public PAddAI(AIType aiType)
 	{
 		super();
-		this.aiType = aiType;
+		this.AIType = shared.definitions.AIType.toString(aiType);
 	}
 
 	/**
 	 * @return the aiType
 	 */
-	public AIType getAiType() {
-		return aiType;
+	public AIType getAiType()
+	{
+		return shared.definitions.AIType.fromString(AIType);
 	}
 
 	/**
 	 * @param aiType the aiType to set
 	 */
-	public void setAiType(AIType aiType) {
-		this.aiType = aiType;
+	public void setAiType(AIType aiType) 
+	{
+		this.AIType = shared.definitions.AIType.toString(aiType);
 	}
 }

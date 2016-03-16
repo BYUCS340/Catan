@@ -11,6 +11,11 @@ import server.commands.ICommand;
 import server.commands.ICommandBuilder;
 import server.commands.ICommandDirector;
 import server.commands.InvalidFactoryParameterException;
+import server.model.GameException;
+import shared.definitions.AIType;
+import shared.networking.GSONUtils;
+import shared.networking.cookie.NetworkCookie;
+import shared.networking.parameter.PAddAI;
 import shared.definitions.AIType;
 import shared.networking.GSONUtils;
 import shared.networking.parameter.PAddAI;
@@ -38,7 +43,7 @@ public class GameCommandFactory extends Factory
 	}
 
 	@Override
-	public ICommand GetCommand(StringBuilder param, int playerID, String object) throws InvalidFactoryParameterException 
+	public ICommand GetCommand(StringBuilder param, NetworkCookie cookie, String object) throws InvalidFactoryParameterException 
 	{
 		String key = PopToken(param);
 		
@@ -49,10 +54,19 @@ public class GameCommandFactory extends Factory
 			throw e;
 		}
 		
-		CookieBuilder builder = (CookieBuilder)directors.get(key).GetBuilder();
-		builder.SetData(object);
-		builder.SetPlayerData(playerID);
-		return builder.BuildCommand();
+		try
+		{
+			CookieBuilder builder = (CookieBuilder)directors.get(key).GetBuilder();
+			builder.SetData(object);
+			builder.SetCookie(cookie);
+			return builder.BuildCommand();
+		}
+		catch (GameException e)
+		{
+			InvalidFactoryParameterException e1 = new InvalidFactoryParameterException("Invalid cookie", e);
+			Logger.getLogger("CatanServer").throwing("GameCommandFactory", "GetCommand", e1);
+			throw e1;
+		}
 	}
 	
 	private class AddAIDirector implements ICommandDirector
@@ -107,7 +121,7 @@ public class GameCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new GameAddAICommand(playerID, type);
+			return new GameAddAICommand(cookie, type);
 		}
 
 		@Override
@@ -125,7 +139,7 @@ public class GameCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new GameCommandsCommand(playerID, commands);
+			return new GameCommandsCommand(cookie, commands);
 		}
 
 		@Override
@@ -141,7 +155,7 @@ public class GameCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new GameListAICommand(playerID);
+			return new GameListAICommand(cookie);
 		}
 
 		@Override
@@ -158,7 +172,7 @@ public class GameCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new GameModelCommand(playerID, version);
+			return new GameModelCommand(cookie, version);
 		}
 
 		@Override
@@ -174,7 +188,7 @@ public class GameCommandFactory extends Factory
 		@Override
 		public ICommand BuildCommand() 
 		{
-			return new GameResetCommand(playerID);
+			return new GameResetCommand(cookie);
 		}
 
 		@Override

@@ -1,12 +1,18 @@
 package server.cookie;
 
-import shared.networking.Cookie;
+import java.io.Serializable;
 
-public class ServerCookie implements Cookie 
+import shared.networking.cookie.Cookie;
+
+@SuppressWarnings("serial")
+public class ServerCookie implements Cookie, Serializable
 {
-	private long cookieID = 0;
+	private String name;
+	private String password;
 	private int  playerID = 0;
 	private int  gameID = 0;
+	
+	private long cookieID = 0;
 	private long created;
 	private final long minutesValid = 180;
 	
@@ -29,7 +35,7 @@ public class ServerCookie implements Cookie
 	}
 	
 	/**
-	 * Checks if the cookie matches the sa,e 
+	 * Checks if the cookie matches the same 
 	 * @param cookieText
 	 * @return
 	 */

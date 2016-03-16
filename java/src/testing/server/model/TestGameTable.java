@@ -11,6 +11,7 @@ import server.model.GameException;
 import server.model.GameTable;
 import server.model.ServerGameManager;
 import server.model.ServerPlayer;
+import shared.data.GameInfo;
 
 public class TestGameTable 
 {
@@ -31,13 +32,13 @@ public class TestGameTable
 	{
 		String username = "amIhuman";
 		String password = "orAmIdancer";
-		ServerCookie sc = null;
+		int sc = -1;
 		ServerPlayer sp = null;
 		int playerID = -1;
 		
 		String username2 = "mrBrightside";
 		String password2 = "feelingfine";
-		ServerCookie sc2 = null;
+		int sc2 = -1;
 		ServerPlayer sp2 = null;
 		int playerID2 = -1;
 		
@@ -52,7 +53,6 @@ public class TestGameTable
 		//Register the player
 		try{
 			sc = gt.RegisterPlayer(username, password);
-			playerID = sc.getPlayerID();
 		}
 		catch (GameException e){
 			fail("We should be able to register the player");
@@ -64,19 +64,6 @@ public class TestGameTable
 			fail("We shouldn't be able to register the player again");
 		}
 		catch (GameException e){}
-		
-		//Get the current player
-		try 
-		{
-			sp = gt.CookieCheck(sc.getCookieText());
-			assertEquals(sp.GetName(), username);
-			assertEquals(sp.GetID(), playerID);
-		}
-		catch (GameException e) 
-		{
-			e.printStackTrace();
-			fail("Cookie check failed!");
-		}
 		
 		//PLAYER 2
 		
@@ -92,7 +79,6 @@ public class TestGameTable
 		//Register the player
 		try{
 			sc2 = gt.RegisterPlayer(username2, password2);
-			playerID2 = sc2.getPlayerID();
 		}
 		catch (GameException e){
 			fail("We should be able to register the player");
@@ -104,55 +90,6 @@ public class TestGameTable
 			fail("We shouldn't be able to register the player again");
 		}
 		catch (GameException e){}
-		
-		//Get the current player
-		try 
-		{
-			sp2 = gt.CookieCheck(sc2.getCookieText());
-			assertEquals(sp2.GetName(), username2);
-			assertEquals(sp2.GetID(), playerID2);
-		}
-		catch (GameException e) 
-		{
-			e.printStackTrace();
-			fail("Cookie check failed!");
-		}
-
-		
-		
-		
-		//Get the current player
-		try 
-		{
-			sp = gt.CookieCheck(sc.getCookieText());
-			assertEquals(sp.GetName(), username);
-			assertEquals(sp.GetID(), playerID);
-		}
-		catch (GameException e) 
-		{
-			e.printStackTrace();
-			fail("Cookie check failed!");
-		}
-		
-		
-		//Check to make sure the games run properly
-		assertEquals(gt.GetNumberGames(),0);
-		String gameName = "BrawlRoyal";
-		int gameID = gt.CreateGame(gameName, false, false, false);
-		assertEquals(gt.GetNumberGames(),1);
-		ServerGameManager sgm = null;
-		try 
-		{
-			sgm = gt.GetGame(gameID);
-			assertEquals(gameName,sgm.GetGameTitle());
-		}
-		catch (GameException e) 
-		{
-			//e.printStackTrace();
-			fail("We should have found the game");
-		}
-		
-		
 	}
 
 }

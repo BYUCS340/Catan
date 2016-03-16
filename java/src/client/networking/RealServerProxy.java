@@ -15,7 +15,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Scanner;
-import org.junit.Assert.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +29,7 @@ import shared.networking.Deserializer;
 import shared.networking.JSONDeserializer;
 import shared.networking.JSONSerializer;
 import shared.networking.Serializer;
-import shared.networking.UserCookie;
+import shared.networking.cookie.UserCookie;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 import shared.networking.transport.NetPlayer;
@@ -1079,8 +1078,7 @@ public class RealServerProxy implements EarlyServerProxy
 			
 			//add cookie to headers if there is a logged-in user
 			if(userCookie != null){
-				String cookieString = getCookieString();
-				connection.setRequestProperty("Cookie", cookieString);	
+				connection.setRequestProperty("Cookie", userCookie.getCookieText());	
 			}
 			
 			connection.setDoOutput(true);
@@ -1109,7 +1107,6 @@ public class RealServerProxy implements EarlyServerProxy
 				//parse the header, if requested
 				if(getUserCookie){
 					String uCookie = connection.getHeaderField("Set-cookie");
-					uCookie = processUserCookie(uCookie);
 					JSONObject obj = new JSONObject(URLDecoder.decode(uCookie));
 					String tempUsername = obj.getString("name");
 					String tempPassword = obj.getString("password");
@@ -1119,7 +1116,9 @@ public class RealServerProxy implements EarlyServerProxy
 				}
 				else if(getGameCookie){
 					String gCookie = connection.getHeaderField("Set-cookie");
-					gameID = processGameCookie(gCookie);
+					JSONObject obj = new JSONObject(URLDecoder.decode(gCookie));
+					gameID = obj.getInt("gameID");
+					userCookie.setCookie(gCookie);
 				}
 				connection.disconnect();
 			}
@@ -1171,8 +1170,7 @@ public class RealServerProxy implements EarlyServerProxy
 			
 			//add cookie to headers if there is a logged-in user
 			if(userCookie != null){
-				String cookieString = getCookieString();
-				connection.setRequestProperty("Cookie", cookieString);	
+				connection.setRequestProperty("Cookie", userCookie.getCookieText());	
 			}
 			
 			connection.setDoOutput(true);
@@ -1242,46 +1240,4 @@ public class RealServerProxy implements EarlyServerProxy
 		userCookie = null;
 		gameID = -1;
 	}
-	
-	/**
-	 * Processes user's cached cookie string
-	 * @param uCookie
-	 * @return
-	 */
-	private String processUserCookie(String uCookie){
-		String tempStr = uCookie.substring(11);
-		tempStr = tempStr.substring(0, tempStr.indexOf(";Path"));
-		return tempStr;
-	}
-	
-	/**
-	 * Extracts and returns parameters from passed cookie
-	 * @param gCookie
-	 * @return
-	 */
-	private int processGameCookie(String gCookie){
-		String tempStr = gCookie.substring(11, gCookie.indexOf(';'));
-		return Integer.parseInt(tempStr);
-	}
-	
-	/**
-	 * Generates a cookie string for the user
-	 * @return
-	 */
-	private String getCookieString(){
-		StringBuilder sb = new StringBuilder();
-		sb.append("catan.user=");
-		sb.append(userCookie.getCookieText());
-		
-		//add the game cookie information if it exists
-		if(gameID >= 0){
-			sb.append("; ");
-			sb.append("catan.game="+gameID);
-		}
-		
-		return sb.toString();
-	}
-	
-	
-
 }

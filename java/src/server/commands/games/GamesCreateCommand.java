@@ -1,6 +1,9 @@
 package server.commands.games;
 
 import server.commands.ICommand;
+import server.model.GameArcade;
+import shared.data.GameInfo;
+import shared.networking.GSONUtils;
 
 /**
  * Command to create a new game.
@@ -13,6 +16,8 @@ public class GamesCreateCommand implements ICommand
 	private boolean randomNumbers;
 	private boolean randomPorts;
 	private String name;
+	
+	private GameInfo info;
 	
 	/**
 	 * Creates a command object to create a game.
@@ -32,8 +37,8 @@ public class GamesCreateCommand implements ICommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
-		return false;
+		info = GameArcade.games().CreateGame(name, randomTiles, randomNumbers, randomPorts);
+		return info != null;
 	}
 
 	@Override
@@ -44,9 +49,17 @@ public class GamesCreateCommand implements ICommand
 	}
 
 	@Override
-	public String Response() 
+	public String GetResponse() 
 	{
-		// TODO Auto-generated method stub
+		if (info != null)
+			return GSONUtils.serialize(info);
+		else
+			return null;
+	}
+
+	@Override
+	public String GetHeader() 
+	{
 		return null;
 	}
 

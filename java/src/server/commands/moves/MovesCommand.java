@@ -1,14 +1,15 @@
 package server.commands.moves;
 
 import server.commands.CookieCommand;
+import shared.networking.cookie.NetworkCookie;
 
 public abstract class MovesCommand extends CookieCommand 
 {
 	protected int playerIndex;
 	
-	public MovesCommand(int playerID, int playerIndex) 
+	public MovesCommand(NetworkCookie cookie, int playerIndex) 
 	{
-		super(playerID);
+		super(cookie);
 		this.playerIndex = playerIndex;
 	}
 }
