@@ -250,7 +250,6 @@ public class MovesCommandFactory extends Factory
 	
 	private class AcceptTradeBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private boolean willAccept;
 		
 		@Override
@@ -264,14 +263,11 @@ public class MovesCommandFactory extends Factory
 		{
 			PAcceptTrade acctrade = GSONUtils.deserialize(object, PAcceptTrade.class);
 			willAccept = acctrade.willAccept();
-			
-			//TODO get the playerIndex
 		}
 	}
 	
 	private class BuildCityBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private Coordinate point;
 		
 		@Override
@@ -286,8 +282,6 @@ public class MovesCommandFactory extends Factory
 			//get the correct hex location from the input object 
 			PBuildCity pbcity = GSONUtils.deserialize(object, PBuildCity.class);
 			point = pbcity.getLocation();
-			
-			//TODO get the playerIndex
 		}
 	}
 	
@@ -309,15 +303,12 @@ public class MovesCommandFactory extends Factory
 			PBuildRoad broad = GSONUtils.deserialize(object, PBuildRoad.class);
 			start = broad.getStart();
 			end = broad.getEnd();
-			free = broad.isFree();
-			
-			//TODO get playerIndex			
+			free = broad.isFree();		
 		}
 	}
 	
 	private class BuildSettlementBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private Coordinate point;
 		private boolean free;
 		
@@ -332,16 +323,12 @@ public class MovesCommandFactory extends Factory
 		{
 			PBuildSettlement pbsettlement = GSONUtils.deserialize(object, PBuildSettlement.class);
 			point = pbsettlement.getLocation();
-			free = pbsettlement.isFree();
-			
-			//TODO get playerIndex		
+			free = pbsettlement.isFree();	
 		}
 	}
 	
 	private class BuyDevCardBuilder extends CookieBuilder
 	{
-		private int playerIndex;
-		
 		@Override
 		public ICommand BuildCommand() 
 		{
@@ -351,13 +338,12 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			return;
 		}
 	}
 	
 	private class DiscardCardsBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private List<Integer> toDiscard;
 		
 		@Override
@@ -371,15 +357,11 @@ public class MovesCommandFactory extends Factory
 		{
 			PDiscardCards pdiscard = GSONUtils.deserialize(object, PDiscardCards.class);
 			toDiscard = pdiscard.getResourceList();
-			
-			//TODO get playerIndex
 		}
 	}
 	
 	private class FinishTurnBuilder extends CookieBuilder
 	{
-		private int playerIndex;
-		
 		@Override
 		public ICommand BuildCommand() 
 		{
@@ -389,13 +371,12 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			return;
 		}
 	}
 	
 	private class MaritimeTradeBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private int ratio;
 		private ResourceType input;
 		private ResourceType output;
@@ -413,14 +394,11 @@ public class MovesCommandFactory extends Factory
 			ratio = pmaritime.getRatio();
 			input = pmaritime.getInputResource();
 			output = pmaritime.getOutputReseource();
-			
-			//TODO get playerIndex
 		}
 	}
 	
 	private class MonopolyBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private ResourceType resource;
 		
 		@Override
@@ -434,15 +412,11 @@ public class MovesCommandFactory extends Factory
 		{
 			PMonopolyCard pmonopoly = GSONUtils.deserialize(object, PMonopolyCard.class);
 			resource = pmonopoly.getResource();
-			
-			//TODO get playerIndex
 		}
 	}
 	
 	private class MonumentBuilder extends CookieBuilder
 	{
-		private int playerIndex;
-		
 		@Override
 		public ICommand BuildCommand() 
 		{
@@ -452,13 +426,12 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			//TODO get playerIndex
+			return;
 		}
 	}
 	
 	private class OfferTradeBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private int receiverIndex;
 		private List<Integer> offer;
 		
@@ -473,15 +446,12 @@ public class MovesCommandFactory extends Factory
 		{
 			POfferTrade poffertrade = GSONUtils.deserialize(object, POfferTrade.class);
 			receiverIndex = poffertrade.getReceiver();
-			offer = poffertrade.getResourceList();
-			
-			//TODO get playerIndex			
+			offer = poffertrade.getResourceList();		
 		}
 	}
 	
 	private class RoadBuildingBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private Coordinate start1;
 		private Coordinate end1;
 		private Coordinate start2;
@@ -500,15 +470,12 @@ public class MovesCommandFactory extends Factory
 			start1 = prbc.getStart1();
 			start2 = prbc.getStart2();
 			end1 = prbc.getEnd1();
-			end2 = prbc.getEnd2();
-			
-			//TODO get playerIndex		
+			end2 = prbc.getEnd2();	
 		}
 	}
 	
 	private class RobPlayerBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private int victimIndex;
 		private Coordinate point;
 		
@@ -524,14 +491,11 @@ public class MovesCommandFactory extends Factory
 			PRobPlayer prob = GSONUtils.deserialize(object, PRobPlayer.class);
 			victimIndex = prob.getVictimIndex();
 			point = prob.getLocation();
-			
-			//TODO get playerIndex		
 		}
 	}
 	
 	private class RollNumberBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private int roll;
 		
 		@Override
@@ -545,14 +509,11 @@ public class MovesCommandFactory extends Factory
 		{
 			PRollDice proll = GSONUtils.deserialize(object, PRollDice.class);
 			roll = proll.getRoll();
-			
-			//TODO get playerIndex
 		}
 	}
 	
 	private class SendChatBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private String message;
 		
 		@Override
@@ -565,15 +526,12 @@ public class MovesCommandFactory extends Factory
 		public void SetData(String object) 
 		{
 			PSendChat pchat = GSONUtils.deserialize(object, PSendChat.class);
-			message = pchat.getContent();
-			
-			//TODO get playerIndex			
+			message = pchat.getContent();	
 		}
 	}
 	
 	private class SoldierBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private int victimIndex;
 		private Coordinate point;
 		
@@ -588,15 +546,12 @@ public class MovesCommandFactory extends Factory
 		{
 			PSoldierCard psoldier = GSONUtils.deserialize(object, PSoldierCard.class);
 			victimIndex = psoldier.getVictimIndex();
-			point = psoldier.getLocation();
-			
-			//TODO get playerIndex		
+			point = psoldier.getLocation();		
 		}
 	}
 	
 	private class YearOfPlentyBuilder extends CookieBuilder
 	{
-		private int playerIndex;
 		private ResourceType resource1;
 		private ResourceType resource2;
 		
@@ -612,8 +567,6 @@ public class MovesCommandFactory extends Factory
 			PYearOfPlentyCard pyear = GSONUtils.deserialize(object, PYearOfPlentyCard.class);
 			resource1 = pyear.getResource1();
 			resource2 = pyear.getResource2();
-			
-			//TODO get playerIndex
 		}
 	}
 }

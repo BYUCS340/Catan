@@ -4,11 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import server.commands.*;
+import server.commands.CookieBuilder;
+import server.commands.Factory;
+import server.commands.ICommand;
+import server.commands.ICommandBuilder;
+import server.commands.ICommandDirector;
+import server.commands.InvalidFactoryParameterException;
 import server.model.GameException;
 import shared.definitions.CatanColor;
 import shared.networking.GSONUtils;
 import shared.networking.cookie.NetworkCookie;
+import shared.networking.parameter.PCreateGame;
+import shared.networking.parameter.PJoinGame;
 import shared.networking.parameter.PCreateGame;
 import shared.networking.parameter.PJoinGame;
 
@@ -123,11 +130,11 @@ public class GamesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PCreateGame create = GSONUtils.deserialize(object, PCreateGame.class);
-			randomTiles = create.isRandomTiles();
-			randomNumbers = create.isRandomNumbers();
-			randomPorts = create.isRandomPorts();
-			name = create.getName();
+			PCreateGame creategame = GSONUtils.deserialize(object, PCreateGame.class);
+			randomTiles = creategame.isRandomTiles();
+			randomNumbers = creategame.isRandomNumbers();
+			randomPorts = creategame.isRandomPorts();
+			name = creategame.getName();			
 		}
 	}
 	

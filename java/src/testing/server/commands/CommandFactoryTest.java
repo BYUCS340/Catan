@@ -159,8 +159,8 @@ public class CommandFactoryTest
 		String url = "games/create";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
-		PCreateGame create = new PCreateGame(false, false, false, "TheGame");
-		object = GSONUtils.serialize(create);
+		PCreateGame create = new PCreateGame(false, false, true, "hellotest");
+		String object = GSONUtils.serialize(create);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -173,10 +173,10 @@ public class CommandFactoryTest
 		String url = "games/join";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
-		PJoinGame join = new PJoinGame(1, CatanColor.GREEN);
-		object = GSONUtils.serialize(join);
-		ICommand command = factory.GetCommand(param, cookie, object);
+		PJoinGame join = new PJoinGame(0, CatanColor.BLUE);
+		String object = GSONUtils.serialize(join);
 		
+		ICommand command = factory.GetCommand(param, cookie, object);
 		assertTrue(command.getClass() == GamesJoinCommand.class);
 	}
 	
@@ -236,8 +236,8 @@ public class CommandFactoryTest
 		String url = "game/addai";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
-		PAddAI addAI = new PAddAI(AIType.BEGINNER);
-		object = GSONUtils.serialize(addAI);
+		PAddAI addai = new PAddAI(AIType.BEGINNER);
+		String object = GSONUtils.serialize(addai);
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
 		assertTrue(command.getClass() == GameAddAICommand.class);

@@ -8,11 +8,14 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import server.ai.types.AI;
-import server.ai.types.B_Groot;
 import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 
+/**
+ * Class used for interacting with AI objects.
+ * @author Jonathan Sadler
+ *
+ */
 public class AIHandler 
 {
 	private List<String> types;
@@ -20,6 +23,9 @@ public class AIHandler
 	private Map<String, AI> AIbyName;
 	private Map<Integer, AI> AIbyIndex;
 	
+	/**
+	 * Creates an AI Handler
+	 */
 	public AIHandler()
 	{
 		CompileTypes();
@@ -30,23 +36,52 @@ public class AIHandler
 		AddAI(new B_Groot());
 	}
 	
+	/**
+	 * Sets the player ID of the AI player.
+	 * @param name The AI's name.
+	 * @param playerID The player ID to set.
+	 */
+	public void RegisterAI(String name, int playerID)
+	{
+		AI ai = AIbyName.get(name);
+		ai.SetID(playerID);
+		AIbyIndex.put(playerID, ai);
+	}
+	
+	/**
+	 * Gets the available types of AIs.
+	 * @return A list of AI types.
+	 */
 	public List<String> GetTypes()
 	{
 		return java.util.Collections.unmodifiableList(types);
 	}
 	
-	public void RegisterAI(String name, int playerIndex)
-	{
-		AI ai = AIbyName.get(name);
-		ai.SetIndex(playerIndex);
-		AIbyIndex.put(playerIndex, ai);
-	}
-	
+	/**
+	 * Gets the names of all available AIs.
+	 * @return A list of names.
+	 */
 	public Set<String> GetNames()
 	{
 		return java.util.Collections.unmodifiableSet(AIbyName.keySet());
 	}
 	
+	/**
+	 * Gets the name of the AI based on ID.
+	 * @param id The ID of the AI.
+	 * @return The name of the AI.
+	 */
+	public String GetName(int id)
+	{
+		return AIbyIndex.get(id).GetName();
+	}
+	
+	/**
+	 * Gets a random AI associated with the desired type.
+	 * @param type The AI.
+	 * @return An AI associated with the type. If the type is random, then it returns
+	 * an AI with a random type.
+	 */
 	public int GetAI(AIType type)
 	{
 		Set<AI> ais = null;
@@ -68,17 +103,28 @@ public class AIHandler
 		
 		AI[] aiList = ais.toArray(new AI[0]);
 		
-		return aiList[aiIndex].GetIndex();
+		return aiList[aiIndex].GetID();
 	}
 	
-	public CatanColor PickColor(int index, Set<CatanColor> notAvailable)
+	/**
+	 * Asks the AI to pick a color.
+	 * @param id The ID of the AI.
+	 * @param notAvailable The colors already selected.
+	 * @return The selected color.
+	 */
+	public CatanColor PickColor(int id, Set<CatanColor> notAvailable)
 	{
-		return AIbyIndex.get(index).PickColor(notAvailable);
+		return AIbyIndex.get(id).PickColor(notAvailable);
 	}
 	
-	public String GetName(int index)
+	/**
+	 * Tells an AI to begin its turn.
+	 * @param aiID the ID of the AI.
+	 * @param gameID The ID of the game.
+	 */
+	public void RunAI(int aiID, int gameID)
 	{
-		return AIbyIndex.get(index).GetName();
+		new AIThread(aiID, gameID).start();;
 	}
 	
 	private void CompileTypes()
@@ -104,5 +150,23 @@ public class AIHandler
 		}
 		
 		AIbyName.put(ai.GetName(), ai);
+	}
+	
+	private class AIThread extends Thread
+	{
+		private int aiIndex;
+		private int gameIndex;
+		
+		public AIThread(int aiIndex, int gameIndex)
+		{
+			this.aiIndex = aiIndex;
+			this.gameIndex = gameIndex;
+		}
+		
+		@Override
+		public void run()
+		{
+			AIbyIndex.get(aiIndex).TakeTurn(gameIndex);
+		}
 	}
 }
