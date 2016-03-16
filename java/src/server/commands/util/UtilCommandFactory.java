@@ -67,8 +67,7 @@ public class UtilCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
-			
+			// TODO Auto-generated method stub	
 		}
 	}
 }
