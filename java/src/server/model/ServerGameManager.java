@@ -1,12 +1,15 @@
 package server.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import shared.definitions.CatanColor;
+import shared.definitions.ResourceType;
 import shared.model.GameManager;
 import shared.model.GameModel;
 import shared.model.ModelException;
+import shared.model.map.Coordinate;
 import shared.model.map.model.MapGenerator;
 import shared.model.map.model.MapModel;
 
@@ -66,7 +69,7 @@ public class ServerGameManager extends GameManager {
 	 * @param playerID by Player ID
 	 * @param message to chat with
 	 */
-	public boolean SendChat(int playerID, String message)
+	public boolean ServerSendChat(int playerID, String message)
 	{
 		int playerIndex = GetPlayerIndexByID(playerID);
 		if (super.canChat(playerIndex))
@@ -84,7 +87,7 @@ public class ServerGameManager extends GameManager {
 	 * @param number
 	 * @return
 	 */
-	public boolean RollNumber(int playerID, int number)
+	public boolean ServerRollNumber(int playerID, int number)
 	{
 		int playerIndex = GetPlayerIndexByID(playerID);
 		if (!super.CanRollNumber(playerIndex)) 
@@ -102,7 +105,141 @@ public class ServerGameManager extends GameManager {
 	 * @param hex
 	 * @return
 	 */
-	public boolean RobPlayer(int playerID, int playerIndex, Coordinate hex)
+	public boolean ServerRobPlayer(int playerID, int playerIndex, Coordinate hex)
+	{
+		return false;
+	}
+	
+	/**
+	 * Ends a player's turn
+	 * @param playerID
+	 * @return
+	 */
+	public boolean ServerFinishTurn(int playerID)
+	{
+		return false;
+	}
+	
+	/**
+	 * Buys a dev card
+	 * @param playerID
+	 * @return
+	 */
+	public boolean ServerBuyDevCard(int playerID)
+	{
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param playerID
+	 * @param res1
+	 * @param res2
+	 * @return
+	 */
+	public boolean ServerYearOfPlenty(int playerID, ResourceType res1, ResourceType res2)
+	{
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param playerID
+	 * @param p1
+	 * @param p2
+	 * @return
+	 */
+	public boolean ServerRoadBuilding(int playerID, Coordinate p1, Coordinate p2)
+	{
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param playerID
+	 * @param p1
+	 * @return
+	 */
+	public boolean ServerSolider(int playerID, Coordinate p1)
+	{
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param playerID
+	 * @param p
+	 * @return
+	 */
+	public boolean ServerBuildRoad(int playerID, Coordinate p)
+	{
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param playerID
+	 * @param p
+	 * @return
+	 */
+	public boolean ServerBuildCity(int playerID, Coordinate p)
+	{
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param playerID
+	 * @param p
+	 * @return
+	 */
+	public boolean ServerBuildSettlement(int playerID, Coordinate p)
+	{
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param playerID
+	 * @param playerIndexTo
+	 * @param resourceList
+	 * @return
+	 */
+	public boolean ServerOfferTrade(int playerID, int playerIndexTo, List<Integer> resourceList )
+	{
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param playerID
+	 * @param willAccept
+	 * @return
+	 */
+	public boolean ServerAcceptTrade(int playerID, boolean willAccept)
+	{
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param playerID
+	 * @param in
+	 * @param out
+	 * @return
+	 */
+	public boolean ServerMaritimeTrading(int playerID, ResourceType in, ResourceType out)
+	{
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param playerID
+	 * @param resourceList
+	 * @return
+	 */
+	public boolean ServerDiscardCards(int playerID, List<Integer> resourceList)
 	{
 		return false;
 	}
