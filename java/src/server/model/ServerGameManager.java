@@ -184,6 +184,27 @@ public class ServerGameManager extends GameManager {
 		return false;
 	}
 	
+	
+	/**
+	 * Gets the server's current game model into the game model object
+	 * @return
+	 */
+	public GameModel ServerGetModel()
+	{
+		GameModel gm = new GameModel();
+		
+		gm.gameBank = this.gameBank;
+		gm.gameState = this.gameState;
+		gm.log = this.log;
+		gm.mapModel = this.map;
+		gm.players = this.players;
+		gm.version = this.version;
+		gm.waterCooler = this.waterCooler;
+		gm.victoryPointManager = this.victoryPointManager;
+		
+		return gm;
+	}
+	
 	/**
 	 * 
 	 * @param playerID
@@ -285,26 +306,6 @@ public class ServerGameManager extends GameManager {
 	public boolean ServerDiscardCards(int playerID, List<Integer> resourceList)
 	{
 		return false;
-	}
-	
-	/**
-	 * Condenses the current game model into the game model object
-	 * @return
-	 */
-	public GameModel condense()
-	{
-		GameModel gm = new GameModel();
-		
-		gm.gameBank = this.gameBank;
-		gm.gameState = this.gameState;
-		gm.log = this.log;
-		gm.mapModel = this.map;
-		gm.players = this.players;
-		gm.version = this.version;
-		gm.waterCooler = this.waterCooler;
-		gm.victoryPointManager = this.victoryPointManager;
-		
-		return gm;
 	}
 	
 }
