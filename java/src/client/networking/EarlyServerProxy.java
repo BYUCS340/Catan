@@ -11,7 +11,7 @@ import shared.locations.VertexLocation;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetGameModel;
 
-public interface EarlyServerProxy extends ServerProxy
+public interface EarlyServerProxy
 {
 	/**
 	 * Logs the specified user in and returns a User object if the user was
