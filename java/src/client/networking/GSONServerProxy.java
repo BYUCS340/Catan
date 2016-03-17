@@ -69,8 +69,6 @@ public class GSONServerProxy implements ServerProxy
 	private String URL_PREFIX;
 	private final String HTTP_GET = "GET";
 	private final String HTTP_POST = "POST";
-	private Serializer serializer;
-	private Deserializer deserializer;
 	private int userIndex;
 	private String userName;
 	
@@ -80,8 +78,6 @@ public class GSONServerProxy implements ServerProxy
 	 */
 	public GSONServerProxy()
 	{
-		serializer = new JSONSerializer();
-		deserializer = new JSONDeserializer();
 		SERVER_HOST = "localhost";
 		SERVER_PORT = 8081;
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
