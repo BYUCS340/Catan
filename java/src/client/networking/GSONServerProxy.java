@@ -19,27 +19,37 @@ import java.util.Scanner;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import shared.data.GameInfo;
 import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.GameModel;
+import shared.model.Player;
 import shared.networking.Deserializer;
+import shared.networking.GSONUtils;
 import shared.networking.JSONDeserializer;
 import shared.networking.JSONSerializer;
 import shared.networking.Serializer;
 import shared.networking.cookie.UserCookie;
-import shared.networking.transport.NetGame;
+import shared.networking.parameter.PAddAI;
+import shared.networking.parameter.PCreateGame;
+import shared.networking.parameter.PCredentials;
+import shared.networking.parameter.PJoinGame;
 import shared.networking.transport.NetGameModel;
-import shared.networking.transport.NetPlayer;
 
 /**
- * @author pbridd
+ * @author Parker Ridd
  *
  */
-public class RealServerProxy implements EarlyServerProxy
+public class GSONServerProxy implements ServerProxy
 {
+
 	private UserCookie userCookie;
 	private int gameID;
 	private String SERVER_HOST;
@@ -56,7 +66,7 @@ public class RealServerProxy implements EarlyServerProxy
 	 * Default constructor. Sets up connection with the server with default
 	 * parameters.
 	 */
-	public RealServerProxy()
+	public GSONServerProxy()
 	{
 		serializer = new JSONSerializer();
 		deserializer = new JSONDeserializer();
@@ -74,7 +84,7 @@ public class RealServerProxy implements EarlyServerProxy
 	 * @param server_host this string represents the hostname of the server
 	 * @param server_port this int is the port to send requests to on the server
 	 */
-	public RealServerProxy(String server_host, int server_port)
+	public GSONServerProxy(String server_host, int server_port)
 	{
 		this();
 		SERVER_HOST = server_host;
@@ -120,14 +130,8 @@ public class RealServerProxy implements EarlyServerProxy
 	@Override
 	public boolean loginUser(String username, String password) throws ServerProxyException
 	{
-		String postData;
-		try
-		{
-			postData = serializer.sCredentials(username, password);
-		} catch (Exception e1)
-		{
-			throw new ServerProxyException(e1.getMessage(), e1.getCause());
-		}
+		PCredentials cred = new PCredentials(username, password);
+		String postData = GSONUtils.serialize(cred);
 		String urlPath = "/user/login";
 		try{
 			doJSONPost(urlPath, postData, true, false);
@@ -141,7 +145,6 @@ public class RealServerProxy implements EarlyServerProxy
 		}
 		
 		this.userName = username;
-		
 		return true;
 
 	}
@@ -152,14 +155,8 @@ public class RealServerProxy implements EarlyServerProxy
 	@Override
 	public boolean registerUser(String username, String password) throws ServerProxyException
 	{
-		String postData;
-		try
-		{
-			postData = serializer.sCredentials(username, password);
-		} catch (Exception e1)
-		{
-			throw new ServerProxyException(e1.getMessage(), e1.getCause());
-		}
+		PCredentials cred = new PCredentials(username, password);
+		String postData = GSONUtils.serialize(cred);
 		String urlPath = "/user/register";
 		try{
 			doJSONPost(urlPath, postData, false, false);
@@ -179,21 +176,14 @@ public class RealServerProxy implements EarlyServerProxy
 	 * @see client.networking.ServerProxy#listGames()
 	 */
 	@Override
-	public List<NetGame> listGames() throws ServerProxyException
+	public List<GameInfo> listGames() throws ServerProxyException
 	{
 		String urlPath = "/games/list";
 		String resultStr = null;
 
 		resultStr = doJSONGet(urlPath);
-		
-		List<NetGame> result;
-		try
-		{
-			result = deserializer.parseNetGameList(resultStr.toString());
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		//TODO deobfuscate this method once functionality is verified
+		List<GameInfo> result = (new Gson()).fromJson(resultStr, new TypeToken<List<GameInfo>>(){}.getType());
 		
 		return result;
 	}
@@ -202,7 +192,7 @@ public class RealServerProxy implements EarlyServerProxy
 	 * @see client.networking.ServerProxy#createGame(boolean, boolean, boolean, java.lang.String)
 	 */
 	@Override
-	public NetGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
+	public GameInfo createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
 		throws ServerProxyException
 	{
 		if(userCookie == null)
@@ -212,24 +202,11 @@ public class RealServerProxy implements EarlyServerProxy
 		}
 		
 		String urlPath = "/games/create";
-		String postData;
-		try
-		{
-			postData = serializer.sCreateGameReq(randomTiles, randomNumbers, randomPorts, name);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
-		String result = doJSONPost(urlPath, postData, false, false);
+		PCreateGame create = new PCreateGame(randomTiles, randomNumbers, randomPorts, name);
+		String postData = GSONUtils.serialize(create);
 		
-		NetGame createdGame;
-		try
-		{
-			createdGame = deserializer.parseNetGame(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		String result = doJSONPost(urlPath, postData, false, false);
+		GameInfo createdGame = GSONUtils.deserialize(result, GameInfo.class);
 		
 		return createdGame;
 	}
@@ -248,27 +225,10 @@ public class RealServerProxy implements EarlyServerProxy
 		
 		//send the request to the server
 		String urlPath = "/games/join";
-		String postData;
-		try
-		{
-			postData = serializer.sJoinGameReq(id, color);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		PJoinGame join = new PJoinGame(id, color);
+		String postData = GSONUtils.serialize(join);
+
 		String result = doJSONPost(urlPath, postData, false, true);
-		
-		//parse the result into a NetGame
-//		NetGame joinedGame;
-//		try
-//		{
-//			joinedGame = deserializer.parseNetGame(result);
-//		} catch (Exception e)
-//		{
-//			throw new ServerProxyException(e.getMessage(), e.getCause());
-//		}
-//		
-		//get the userIndex
 		System.out.println(result);
 	}
 
@@ -276,7 +236,7 @@ public class RealServerProxy implements EarlyServerProxy
 	 * @see client.networking.ServerProxy#getGameModel()
 	 */
 	@Override
-	public NetGameModel getGameModel() throws ServerProxyException
+	public GameModel getGameModel() throws ServerProxyException
 	{
 		if(userCookie == null)
 		{
@@ -293,25 +253,19 @@ public class RealServerProxy implements EarlyServerProxy
 		String urlPath = "/game/model";
 		String result = doJSONGet(urlPath);
 		
-		//parse the result into a NetGameModel
-		NetGameModel netGameModel;
-		try
-		{
-			netGameModel = deserializer.parseNetGameModel(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}	
+		//parse the result into a GameModel
+		GameModel gameModel = GSONUtils.deserialize(result, GameModel.class);
+			
 		
 		//get user number
 		if(userIndex < 0);
 		String name = userCookie.getUsername();
-		List<NetPlayer> playerList = netGameModel.getNetPlayers();
-		for(NetPlayer p : playerList)
+		List<Player> playerList = gameModel.players;
+		for(Player p : playerList)
 		{
-			if(p.getName().equals(name))
+			if(p.name.equals(name))
 			{
-				userIndex = p.getPlayerIndex();
+				userIndex = p.playerIndex();
 			}
 		}
 		
@@ -321,7 +275,7 @@ public class RealServerProxy implements EarlyServerProxy
 			throw new ServerProxyException("Bad User Index "+userIndex);
 		
 		
-		return netGameModel;
+		return gameModel;
 	}
 
 	/* (non-Javadoc)
@@ -343,17 +297,10 @@ public class RealServerProxy implements EarlyServerProxy
 		
 		//send the request to the server
 		String urlPath = "/game/addAI";
-		String postData;
-		try
-		{
-			postData = serializer.sAddAIReq(aiType);
-		} 
-		catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		PAddAI add = new PAddAI(aiType);
+		String postData = GSONUtils.serialize(add);
+
 		doJSONPost(urlPath, postData, false, false);
-		
 		//if there is no exception, this operation succeeded
 	}
 
@@ -1240,4 +1187,5 @@ public class RealServerProxy implements EarlyServerProxy
 		userCookie = null;
 		gameID = -1;
 	}
+
 }

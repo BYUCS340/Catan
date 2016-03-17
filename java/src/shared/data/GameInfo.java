@@ -16,6 +16,7 @@ import java.util.*;
  */
 public class GameInfo implements Serializable
 {
+	private static final long serialVersionUID = 8471016022451788524L;
 	private int id;
 	private String title;
 	private List<PlayerInfo> players;

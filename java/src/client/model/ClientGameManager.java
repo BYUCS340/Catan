@@ -6,7 +6,7 @@ import java.util.List;
 
 import client.data.RobPlayerInfo;
 import client.map.RobView;
-import client.networking.RealServerProxy;
+import client.networking.RealEarlyServerProxy;
 import client.networking.EarlyServerProxy;
 import client.networking.ServerProxyException;
 
@@ -66,7 +66,7 @@ public class ClientGameManager extends GameManager
 	 * @param clientProxy
 	 * @param myPlayerID
 	 */
-	public ClientGameManager(RealServerProxy clientProxy, int myPlayerIndex)
+	public ClientGameManager(RealEarlyServerProxy clientProxy, int myPlayerIndex)
 	{
 		this(clientProxy);
 		this.myPlayerIndex = myPlayerIndex;

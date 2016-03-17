@@ -1,14 +1,14 @@
 package client.model;
 
 import client.networking.Poller;
-import client.networking.RealServerProxy;
+import client.networking.RealEarlyServerProxy;
 import client.networking.EarlyServerProxy;
 import shared.model.GameManager;
 import shared.model.ModelException;
 
 public class ClientGame {
 	static private ClientGameManager game;
-	static private RealServerProxy proxy;
+	static private RealEarlyServerProxy proxy;
 	static private Poller poller;
 	
 	/**
@@ -26,7 +26,7 @@ public class ClientGame {
 	 * This must be called before getting a game
 	 * @param proxy
 	 */
-	static public void startGameWithProxy(RealServerProxy proxy)
+	static public void startGameWithProxy(RealEarlyServerProxy proxy)
 	{
 		ClientGame.proxy = proxy;
 		ClientGame.game = new ClientGameManager(proxy);
@@ -43,7 +43,7 @@ public class ClientGame {
 		ClientGame.poller = new Poller();
 	}
 	
-	static public RealServerProxy getCurrentProxy()
+	static public RealEarlyServerProxy getCurrentProxy()
 	{
 		return ClientGame.proxy;
 	}
