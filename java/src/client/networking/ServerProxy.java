@@ -8,6 +8,7 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.map.Coordinate;
 
 public interface ServerProxy {
 	/**
@@ -108,11 +109,11 @@ public interface ServerProxy {
 	/**
 	 * Notifies the server that the user has decided to rob another player
 	 * @param victimIndex The index of the victim of the user's robbing
-	 * @param location The new hex location of the robber
+	 * @param location The new coordinate location of the robber
 	 * @return a Object object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public Object robPlayer(int victimIndex, HexLocation location) throws ServerProxyException;
+	public Object robPlayer(int victimIndex, Coordinate location) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has finished his turn
