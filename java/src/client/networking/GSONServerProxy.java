@@ -26,9 +26,6 @@ import shared.data.GameInfo;
 import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
-import shared.locations.EdgeLocation;
-import shared.locations.HexLocation;
-import shared.locations.VertexLocation;
 import shared.model.GameModel;
 import shared.model.Player;
 import shared.model.map.Coordinate;
@@ -38,13 +35,23 @@ import shared.networking.JSONDeserializer;
 import shared.networking.JSONSerializer;
 import shared.networking.Serializer;
 import shared.networking.cookie.UserCookie;
+import shared.networking.parameter.PAcceptTrade;
 import shared.networking.parameter.PAddAI;
+import shared.networking.parameter.PBuildCity;
+import shared.networking.parameter.PBuildRoad;
+import shared.networking.parameter.PBuildSettlement;
 import shared.networking.parameter.PCreateGame;
 import shared.networking.parameter.PCredentials;
+import shared.networking.parameter.PDiscardCards;
 import shared.networking.parameter.PJoinGame;
+import shared.networking.parameter.PMaritimeTrade;
+import shared.networking.parameter.PMonopolyCard;
+import shared.networking.parameter.POfferTrade;
+import shared.networking.parameter.PRoadBuildingCard;
 import shared.networking.parameter.PRobPlayer;
 import shared.networking.parameter.PRollDice;
 import shared.networking.parameter.PSendChat;
+import shared.networking.parameter.PSoldierCard;
 import shared.networking.parameter.PYearOfPlentyCard;
 import shared.networking.transport.NetGameModel;
 
@@ -320,14 +327,9 @@ public class GSONServerProxy implements ServerProxy
 		String result = doJSONGet(urlPath);
 		
 		//deserialize
-		List<AIType> supportedAI;
-		try
-		{
-			supportedAI = deserializer.parseAIList(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		//TODO deobfuscate when functionality is confirmed
+		List<AIType> supportedAI = (new Gson()).fromJson(result, new TypeToken<List<AIType>>(){}.getType());
+
 		return supportedAI;
 	}
 
@@ -496,7 +498,7 @@ public class GSONServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#roadBuildingCard(shared.locations.EdgeLocation, shared.locations.EdgeLocation)
 	 */
 	@Override
-	public NetGameModel roadBuildingCard(EdgeLocation location1, EdgeLocation location2) throws ServerProxyException
+	public GameModel roadBuildingCard(Coordinate start1, Coordinate end1, Coordinate start2, Coordinate end2) throws ServerProxyException
 	{
 		if(userCookie == null)
 		{
@@ -510,25 +512,13 @@ public class GSONServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/Road_Building";
-		String postData;
-		try
-		{
-			postData = serializer.sRoadBuildingCardReq(userIndex, location1, location2);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		PRoadBuildingCard rbcard = new PRoadBuildingCard(start1, start2, end1, end2);
+		String postData = GSONUtils.serialize(rbcard);
+
 		String result = doJSONPost(urlPath, postData, false, false);
 		
-		NetGameModel ret;
-		try
-		{
-			ret = deserializer.parseNetGameModel(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
-		
+		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+
 		return ret;
 	}
 
@@ -536,7 +526,7 @@ public class GSONServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#soldierCard(int, shared.locations.HexLocation)
 	 */
 	@Override
-	public NetGameModel soldierCard(int victimIndex, HexLocation hexLocation) throws ServerProxyException
+	public GameModel soldierCard(int victimIndex, Coordinate location) throws ServerProxyException
 	{
 		if(userCookie == null)
 		{
@@ -550,24 +540,11 @@ public class GSONServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/Soldier";
-		String postData;
-		try
-		{
-			postData = serializer.sSoldierCardReq(userIndex, victimIndex, hexLocation);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		PSoldierCard soldier = new PSoldierCard(victimIndex, location);
+		String postData = GSONUtils.serialize(soldier);
+
 		String result = doJSONPost(urlPath, postData, false, false);
-		
-		NetGameModel ret;
-		try
-		{
-			ret = deserializer.parseNetGameModel(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -576,7 +553,7 @@ public class GSONServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#monopolyCard(java.lang.String)
 	 */
 	@Override
-	public NetGameModel monopolyCard(ResourceType resource) throws ServerProxyException
+	public GameModel monopolyCard(ResourceType resource) throws ServerProxyException
 	{
 		if(userCookie == null)
 		{
@@ -590,25 +567,12 @@ public class GSONServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/Monopoly";
-		String postData;
-		try
-		{
-			postData = serializer.sMonopolyCardReq(userIndex, resource);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		PMonopolyCard monopoly = new PMonopolyCard(resource);
+		String postData = GSONUtils.serialize(monopoly);
+
 		String result = doJSONPost(urlPath, postData, false, false);
-		
-		NetGameModel ret;
-		try
-		{
-			ret = deserializer.parseNetGameModel(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
-		
+		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+
 		return ret;
 	}
 
@@ -616,7 +580,7 @@ public class GSONServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#monumentCard()
 	 */
 	@Override
-	public NetGameModel monumentCard() throws ServerProxyException
+	public GameModel monumentCard() throws ServerProxyException
 	{
 		if(userCookie == null)
 		{
@@ -630,24 +594,10 @@ public class GSONServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/Monument";
-		String postData;
-		try
-		{
-			postData = serializer.sMonumentCardReq(userIndex);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		String postData = "";
 		String result = doJSONPost(urlPath, postData, false, false);
-		
-		NetGameModel ret;
-		try
-		{
-			ret = deserializer.parseNetGameModel(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+
+		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -656,7 +606,7 @@ public class GSONServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#buildRoad(shared.locations.EdgeLocation, boolean)
 	 */
 	@Override
-	public NetGameModel buildRoad(EdgeLocation edgeLocation, boolean free) throws ServerProxyException
+	public GameModel buildRoad(Coordinate start, Coordinate end, boolean free) throws ServerProxyException
 	{
 		if(userCookie == null)
 		{
@@ -670,24 +620,11 @@ public class GSONServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/buildRoad";
-		String postData;
-		try
-		{
-			postData = serializer.sBuildRoadReq(userIndex, edgeLocation, free);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		PBuildRoad road = new PBuildRoad(start, end, free);
+		String postData = GSONUtils.serialize(road);
+
 		String result = doJSONPost(urlPath, postData, false, false);
-		
-		NetGameModel ret;
-		try
-		{
-			ret = deserializer.parseNetGameModel(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -696,7 +633,7 @@ public class GSONServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#buildSettlement(shared.locations.VertexLocation, boolean)
 	 */
 	@Override
-	public NetGameModel buildSettlement(VertexLocation vertexLocation, boolean free) throws ServerProxyException
+	public GameModel buildSettlement(Coordinate location, boolean free) throws ServerProxyException
 	{
 		if(userCookie == null)
 		{
@@ -710,24 +647,11 @@ public class GSONServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/buildSettlement";
-		String postData;
-		try
-		{
-			postData = serializer.sBuildSettlementReq(userIndex, vertexLocation, free);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		PBuildSettlement settle = new PBuildSettlement(location, free);
+		String postData = GSONUtils.serialize(settle);
+
 		String result = doJSONPost(urlPath, postData, false, false);
-		
-		NetGameModel ret;
-		try
-		{
-			ret = deserializer.parseNetGameModel(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -736,7 +660,7 @@ public class GSONServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#buildCity(shared.locations.VertexLocation)
 	 */
 	@Override
-	public NetGameModel buildCity(VertexLocation vertexLocation) throws ServerProxyException
+	public GameModel buildCity(Coordinate location) throws ServerProxyException
 	{
 		if(userCookie == null)
 		{
@@ -750,24 +674,11 @@ public class GSONServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/buildCity";
-		String postData;
-		try
-		{
-			postData = serializer.sBuildCityReq(userIndex, vertexLocation);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		PBuildCity bcity = new PBuildCity(location);
+		String postData = GSONUtils.serialize(bcity);
+
 		String result = doJSONPost(urlPath, postData, false, false);
-		
-		NetGameModel ret;
-		try
-		{
-			ret = deserializer.parseNetGameModel(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -776,7 +687,7 @@ public class GSONServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#offerTrade(java.util.List, int)
 	 */
 	@Override
-	public NetGameModel offerTrade(List<Integer> resourceList, int receiver) throws ServerProxyException
+	public GameModel offerTrade(List<Integer> resourceList, int receiver) throws ServerProxyException
 	{
 		if(userCookie == null)
 		{
@@ -790,24 +701,11 @@ public class GSONServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/offerTrade";
-		String postData;
-		try
-		{
-			postData = serializer.sOfferTradeReq(userIndex, resourceList, receiver);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		POfferTrade trade = new POfferTrade(resourceList, receiver);
+		String postData = GSONUtils.serialize(trade);
+
 		String result = doJSONPost(urlPath, postData, false, false);
-		
-		NetGameModel ret;
-		try
-		{
-			ret = deserializer.parseNetGameModel(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -816,7 +714,7 @@ public class GSONServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#acceptTrade(boolean)
 	 */
 	@Override
-	public NetGameModel acceptTrade(boolean willAccept) throws ServerProxyException
+	public GameModel acceptTrade(boolean willAccept) throws ServerProxyException
 	{
 		if(userCookie == null)
 		{
@@ -830,24 +728,11 @@ public class GSONServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/acceptTrade";
-		String postData;
-		try
-		{
-			postData = serializer.sAcceptTradeReq(userIndex, willAccept);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		PAcceptTrade acctrade = new PAcceptTrade(willAccept);
+		String postData = GSONUtils.serialize(acctrade);
+
 		String result = doJSONPost(urlPath, postData, false, false);
-		
-		NetGameModel ret;
-		try
-		{
-			ret = deserializer.parseNetGameModel(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -856,7 +741,7 @@ public class GSONServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#maritimeTrade(int, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public NetGameModel maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource)
+	public GameModel maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource)
 		throws ServerProxyException
 	{
 		if(userCookie == null)
@@ -871,25 +756,11 @@ public class GSONServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/maritimeTrade";
-		String postData;
-		try
-		{
-			postData = serializer.sMaritimeTradeReq(userIndex, ratio,
-					inputResource, outputResource);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		PMaritimeTrade trade = new PMaritimeTrade(ratio, inputResource, outputResource);
+		String postData = GSONUtils.serialize(trade);
+
 		String result = doJSONPost(urlPath, postData, false, false);
-		
-		NetGameModel ret;
-		try
-		{
-			ret = deserializer.parseNetGameModel(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -898,7 +769,7 @@ public class GSONServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#discardCards(java.util.List)
 	 */
 	@Override
-	public NetGameModel discardCards(List<Integer> resourceList) throws ServerProxyException
+	public GameModel discardCards(List<Integer> resourceList) throws ServerProxyException
 	{
 		if(userCookie == null)
 		{
@@ -912,26 +783,13 @@ public class GSONServerProxy implements ServerProxy
 		}
 		
 		String urlPath = "/moves/discardCards";
-		String postData;
-		try
-		{
-			postData = serializer.sDiscardCardsReq(userIndex, resourceList);
-		} 
-		catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		PDiscardCards discard = new PDiscardCards(resourceList);
+		String postData = GSONUtils.serialize(discard);
+		
+
 		System.out.println(urlPath + " " + postData);
 		String result = doJSONPost(urlPath, postData, false, false);
-		
-		NetGameModel ret;
-		try
-		{
-			ret = deserializer.parseNetGameModel(result);
-		} catch (Exception e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}

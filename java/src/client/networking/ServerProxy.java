@@ -141,21 +141,23 @@ public interface ServerProxy {
 	
 	/**
 	 * Notifies the server that the user has played a road building card
-	 * @param location1 The EdgeLocation location of the first road
-	 * @param location2 The EdgeLocation location of the second card
+	 * @param start1 The start coordinate of the first road
+	 * @param end1 The end coordinate of the first road
+	 * @param start2 The start location of the second road
+	 * @param end2 The end location of the second road
 	 * @return a Object object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public Object roadBuildingCard(EdgeLocation location1, EdgeLocation location2) throws ServerProxyException;
+	public Object roadBuildingCard(Coordinate start1, Coordinate end1, Coordinate start2, Coordinate end2) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has played a soldier card
 	 * @param victimIndex The index of the player who is being robbed
-	 * @param hexLocation The new hex location of the robber
+	 * @param location The new location of the robber
 	 * @return a Object object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public Object soldierCard(int victimIndex, HexLocation hexLocation) throws ServerProxyException;
+	public Object soldierCard(int victimIndex, Coordinate location) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has played a monopoly card
@@ -174,29 +176,30 @@ public interface ServerProxy {
 	
 	/**
 	 * Notifies the server that the user has decided to build a road
-	 * @param edgeLocation The edge location of the road
+	 * @param start the Coordinate where the road starts
+	 * @param end the Coordinate where the road ends
 	 * @param free Whether this road was free (only true during the set up phases)
 	 * @return a Object object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public Object buildRoad(EdgeLocation edgeLocation, boolean free) throws ServerProxyException;
+	public Object buildRoad(Coordinate start, Coordinate end, boolean free) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has decided to build a settlement
-	 * @param vertexLocation The vertex location of the settlement
+	 * @param location The vertex coordinate of the settlement
 	 * @param free Whether this settlement was free (only true during the set up phases)
 	 * @return a Object object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public Object buildSettlement(VertexLocation vertexLocation, boolean free) throws ServerProxyException;
+	public Object buildSettlement(Coordinate location, boolean free) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has decided to build a city
-	 * @param vertexLocation The vertex location of the city
+	 * @param location The vertex location of the city
 	 * @return a Object object that reflects the current state of the Game
 	 * @throws ServerProxyException if there is no logged in user
 	 */
-	public Object buildCity(VertexLocation vertexLocation) throws ServerProxyException;
+	public Object buildCity(Coordinate location) throws ServerProxyException;
 	
 	/**
 	 * Notifies the server that the user has decided to offer a trade to another player
