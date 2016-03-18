@@ -1,5 +1,6 @@
 package server.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -186,7 +187,16 @@ public class ServerGameManager extends GameManager {
 	
 	
 	/**
-	 * Gets the server's current game model into the game model object
+	 * Gets the server's current game model in a serializable form
+	 * @return
+	 */
+	public Serializable ServerGetSerializableModel()
+	{
+		return (Serializable) this.ServerGetModel();
+	}
+	
+	/**
+	 * Gets the current game model
 	 * @return
 	 */
 	public GameModel ServerGetModel()
@@ -235,7 +245,7 @@ public class ServerGameManager extends GameManager {
 	 * @param p
 	 * @return
 	 */
-	public boolean ServerBuildRoad(int playerID, Coordinate p)
+	public boolean ServerBuildRoad(int playerID, Coordinate start, Coordinate end, boolean free)
 	{
 		return false;
 	}
@@ -257,7 +267,7 @@ public class ServerGameManager extends GameManager {
 	 * @param p
 	 * @return
 	 */
-	public boolean ServerBuildSettlement(int playerID, Coordinate p)
+	public boolean ServerBuildSettlement(int playerID, Coordinate p, boolean free)
 	{
 		return false;
 	}

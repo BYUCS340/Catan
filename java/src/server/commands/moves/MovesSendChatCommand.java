@@ -1,5 +1,9 @@
 package server.commands.moves;
 
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
+import shared.networking.GSONUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -10,7 +14,7 @@ import shared.networking.cookie.NetworkCookie;
 public class MovesSendChatCommand extends MovesCommand 
 {
 	private String message;
-	
+	private ServerGameManager sgm;
 	/**
 	 * Creates a command to send a chat.
 	 * @param playerID The player ID.
@@ -27,7 +31,15 @@ public class MovesSendChatCommand extends MovesCommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
+		try 
+		{
+			sgm = GameArcade.games().GetGame(gameID);
+			return sgm.ServerSendChat(playerID, message);
+		}
+		catch (GameException e) 
+		{ //game not found
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -42,6 +54,8 @@ public class MovesSendChatCommand extends MovesCommand
 	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
+		if (sgm != null) 
+			return GSONUtils.serialize(sgm.ServerGetSerializableModel());
 		return null;
 	}
 
