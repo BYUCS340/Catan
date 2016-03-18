@@ -1,9 +1,9 @@
 package shared.data;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import shared.definitions.CatanColor;
 import shared.model.Player;
 import shared.networking.transport.NetGame;
 import shared.networking.transport.NetPlayer;
@@ -61,6 +61,17 @@ public class DataTranslator {
 	static public Player convertPlayerInfo(PlayerInfo player){
 		//String name, int index, CatanColor playerColor, boolean isHuman)
 		return new Player(player.getName(), player.getPlayerIndex(), player.getColor(), true, player.getId());		
+	}
+	
+	static public List<Player> convertPlayerInfo(List<PlayerInfo> players)
+	{
+		List<Player> playerList = new ArrayList<Player>();
+		for(PlayerInfo p : players)
+		{
+			playerList.add(DataTranslator.convertPlayerInfo(p));
+		}
+		
+		return playerList;
 	}
 	
 	/**

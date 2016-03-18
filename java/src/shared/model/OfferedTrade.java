@@ -1,7 +1,5 @@
 package shared.model;
 
-import java.util.List;
-
 import shared.definitions.ResourceType;
 
 /**
@@ -99,5 +97,37 @@ public class OfferedTrade
 		default:
 			return -1;
 		}
+	}
+
+	/**
+	 * @return the fromPlayerID
+	 */
+	public int getFromPlayerID()
+	{
+		return fromPlayerID;
+	}
+
+	/**
+	 * @param fromPlayerID the fromPlayerID to set
+	 */
+	public void setFromPlayerID(int fromPlayerID)
+	{
+		this.fromPlayerID = fromPlayerID;
+	}
+
+	/**
+	 * @return the toPlayerID
+	 */
+	public int getToPlayerID()
+	{
+		return toPlayerID;
+	}
+
+	/**
+	 * @param toPlayerID the toPlayerID to set
+	 */
+	public void setToPlayerID(int toPlayerID)
+	{
+		this.toPlayerID = toPlayerID;
 	}
 }
