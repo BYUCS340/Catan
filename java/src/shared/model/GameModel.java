@@ -23,4 +23,5 @@ public class GameModel implements Serializable
 	public ChatBox waterCooler;
 	public GameActionLog log;
 	public int version;
+	public OfferedTrade trade;
 }

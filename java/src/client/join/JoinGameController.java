@@ -121,12 +121,9 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	{
 		try
 		{
-			List<NetGame> allGames = ClientGame.getCurrentProxy().listGames();
-
-			//Get the games
-			games = new GameInfo[allGames.size()];
-			for (int i=0; i< allGames.size(); i++)
-				games[i] = DataTranslator.convertGame(allGames.get(i));
+			//get the games
+			List<GameInfo> allGames = ClientGame.getCurrentProxy().listGames();
+			games = allGames.toArray(new GameInfo[allGames.size()]);
 
 			//Create the current player
 			PlayerInfo localPlayer = new PlayerInfo();
@@ -167,8 +164,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		boolean randomTiles = getNewGameView().getRandomlyPlaceHexes();
 		boolean randomNumbers = getNewGameView().getRandomlyPlaceNumbers();
 		boolean randomPorts = getNewGameView().getUseRandomPorts();
-		NetGame newgame = ClientGame.getGame().createGame(randomTiles, randomNumbers, randomPorts, name); 
-		if (newgame == null)
+		GameInfo newgameinfo = ClientGame.getGame().createGame(randomTiles, randomNumbers, randomPorts, name); 
+		if (newgameinfo == null)
 		{
 			getMessageView().setMessage("Unable to create game: "+name);
 			getMessageView().showModal();
@@ -177,7 +174,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		
 		//this.refreshGameList();
 		getNewGameView().closeModal();
-		GameInfo newgameinfo = DataTranslator.convertGame(newgame);
 		
 		createdGame = true;
 		startJoinGame(newgameinfo);

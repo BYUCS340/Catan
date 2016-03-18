@@ -6,10 +6,12 @@ import java.util.List;
 
 import client.data.RobPlayerInfo;
 import client.map.RobView;
-import client.networking.RealEarlyServerProxy;
-import client.networking.EarlyServerProxy;
+import client.networking.GSONServerProxy;
+import client.networking.ServerProxy;
 import client.networking.ServerProxyException;
-
+import shared.data.DataTranslator;
+import shared.data.GameInfo;
+import shared.data.PlayerInfo;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
@@ -17,28 +19,25 @@ import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.definitions.TurnState;
+import shared.model.Bank;
+import shared.model.GameActionLog;
 import shared.model.GameManager;
+import shared.model.GameModel;
+import shared.model.GameState;
 import shared.model.ModelException;
+import shared.model.OfferedTrade;
 import shared.model.Player;
-import shared.model.Translate;
-import shared.data.DataTranslator;
-import shared.data.GameInfo;
-import shared.data.PlayerInfo;
-import shared.definitions.*;
-import shared.locations.*;
-import shared.model.*;
-import shared.model.map.*;
+import shared.model.VictoryPointManager;
+import shared.model.map.Coordinate;
+import shared.model.map.MapException;
 import shared.model.map.model.IMapModel;
 import shared.model.map.model.MapModel;
 import shared.model.map.model.UnmodifiableMapModel;
-import shared.networking.transport.NetGame;
-import shared.networking.transport.NetGameModel;
 import shared.networking.transport.NetResourceList;
-import shared.networking.transport.NetTradeOffer;
 
 public class ClientGameManager extends GameManager
 {
-	private EarlyServerProxy proxy;
+	private ServerProxy proxy;
 	private int myPlayerIndex = -1;
 	private TurnState turnState;
 	private int playerIndexWithTradeOffer = -2;
@@ -49,12 +48,13 @@ public class ClientGameManager extends GameManager
 	private CatanColor myPlayerColor;
 	
 	private PieceType lastSelectedPiece = null;
-	private EdgeLocation lastRoadBuilt  = null;
+	private Coordinate lastRoadBuiltStart = null;
+	private Coordinate lastRoadBuiltEnd = null;
 	/**
 	 * Creates the client game manager with the proxy
 	 * @param clientProxy
 	 */
-	public ClientGameManager(EarlyServerProxy clientProxy)
+	public ClientGameManager(ServerProxy clientProxy)
 	{
 		super();
 		this.proxy = clientProxy;
@@ -66,7 +66,7 @@ public class ClientGameManager extends GameManager
 	 * @param clientProxy
 	 * @param myPlayerID
 	 */
-	public ClientGameManager(RealEarlyServerProxy clientProxy, int myPlayerIndex)
+	public ClientGameManager(GSONServerProxy clientProxy, int myPlayerIndex)
 	{
 		this(clientProxy);
 		this.myPlayerIndex = myPlayerIndex;
@@ -244,11 +244,11 @@ public class ClientGameManager extends GameManager
 	 * @param name
 	 * @return
 	 */
-	public NetGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
+	public GameInfo createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name)
 	{
 		try
 		{
-			NetGame game = proxy.createGame(randomTiles, randomNumbers, randomPorts, name);
+			GameInfo game = proxy.createGame(randomTiles, randomNumbers, randomPorts, name);
 			this.LoadGame(game);
 			return game;
 		}
@@ -275,7 +275,7 @@ public class ClientGameManager extends GameManager
 		try
 		{
 			roll = super.RollDice();
-			NetGameModel model = proxy.rollNumber(roll);
+			GameModel model = proxy.rollNumber(roll);
 			this.reloadGame(model,true);
 		}
 		catch (ServerProxyException|ModelException e)
@@ -305,7 +305,7 @@ public class ClientGameManager extends GameManager
 		{
 			boolean free = false;
 			
-			//TODOD This logic will need added to
+			//TODO This logic will need added to
 			if (turnState == TurnState.FIRST_ROUND_MY_TURN || turnState == TurnState.SECOND_ROUND_MY_TURN)
 				free = true;
 			else if (turnState == TurnState.ROAD_BUILDER_SECOND || turnState == TurnState.ROAD_BUILDER)
@@ -313,21 +313,21 @@ public class ClientGameManager extends GameManager
 			
 			this.BuildRoad(myPlayerIndex, start, end, free);
 
-			EdgeLocation location = Translate.GetEdgeLocation(start, end);
 			System.out.println("Building a road in state "+this.turnState);
 			if (turnState == TurnState.ROAD_BUILDER_SECOND)
 			{
-				proxy.roadBuildingCard(lastRoadBuilt, location);
+				proxy.roadBuildingCard(lastRoadBuiltStart, lastRoadBuiltEnd, start, end);
 				this.setTurnState(TurnState.PLAYING);
 			}
 			else if (turnState != TurnState.ROAD_BUILDER)
 			{
-				proxy.buildRoad(location, free);
+				proxy.buildRoad(start, end, free);
 			}
 			else{
 				this.setTurnState(TurnState.ROAD_BUILDER_SECOND);
 			}
-			lastRoadBuilt = location;
+			lastRoadBuiltStart = start;
+			lastRoadBuiltEnd = end;
 
 		}
 		catch (ModelException e)
@@ -356,9 +356,7 @@ public class ClientGameManager extends GameManager
 			
 			this.BuildSettlement(myPlayerIndex, point, free);
 
-			VertexLocation location = Translate.GetVertexLocation(point);
-
-			NetGameModel newmodel = proxy.buildSettlement(location, free);
+			GameModel newmodel = proxy.buildSettlement(point, free);
 			this.reloadGame(newmodel,true);
 		}
 		catch (ModelException e)
@@ -380,7 +378,7 @@ public class ClientGameManager extends GameManager
 	{
 		try
 		{
-			NetGameModel newmodel = proxy.buyDevCard();
+			GameModel newmodel = proxy.buyDevCard();
 			this.reloadGame(newmodel,true);
 			return true;
 		} 
@@ -408,7 +406,7 @@ public class ClientGameManager extends GameManager
 		try 
 		{
 			this.playDevCard(this.myPlayerIndex, DevCardType.MONOPOLY);
-			NetGameModel model = proxy.monopolyCard(resource);
+			GameModel model = proxy.monopolyCard(resource);
 			this.reloadGame(model, true);
 			return true;
 		} 
@@ -446,7 +444,7 @@ public class ClientGameManager extends GameManager
 			return false;
 		try 
 		{
-			NetGameModel model = proxy.monumentCard();
+			GameModel model = proxy.monumentCard();
 			this.reloadGame(model, true);
 			return true;
 		} 
@@ -501,7 +499,7 @@ public class ClientGameManager extends GameManager
 			return false;
 		try 
 		{
-			NetGameModel model = proxy.yearOfPlentyCard(resource1, resource2);
+			GameModel model = proxy.yearOfPlentyCard(resource1, resource2);
 			this.reloadGame(model, true);
 			return true;
 		} 
@@ -526,11 +524,7 @@ public class ClientGameManager extends GameManager
 	{
 		try
 		{
-			//super.BuildCity(myPlayerIndex, point);
-
-			VertexLocation location = Translate.GetVertexLocation(point);
-
-			NetGameModel newmodel = proxy.buildCity(location);
+			GameModel newmodel = proxy.buildCity(point);
 			this.reloadGame(newmodel,true);
 		}
 		catch (ModelException e)
@@ -604,8 +598,7 @@ public class ClientGameManager extends GameManager
 			try{
 				turnState = TurnState.PLAYING;
 				notifyCenter.notify(ModelNotification.STATE);
-				HexLocation location = Translate.GetHexLocation(map.GetRobberLocation().getPoint());
-				NetGameModel newmodel = this.proxy.soldierCard(victimIndex, location);
+				GameModel newmodel = this.proxy.soldierCard(victimIndex, map.GetRobberLocation().getPoint());
 				this.reloadGame(newmodel,true);
 			}
 			catch (ServerProxyException | ModelException e) 
@@ -622,8 +615,7 @@ public class ClientGameManager extends GameManager
 				turnState = TurnState.PLAYING;
 				notifyCenter.notify(ModelNotification.STATE);
 				
-				HexLocation location = Translate.GetHexLocation(map.GetRobberLocation().getPoint());
-				NetGameModel newmodel = this.proxy.robPlayer(victimIndex, location);
+				GameModel newmodel = this.proxy.robPlayer(victimIndex, map.GetRobberLocation().getPoint());
 				this.reloadGame(newmodel,true);
 			} 
 			catch (ServerProxyException | ModelException e) 
@@ -644,7 +636,7 @@ public class ClientGameManager extends GameManager
 		{
 			if (!gameState.nextTurn())
 				throw new ModelException("Unable to finish turn");
-			NetGameModel newmodel = proxy.finishTurn();
+			GameModel newmodel = proxy.finishTurn();
 			//Our observes will be updated when we reload the game
 			this.reloadGame(newmodel,true);
 
@@ -665,7 +657,7 @@ public class ClientGameManager extends GameManager
 		try
 		{
 			//Check to make sure we can discard cards
-			NetGameModel newmodel = proxy.discardCards(resourceList);
+			GameModel newmodel = proxy.discardCards(resourceList);
 			this.reloadGame(newmodel,true);
 		}
 		catch(ServerProxyException | ModelException e)
@@ -683,7 +675,7 @@ public class ClientGameManager extends GameManager
 		super.PlayerChat(myPlayerIndex, message);
 		try
 		{
-			NetGameModel newModel = proxy.sendChat(message);
+			GameModel newModel = proxy.sendChat(message);
 			this.reloadGame(newModel, true);
 		}
 		catch (ServerProxyException | ModelException e)
@@ -763,7 +755,7 @@ public class ClientGameManager extends GameManager
 	 * @param model the model to be loaded in
 	 * @throws ModelException if model is incorrect
 	 */
-	private void reloadGame(NetGameModel model) throws ModelException
+	private void reloadGame(GameModel model) throws ModelException
 	{
 		//reload the game but don't force it
 		this.reloadGame(model, false);
@@ -776,9 +768,9 @@ public class ClientGameManager extends GameManager
 	 * @throws ModelException
 	 */
 	private boolean updateInProgress = false;
-	private void reloadGame(NetGameModel model, boolean forced) throws ModelException
+	private void reloadGame(GameModel game, boolean forced) throws ModelException
 	{
-		if (forced == false && model.getVersion() == this.version && this.version > 0 )
+		if (forced == false && game.version == this.version && this.version > 0 )
 		{
 			return;
 		}
@@ -794,12 +786,6 @@ public class ClientGameManager extends GameManager
 			System.out.println("Forced update of game");
 		else
 			System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());*/
-		
-		
-
-		//Add new players if needed
-		Translate trans = new Translate();
-		GameModel game = trans.fromNetGameModel(model);
 		
 		//If there are new players or the number of resources have changed
 		List<Player> newplayers = game.players;
@@ -997,28 +983,32 @@ public class ClientGameManager extends GameManager
 		if (this.version == -1)
 			this.notifyCenter.notify(ModelNotification.ALL);
 		
-		this.version = model.getVersion();
+		this.version = game.version;
 		//throw new ModelException();
 
 
 		//  check for trade offer, set to -1 if there is no trade in process
-		NetTradeOffer offer = model.getNetTradeOffer();
+		OfferedTrade offer = game.trade;
 
 		if(offer != null)
 		{
-			playerIndexWithTradeOffer =  offer.getReceiver();
-			playerIndexSendingOffer = offer.getSender();
+			playerIndexWithTradeOffer =  offer.getToPlayerID();
+			playerIndexSendingOffer = offer.getFromPlayerID();
 
 			if(playerIndexWithTradeOffer == this.myPlayerIndex())
 			{
 				//  if the player has a trade waiting for them, get resources, then notify
-				NetResourceList resourcesForTrade = offer.getNetResourceList();
 				resourceToTrade = new int[5];
-				resourceToTrade[0] = resourcesForTrade.getNumBrick();
-				resourceToTrade[1] = resourcesForTrade.getNumOre();
-				resourceToTrade[2] = resourcesForTrade.getNumSheep();
-				resourceToTrade[3] = resourcesForTrade.getNumWheat();
-				resourceToTrade[4] = resourcesForTrade.getNumWood();
+				resourceToTrade[0] = offer.getWantedResourceAmount(ResourceType.BRICK)
+						- offer.getOfferedResourceAmount(ResourceType.BRICK);
+				resourceToTrade[1] = offer.getWantedResourceAmount(ResourceType.ORE)
+						- offer.getOfferedResourceAmount(ResourceType.ORE);
+				resourceToTrade[2] = offer.getWantedResourceAmount(ResourceType.SHEEP)
+						- offer.getOfferedResourceAmount(ResourceType.SHEEP);
+				resourceToTrade[3] = offer.getWantedResourceAmount(ResourceType.WHEAT)
+						- offer.getOfferedResourceAmount(ResourceType.WHEAT);
+				resourceToTrade[4] = offer.getWantedResourceAmount(ResourceType.WOOD)
+						- offer.getOfferedResourceAmount(ResourceType.WOOD);
 				
 				this.notifyCenter.notify(ModelNotification.STATE);
 				this.notifyCenter.notify(ModelNotification.TRADE);
@@ -1050,11 +1040,10 @@ public class ClientGameManager extends GameManager
 	 * @param model
 	 * @throws ModelException
 	 */
-	public void LoadGame(NetGame model) throws ModelException
+	public void LoadGame(GameInfo model) throws ModelException
 	{
 		this.reset();
-		Translate trans = new Translate();
-		this.SetPlayers(trans.fromNetPlayers(model.getNetPlayers()));
+		this.SetPlayers(DataTranslator.convertPlayerInfo(model.getPlayers()));
 		this.gameID = model.getId();
 		this.gameTitle = model.getTitle();
 
@@ -1096,7 +1085,7 @@ public class ClientGameManager extends GameManager
 				System.err.println("Proxy was null");
 				return;
 			}
-			NetGameModel model = proxy.getGameModel();
+			GameModel model = proxy.getGameModel();
 			if (model == null) 
 			{
 				System.err.println("Model was null from the server");
