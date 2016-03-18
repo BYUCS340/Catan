@@ -94,13 +94,21 @@ public class GameState
 		return true;
 	}
 	/**
-	 * Sets the game state to finished
+	 * checks if the game state is finished
 	 * @return successful or not (almost always is true)
 	 */
 	public boolean IsEndGame()
 	{
 		//check if someone has 10 points or not
 		return state == GameRound.GAMEOVER;
+	}
+	
+	/**
+	 * Whether the game is in setup or not
+	 * @return true if firstround or second round
+	 */
+	public boolean IsSetup() {
+		return state == GameRound.FIRSTROUND || state == GameRound.SECONDROUND;
 	}
 	
 	public void endGame()
@@ -138,4 +146,5 @@ public class GameState
 			return false;
 		return true;
 	}
+	
 }
