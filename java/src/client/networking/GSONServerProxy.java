@@ -862,12 +862,12 @@ public class GSONServerProxy implements ServerProxy
 			}
 		} catch (MalformedURLException e)
 		{
-			throw new ServerProxyException("MalformedURLException thrown in client.networking.RealServerProxy.doJSONPost + " + urlPath + "\n"
+			throw new ServerProxyException("MalformedURLException thrown in client.networking.GSONServerProxy.doJSONPost + " + urlPath + "\n"
 					+e.getStackTrace());
 			
 		} catch (IOException e)
 		{
-			throw new ServerProxyException("IOException thrown in client.networking.RealServerProxy.doJSONPost\n"
+			throw new ServerProxyException("IOException thrown in client.networking.GSONServerProxy.doJSONPost\n"
 					+e.getStackTrace());
 		} catch (JSONException e)
 		{
@@ -930,12 +930,12 @@ public class GSONServerProxy implements ServerProxy
 			}
 		} catch (MalformedURLException e)
 		{
-			throw new ServerProxyException("MalformedURLException thrown in client.networking.RealServerProxy.doJSONGet + " + urlPath + "\n"
+			throw new ServerProxyException("MalformedURLException thrown in client.networking.GSONServerProxy.doJSONGet + " + urlPath + "\n"
 					+e.getStackTrace());
 			
 		} catch (IOException e)
 		{
-			throw new ServerProxyException("IOException thrown in client.networking.RealServerProxy.doJSONGet\n"
+			throw new ServerProxyException("IOException thrown in client.networking.GSONServerProxy.doJSONGet\n"
 					+e.getStackTrace());
 		}
 		finally
