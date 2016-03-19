@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-import shared.definitions.*;
+
+import shared.definitions.DevCardType;
+import shared.definitions.PieceType;
+import shared.definitions.ResourceType;
 
 /**
  * The bank class holds resource cards, game pieces, and dev cards
- * @author matthewcarlson, garrettegan
+ * @author matthewcarlson, garrettegan, parker ridd
  *
  */
 public class Bank
@@ -190,6 +192,82 @@ public class Bank
 	{
 		if (amount < 0 ) throw new ModelException("Negative Amount");
 		this.resources[type.ordinal()] += amount;
+	}
+	
+	/**
+	 * Gives a random resource from this player to the bank
+	 * @return the resourcetype taken; null if this player doesn't have any
+	 * resources
+	 */
+	public ResourceType giveRandomResource()
+	{
+		if(this.getResourceCount() == 0)
+		{
+			return null;
+		}
+		
+		int randNum = (int) ((Math.random() * this.getResourceCount()));
+		int count = 0;
+		if(randNum < (count += this.getResourceCount(ResourceType.BRICK)))
+		{
+			try {
+				this.giveResource(ResourceType.BRICK);
+				return ResourceType.BRICK;
+			} 
+			catch (ModelException e) 
+			{
+				e.printStackTrace();
+				return null;
+			}
+		}
+		else if(randNum < (count += this.getResourceCount(ResourceType.ORE)))
+		{
+			try {
+				this.giveResource(ResourceType.ORE);
+				return ResourceType.ORE;
+			} 
+			catch (ModelException e) 
+			{
+				e.printStackTrace();
+				return null;
+			}
+		}
+		else if(randNum < (count += this.getResourceCount(ResourceType.SHEEP)))
+		{
+			try {
+				this.giveResource(ResourceType.SHEEP);
+				return ResourceType.SHEEP;
+			} 
+			catch (ModelException e) 
+			{
+				e.printStackTrace();
+				return null;
+			}
+		}
+		else if(randNum < (count += this.getResourceCount(ResourceType.WHEAT)))
+		{
+			try {
+				this.giveResource(ResourceType.WHEAT);
+				return ResourceType.WHEAT;
+			} 
+			catch (ModelException e) 
+			{
+				e.printStackTrace();
+				return null;
+			}
+		}
+		else
+		{
+			try {
+				this.giveResource(ResourceType.WOOD);
+				return ResourceType.WOOD;
+			} 
+			catch (ModelException e) 
+			{
+				e.printStackTrace();
+				return null;
+			}
+		}
 	}
 	
 	/**
