@@ -136,6 +136,17 @@ public class GameTable
 	}
 	
 	/**
+	 * Gets a game
+	 * @param gameID
+	 * @return
+	 * @throws GameException
+	 */
+	public ServerGameManager GetGame(int gameID) throws GameException
+	{
+		return games.GetGame(gameID);
+	}
+	
+	/**
 	 * Gets the available list of AIs.
 	 * @return List of AIs.
 	 */

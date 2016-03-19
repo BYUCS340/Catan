@@ -1,5 +1,6 @@
 package server.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import shared.model.GameManager;
 import shared.model.GameModel;
 import shared.model.ModelException;
 import shared.model.map.Coordinate;
+import shared.model.map.MapException;
 import shared.model.map.model.MapGenerator;
 import shared.model.map.model.MapModel;
 
@@ -61,6 +63,13 @@ public class ServerGameManager extends GameManager {
 	{
 		int index = super.AddPlayer(name, color, isHuman, playerID);
 		playerIndexLookup.put(playerID, index);
+		
+		//Start the game if we have 4 players
+		if (this.players.size() == 4){
+			this.StartGame();
+			this.updateVersion();
+		}
+			
 		
 		return index;
 	}
@@ -126,6 +135,7 @@ public class ServerGameManager extends GameManager {
 		if (super.CurrentPlayersTurn() != currentPlayer) 
 			return false;
 		
+		this.updateVersion();
 		
 		return false;
 	}
@@ -140,8 +150,14 @@ public class ServerGameManager extends GameManager {
 		int currentPlayer = this.GetPlayerIndexByID(playerID);
 		if (super.CurrentPlayersTurn() != currentPlayer) 
 			return false;
+		
 		//Go to the next turn
-		return gameState.nextTurn();
+		if (gameState.nextTurn())
+		{
+			this.updateVersion();
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -162,6 +178,7 @@ public class ServerGameManager extends GameManager {
 		try 
 		{
 			super.BuyDevCard(currentPlayer);
+			this.updateVersion();
 			return true;
 		}
 		catch (ModelException e) //they didn't have the resources 
@@ -184,6 +201,8 @@ public class ServerGameManager extends GameManager {
 		return false;
 	}
 	
+	
+
 	/**
 	 * 
 	 * @param playerID
@@ -214,9 +233,34 @@ public class ServerGameManager extends GameManager {
 	 * @param p
 	 * @return
 	 */
-	public boolean ServerBuildRoad(int playerID, Coordinate p)
+	public boolean ServerBuildRoad(int playerID, Coordinate start, Coordinate end, boolean free)
 	{
-		return false;
+		int playerIndex = this.GetPlayerIndexByID(playerID);
+		if (!this.CanPlayerPlay(playerIndex)) 
+			return false;
+		
+		CatanColor color = this.getPlayerColorByIndex(playerIndex);
+		if (!this.map.CanPlaceRoad(start, end, color))
+			return false;
+		
+		//If they get a road for free
+		if (free && !this.gameState.IsSetup())
+			return false;
+		
+		
+		//Build the road
+		try 
+		{
+			this.BuildRoad(playerIndex, start, end, free);
+		}
+		catch (ModelException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		this.updateVersion();
+		return true;
 	}
 	
 	/**
@@ -236,7 +280,7 @@ public class ServerGameManager extends GameManager {
 	 * @param p
 	 * @return
 	 */
-	public boolean ServerBuildSettlement(int playerID, Coordinate p)
+	public boolean ServerBuildSettlement(int playerID, Coordinate p, boolean free)
 	{
 		return false;
 	}
@@ -287,11 +331,21 @@ public class ServerGameManager extends GameManager {
 		return false;
 	}
 	
+	
 	/**
-	 * Condenses the current game model into the game model object
+	 * Gets the server's current game model in a serializable form
 	 * @return
 	 */
-	public GameModel condense()
+	public Serializable ServerGetSerializableModel()
+	{
+		return (Serializable) this.ServerGetModel();
+	}
+	
+	/**
+	 * Gets the current game model
+	 * @return
+	 */
+	public GameModel ServerGetModel()
 	{
 		GameModel gm = new GameModel();
 		
@@ -306,5 +360,6 @@ public class ServerGameManager extends GameManager {
 		
 		return gm;
 	}
+	
 	
 }

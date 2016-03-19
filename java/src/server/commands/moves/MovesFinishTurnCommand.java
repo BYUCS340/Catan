@@ -1,5 +1,9 @@
 package server.commands.moves;
 
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
+import shared.networking.GSONUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -9,6 +13,7 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesFinishTurnCommand extends MovesCommand 
 {
+	private ServerGameManager sgm;
 	/**
 	 * Creates a command object that finishes a player's turn.
 	 * @param playerID The player ID.
@@ -23,6 +28,16 @@ public class MovesFinishTurnCommand extends MovesCommand
 	public boolean Execute() 
 	{
 		// TODO Auto-generated method stub
+		
+		try 
+		{
+			sgm = GameArcade.games().GetGame(gameID);
+			return sgm.ServerFinishTurn(this.playerID);
+		}
+		catch (GameException e) 
+		{ //game not found
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -37,6 +52,8 @@ public class MovesFinishTurnCommand extends MovesCommand
 	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
+		if (sgm != null) 
+			return GSONUtils.serialize(sgm.ServerGetSerializableModel());
 		return null;
 	}
 
