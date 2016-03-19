@@ -202,35 +202,7 @@ public class ServerGameManager extends GameManager {
 	}
 	
 	
-	/**
-	 * Gets the server's current game model in a serializable form
-	 * @return
-	 */
-	public Serializable ServerGetSerializableModel()
-	{
-		return (Serializable) this.ServerGetModel();
-	}
-	
-	/**
-	 * Gets the current game model
-	 * @return
-	 */
-	public GameModel ServerGetModel()
-	{
-		GameModel gm = new GameModel();
-		
-		gm.gameBank = this.gameBank;
-		gm.gameState = this.gameState;
-		gm.log = this.log;
-		gm.mapModel = this.map;
-		gm.players = this.players;
-		gm.version = this.version;
-		gm.waterCooler = this.waterCooler;
-		gm.victoryPointManager = this.victoryPointManager;
-		
-		return gm;
-	}
-	
+
 	/**
 	 * 
 	 * @param playerID
@@ -358,5 +330,36 @@ public class ServerGameManager extends GameManager {
 	{
 		return false;
 	}
+	
+	
+	/**
+	 * Gets the server's current game model in a serializable form
+	 * @return
+	 */
+	public Serializable ServerGetSerializableModel()
+	{
+		return (Serializable) this.ServerGetModel();
+	}
+	
+	/**
+	 * Gets the current game model
+	 * @return
+	 */
+	public GameModel ServerGetModel()
+	{
+		GameModel gm = new GameModel();
+		
+		gm.gameBank = this.gameBank;
+		gm.gameState = this.gameState;
+		gm.log = this.log;
+		gm.mapModel = this.map;
+		gm.players = this.players;
+		gm.version = this.version;
+		gm.waterCooler = this.waterCooler;
+		gm.victoryPointManager = this.victoryPointManager;
+		
+		return gm;
+	}
+	
 	
 }
