@@ -31,11 +31,18 @@
 	<!-- CLASSPATHS -->
 	<!-- ********** -->
     
+	<path id="build-classpath">
+    <fileset dir="${java.lib.dir}">
+        <include name="*.jar"/>
+		</fileset>
+	</path>
+	
 	<path id="java.lib.classpath">
 		<fileset dir="${java.lib.dir}">
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
+
 
 	<!-- TARGETS -->
 	<!-- ******* -->
@@ -126,21 +133,29 @@
 				<include name="**"/>
 			</fileset>
 		</copy>
+		<manifestclasspath property="lib.list.client" jarfile="${java.dist}/catan-client.jar">
+			<classpath refid="build-classpath"/>
+		</manifestclasspath>
  		<jar jarfile="${java.dist}/catan-client.jar" basedir="${java.build}">
 			<manifest>
 				<attribute name="Main-Class" value="client.main.Catan"/>
 				<attribute name="Class-Path" 
-					value="lib/java-json.jar" />
+					value="${lib.list.client}" />
 			</manifest>
 		</jar>
+		
+		<manifestclasspath property="lib.list.server" jarfile="${java.dist}/catan-client.jar">
+			<classpath refid="build-classpath"/>
+		</manifestclasspath>
  		<jar jarfile="${java.dist}/catan-server.jar" basedir="${java.build}">
 			<manifest>
 				<attribute name="Main-Class" value="server.Server"/>
-				<attribute name="Class-Path" value="lib/gson-2.2.4.jar" />
+				<attribute name="Class-Path" value="${lib.list.server}" />
 			</manifest>
 		</jar>
 	</target>
 	
+
 	<target name="our-client" depends="package" description="compiles, packages, and runs the student client">
 		<java jar="${java.dist}/catan-client.jar" dir="${java.dist}" fork="yes">
 			<arg value="${server}"/>
