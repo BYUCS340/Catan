@@ -1,14 +1,13 @@
 package client.model;
 
+import client.networking.GSONServerProxy;
 import client.networking.Poller;
-import client.networking.RealServerProxy;
-import client.networking.EarlyServerProxy;
-import shared.model.GameManager;
-import shared.model.ModelException;
+import client.networking.RealEarlyServerProxy;
+import client.networking.ServerProxy;
 
 public class ClientGame {
 	static private ClientGameManager game;
-	static private RealServerProxy proxy;
+	static private GSONServerProxy proxy;
 	static private Poller poller;
 	
 	/**
@@ -26,7 +25,7 @@ public class ClientGame {
 	 * This must be called before getting a game
 	 * @param proxy
 	 */
-	static public void startGameWithProxy(RealServerProxy proxy)
+	static public void startGameWithProxy(GSONServerProxy proxy)
 	{
 		ClientGame.proxy = proxy;
 		ClientGame.game = new ClientGameManager(proxy);
@@ -37,13 +36,13 @@ public class ClientGame {
 	 * Starting the game for testing purposes
 	 * @param proxy
 	 */
-	static public void startGameWithProxy(EarlyServerProxy proxy)
+	static public void startGameWithProxy(ServerProxy proxy)
 	{
 		ClientGame.game = new ClientGameManager(proxy);
 		ClientGame.poller = new Poller();
 	}
 	
-	static public RealServerProxy getCurrentProxy()
+	static public ServerProxy getCurrentProxy()
 	{
 		return ClientGame.proxy;
 	}
