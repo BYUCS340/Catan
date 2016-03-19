@@ -1,6 +1,10 @@
 package server.commands.game;
 
 import server.commands.CookieCommand;
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
+import shared.networking.GSONUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -11,6 +15,7 @@ import shared.networking.cookie.NetworkCookie;
 public class GameModelCommand extends CookieCommand
 {
 	private int version;
+	private ServerGameManager sgm;
 	
 	/**
 	 * Gets a game model from the server.
@@ -25,7 +30,16 @@ public class GameModelCommand extends CookieCommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
+		try 
+		{
+			sgm = GameArcade.games().GetGame(gameID);
+			return sgm.GetVersion() != version;
+		}
+		catch (GameException e) 
+		{ //game not found
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 
@@ -39,7 +53,8 @@ public class GameModelCommand extends CookieCommand
 	@Override
 	public String GetResponse() 
 	{
-		// TODO Auto-generated method stub
+		if (sgm != null) 
+			return GSONUtils.serialize(sgm.ServerGetSerializableModel());
 		return null;
 	}
 
