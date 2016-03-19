@@ -15,6 +15,7 @@ public class Player
 	private int playerIndex;
 	private int playerID;
 	private boolean isRobot = false;
+	private int armySize;
 	
 	/**
 	 * Creates a Player
@@ -31,11 +32,30 @@ public class Player
 		this.playerIndex = index;
 		this.color = playerColor;
 		this.playerID = -1;
+		this.armySize = 0;
 	}
 	public Player(String name, int index, CatanColor playerColor, boolean isHuman, int ID)
 	{
 		this(name, index, playerColor, isHuman);
 		this.playerID = ID;
+	}
+	
+	/**
+	 * Gets this player's army size
+	 * @return the size of this player's army
+	 */
+	public int getArmySize()
+	{
+		return this.armySize;
+	}
+	
+	/**
+	 * Increments this player's army size
+	 * @return this player's new army size
+	 */
+	public int incrementArmySize()
+	{
+		return ++armySize;
 	}
 	
 	/**

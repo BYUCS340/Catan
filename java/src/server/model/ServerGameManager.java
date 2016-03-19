@@ -8,6 +8,7 @@ import java.util.logging.Level;
 
 import server.Log;
 import shared.definitions.CatanColor;
+import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
 import shared.definitions.ResourceType;
 import shared.model.Bank;
@@ -143,6 +144,21 @@ public class ServerGameManager extends GameManager {
 		if (!this.map.CanPlaceRobber(location))
 			return false;
 		
+		boolean couldRob = this.ServerExecuteRob(playerIndex, victimIndex, location);
+		
+		this.updateVersion();		
+		return couldRob;
+	}
+	
+	/**
+	 * Actually executes the robbing action. NOTE: No rule checking takes place in this function
+	 * @param playerIndex
+	 * @param victimIndex
+	 * @param location
+	 * @return
+	 */
+	private boolean ServerExecuteRob(int playerIndex, int victimIndex, Coordinate location)
+	{
 		try
 		{
 			map.PlaceRobber(location);
@@ -159,7 +175,6 @@ public class ServerGameManager extends GameManager {
 		Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex + " took a "
 				+ takenResource.toString() + " from Player " + victimIndex);
 		
-		this.updateVersion();		
 		return true;
 	}
 	
@@ -241,13 +256,39 @@ public class ServerGameManager extends GameManager {
 	/**
 	 * 
 	 * @param playerID
-	 * @param p1
-	 * @param playerIndex the victim
+	 * @param location
+	 * @param victimIndex the victim
 	 * @return
 	 */
-	public boolean ServerSoldier(int playerID, Coordinate p1, int playerIndex)
+	public boolean ServerSoldier(int playerID, Coordinate location, int victimIndex)
 	{
-		return false;
+		int playerIndex = this.GetPlayerIndexByID(playerID);
+
+		if(this.CurrentPlayersTurn() != playerIndex)
+		{
+			return false;
+		}
+		
+		if(!this.CanPlayDevCard(playerIndex, DevCardType.SOLDIER))
+		{
+			return false;
+		}
+		
+		boolean couldRob = this.ServerExecuteRob(playerIndex, victimIndex, location);
+		
+		//ONLY take the soldier card if this player could actually execute the robbing
+		//action
+		if(couldRob)
+		{
+			Player pPlayer = players.get(playerIndex);
+			Bank bPlayer = pPlayer.playerBank;
+			bPlayer.giveDevCard(DevCardType.SOLDIER);
+			int armySize = pPlayer.incrementArmySize();
+			this.victoryPointManager.checkPlayerArmySize(playerIndex, armySize);
+		}
+		
+		this.updateVersion();
+		return couldRob;
 	}
 	
 	/**
