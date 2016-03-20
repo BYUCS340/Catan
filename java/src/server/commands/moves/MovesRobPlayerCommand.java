@@ -1,6 +1,10 @@
 package server.commands.moves;
 
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
 import shared.model.map.Coordinate;
+import shared.networking.GSONUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -12,6 +16,7 @@ public class MovesRobPlayerCommand extends MovesCommand
 {
 	private int victimIndex;
 	private Coordinate point;
+	private ServerGameManager sgm;
 	
 	/**
 	 * Creates a command class that robs a player.
@@ -30,7 +35,15 @@ public class MovesRobPlayerCommand extends MovesCommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
+		try 
+		{
+			sgm = GameArcade.games().GetGame(gameID);
+			return sgm.ServerRobPlayer(playerIndex, victimIndex, point);
+		}
+		catch (GameException e) 
+		{ //game not found
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -44,7 +57,10 @@ public class MovesRobPlayerCommand extends MovesCommand
 	@Override
 	public String GetResponse() 
 	{
-		// TODO Auto-generated method stub
+		if(sgm != null)
+		{
+			return GSONUtils.serialize(sgm.ServerGetSerializableModel());
+		}
 		return null;
 	}
 
