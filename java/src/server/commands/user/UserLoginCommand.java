@@ -42,7 +42,7 @@ public class UserLoginCommand implements ICommand
 		} 
 		catch (GameException e) 
 		{
-			response = "failure";
+			response = "Failed to login";
 			return false;
 		}
 	}
