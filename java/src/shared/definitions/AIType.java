@@ -13,6 +13,7 @@ public enum AIType
 		case EXPERT: return "EXPERT";
 		case RANDOM: return "RANDOM";
 		case OBNOXIOUS: return "OBNOXIOUS";
+		
 		}
 		
 		assert false;
@@ -28,6 +29,7 @@ public enum AIType
 		case "EXPERT": return EXPERT;
 		case "RANDOM": return RANDOM;
 		case "OBNOXIOUS": return OBNOXIOUS;
+		
 		}
 		
 		assert false;

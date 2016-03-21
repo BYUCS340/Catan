@@ -1,5 +1,6 @@
 package shared.model.map.handlers;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -13,8 +14,10 @@ import shared.model.map.objects.Edge;
  * @author Jonathan Sadler
  *
  */
-public class EdgeHandler {
-
+public class EdgeHandler implements Serializable 
+{
+	private static final long serialVersionUID = 3800823881181420821L;
+	
 	private static final int INITIAL_CAPACITY = 72;
 	private static final int Y_SHIFT = 6;
 	

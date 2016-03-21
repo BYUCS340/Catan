@@ -1,5 +1,7 @@
 package shared.model.map.objects;
 
+import java.io.Serializable;
+
 import shared.definitions.HexType;
 import shared.definitions.PortType;
 import shared.model.map.*;
@@ -9,8 +11,10 @@ import shared.model.map.*;
  * @author Jonathan Sadler
  *
  */
-public class Hex
+public class Hex implements Serializable
 {
+	private static final long serialVersionUID = 4534948550598615691L;
+	
 	private HexType type;
 	private Coordinate point;
 	private PortType port;

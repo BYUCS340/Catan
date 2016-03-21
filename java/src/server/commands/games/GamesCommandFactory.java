@@ -12,7 +12,7 @@ import server.commands.ICommandDirector;
 import server.commands.InvalidFactoryParameterException;
 import server.model.GameException;
 import shared.definitions.CatanColor;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 import shared.networking.parameter.PCreateGame;
 import shared.networking.parameter.PJoinGame;
@@ -130,7 +130,7 @@ public class GamesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PCreateGame creategame = GSONUtils.deserialize(object, PCreateGame.class);
+			PCreateGame creategame = SerializationUtils.deserialize(object, PCreateGame.class);
 			randomTiles = creategame.isRandomTiles();
 			randomNumbers = creategame.isRandomNumbers();
 			randomPorts = creategame.isRandomPorts();
@@ -152,7 +152,7 @@ public class GamesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PJoinGame join = GSONUtils.deserialize(object, PJoinGame.class);
+			PJoinGame join = SerializationUtils.deserialize(object, PJoinGame.class);
 			gameID = join.getId();
 			color = join.getColor();
 		}

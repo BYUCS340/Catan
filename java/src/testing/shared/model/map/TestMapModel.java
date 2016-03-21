@@ -43,38 +43,6 @@ public class TestMapModel
 	{
 		assertTrue(model.IsRobberInitialized());
 	}
-	
-	/**
-	 * No longest road should exist as no roads have been placed.
-	 */
-	@Test
-	public void testLongestRoadExists_False()
-	{
-		assertFalse(model.LongestRoadExists());
-	}
-	
-	/**
-	 * By placing 3 roads, the green player should now have the longest road.
-	 * @throws MapException Shouldn't be thrown.
-	 */
-	@Test
-	public void testLongestRoadExists_True() throws MapException
-	{
-		Coordinate p1 = new Coordinate(3, 0);
-		Coordinate p2 = new Coordinate(3, 1);
-		Coordinate p3 = new Coordinate(3, 2);
-		Coordinate p4 = new Coordinate(3, 3);
-		
-		model.SetupPhase(true);
-		model.PlaceSettlement(p1, CatanColor.GREEN);
-		model.PlaceRoad(p1, p2, CatanColor.GREEN);
-		
-		model.SetupPhase(false);
-		model.PlaceRoad(p2, p3, CatanColor.GREEN);
-		model.PlaceRoad(p3, p4, CatanColor.GREEN);
-		
-		assertTrue(model.LongestRoadExists());
-	}
 
 	/**
 	 * Edges are initialized automatically. The edge passed in shouldn't exist
@@ -996,38 +964,5 @@ public class TestMapModel
 		}
 		
 		assert(count > 0);
-	}
-
-	/**
-	 * The longest road shouldn't exist, so an exception should be thrown.
-	 * @throws MapException Thrown when getting road.
-	 */
-	@Test(expected=MapException.class)
-	public void testGetLongestRoadColor_NoExist() throws MapException
-	{
-		model.GetLongestRoadColor();
-	}
-	
-	/**
-	 * Gets the longest roads color.
-	 * @throws MapException Shouldn't occur.
-	 */
-	@Test
-	public void testGetLongestRoadColor_Exist() throws MapException
-	{
-		Coordinate p1 = new Coordinate(3, 0);
-		Coordinate p2 = new Coordinate(3, 1);
-		Coordinate p3 = new Coordinate(3, 2);
-		Coordinate p4 = new Coordinate(3, 3);
-		
-		model.SetupPhase(true);
-		model.PlaceSettlement(p1, CatanColor.GREEN);
-		model.PlaceRoad(p1, p2, CatanColor.GREEN);
-		
-		model.SetupPhase(false);
-		model.PlaceRoad(p2, p3, CatanColor.GREEN);
-		model.PlaceRoad(p3, p4, CatanColor.GREEN);
-		
-		assertTrue(model.GetLongestRoadColor() == CatanColor.GREEN);
 	}
 }

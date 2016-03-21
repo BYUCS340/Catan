@@ -1,5 +1,6 @@
 package shared.model.map.handlers;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -13,8 +14,10 @@ import shared.model.map.objects.Vertex;
  * @author Jonathan Sadler
  *
  */
-public class VertexHandler
+public class VertexHandler implements Serializable
 {
+	private static final long serialVersionUID = -6077620391008535563L;
+	
 	private static final int INITIAL_CAPACITY = 54;
 	private static final int Y_SHIFT = 5;
 	

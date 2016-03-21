@@ -1,6 +1,8 @@
 package shared.definitions;
 
-public enum GameRound
+import java.io.Serializable;
+
+public enum GameRound implements Serializable
 {
 	WAITING,ROLLING, ROBBING, PLAYING, DISCARDING, FIRSTROUND, SECONDROUND, GAMEOVER;
 	

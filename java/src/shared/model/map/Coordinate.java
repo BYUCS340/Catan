@@ -1,12 +1,16 @@
 package shared.model.map;
 
+import java.io.Serializable;
+
 /**
  * Stores a X, Y coordinate pair.
  * @author Jonathan Sadler
  *
  */
-public class Coordinate {
-
+public class Coordinate implements Serializable 
+{
+	private static final long serialVersionUID = 6157592562349085452L;
+	
 	private int x;
 	private int y;
 	

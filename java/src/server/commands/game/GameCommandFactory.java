@@ -13,11 +13,11 @@ import server.commands.ICommandDirector;
 import server.commands.InvalidFactoryParameterException;
 import server.model.GameException;
 import shared.definitions.AIType;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 import shared.networking.parameter.PAddAI;
 import shared.definitions.AIType;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.parameter.PAddAI;
 
 /**
@@ -127,7 +127,7 @@ public class GameCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PAddAI addai = GSONUtils.deserialize(object, PAddAI.class);
+			PAddAI addai = SerializationUtils.deserialize(object, PAddAI.class);
 			type = addai.getAiType();			
 		}
 	}

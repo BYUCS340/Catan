@@ -1,6 +1,8 @@
 package shared.definitions;
 
-public enum PortType
+import java.io.Serializable;
+
+public enum PortType implements Serializable
 {
 	
 	WOOD, BRICK, SHEEP, WHEAT, ORE, THREE, NONE();
