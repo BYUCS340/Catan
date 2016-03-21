@@ -55,7 +55,6 @@ public class SerializationUtils
 	 */
 	public static <T extends Serializable> T deserialize(String json, java.lang.Class<T> objClass)
 	{
-		System.out.println(json);
 		T retObj = SerializationUtils.gson().fromJson(json, objClass);
 		
 		return retObj;
