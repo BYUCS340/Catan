@@ -30,7 +30,7 @@ import shared.model.GameModel;
 import shared.model.Player;
 import shared.model.map.Coordinate;
 import shared.networking.Deserializer;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.JSONDeserializer;
 import shared.networking.JSONSerializer;
 import shared.networking.Serializer;
@@ -139,7 +139,7 @@ public class GSONServerProxy implements ServerProxy
 	public boolean loginUser(String username, String password) throws ServerProxyException
 	{
 		PCredentials cred = new PCredentials(username, password);
-		String postData = GSONUtils.serialize(cred);
+		String postData = SerializationUtils.serialize(cred);
 		String urlPath = "/user/login";
 		try{
 			doJSONPost(urlPath, postData, true, false);
@@ -164,7 +164,7 @@ public class GSONServerProxy implements ServerProxy
 	public boolean registerUser(String username, String password) throws ServerProxyException
 	{
 		PCredentials cred = new PCredentials(username, password);
-		String postData = GSONUtils.serialize(cred);
+		String postData = SerializationUtils.serialize(cred);
 		String urlPath = "/user/register";
 		try{
 			doJSONPost(urlPath, postData, false, false);
@@ -211,10 +211,10 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/games/create";
 		PCreateGame create = new PCreateGame(randomTiles, randomNumbers, randomPorts, name);
-		String postData = GSONUtils.serialize(create);
+		String postData = SerializationUtils.serialize(create);
 		
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameInfo createdGame = GSONUtils.deserialize(result, GameInfo.class);
+		GameInfo createdGame = SerializationUtils.deserialize(result, GameInfo.class);
 		
 		return createdGame;
 	}
@@ -234,7 +234,7 @@ public class GSONServerProxy implements ServerProxy
 		//send the request to the server
 		String urlPath = "/games/join";
 		PJoinGame join = new PJoinGame(id, color);
-		String postData = GSONUtils.serialize(join);
+		String postData = SerializationUtils.serialize(join);
 
 		String result = doJSONPost(urlPath, postData, false, true);
 		System.out.println(result);
@@ -262,7 +262,7 @@ public class GSONServerProxy implements ServerProxy
 		String result = doJSONGet(urlPath);
 		
 		//parse the result into a GameModel
-		GameModel gameModel = GSONUtils.deserialize(result, GameModel.class);
+		GameModel gameModel = SerializationUtils.deserialize(result, GameModel.class);
 			
 		
 		//get user number
@@ -306,7 +306,7 @@ public class GSONServerProxy implements ServerProxy
 		//send the request to the server
 		String urlPath = "/game/addAI";
 		PAddAI add = new PAddAI(aiType);
-		String postData = GSONUtils.serialize(add);
+		String postData = SerializationUtils.serialize(add);
 
 		doJSONPost(urlPath, postData, false, false);
 		//if there is no exception, this operation succeeded
@@ -348,10 +348,10 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/sendChat";
 		PSendChat chat = new PSendChat(content);
-		String postData = GSONUtils.serialize(chat);
+		String postData = SerializationUtils.serialize(chat);
 
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 				
 		return ret;
 	}
@@ -375,10 +375,10 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/rollNumber";
 		PRollDice rolld = new PRollDice(roll);
-		String postData = GSONUtils.serialize(rolld);
+		String postData = SerializationUtils.serialize(rolld);
 
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -402,10 +402,10 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/robPlayer";
 		PRobPlayer rob = new PRobPlayer(victimIndex, location);
-		String postData = GSONUtils.serialize(rob);
+		String postData = SerializationUtils.serialize(rob);
 
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -431,7 +431,7 @@ public class GSONServerProxy implements ServerProxy
 		String postData = "";
 
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -457,7 +457,7 @@ public class GSONServerProxy implements ServerProxy
 		String postData = "";
 		
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -481,11 +481,11 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/Year_of_Plenty";
 		PYearOfPlentyCard yop = new PYearOfPlentyCard(resource1, resource2);
-		String postData = GSONUtils.serialize(yop);
+		String postData = SerializationUtils.serialize(yop);
 
 		String result = doJSONPost(urlPath, postData, false, false);
 //		System.out.println("Year of Plenty response: " + result);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -509,11 +509,11 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/Road_Building";
 		PRoadBuildingCard rbcard = new PRoadBuildingCard(start1, start2, end1, end2);
-		String postData = GSONUtils.serialize(rbcard);
+		String postData = SerializationUtils.serialize(rbcard);
 
 		String result = doJSONPost(urlPath, postData, false, false);
 		
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 
 		return ret;
 	}
@@ -537,10 +537,10 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/Soldier";
 		PSoldierCard soldier = new PSoldierCard(victimIndex, location);
-		String postData = GSONUtils.serialize(soldier);
+		String postData = SerializationUtils.serialize(soldier);
 
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -564,10 +564,10 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/Monopoly";
 		PMonopolyCard monopoly = new PMonopolyCard(resource);
-		String postData = GSONUtils.serialize(monopoly);
+		String postData = SerializationUtils.serialize(monopoly);
 
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 
 		return ret;
 	}
@@ -593,7 +593,7 @@ public class GSONServerProxy implements ServerProxy
 		String postData = "";
 		String result = doJSONPost(urlPath, postData, false, false);
 
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -617,10 +617,10 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/buildRoad";
 		PBuildRoad road = new PBuildRoad(start, end, free);
-		String postData = GSONUtils.serialize(road);
+		String postData = SerializationUtils.serialize(road);
 
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -644,10 +644,10 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/buildSettlement";
 		PBuildSettlement settle = new PBuildSettlement(location, free);
-		String postData = GSONUtils.serialize(settle);
+		String postData = SerializationUtils.serialize(settle);
 
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -671,10 +671,10 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/buildCity";
 		PBuildCity bcity = new PBuildCity(location);
-		String postData = GSONUtils.serialize(bcity);
+		String postData = SerializationUtils.serialize(bcity);
 
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -698,10 +698,10 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/offerTrade";
 		POfferTrade trade = new POfferTrade(resourceList, receiver);
-		String postData = GSONUtils.serialize(trade);
+		String postData = SerializationUtils.serialize(trade);
 
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -725,10 +725,10 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/acceptTrade";
 		PAcceptTrade acctrade = new PAcceptTrade(willAccept);
-		String postData = GSONUtils.serialize(acctrade);
+		String postData = SerializationUtils.serialize(acctrade);
 
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -753,10 +753,10 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/maritimeTrade";
 		PMaritimeTrade trade = new PMaritimeTrade(ratio, inputResource, outputResource);
-		String postData = GSONUtils.serialize(trade);
+		String postData = SerializationUtils.serialize(trade);
 
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}
@@ -780,12 +780,12 @@ public class GSONServerProxy implements ServerProxy
 		
 		String urlPath = "/moves/discardCards";
 		PDiscardCards discard = new PDiscardCards(resourceList);
-		String postData = GSONUtils.serialize(discard);
+		String postData = SerializationUtils.serialize(discard);
 		
 
 		System.out.println(urlPath + " " + postData);
 		String result = doJSONPost(urlPath, postData, false, false);
-		GameModel ret = GSONUtils.deserialize(result, GameModel.class);
+		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
 		
 		return ret;
 	}

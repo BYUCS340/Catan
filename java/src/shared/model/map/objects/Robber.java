@@ -1,11 +1,15 @@
 package shared.model.map.objects;
 
+import java.io.Serializable;
+
 /**
  * Used to store information about the robber.
  * @author Jonathan Sadler
  *
  */
-public class Robber {
+public class Robber implements Serializable
+{
+	private static final long serialVersionUID = -1551842212522619052L;
 
 	private Hex placedOn;
 	

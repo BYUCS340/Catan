@@ -3,7 +3,7 @@ package server.commands.games;
 import server.commands.ICommand;
 import server.model.GameArcade;
 import shared.definitions.CatanColor;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -57,6 +57,6 @@ public class GamesJoinCommand implements ICommand
 	@Override
 	public String GetHeader() 
 	{
-		return GSONUtils.serialize(cookie);
+		return SerializationUtils.serialize(cookie);
 	}
 }

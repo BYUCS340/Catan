@@ -1,5 +1,6 @@
 package shared.model.chat;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +9,11 @@ import java.util.List;
  * @author matthewcarlson
  *
  */
-public class ChatBox
+public class ChatBox implements Serializable
 {
-	List <ChatMessage> messages;
+	private static final long serialVersionUID = -5653973592529483133L;
+
+	private List <ChatMessage> messages;
 	
 	/**
 	 * Default constructor; initializes message list

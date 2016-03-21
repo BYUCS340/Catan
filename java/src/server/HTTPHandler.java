@@ -9,7 +9,7 @@ import server.commands.CommandFactory;
 import server.commands.ICommand;
 import server.commands.InvalidFactoryParameterException;
 import server.swagger.SwaggerHandlers;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -52,7 +52,7 @@ public class HTTPHandler implements HttpHandler
 		if (headers.containsKey("Cookie"))
 		{
 			String jsonCookie = headers.get("Cookie").get(0);
-			cookie = GSONUtils.deserialize(jsonCookie, NetworkCookie.class);
+			cookie = SerializationUtils.deserialize(jsonCookie, NetworkCookie.class);
 		}
 		
 		try 

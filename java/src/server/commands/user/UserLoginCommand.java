@@ -3,7 +3,7 @@ package server.commands.user;
 import server.commands.ICommand;
 import server.model.GameArcade;
 import server.model.GameException;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -64,6 +64,6 @@ public class UserLoginCommand implements ICommand
 	public String GetHeader() 
 	{
 		NetworkCookie cookie = new NetworkCookie(username, password, playerID);
-		return GSONUtils.serialize(cookie);
+		return SerializationUtils.serialize(cookie);
 	}
 }

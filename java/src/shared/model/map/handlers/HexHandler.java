@@ -1,5 +1,6 @@
 package shared.model.map.handlers;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -12,8 +13,10 @@ import shared.model.map.objects.Hex;
  * @author Jonathan Sadler
  *
  */
-public class HexHandler
+public class HexHandler implements Serializable
 {
+	private static final long serialVersionUID = 124020036520139024L;
+	
 	private static final int MAX_SIZE = 37;
 	private static final int Y_SHIFT = 6;
 	

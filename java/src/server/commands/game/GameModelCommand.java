@@ -4,7 +4,7 @@ import server.commands.CookieCommand;
 import server.model.GameArcade;
 import server.model.GameException;
 import server.model.ServerGameManager;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -54,7 +54,7 @@ public class GameModelCommand extends CookieCommand
 	public String GetResponse() 
 	{
 		if (sgm != null) 
-			return GSONUtils.serialize(sgm.ServerGetSerializableModel());
+			return SerializationUtils.serialize(sgm.ServerGetSerializableModel());
 		return null;
 	}
 

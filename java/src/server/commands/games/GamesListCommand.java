@@ -5,7 +5,7 @@ import java.util.List;
 import server.commands.ICommand;
 import server.model.GameArcade;
 import shared.data.GameInfo;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 
 /**
  * Command to get all the games from the server.
@@ -39,7 +39,7 @@ public class GamesListCommand implements ICommand
 	@Override
 	public String GetResponse() 
 	{
-		return GSONUtils.serialize(games);
+		return SerializationUtils.serialize(games);
 	}
 
 	@Override
