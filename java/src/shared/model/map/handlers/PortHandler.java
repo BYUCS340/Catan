@@ -1,5 +1,6 @@
 package shared.model.map.handlers;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -15,8 +16,13 @@ import shared.model.map.objects.*;
  * @author Jonathan Sadler
  *
  */
-public class PortHandler
+public class PortHandler implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static final int INITIAL_CAPACITY = 9;
 	
 	private Map<Edge, Hex> ePorts;

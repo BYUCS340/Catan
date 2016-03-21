@@ -33,7 +33,7 @@ public class GameModelCommand extends CookieCommand
 		try 
 		{
 			sgm = GameArcade.games().GetGame(gameID);
-			return sgm.GetVersion() != version;
+			return true;
 		}
 		catch (GameException e) 
 		{ //game not found

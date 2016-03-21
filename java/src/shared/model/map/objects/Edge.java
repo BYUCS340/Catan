@@ -1,5 +1,7 @@
 package shared.model.map.objects;
 
+import java.io.Serializable;
+
 import shared.definitions.CatanColor;
 import shared.model.map.Coordinate;
 
@@ -8,8 +10,12 @@ import shared.model.map.Coordinate;
  * @author Jonathan Sadler
  *
  */
-public class Edge
+public class Edge implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Coordinate start;
 	private Coordinate end;
 	
