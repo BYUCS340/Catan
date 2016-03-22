@@ -9,13 +9,17 @@ import server.commands.CommandFactory;
 import server.commands.ICommand;
 import server.commands.InvalidFactoryParameterException;
 import shared.definitions.CatanColor;
+import shared.definitions.PieceType;
 import shared.model.GameModel;
 import shared.model.map.Coordinate;
+import shared.model.map.objects.Edge;
 import shared.model.map.objects.Vertex;
 import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
+import shared.networking.parameter.PBuildCity;
 import shared.networking.parameter.PBuildRoad;
 import shared.networking.parameter.PBuildSettlement;
+import shared.networking.parameter.PDiscardCards;
 
 public abstract class Personality 
 {
@@ -40,6 +44,17 @@ public abstract class Personality
 		return CommandExecutor(param, cookie, null, GameModel.class);
 	}
 	
+	protected GameModel BuildCity(int game, Coordinate point)
+	{
+		StringBuilder param = new StringBuilder("MOVES/BUILDCITY");
+		NetworkCookie cookie = GetCookie(username, id, game);
+		
+		PBuildCity city = new PBuildCity(point);
+		String object = SerializationUtils.serialize(city);
+		
+		return CommandExecutor(param, cookie, object, GameModel.class);
+	}
+	
 	protected GameModel BuildRoad(int game, Coordinate start, Coordinate end, boolean free)
 	{
 		StringBuilder param = new StringBuilder("MOVES/BUILDROAD");
@@ -51,15 +66,34 @@ public abstract class Personality
 		return CommandExecutor(param, cookie, object, GameModel.class);
 	}
 	
-	protected GameModel BuildSettlement(int game, Coordinate coordinate, boolean free)
+	protected GameModel BuildSettlement(int game, Coordinate point, boolean free)
 	{
 		StringBuilder param = new StringBuilder("MOVES/BUILDSETTLEMENT");
 		NetworkCookie cookie = GetCookie(username, id, game);
 		
-		PBuildSettlement settlement = new PBuildSettlement(coordinate, free);
+		PBuildSettlement settlement = new PBuildSettlement(point, free);
 		String object = SerializationUtils.serialize(settlement);
 		
 		return CommandExecutor(param, cookie, object, GameModel.class);
+	}
+	
+	protected GameModel BuyDevCard(int game)
+	{
+		StringBuilder param = new StringBuilder("MOVES/BUYDEVCARD");
+		NetworkCookie cookie = GetCookie(username, id, game);
+		
+		return CommandExecutor(param, cookie, GameModel.class);
+	}
+	
+	protected void Discard(int game, List<Integer> resourceList)
+	{
+		StringBuilder param = new StringBuilder("MOVES/DISCARDCARDS");
+		NetworkCookie cookie = GetCookie(username, id, game);
+		
+		PDiscardCards discard = new PDiscardCards(resourceList);
+		String object = SerializationUtils.serialize(discard);
+		
+		CommandExecutor(param, cookie, object);
 	}
 	
 	protected void FinishTurn(int game)
@@ -86,19 +120,23 @@ public abstract class Personality
 		return available;
 	}
 	
-	private NetworkCookie GetCookie(String username, int id)
+	protected List<Edge> GetAvailableEdges(GameModel model)
 	{
-		return GetCookie(username, id, -1);
+		CatanColor color = GetColor(model);
+		
+		List<Edge> available = new ArrayList<Edge>();
+		Iterator<Edge> edges = model.mapModel.GetEdges();
+		while (edges.hasNext())
+		{
+			Edge edge = edges.next();
+			if (model.mapModel.CanPlaceRoad(edge.getStart(), edge.getEnd(), color))
+				available.add(edge);
+		}
+		
+		return available;
 	}
 	
-	private NetworkCookie GetCookie(String username, int id, int game)
-	{
-		NetworkCookie cookie = new NetworkCookie(username, null, id);
-		cookie.setGameID(game);
-		return cookie;
-	}
-	
-	private CatanColor GetColor(GameModel model)
+	protected CatanColor GetColor(GameModel model)
 	{
 		for (int i = 0; i < model.players.size(); i++)
 		{
@@ -110,9 +148,33 @@ public abstract class Personality
 		return null;
 	}
 	
+	protected List<Vertex> GetSettlements(GameModel model)
+	{
+		CatanColor color = GetColor(model);
+		
+		List<Vertex> settlements = new ArrayList<Vertex>();
+		Iterator<Vertex> vertices = model.mapModel.GetVertices();
+		while (vertices.hasNext())
+		{
+			Vertex vertex = vertices.next();
+			
+			if (vertex.getType() == PieceType.SETTLEMENT && vertex.getColor() == color)
+				settlements.add(vertex);
+		}
+		
+		return settlements;
+	}
+	
+	private NetworkCookie GetCookie(String username, int id, int game)
+	{
+		NetworkCookie cookie = new NetworkCookie(username, null, id);
+		cookie.setGameID(game);
+		return cookie;
+	}
+	
 	private String CommandExecutor(StringBuilder param, NetworkCookie cookie)
 	{
-		return CommandExecutor(param, cookie, null);
+		return CommandExecutor(param, cookie, "");
 	}
 	
 	private String CommandExecutor(StringBuilder param, NetworkCookie cookie, String object)
@@ -130,6 +192,11 @@ public abstract class Personality
 		}
 	}
 	
+	private <T extends Serializable> T CommandExecutor(StringBuilder param, NetworkCookie cookie, java.lang.Class<T> objClass)
+	{
+		return CommandExecutor(param, cookie, null, objClass);
+	}
+	
 	private <T extends Serializable> T CommandExecutor(StringBuilder param, NetworkCookie cookie, String object, java.lang.Class<T> objClass)
 	{
 		String response = CommandExecutor(param, cookie, object);
@@ -138,6 +205,10 @@ public abstract class Personality
 	}
 	
 	public abstract void TakeTurn(int gameID);
+	
+	public abstract void Discard(int gameID);
+	
+	public abstract void ChatReceived(int gameID, String message);
 	
 	protected abstract void Setup(GameModel model);
 	
