@@ -8,6 +8,11 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import server.Log;
+import server.ai.characters.AI;
+import server.ai.characters.B_Groot;
+import server.ai.characters.B_JarJar;
+import server.ai.characters.B_Trogdor;
 import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 
@@ -18,6 +23,16 @@ import shared.definitions.CatanColor;
  */
 public class AIHandler 
 {
+	private static AIHandler handler = null;
+	
+	public static AIHandler GetHandler()
+	{
+		if (handler == null)
+			handler = new AIHandler();
+		
+		return handler;
+	}
+	
 	private List<String> types;
 	private Map<AIType, Set<AI>> AIbyType;
 	private Map<String, AI> AIbyName;
@@ -26,7 +41,7 @@ public class AIHandler
 	/**
 	 * Creates an AI Handler
 	 */
-	public AIHandler()
+	private AIHandler()
 	{
 		CompileTypes();
 		AIbyType = new HashMap<AIType, Set<AI>>();
@@ -34,6 +49,8 @@ public class AIHandler
 		AIbyIndex = new HashMap<Integer, AI>();
 		
 		AddAI(new B_Groot());
+		AddAI(new B_JarJar());
+		AddAI(new B_Trogdor());
 	}
 	
 	/**
@@ -82,7 +99,7 @@ public class AIHandler
 	 * @return An AI associated with the type. If the type is random, then it returns
 	 * an AI with a random type.
 	 */
-	public int GetAI(AIType type)
+	public int GetAI(AIType type, List<Integer> inGame)
 	{
 		Set<AI> ais = null;
 		
@@ -90,12 +107,21 @@ public class AIHandler
 		{
 			ais = new HashSet<AI>();
 			ais.addAll(AIbyType.get(AIType.BEGINNER));
-			ais.addAll(AIbyType.get(AIType.MODERATE));
-			ais.addAll(AIbyType.get(AIType.EXPERT));
+//			ais.addAll(AIbyType.get(AIType.MODERATE));
+//			ais.addAll(AIbyType.get(AIType.EXPERT));
 		}
 		else
 		{
 			ais = AIbyType.get(type);
+		}
+		
+		for (int gamer : inGame)
+		{
+			if (AIbyIndex.containsKey(gamer))
+			{
+				AI ai = AIbyIndex.get(gamer);
+				ais.remove(ai);
+			}
 		}
 			
 		Random random = new Random();
@@ -166,7 +192,16 @@ public class AIHandler
 		@Override
 		public void run()
 		{
-			AIbyIndex.get(aiIndex).TakeTurn(gameIndex);
+			try 
+			{
+				Thread.sleep(3000);
+				AIbyIndex.get(aiIndex).TakeTurn(gameIndex);
+			}
+			catch (InterruptedException e) 
+			{
+				Log.GetLog().throwing("AIThread", "run", e);
+				e.printStackTrace();
+			}
 		}
 	}
 }

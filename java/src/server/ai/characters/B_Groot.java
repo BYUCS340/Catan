@@ -1,5 +1,6 @@
-package server.ai;
+package server.ai.characters;
 
+import server.ai.characters.personalities.BeginnerPersonality;
 import shared.definitions.AIType;
 
 /**
@@ -9,23 +10,18 @@ import shared.definitions.AIType;
  */
 public class B_Groot extends AI 
 {
+	private static final String NAME = "Groot";
 	/**
 	 * Plants Groot.
 	 */
 	public B_Groot() 
 	{
-		super(AIType.BEGINNER);
+		super(AIType.BEGINNER, new BeginnerPersonality(NAME));
 	}
 	
 	@Override
 	public String GetName() 
 	{
-		return "Groot";
-	}
-
-	@Override
-	void TakeTurn(int gameID) 
-	{
-		
+		return NAME;
 	}
 }

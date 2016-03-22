@@ -23,7 +23,6 @@ import shared.data.PlayerInfo;
  */
 public class GameTable 
 {
-	private AIHandler ais;
 	private GameHandler games;
 	private PlayerDen playerTable;
 	//TODO thing that manages players objects
@@ -33,12 +32,11 @@ public class GameTable
 		games = new GameHandler();
 		playerTable = new PlayerDen();
 		
-		ais = new AIHandler();
-		Set<String> aiNames = ais.GetNames();
+		Set<String> aiNames = AIHandler.GetHandler().GetNames();
 		for (String name : aiNames)
 		{
 			int index = playerTable.RegisterAI(name);
-			ais.RegisterAI(name, index);
+			AIHandler.GetHandler().RegisterAI(name, index);
 		}
 	}
 	
@@ -152,7 +150,7 @@ public class GameTable
 	 */
 	public List<String> ListAI()
 	{
-		return ais.GetTypes();
+		return AIHandler.GetHandler().GetTypes();
 	}
 	
 	/**
@@ -170,13 +168,17 @@ public class GameTable
 				return false;
 			
 			Set<CatanColor> notAvailable = new HashSet<CatanColor>();
+			List<Integer> ids = new ArrayList<Integer>();
 			int num = manager.getNumberPlayers();
 			for (int i = 0; i < num; i++)
+			{
 				notAvailable.add(manager.getPlayerColorByIndex(i));
+				ids.add(manager.allCurrentPlayers()[i].getId());
+			}
 				
-			int aiID = ais.GetAI(type);
-			String name = ais.GetName(aiID);
-			CatanColor color = ais.PickColor(aiID, notAvailable);
+			int aiID = AIHandler.GetHandler().GetAI(type, ids);
+			String name = AIHandler.GetHandler().GetName(aiID);
+			CatanColor color = AIHandler.GetHandler().PickColor(aiID, notAvailable);
 			manager.AddPlayer(name, color, false, aiID);
 			
 			return true;

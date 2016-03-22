@@ -14,10 +14,10 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesBuildSettlementCommand extends MovesCommand
 {
-
 	private Coordinate point;
 	private boolean free;
 	private ServerGameManager sgm;
+	
 	/**
 	 * Creates a command the builds a settlement.
 	 * @param playerID The player ID.
@@ -30,8 +30,6 @@ public class MovesBuildSettlementCommand extends MovesCommand
 		super(cookie, playerIndex);
 		this.point = point;
 		this.free = free;
-		
-		
 	}
 
 	@Override
@@ -40,7 +38,7 @@ public class MovesBuildSettlementCommand extends MovesCommand
 		try 
 		{
 			sgm = GameArcade.games().GetGame(gameID);
-			return sgm.ServerBuildSettlement(playerID, point,free);
+			return sgm.ServerBuildSettlement(playerIndex, point,free);
 		}
 		catch (GameException e) 
 		{ //game not found
