@@ -5,23 +5,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import server.Log;
+import server.ai.AIHandler;
 import shared.definitions.CatanColor;
 import shared.definitions.GameRound;
 import shared.definitions.ResourceType;
 import shared.model.GameManager;
 import shared.model.GameModel;
 import shared.model.ModelException;
+import shared.model.Player;
 import shared.model.map.Coordinate;
-import shared.model.map.MapException;
 import shared.model.map.model.MapGenerator;
-import shared.model.map.model.MapModel;
 
 /**
  * Special formation of the game manager 
  * @author matthewcarlson
  *
  */
-public class ServerGameManager extends GameManager {
+public class ServerGameManager extends GameManager 
+{
 	private	boolean randomTiles;
 	private boolean randomNumbers;
 	private boolean randomPorts;
@@ -156,6 +158,17 @@ public class ServerGameManager extends GameManager {
 		if (gameState.nextTurn())
 		{
 			this.updateVersion();
+			
+			int current = this.CurrentPlayersTurn();
+			for (Player player : this.players)
+			{
+				if (player.playerIndex() == current && player.isARobot())
+				{
+					int aiID = player.playerID();
+					AIHandler.GetHandler().RunAI(aiID, gameID);
+					break;
+				}
+			}
 			return true;
 		}
 		return false;
@@ -241,6 +254,8 @@ public class ServerGameManager extends GameManager {
 			return false;
 		
 		CatanColor color = this.getPlayerColorByIndex(playerIndex);
+		this.map.SetupPhase(free);
+		
 		if (!this.map.CanPlaceRoad(start, end, color))
 			return false;
 		
@@ -256,10 +271,10 @@ public class ServerGameManager extends GameManager {
 		}
 		catch (ModelException e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
+		
 		this.updateVersion();
 		return true;
 	}
@@ -281,9 +296,33 @@ public class ServerGameManager extends GameManager {
 	 * @param p
 	 * @return
 	 */
-	public boolean ServerBuildSettlement(int playerID, Coordinate p, boolean free)
+	public boolean ServerBuildSettlement(int playerIndex, Coordinate p, boolean free)
 	{
-		return false;
+		try 
+		{
+			if (!this.CanPlayerPlay(playerIndex)) 
+				return false;
+			
+			this.map.SetupPhase(free);
+			
+			CatanColor color = this.getPlayerColorByIndex(playerIndex);
+			if (!this.map.CanPlaceSettlement(p, color))
+				return false;
+			
+			if (free && !this.gameState.IsSetup())
+				return false;
+			
+			this.BuildSettlement(playerIndex, p, free);
+		}
+		catch (ModelException e)
+		{
+			Log.GetLog().throwing("ServerGameManager", "ServerBuildSettlement", e);
+			e.printStackTrace();
+			return false;
+		}
+		
+		this.updateVersion();
+		return true;
 	}
 	
 	/**
@@ -351,6 +390,7 @@ public class ServerGameManager extends GameManager {
 		GameModel gm = new GameModel();
 		
 		gm.gameBank = this.gameBank;
+		gm.gameID = this.gameID;
 		gm.gameState = this.gameState;
 		gm.log = this.log;
 		gm.mapModel = this.map;

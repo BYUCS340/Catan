@@ -1,4 +1,4 @@
-package server.ai;
+package server.ai.characters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import server.ai.characters.personalities.Personality;
 import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 
@@ -19,21 +20,17 @@ public abstract class AI
 {
 	private int id;
 	private AIType type;
+	protected Personality personality;
 	
 	/**
 	 * Constructs AI object.
 	 * @param type The type of AI.
 	 */
-	protected AI(AIType type) 
+	protected AI(AIType type, Personality personality) 
 	{	
 		this.type = type;
+		this.personality = personality;		
 	}
-	
-	/**
-	 * Called to tell the AI to take its turn.
-	 * @param gameID The ID of the game they are playing in.
-	 */
-	abstract void TakeTurn(int gameID);
 	
 	/**
 	 * Gets the formal name of the AI.
@@ -66,6 +63,7 @@ public abstract class AI
 	public void SetID(int id)
 	{
 		this.id = id;
+		personality.SetID(id);
 	}
 	
 	/**
@@ -93,5 +91,14 @@ public abstract class AI
 		}
 		
 		return colors;
+	}
+	
+	/**
+	 * Called to tell the AI to take its turn.
+	 * @param gameID The ID of the game they are playing in.
+	 */
+	public void TakeTurn(int gameID)
+	{
+		personality.TakeTurn(gameID);
 	}
 }
