@@ -34,12 +34,27 @@ public class GameState implements Serializable
 	public boolean nextTurn()
 	{
 		if (state == GameRound.ROLLING || state == GameRound.ROBBING) return false;
-		activePlayerIndex ++;
+		
+		if (state == GameRound.SECONDROUND)
+			activePlayerIndex --;
+		else
+			activePlayerIndex ++;
+		
+		//if we go to the last player
 		if (activePlayerIndex > 3)
 		{
 			activePlayerIndex = 0;
-			if (state == GameRound.FIRSTROUND) state = GameRound.SECONDROUND;
-			else if (state == GameRound.SECONDROUND ) state = GameRound.ROLLING;
+			//if it's the first round go to the second round
+			if (state == GameRound.FIRSTROUND) 
+			{
+				state = GameRound.SECONDROUND;
+				activePlayerIndex = 3;
+			}
+		}
+		if (activePlayerIndex < 0 && state == GameRound.SECONDROUND)
+		{
+			activePlayerIndex = 0;
+			state = GameRound.ROLLING;
 		}
 		if (state == GameRound.PLAYING) state = GameRound.ROLLING;
 		

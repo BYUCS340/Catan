@@ -49,14 +49,14 @@ public class TestGameManager
 			assertEquals(gm.CurrentPlayersTurn(),3);
 			assertEquals(GameRound.FIRSTROUND,gm.CurrentState());
 			gm.FinishTurn();
-			assertEquals(gm.CurrentPlayersTurn(),0);
+			assertEquals(gm.CurrentPlayersTurn(),3);
 			assertEquals(GameRound.SECONDROUND,gm.CurrentState());
-			gm.FinishTurn();
-			assertEquals(gm.CurrentPlayersTurn(),1);
 			gm.FinishTurn();
 			assertEquals(gm.CurrentPlayersTurn(),2);
 			gm.FinishTurn();
-			assertEquals(gm.CurrentPlayersTurn(),3);
+			assertEquals(gm.CurrentPlayersTurn(),1);
+			gm.FinishTurn();
+			assertEquals(gm.CurrentPlayersTurn(),0);
 			assertEquals(GameRound.SECONDROUND,gm.CurrentState());
 			gm.FinishTurn();
 			assertEquals(GameRound.ROLLING,gm.CurrentState());

@@ -13,6 +13,7 @@ import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
 import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
+import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.model.map.*;
 import shared.model.map.model.MapGenerator;
@@ -513,8 +514,23 @@ public class GameManager implements ModelSubject
 	{
 		//Check the Map to see if they're connected to a port
 		//map.getTradeRatio?
+		CatanColor color = this.getPlayerColorByIndex(playerIndex);
+		
+		Iterator<PortType> iter = map.GetPorts(color);
+		
+		int lowestRatio = 4;
+		
+		while (iter.hasNext())
+		{
+			PortType port = iter.next();
+			if (port == PortType.THREE && lowestRatio > 3) 
+				lowestRatio = 3;
+			else if (PortType.MatchedResource(port, type))
+				lowestRatio = 2;
+		}
+		
 		//Otherwise return the default trade in value
-		return 4;
+		return lowestRatio;
 	}
 	
 	/**

@@ -11,13 +11,13 @@ public enum AIType
 		case BEGINNER: return "BEGINNER";
 //		case MODERATE: return "MODERATE";
 //		case EXPERT: return "EXPERT";
-		case RANDOM: return "RANDOM";
+
 		case OBNOXIOUS: return "OBNOXIOUS";
+		case RANDOM: 
+		default:
+			return "RANDOM";
 		
 		}
-		
-		assert false;
-		return "unknown";
 	}
 	
 	public static AIType fromString(String type)
@@ -26,14 +26,13 @@ public enum AIType
 		{
 		case "BEGINNER": return BEGINNER;
 //		case "MODERATE": return MODERATE;
-//		case "EXPERT": return EXPERT;
-		case "RANDOM": return RANDOM;
+//		case "EXPERT": return EXPERT;		
 		case "OBNOXIOUS": return OBNOXIOUS;
-		
+		case "RANDOM": 
+		default:
+			return RANDOM;
 		}
 		
-		assert false;
-		return null;
 	}
 	
 	

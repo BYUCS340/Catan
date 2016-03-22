@@ -729,8 +729,11 @@ public class MapModel implements IMapModel
 			return false;
 		if (!ports.equals(other.ports))
 			return false;
-		if (robber == null && other.robber != null)
-			return false;
+		if (robber == null)
+		{
+			if (other.robber != null)
+				return false;
+		}
 		else if (!robber.equals(other.robber))
 			return false;
 		if (!values.equals(other.values))
