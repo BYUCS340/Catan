@@ -25,5 +25,16 @@ public enum PortType implements Serializable
 		
 		return null;
 	}
+	
+	public static boolean MatchedResource(PortType port, ResourceType type){
+		if (port == WOOD && type == ResourceType.WOOD) return true;
+		if (port == BRICK && type == ResourceType.BRICK) return true;
+		if (port == SHEEP && type == ResourceType.SHEEP) return true;
+		if (port == WHEAT && type == ResourceType.WHEAT) return true;
+		if (port == ORE && type == ResourceType.ORE) return true;
+		
+		return false;
+	}
+
 }
 
