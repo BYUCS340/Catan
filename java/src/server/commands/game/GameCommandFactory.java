@@ -16,9 +16,7 @@ import shared.definitions.AIType;
 import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 import shared.networking.parameter.PAddAI;
-import shared.definitions.AIType;
-import shared.networking.SerializationUtils;
-import shared.networking.parameter.PAddAI;
+import shared.networking.parameter.PGetModel;
 
 /**
  * Creates game command objects.
@@ -178,8 +176,7 @@ public class GameCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
-			
+			version = SerializationUtils.deserialize(object, PGetModel.class).getVersion();			
 		}
 	}
 	
