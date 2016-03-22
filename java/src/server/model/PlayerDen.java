@@ -26,6 +26,14 @@ public class PlayerDen
 		players = new HashMap<>();
 		playerLogin = new HashMap<>();
 		playerNames = new ArrayList<>();
+		
+		try 
+		{
+			this.RegisterPlayer("Matt", "matthew");
+		} 
+		catch (GameException e) 
+		{
+		}
 	}
 	
 	/**
