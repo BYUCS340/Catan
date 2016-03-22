@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import shared.definitions.ResourceType;
+import shared.model.Bank;
 import shared.model.GameModel;
 import shared.model.map.Coordinate;
 import shared.model.map.objects.Edge;
@@ -36,7 +37,7 @@ public class BeginnerPersonality extends Personality
 	{
 		GameModel model = GetModel(gameID);
 		
-		int count = model.gameBank.getResourceCount();
+		int count = GetBank(model).getResourceCount();
 		if (count <= 7)
 			return;
 		
@@ -47,7 +48,7 @@ public class BeginnerPersonality extends Personality
 		List<Integer> selectedResources = new ArrayList<Integer>();
 		
 		for (ResourceType resource : ResourceType.values())
-			currentResources.add(model.gameBank.getResourceCount(resource));
+			currentResources.add(GetBank(model).getResourceCount(resource));
 		
 		int index = 0;
 		while (selected < toRemove)
@@ -101,13 +102,15 @@ public class BeginnerPersonality extends Personality
 	@Override
 	protected void Play(GameModel model) 
 	{
-		if (model.gameBank.canBuildCity())
+		Bank bank = GetBank(model);
+		
+		if (bank.canBuildCity())
 			AttemptBuildCity(model);
-		if (model.gameBank.canBuildSettlement())
+		if (bank.canBuildSettlement())
 			AttemptBuildSettlement(model);
-		if (model.gameBank.canBuildRoad())
+		if (bank.canBuildRoad())
 			AttemptBuildRoad(model);
-		if (model.gameBank.canBuyDevCard())
+		if (bank.canBuyDevCard())
 			AttemptBuyDevCard(model);
 	}
 	
@@ -115,7 +118,7 @@ public class BeginnerPersonality extends Personality
 	{
 		Iterator<Vertex> settlements = GetSettlements(model).iterator();
 		
-		while (settlements.hasNext() && model.gameBank.canBuildCity())
+		while (settlements.hasNext() && GetBank(model).canBuildCity())
 		{
 			Vertex vertex = settlements.next();
 			
@@ -129,7 +132,7 @@ public class BeginnerPersonality extends Personality
 		
 		Iterator<Vertex> available = GetAvailableVertices(model).iterator();
 		
-		while (available.hasNext() && model.gameBank.canBuildSettlement())
+		while (available.hasNext() && GetBank(model).canBuildSettlement())
 		{
 			Vertex vertex = available.next();
 			
@@ -143,7 +146,7 @@ public class BeginnerPersonality extends Personality
 		
 		Iterator<Edge> available = GetAvailableEdges(model).iterator();
 		
-		while (available.hasNext() && model.gameBank.canBuildRoad())
+		while (available.hasNext() && GetBank(model).canBuildRoad())
 		{
 			Edge edge = available.next();
 			
@@ -153,7 +156,7 @@ public class BeginnerPersonality extends Personality
 	
 	private void AttemptBuyDevCard(GameModel model)
 	{
-		while (model.gameBank.canBuyDevCard())
+		while (GetBank(model).canBuyDevCard())
 			BuyDevCard(model.gameID);
 	}
 }

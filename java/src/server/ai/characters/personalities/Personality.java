@@ -10,7 +10,9 @@ import server.commands.ICommand;
 import server.commands.InvalidFactoryParameterException;
 import shared.definitions.CatanColor;
 import shared.definitions.PieceType;
+import shared.model.Bank;
 import shared.model.GameModel;
+import shared.model.Player;
 import shared.model.map.Coordinate;
 import shared.model.map.objects.Edge;
 import shared.model.map.objects.Vertex;
@@ -20,6 +22,7 @@ import shared.networking.parameter.PBuildCity;
 import shared.networking.parameter.PBuildRoad;
 import shared.networking.parameter.PBuildSettlement;
 import shared.networking.parameter.PDiscardCards;
+import shared.networking.parameter.PGetModel;
 
 public abstract class Personality 
 {
@@ -41,7 +44,10 @@ public abstract class Personality
 		StringBuilder param = new StringBuilder("GAME/MODEL");
 		NetworkCookie cookie = GetCookie(username, id, game);
 		
-		return CommandExecutor(param, cookie, null, GameModel.class);
+		PGetModel model = new PGetModel(0);
+		String object = SerializationUtils.serialize(model);
+		
+		return CommandExecutor(param, cookie, object, GameModel.class);
 	}
 	
 	protected GameModel BuildCity(int game, Coordinate point)
@@ -104,6 +110,28 @@ public abstract class Personality
 		CommandExecutor(param, cookie);
 	}
 	
+	protected Player GetAIPlayer(GameModel model)
+	{
+		for (int i = 0; i < model.players.size(); i++)
+		{
+			if (model.players.get(i).playerID() == id)
+				return model.players.get(i);
+		}
+		
+		assert false;
+		return null;
+	}
+	
+	protected CatanColor GetColor(GameModel model)
+	{
+		return GetAIPlayer(model).color;
+	}
+	
+	protected Bank GetBank(GameModel model)
+	{
+		return GetAIPlayer(model).playerBank;
+	}
+	
 	protected List<Vertex> GetAvailableVertices(GameModel model)
 	{
 		CatanColor color = GetColor(model);
@@ -134,18 +162,6 @@ public abstract class Personality
 		}
 		
 		return available;
-	}
-	
-	protected CatanColor GetColor(GameModel model)
-	{
-		for (int i = 0; i < model.players.size(); i++)
-		{
-			if (model.players.get(i).playerID() == id)
-				return model.players.get(i).color;
-		}
-		
-		assert false;
-		return null;
 	}
 	
 	protected List<Vertex> GetSettlements(GameModel model)

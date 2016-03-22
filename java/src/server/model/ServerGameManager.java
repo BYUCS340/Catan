@@ -72,11 +72,10 @@ public class ServerGameManager extends GameManager
 		playerIndexLookup.put(playerID, index);
 		
 		//Start the game if we have 4 players
-		if (this.players.size() == 4){
+		if (this.players.size() == 4)
 			this.StartGame();
-			this.updateVersion();
-		}
-			
+		
+		this.updateVersion();
 		
 		return index;
 	}

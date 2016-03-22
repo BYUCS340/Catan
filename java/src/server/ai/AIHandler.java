@@ -215,7 +215,7 @@ public class AIHandler
 		{
 			try 
 			{
-				Thread.sleep(3000);
+				Thread.sleep(1000);
 				AIbyIndex.get(aiID).TakeTurn(gameID);
 			}
 			catch (InterruptedException e) 
@@ -242,7 +242,7 @@ public class AIHandler
 		{
 			try 
 			{
-				Thread.sleep(3000);
+				Thread.sleep(1000);
 				AIbyIndex.get(aiID).Discard(gameID);
 			}
 			catch (InterruptedException e) 
@@ -271,7 +271,7 @@ public class AIHandler
 		{
 			try 
 			{
-				Thread.sleep(3000);
+				Thread.sleep(1000);
 				AIbyIndex.get(aiID).Chat(gameID, message);
 			}
 			catch (InterruptedException e) 
