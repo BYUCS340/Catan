@@ -259,9 +259,8 @@ public class GSONServerProxy implements ServerProxy
 		String data = SerializationUtils.serialize(obj);
 		String result = doJSONPost(urlPath, data, false, false);
 		
-		if(result.equalsIgnoreCase("No New Model"))
+		if(result.contains("No new model"))
 		{
-			System.out.println("No new model received");
 			return null;
 		}
 		

@@ -1088,7 +1088,6 @@ public class ClientGameManager extends GameManager
 			GameModel model = proxy.getGameModel(this.version);
 			if (model == null) 
 			{
-				System.out.println("Model was null from the server");
 				//throw new ModelException("Model was null from server");
 				return;
 			}
