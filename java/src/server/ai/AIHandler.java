@@ -150,7 +150,28 @@ public class AIHandler
 	 */
 	public void RunAI(int aiID, int gameID)
 	{
-		new AIThread(aiID, gameID).start();;
+		new AITakeTurn(aiID, gameID).start();;
+	}
+	
+	/**
+	 * Tells an AI to discard.
+	 * @param aiID The ID of the AI.
+	 * @param gameID The ID of the game.
+	 */
+	public void Discard(int aiID, int gameID)
+	{
+		new AIDiscard(aiID, gameID).start();
+	}
+	
+	/**
+	 * Tells an AI of a chat message.
+	 * @param aiID The ID of the AI.
+	 * @param gameID the ID of the game.
+	 * @param message The message to give to the AI.
+	 */
+	public void Chat(int aiID, int gameID, String message)
+	{
+		new AIChat(aiID, gameID, message).start();
 	}
 	
 	private void CompileTypes()
@@ -178,15 +199,15 @@ public class AIHandler
 		AIbyName.put(ai.GetName(), ai);
 	}
 	
-	private class AIThread extends Thread
+	private class AITakeTurn extends Thread
 	{
-		private int aiIndex;
-		private int gameIndex;
+		private int aiID;
+		private int gameID;
 		
-		public AIThread(int aiIndex, int gameIndex)
+		public AITakeTurn(int aiID, int gameID)
 		{
-			this.aiIndex = aiIndex;
-			this.gameIndex = gameIndex;
+			this.aiID = aiID;
+			this.gameID = gameID;
 		}
 		
 		@Override
@@ -195,7 +216,63 @@ public class AIHandler
 			try 
 			{
 				Thread.sleep(3000);
-				AIbyIndex.get(aiIndex).TakeTurn(gameIndex);
+				AIbyIndex.get(aiID).TakeTurn(gameID);
+			}
+			catch (InterruptedException e) 
+			{
+				Log.GetLog().throwing("AIThread", "run", e);
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private class AIDiscard extends Thread
+	{
+		private int aiID;
+		private int gameID;
+		
+		public AIDiscard(int aiID, int gameID)
+		{
+			this.aiID = aiID;
+			this.gameID = gameID;
+		}
+		
+		@Override
+		public void run()
+		{
+			try 
+			{
+				Thread.sleep(3000);
+				AIbyIndex.get(aiID).Discard(gameID);
+			}
+			catch (InterruptedException e) 
+			{
+				Log.GetLog().throwing("AIThread", "run", e);
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private class AIChat extends Thread
+	{
+		private int aiID;
+		private int gameID;
+		private String message;
+		
+		public AIChat(int aiID, int gameID, String message)
+		{
+			this.aiID = aiID;
+			this.gameID = gameID;
+			this.message = message;
+		}
+		
+		@Override
+		public void run()
+		{
+			try 
+			{
+				Thread.sleep(3000);
+				AIbyIndex.get(aiID).Chat(gameID, message);
 			}
 			catch (InterruptedException e) 
 			{

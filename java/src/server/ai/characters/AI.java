@@ -101,4 +101,23 @@ public abstract class AI
 	{
 		personality.TakeTurn(gameID);
 	}
+	
+	/**
+	 * Called to tell the AI to discard cards.
+	 * @param gameID The ID of the game they are playing in.
+	 */
+	public void Discard(int gameID)
+	{
+		personality.Discard(gameID);
+	}
+	
+	/**
+	 * Called to give the AI a chat message.
+	 * @param gameID The ID of the game they are playing in.
+	 * @param message The chat message.
+	 */
+	public void Chat(int gameID, String message)
+	{
+		personality.ChatReceived(gameID, message);
+	}
 }

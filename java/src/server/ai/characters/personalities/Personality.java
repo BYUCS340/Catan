@@ -19,6 +19,7 @@ import shared.networking.cookie.NetworkCookie;
 import shared.networking.parameter.PBuildCity;
 import shared.networking.parameter.PBuildRoad;
 import shared.networking.parameter.PBuildSettlement;
+import shared.networking.parameter.PDiscardCards;
 
 public abstract class Personality 
 {
@@ -82,6 +83,17 @@ public abstract class Personality
 		NetworkCookie cookie = GetCookie(username, id, game);
 		
 		return CommandExecutor(param, cookie, GameModel.class);
+	}
+	
+	protected void Discard(int game, List<Integer> resourceList)
+	{
+		StringBuilder param = new StringBuilder("MOVES/DISCARDCARDS");
+		NetworkCookie cookie = GetCookie(username, id, game);
+		
+		PDiscardCards discard = new PDiscardCards(resourceList);
+		String object = SerializationUtils.serialize(discard);
+		
+		CommandExecutor(param, cookie, object);
 	}
 	
 	protected void FinishTurn(int game)
@@ -153,11 +165,6 @@ public abstract class Personality
 		return settlements;
 	}
 	
-	private NetworkCookie GetCookie(String username, int id)
-	{
-		return GetCookie(username, id, -1);
-	}
-	
 	private NetworkCookie GetCookie(String username, int id, int game)
 	{
 		NetworkCookie cookie = new NetworkCookie(username, null, id);
@@ -198,6 +205,10 @@ public abstract class Personality
 	}
 	
 	public abstract void TakeTurn(int gameID);
+	
+	public abstract void Discard(int gameID);
+	
+	public abstract void ChatReceived(int gameID, String message);
 	
 	protected abstract void Setup(GameModel model);
 	

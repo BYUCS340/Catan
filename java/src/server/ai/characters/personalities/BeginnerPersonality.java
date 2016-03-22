@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import shared.definitions.CatanColor;
+import shared.definitions.ResourceType;
 import shared.model.GameModel;
 import shared.model.map.Coordinate;
 import shared.model.map.objects.Edge;
@@ -29,6 +29,47 @@ public class BeginnerPersonality extends Personality
 			Play(model);
 		
 		FinishTurn(gameID);
+	}
+	
+	@Override
+	public void Discard(int gameID) 
+	{
+		GameModel model = GetModel(gameID);
+		
+		int count = model.gameBank.getResourceCount();
+		if (count <= 7)
+			return;
+		
+		int toRemove = (int)Math.floor(count / 2.0);
+		int selected = 0;
+		
+		List<Integer> currentResources = new ArrayList<Integer>();
+		List<Integer> selectedResources = new ArrayList<Integer>();
+		
+		for (ResourceType resource : ResourceType.values())
+			currentResources.add(model.gameBank.getResourceCount(resource));
+		
+		int index = 0;
+		while (selected < toRemove)
+		{
+			if (currentResources.get(index) > 0)
+			{
+				currentResources.set(index, currentResources.get(index) - 1);
+				selectedResources.set(index, selectedResources.get(index) + 1);
+			}
+			
+			index++;
+			if (index >= currentResources.size())
+				index = 0;
+		}
+		
+		Discard(model.gameID, selectedResources);
+	}
+
+	@Override
+	public void ChatReceived(int gameID, String message) 
+	{
+		return;
 	}
 
 	@Override
