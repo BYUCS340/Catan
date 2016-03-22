@@ -1,8 +1,9 @@
 package shared.definitions;
 
 import java.awt.Color;
+import java.io.Serializable;
 
-public enum CatanColor
+public enum CatanColor implements Serializable
 {
 	RED, ORANGE, YELLOW, BLUE, GREEN, PURPLE, PUCE, WHITE, BROWN;
 	

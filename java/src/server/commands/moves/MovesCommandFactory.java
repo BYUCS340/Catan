@@ -14,7 +14,7 @@ import server.commands.InvalidFactoryParameterException;
 import server.model.GameException;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 import shared.networking.parameter.PAcceptTrade;
 import shared.networking.parameter.PBuildCity;
@@ -261,7 +261,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PAcceptTrade acctrade = GSONUtils.deserialize(object, PAcceptTrade.class);
+			PAcceptTrade acctrade = SerializationUtils.deserialize(object, PAcceptTrade.class);
 			willAccept = acctrade.willAccept();
 		}
 	}
@@ -280,7 +280,7 @@ public class MovesCommandFactory extends Factory
 		public void SetData(String object) 
 		{
 			//get the correct hex location from the input object 
-			PBuildCity pbcity = GSONUtils.deserialize(object, PBuildCity.class);
+			PBuildCity pbcity = SerializationUtils.deserialize(object, PBuildCity.class);
 			point = pbcity.getLocation();
 		}
 	}
@@ -300,7 +300,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PBuildRoad broad = GSONUtils.deserialize(object, PBuildRoad.class);
+			PBuildRoad broad = SerializationUtils.deserialize(object, PBuildRoad.class);
 			start = broad.getStart();
 			end = broad.getEnd();
 			free = broad.isFree();		
@@ -321,7 +321,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PBuildSettlement pbsettlement = GSONUtils.deserialize(object, PBuildSettlement.class);
+			PBuildSettlement pbsettlement = SerializationUtils.deserialize(object, PBuildSettlement.class);
 			point = pbsettlement.getLocation();
 			free = pbsettlement.isFree();	
 		}
@@ -355,7 +355,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PDiscardCards pdiscard = GSONUtils.deserialize(object, PDiscardCards.class);
+			PDiscardCards pdiscard = SerializationUtils.deserialize(object, PDiscardCards.class);
 			toDiscard = pdiscard.getResourceList();
 		}
 	}
@@ -390,7 +390,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PMaritimeTrade pmaritime = GSONUtils.deserialize(object, PMaritimeTrade.class);
+			PMaritimeTrade pmaritime = SerializationUtils.deserialize(object, PMaritimeTrade.class);
 			ratio = pmaritime.getRatio();
 			input = pmaritime.getInputResource();
 			output = pmaritime.getOutputReseource();
@@ -410,7 +410,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PMonopolyCard pmonopoly = GSONUtils.deserialize(object, PMonopolyCard.class);
+			PMonopolyCard pmonopoly = SerializationUtils.deserialize(object, PMonopolyCard.class);
 			resource = pmonopoly.getResource();
 		}
 	}
@@ -444,7 +444,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			POfferTrade poffertrade = GSONUtils.deserialize(object, POfferTrade.class);
+			POfferTrade poffertrade = SerializationUtils.deserialize(object, POfferTrade.class);
 			receiverIndex = poffertrade.getReceiver();
 			offer = poffertrade.getResourceList();		
 		}
@@ -466,7 +466,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PRoadBuildingCard prbc = GSONUtils.deserialize(object, PRoadBuildingCard.class);
+			PRoadBuildingCard prbc = SerializationUtils.deserialize(object, PRoadBuildingCard.class);
 			start1 = prbc.getStart1();
 			start2 = prbc.getStart2();
 			end1 = prbc.getEnd1();
@@ -488,7 +488,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PRobPlayer prob = GSONUtils.deserialize(object, PRobPlayer.class);
+			PRobPlayer prob = SerializationUtils.deserialize(object, PRobPlayer.class);
 			victimIndex = prob.getVictimIndex();
 			point = prob.getLocation();
 		}
@@ -507,7 +507,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PRollDice proll = GSONUtils.deserialize(object, PRollDice.class);
+			PRollDice proll = SerializationUtils.deserialize(object, PRollDice.class);
 			roll = proll.getRoll();
 		}
 	}
@@ -525,7 +525,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PSendChat pchat = GSONUtils.deserialize(object, PSendChat.class);
+			PSendChat pchat = SerializationUtils.deserialize(object, PSendChat.class);
 			message = pchat.getContent();	
 		}
 	}
@@ -544,7 +544,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PSoldierCard psoldier = GSONUtils.deserialize(object, PSoldierCard.class);
+			PSoldierCard psoldier = SerializationUtils.deserialize(object, PSoldierCard.class);
 			victimIndex = psoldier.getVictimIndex();
 			point = psoldier.getLocation();		
 		}
@@ -564,7 +564,7 @@ public class MovesCommandFactory extends Factory
 		@Override
 		public void SetData(String object)
 		{
-			PYearOfPlentyCard pyear = GSONUtils.deserialize(object, PYearOfPlentyCard.class);
+			PYearOfPlentyCard pyear = SerializationUtils.deserialize(object, PYearOfPlentyCard.class);
 			resource1 = pyear.getResource1();
 			resource2 = pyear.getResource2();
 		}

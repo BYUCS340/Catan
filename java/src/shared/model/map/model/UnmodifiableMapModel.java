@@ -12,6 +12,8 @@ import shared.model.map.objects.*;
 
 public class UnmodifiableMapModel implements IMapModel
 {
+	private static final long serialVersionUID = 376342099120883079L;
+	
 	private IMapModel model;
 	
 	public UnmodifiableMapModel(IMapModel model)

@@ -48,7 +48,7 @@ import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.model.map.Coordinate;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 import shared.networking.parameter.PAcceptTrade;
 import shared.networking.parameter.PAddAI;
@@ -121,7 +121,7 @@ public class CommandFactoryTest
 		credentials.setUsername("Jon");
 		credentials.setPassword("Sadler");
 		
-		object = GSONUtils.serialize(credentials);
+		object = SerializationUtils.serialize(credentials);
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
 		assertTrue(command.getClass() == UserLoginCommand.class);
@@ -137,7 +137,7 @@ public class CommandFactoryTest
 		credentials.setUsername("Jon");
 		credentials.setPassword("Sadler");
 		
-		String object = GSONUtils.serialize(credentials);
+		String object = SerializationUtils.serialize(credentials);
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
 		assertTrue(command.getClass() == UserRegisterCommand.class);
@@ -160,7 +160,7 @@ public class CommandFactoryTest
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
 		PCreateGame create = new PCreateGame(false, false, true, "hellotest");
-		String object = GSONUtils.serialize(create);
+		String object = SerializationUtils.serialize(create);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -174,7 +174,7 @@ public class CommandFactoryTest
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
 		PJoinGame join = new PJoinGame(0, CatanColor.BLUE);
-		String object = GSONUtils.serialize(join);
+		String object = SerializationUtils.serialize(join);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		assertTrue(command.getClass() == GamesJoinCommand.class);
@@ -237,7 +237,7 @@ public class CommandFactoryTest
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
 		PAddAI addai = new PAddAI(AIType.BEGINNER);
-		String object = GSONUtils.serialize(addai);
+		String object = SerializationUtils.serialize(addai);
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
 		assertTrue(command.getClass() == GameAddAICommand.class);
@@ -261,7 +261,7 @@ public class CommandFactoryTest
 		
 		PSendChat chat = new PSendChat();
 		chat.setContent("I'm a lasagna hog");
-		String object = GSONUtils.serialize(chat);
+		String object = SerializationUtils.serialize(chat);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -275,7 +275,7 @@ public class CommandFactoryTest
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
 		PRollDice dice = new PRollDice(5);
-		String object = GSONUtils.serialize(dice);
+		String object = SerializationUtils.serialize(dice);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -291,7 +291,7 @@ public class CommandFactoryTest
 		PRobPlayer robber = new PRobPlayer();
 		robber.setLocation(new Coordinate(6,8));
 		robber.setVictimIndex(2);
-		String object = GSONUtils.serialize(robber);
+		String object = SerializationUtils.serialize(robber);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -325,7 +325,7 @@ public class CommandFactoryTest
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
 		PYearOfPlentyCard plenty = new PYearOfPlentyCard(ResourceType.BRICK, ResourceType.WOOD);
-		String object = GSONUtils.serialize(plenty);
+		String object = SerializationUtils.serialize(plenty);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -339,7 +339,7 @@ public class CommandFactoryTest
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
 		PYearOfPlentyCard plenty = new PYearOfPlentyCard(ResourceType.BRICK, ResourceType.WOOD);
-		String object = GSONUtils.serialize(plenty);		
+		String object = SerializationUtils.serialize(plenty);		
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -357,7 +357,7 @@ public class CommandFactoryTest
 		rbcard.setStart2(new Coordinate(5,5));
 		rbcard.setEnd1(new Coordinate(1,1));
 		rbcard.setEnd2(new Coordinate(6,6));
-		String object = GSONUtils.serialize(rbcard);
+		String object = SerializationUtils.serialize(rbcard);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -375,7 +375,7 @@ public class CommandFactoryTest
 		rbcard.setStart2(new Coordinate(5,5));
 		rbcard.setEnd1(new Coordinate(1,1));
 		rbcard.setEnd2(new Coordinate(6,6));
-		String object = GSONUtils.serialize(rbcard);	
+		String object = SerializationUtils.serialize(rbcard);	
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -391,7 +391,7 @@ public class CommandFactoryTest
 		PSoldierCard soldiercard = new PSoldierCard();
 		soldiercard.setLocation(new Coordinate(0,0));
 		soldiercard.setVictimIndex(0);
-		String object = GSONUtils.serialize(soldiercard);
+		String object = SerializationUtils.serialize(soldiercard);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -405,7 +405,7 @@ public class CommandFactoryTest
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
 		PMonopolyCard mon = new PMonopolyCard(ResourceType.BRICK);
-		String object = GSONUtils.serialize(mon);
+		String object = SerializationUtils.serialize(mon);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -429,7 +429,7 @@ public class CommandFactoryTest
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
 		PBuildRoad road = new PBuildRoad(new Coordinate(0,0), new Coordinate(1,1), false);
-		String object = GSONUtils.serialize(road);
+		String object = SerializationUtils.serialize(road);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -443,7 +443,7 @@ public class CommandFactoryTest
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
 		PBuildSettlement settle = new PBuildSettlement(new Coordinate(0,0), true);
-		String object = GSONUtils.serialize(settle);
+		String object = SerializationUtils.serialize(settle);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -457,7 +457,7 @@ public class CommandFactoryTest
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
 		PBuildCity city = new PBuildCity(new Coordinate(0,0));
-		String object = GSONUtils.serialize(city);
+		String object = SerializationUtils.serialize(city);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -479,7 +479,7 @@ public class CommandFactoryTest
 		rList.add(0);
 		rList.add(0);
 		trade.setResourceList(rList);
-		String object = GSONUtils.serialize(trade);
+		String object = SerializationUtils.serialize(trade);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -493,7 +493,7 @@ public class CommandFactoryTest
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		
 		PAcceptTrade acc = new PAcceptTrade(false);
-		String object = GSONUtils.serialize(acc);
+		String object = SerializationUtils.serialize(acc);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -509,7 +509,7 @@ public class CommandFactoryTest
 		trade.setInputResource(ResourceType.BRICK);
 		trade.setOutputResource(ResourceType.ORE);
 		trade.setRatio(3);
-		String object = GSONUtils.serialize(trade);
+		String object = SerializationUtils.serialize(trade);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
@@ -529,7 +529,7 @@ public class CommandFactoryTest
 		rList.add(0);
 		rList.add(0);
 		discard.setResourceList(rList);
-		String object = GSONUtils.serialize(discard);
+		String object = SerializationUtils.serialize(discard);
 		
 		ICommand command = factory.GetCommand(param, cookie, object);
 		

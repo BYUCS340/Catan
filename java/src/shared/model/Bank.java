@@ -1,5 +1,6 @@
 package shared.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,8 +15,10 @@ import shared.definitions.ResourceType;
  * @author matthewcarlson, garrettegan, parker ridd
  *
  */
-public class Bank
+public class Bank implements Serializable
 {
+	private static final long serialVersionUID = -4491817117883319092L;
+
 	private int[] resources;
 	private int[] devCards;
 	private int[] pieces;

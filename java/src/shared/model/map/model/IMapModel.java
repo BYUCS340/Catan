@@ -1,5 +1,6 @@
 package shared.model.map.model;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -10,7 +11,7 @@ import shared.model.map.MapException;
 import shared.model.map.Transaction;
 import shared.model.map.objects.*;
 
-public interface IMapModel
+public interface IMapModel extends Serializable
 {
 	/**
 	 * Overrides can do methods. Allows placement of pieces regardless. Used when receiving

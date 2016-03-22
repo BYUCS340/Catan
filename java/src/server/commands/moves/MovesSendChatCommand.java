@@ -3,7 +3,7 @@ package server.commands.moves;
 import server.model.GameArcade;
 import server.model.GameException;
 import server.model.ServerGameManager;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -55,7 +55,7 @@ public class MovesSendChatCommand extends MovesCommand
 	{
 		// TODO Auto-generated method stub
 		if (sgm != null) 
-			return GSONUtils.serialize(sgm.ServerGetSerializableModel());
+			return SerializationUtils.serialize(sgm.ServerGetSerializableModel());
 		return null;
 	}
 

@@ -1,5 +1,6 @@
 package shared.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +11,14 @@ import shared.definitions.CatanColor;
  * @author matthewcarlson, parker ridd
  *
  */
-public class GameActionLog 
+public class GameActionLog implements Serializable
 {
-	private class GameAction
+	private static final long serialVersionUID = -2772846760248160893L;
+
+	private class GameAction implements Serializable
 	{
+		private static final long serialVersionUID = 4986147939862991898L;
+		
 		private String action;
 		private int playerIndex;
 		

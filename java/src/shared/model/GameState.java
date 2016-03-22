@@ -1,5 +1,7 @@
 package shared.model;
 
+import java.io.Serializable;
+
 import shared.definitions.GameRound;
 
 /**
@@ -7,8 +9,10 @@ import shared.definitions.GameRound;
  * @author matthewcarlson, garrettegan
  * @todo 
  */
-public class GameState
+public class GameState implements Serializable
 {
+	private static final long serialVersionUID = 2016268655363017640L;
+
 	public GameRound state = GameRound.WAITING;
 	public int activePlayerIndex = 0;  //This keeps track of which player's turn it is
 	

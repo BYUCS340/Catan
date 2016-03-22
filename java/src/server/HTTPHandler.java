@@ -9,7 +9,7 @@ import server.commands.CommandFactory;
 import server.commands.ICommand;
 import server.commands.InvalidFactoryParameterException;
 import server.swagger.SwaggerHandlers;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -52,7 +52,7 @@ public class HTTPHandler implements HttpHandler
 		if (headers.containsKey("Cookie"))
 		{
 			String jsonCookie = headers.get("Cookie").get(0);
-			cookie = GSONUtils.deserialize(jsonCookie, NetworkCookie.class);
+			cookie = SerializationUtils.deserialize(jsonCookie, NetworkCookie.class);
 		}
 		
 		try 
@@ -80,18 +80,26 @@ public class HTTPHandler implements HttpHandler
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 				OutputStream oStream = exchange.getResponseBody();
 				oStream.write(response.getBytes());
-				exchange.getResponseBody().close();
+				oStream.close();
 			}
 			else
 			{
 				Log.GetLog().warning("Bad request received");
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, -1);
+				String response = command.GetResponse();
+				
+				exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+				OutputStream oStream = exchange.getResponseBody();
+				oStream.write(response.getBytes());
+				oStream.close();
 			}
 		}
 		catch (InvalidFactoryParameterException e) 
 		{
 			Log.GetLog().severe("Unable to find needed key");
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, -1);
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, 0);
+			OutputStream oStream = exchange.getResponseBody();
+			oStream.write("Invalid key".getBytes());
+			oStream.close();
 		} 
 	}
 

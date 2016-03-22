@@ -1,5 +1,6 @@
 package shared.model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import shared.definitions.DevCardType;
@@ -10,8 +11,10 @@ import shared.definitions.DevCardType;
  * @author matthewcarlson, garrettegan
  *
  */
-public class VictoryPointManager
+public class VictoryPointManager implements Serializable
 {
+	private static final long serialVersionUID = -5622601186536231359L;
+
 	private int currentLongestRoadPlayer = -1;
 	private int currentLargestArmyPlayer = -1;
 	private int[] victoryPoints = new int[4];

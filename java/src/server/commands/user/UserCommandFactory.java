@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import server.commands.*;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 import shared.networking.parameter.PCredentials;
 
@@ -78,7 +78,7 @@ public class UserCommandFactory extends Factory
 		@Override
 		public void SetData(String object)
 		{
-			PCredentials creds = GSONUtils.deserialize(object, PCredentials.class);
+			PCredentials creds = SerializationUtils.deserialize(object, PCredentials.class);
 			username = creds.getUsername();
 			password = creds.getPassword();
 		}
@@ -98,7 +98,7 @@ public class UserCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			PCredentials creds = GSONUtils.deserialize(object, PCredentials.class);
+			PCredentials creds = SerializationUtils.deserialize(object, PCredentials.class);
 			username = creds.getUsername();
 			password = creds.getPassword();
 		}

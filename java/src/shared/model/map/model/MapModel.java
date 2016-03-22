@@ -21,9 +21,9 @@ import shared.model.map.objects.*;
  * @author Jonathan Sadler
  *
  */
-public class MapModel implements IMapModel {
-	
-	private static final int LONGEST_ROAD_INITIAL_VALUE = 2;
+public class MapModel implements IMapModel 
+{	
+	private static final long serialVersionUID = 5280325974057938585L;
 	
 	private boolean force;
 	private boolean setup;
@@ -35,7 +35,6 @@ public class MapModel implements IMapModel {
 	private VertexHandler vertices;	
 	private PortHandler ports;
 	
-	private int longestRoadLength;
 	private CatanColor longestRoadColor;
 	
 	private Robber robber;
@@ -55,7 +54,7 @@ public class MapModel implements IMapModel {
 		vertices = new VertexHandler();
 		ports = new PortHandler();
 		
-		longestRoadLength = LONGEST_ROAD_INITIAL_VALUE;
+		longestRoadColor = null;
 	}
 	
 	public boolean IsForced()
@@ -89,7 +88,7 @@ public class MapModel implements IMapModel {
 	@Override
 	public boolean LongestRoadExists()
 	{
-		return longestRoadLength > LONGEST_ROAD_INITIAL_VALUE;
+		return longestRoadColor != null;
 	}
 	
 	@Override
@@ -264,34 +263,7 @@ public class MapModel implements IMapModel {
 		else
 			throw new MapException("Attempt to place road where not allowed");
 		
-		Set<Edge> handledEdges = new HashSet<Edge>();
-		Set<Edge> allHandledEdges = new HashSet<Edge>();
-		
-		try
-		{
-			handledEdges.add(edges.GetEdge(p1, p2));
-			
-			Vertex v1 = vertices.GetVertex(p1);
-			Vertex v2 = vertices.GetVertex(p2);
-			
-			//All handled edges accounts for loops. That is why it can be passed in
-			//for the right. If the road connects a loop, then the left alread counted
-			//it.
-			int left = GetRoadCount(v1, color, handledEdges, allHandledEdges);
-			int right = GetRoadCount(v2, color, allHandledEdges, allHandledEdges);
-			
-			int roadLength = left + right + 1;
-			if (roadLength > longestRoadLength)
-			{
-				longestRoadLength = roadLength;
-				longestRoadColor = color;
-			}
-		}
-		catch (MapException e)
-		{
-			//This shouldn't occur, else the edge couldn't exist
-			e.printStackTrace();
-		}
+		CheckLongestRoad();
 	}
 	
 	@Override
@@ -301,6 +273,8 @@ public class MapModel implements IMapModel {
 			vertices.SetSettlement(point, color);
 		else
 			throw new MapException("Attempt to place settlement where not allowed");
+		
+		CheckLongestRoad();
 	}
 	
 	@Override
@@ -593,6 +567,11 @@ public class MapModel implements IMapModel {
 		return java.util.Collections.unmodifiableList(transactions).iterator();
 	}
 	
+	private void CheckLongestRoad()
+	{
+		
+	}
+	
 	/**
 	 * Gets all the hexes associated with the dice role.
 	 * @param role The combined value of the dice.
@@ -723,7 +702,6 @@ public class MapModel implements IMapModel {
 		result = prime * result + edges.hashCode();
 		result = prime * result + hexes.hashCode();
 		result = prime * result + ((longestRoadColor == null) ? 0 : longestRoadColor.hashCode());
-		result = prime * result + longestRoadLength;
 		result = prime * result + ports.hashCode();
 		result = prime * result + ((robber == null) ? 0 : robber.hashCode());
 		result = prime * result + values.hashCode();
@@ -748,8 +726,6 @@ public class MapModel implements IMapModel {
 		if (!hexes.equals(other.hexes))
 			return false;
 		if (longestRoadColor != other.longestRoadColor)
-			return false;
-		if (longestRoadLength != other.longestRoadLength)
 			return false;
 		if (!ports.equals(other.ports))
 			return false;

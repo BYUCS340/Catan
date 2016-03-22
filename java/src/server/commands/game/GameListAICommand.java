@@ -5,7 +5,7 @@ import java.util.List;
 import server.ai.AIHandler;
 import server.commands.CookieCommand;
 import server.model.GameArcade;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -42,7 +42,7 @@ public class GameListAICommand extends CookieCommand
 	@Override
 	public String GetResponse() 
 	{
-		return GSONUtils.serialize(types);
+		return SerializationUtils.serialize(types);
 	}
 
 	@Override

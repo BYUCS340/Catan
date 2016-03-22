@@ -1,12 +1,16 @@
 package shared.model.chat;
+
+import java.io.Serializable;
+
 /**
  * A wrapper for a chat message
  * @author matthewcarlson
  *
  */
-public class ChatMessage
+public class ChatMessage implements Serializable
 {
-	
+	private static final long serialVersionUID = -1998360309558925902L;
+
 	public int playerId;   //the player's id 0-3
 	public String message; //the message itself
 	public long timestamp; //time the message was sent in milliseconds

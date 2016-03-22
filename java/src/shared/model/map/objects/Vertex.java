@@ -1,5 +1,7 @@
 package shared.model.map.objects;
 
+import java.io.Serializable;
+
 import shared.definitions.*;
 import shared.model.map.Coordinate;
 
@@ -8,8 +10,10 @@ import shared.model.map.Coordinate;
  * @author Jonathan Sadler
  *
  */
-public class Vertex
+public class Vertex implements Serializable
 {
+	private static final long serialVersionUID = 1806486130564577939L;
+
 	private Coordinate point;
 	
 	private PieceType type;

@@ -41,6 +41,7 @@ public class ServerGameManager extends GameManager {
 		this.randomPorts = randomPorts;
 		this.randomTiles = randomTiles;
 		this.playerIndexLookup = new HashMap<>();
+		this.gameID = index;
 		this.map = MapGenerator.GenerateMap(randomTiles, randomNumbers, randomPorts);
 	}
 

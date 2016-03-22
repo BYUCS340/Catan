@@ -180,7 +180,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	
 	private void welcomeToTheJungle()
 	{
-		String soundName = "images"+File.separator+"welcomeToJungle.wav";    
+		/*String soundName = "images"+File.separator+"welcomeToJungle.wav";    
 		AudioInputStream audioInputStream;
 		audioInputStream = null;
 		try 
@@ -194,7 +194,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
 		{
 			e.printStackTrace();
-		}	
+		}*/
 	}
 	private ModelObserver chatObserver = new ModelObserver()
 	{

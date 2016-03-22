@@ -1,5 +1,7 @@
 package shared.model;
 
+import java.io.Serializable;
+
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 /**
@@ -7,8 +9,10 @@ import shared.definitions.ResourceType;
  * @author matthewcarlson, garrettegan
  *
  */
-public class Player
+public class Player implements Serializable
 {
+	private static final long serialVersionUID = 3438289584063500359L;
+
 	public String name;
 	public CatanColor color;
 	public Bank playerBank;

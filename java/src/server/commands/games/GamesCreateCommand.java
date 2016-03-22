@@ -3,7 +3,7 @@ package server.commands.games;
 import server.commands.ICommand;
 import server.model.GameArcade;
 import shared.data.GameInfo;
-import shared.networking.GSONUtils;
+import shared.networking.SerializationUtils;
 
 /**
  * Command to create a new game.
@@ -52,7 +52,7 @@ public class GamesCreateCommand implements ICommand
 	public String GetResponse() 
 	{
 		if (info != null)
-			return GSONUtils.serialize(info);
+			return SerializationUtils.serialize(info);
 		else
 			return null;
 	}

@@ -1,5 +1,7 @@
 package shared.model;
 
+import java.io.Serializable;
+
 import shared.definitions.ResourceType;
 
 /**
@@ -7,8 +9,10 @@ import shared.definitions.ResourceType;
  * @author matthewcarlson
  *
  */
-public class OfferedTrade
+public class OfferedTrade implements Serializable
 {
+	private static final long serialVersionUID = -8757581898891413179L;
+
 	private int fromPlayerID;
 	private int toPlayerID;
 	

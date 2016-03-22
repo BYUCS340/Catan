@@ -21,6 +21,7 @@ public class GameHandler
 	{
 		gameIndex = new HashMap<Integer, ServerGameManager>();
 		gameNames = new HashSet<String>();
+		
 	}
 
 	public Collection<ServerGameManager> GetAllGames()

@@ -41,7 +41,7 @@ public class UserRegisterCommand implements ICommand
 		catch (GameException e) 
 		{
 			Log.GetLog().finer("Unable to register: " + username);
-			response = "Failed";
+			response = "Failed to register";
 			return false;
 		}
 	}
