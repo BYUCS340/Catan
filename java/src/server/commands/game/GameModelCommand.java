@@ -1,5 +1,8 @@
 package server.commands.game;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import server.commands.CookieCommand;
 import server.model.GameArcade;
 import server.model.GameException;
@@ -54,7 +57,14 @@ public class GameModelCommand extends CookieCommand
 	public String GetResponse() 
 	{
 		if (sgm != null) 
-			return SerializationUtils.serialize(sgm.ServerGetSerializableModel());
+		{
+			if(sgm.GetVersion() != version)
+				return SerializationUtils.serialize(sgm.ServerGetSerializableModel());
+			else
+				Logger.getLogger("CatanServer").log(Level.INFO, "No new model detected. Current version: " + sgm.GetVersion() + " client version: " + version);
+				return "No new model";
+		}
+	
 		return null;
 	}
 

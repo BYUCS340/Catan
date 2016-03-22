@@ -4,17 +4,21 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import server.Log;
 import server.ai.AIHandler;
 import shared.definitions.CatanColor;
+import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
 import shared.definitions.ResourceType;
+import shared.model.Bank;
 import shared.model.GameManager;
 import shared.model.GameModel;
 import shared.model.ModelException;
 import shared.model.Player;
 import shared.model.map.Coordinate;
+import shared.model.map.MapException;
 import shared.model.map.model.MapGenerator;
 
 /**
@@ -114,7 +118,6 @@ public class ServerGameManager extends GameManager
 		}
 		catch (ModelException e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -122,14 +125,16 @@ public class ServerGameManager extends GameManager
 	}
 	
 	/**
-	 * Rob a player
-	 * @param playerID
-	 * @param playerIndex
-	 * @param hex
-	 * @return
+	 * 
+	 * @param playerID the ID of the player who is moving the robber
+	 * @param victimIndex the index of the victim
+	 * @param location the new location of the robber
+	 * @return true if successful, false if not
 	 */
-	public boolean ServerRobPlayer(int playerID, int playerIndex, Coordinate hex)
+	public boolean ServerRobPlayer(int playerID, int victimIndex, Coordinate location)
 	{
+		int playerIndex = this.GetPlayerIndexByID(playerID);
+		
 		if (gameState.state != GameRound.ROBBING) 
 			return false;
 		
@@ -138,9 +143,41 @@ public class ServerGameManager extends GameManager
 		if (super.CurrentPlayersTurn() != currentPlayer) 
 			return false;
 		
-		this.updateVersion();
+		if (!this.map.CanPlaceRobber(location))
+			return false;
 		
-		return false;
+		boolean couldRob = this.ServerExecuteRob(playerIndex, victimIndex, location);
+		
+		this.updateVersion();		
+		return couldRob;
+	}
+	
+	/**
+	 * Actually executes the robbing action. NOTE: No rule checking takes place in this function
+	 * @param playerIndex
+	 * @param victimIndex
+	 * @param location
+	 * @return
+	 */
+	private boolean ServerExecuteRob(int playerIndex, int victimIndex, Coordinate location)
+	{
+		try
+		{
+			map.PlaceRobber(location);
+			Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex 
+					+ " moved the robber");
+		}
+		catch(MapException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		
+		ResourceType takenResource = this.takeRandomResourceCard(playerIndex, victimIndex);
+		Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex + " took a "
+				+ takenResource.toString() + " from Player " + victimIndex);
+		
+		return true;
 	}
 	
 	/**
@@ -232,13 +269,39 @@ public class ServerGameManager extends GameManager
 	/**
 	 * 
 	 * @param playerID
-	 * @param p1
-	 * @param playerIndex the victim
+	 * @param location
+	 * @param victimIndex the victim
 	 * @return
 	 */
-	public boolean ServerSolider(int playerID, Coordinate p1, int playerIndex)
+	public boolean ServerSoldier(int playerID, Coordinate location, int victimIndex)
 	{
-		return false;
+		int playerIndex = this.GetPlayerIndexByID(playerID);
+
+		if(this.CurrentPlayersTurn() != playerIndex)
+		{
+			return false;
+		}
+		
+		if(!this.CanPlayDevCard(playerIndex, DevCardType.SOLDIER))
+		{
+			return false;
+		}
+		
+		boolean couldRob = this.ServerExecuteRob(playerIndex, victimIndex, location);
+		
+		//ONLY take the soldier card if this player could actually execute the robbing
+		//action
+		if(couldRob)
+		{
+			Player pPlayer = players.get(playerIndex);
+			Bank bPlayer = pPlayer.playerBank;
+			bPlayer.giveDevCard(DevCardType.SOLDIER);
+			int armySize = pPlayer.incrementArmySize();
+			this.victoryPointManager.checkPlayerArmySize(playerIndex, armySize);
+		}
+		
+		this.updateVersion();
+		return couldRob;
 	}
 	
 	/**
@@ -369,6 +432,35 @@ public class ServerGameManager extends GameManager
 	public boolean ServerDiscardCards(int playerID, List<Integer> resourceList)
 	{
 		return false;
+	}
+	
+	private ResourceType takeRandomResourceCard(int receiver, int giver)
+	{
+		Player pReceiver = players.get(receiver);
+		Player pGiver = players.get(giver);
+		Bank bReceiver = pReceiver.playerBank;
+		Bank bGiver = pGiver.playerBank;
+		
+		ResourceType rGiven = bGiver.giveRandomResource();
+		
+		//if the giver can't give a resource, return null
+		if(rGiven == null)
+		{
+			return null;
+		}
+		
+		//give the resource to the robbing player
+		try
+		{
+			bReceiver.getResource(rGiven);
+		}
+		catch(ModelException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		
+		return rGiven;		
 	}
 	
 	

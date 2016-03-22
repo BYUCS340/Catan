@@ -58,6 +58,7 @@ import shared.networking.parameter.PBuildSettlement;
 import shared.networking.parameter.PCreateGame;
 import shared.networking.parameter.PCredentials;
 import shared.networking.parameter.PDiscardCards;
+import shared.networking.parameter.PGetModel;
 import shared.networking.parameter.PJoinGame;
 import shared.networking.parameter.PMaritimeTrade;
 import shared.networking.parameter.PMonopolyCard;
@@ -205,6 +206,8 @@ public class CommandFactoryTest
 	{
 		String url = "game/model";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
+		PGetModel model = new PGetModel(2141);
+		String object = SerializationUtils.serialize(model);
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
 		assertTrue(command.getClass() == GameModelCommand.class);
