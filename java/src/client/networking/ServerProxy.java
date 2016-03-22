@@ -69,10 +69,11 @@ public interface ServerProxy {
 
 	/**
 	 * Retrieves the game model from the server
+	 * @param version the current version of the model in the client
 	 * @return a GameModel object
 	 * @throws ServerProxyException if something goes wrong
 	 */
-	public GameModel getGameModel() throws ServerProxyException;
+	public GameModel getGameModel(int version) throws ServerProxyException;
 	
 	/**
 	 * Adds an AI to the game

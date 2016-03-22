@@ -29,11 +29,7 @@ import shared.definitions.ResourceType;
 import shared.model.GameModel;
 import shared.model.Player;
 import shared.model.map.Coordinate;
-import shared.networking.Deserializer;
 import shared.networking.SerializationUtils;
-import shared.networking.JSONDeserializer;
-import shared.networking.JSONSerializer;
-import shared.networking.Serializer;
 import shared.networking.cookie.UserCookie;
 import shared.networking.parameter.PAcceptTrade;
 import shared.networking.parameter.PAddAI;
@@ -43,6 +39,7 @@ import shared.networking.parameter.PBuildSettlement;
 import shared.networking.parameter.PCreateGame;
 import shared.networking.parameter.PCredentials;
 import shared.networking.parameter.PDiscardCards;
+import shared.networking.parameter.PGetModel;
 import shared.networking.parameter.PJoinGame;
 import shared.networking.parameter.PMaritimeTrade;
 import shared.networking.parameter.PMonopolyCard;
@@ -53,7 +50,6 @@ import shared.networking.parameter.PRollDice;
 import shared.networking.parameter.PSendChat;
 import shared.networking.parameter.PSoldierCard;
 import shared.networking.parameter.PYearOfPlentyCard;
-import shared.networking.transport.NetGameModel;
 
 /**
  * @author Parker Ridd
@@ -244,7 +240,7 @@ public class GSONServerProxy implements ServerProxy
 	 * @see client.networking.ServerProxy#getGameModel()
 	 */
 	@Override
-	public GameModel getGameModel() throws ServerProxyException
+	public GameModel getGameModel(int version) throws ServerProxyException
 	{
 		if(userCookie == null)
 		{
@@ -257,9 +253,17 @@ public class GSONServerProxy implements ServerProxy
 					+ "Details: Game ID not valid");
 		}
 		
-		//send the request to the server
+		//send the request to the server		
 		String urlPath = "/game/model";
-		String result = doJSONGet(urlPath);
+		PGetModel obj = new PGetModel(version);
+		String data = SerializationUtils.serialize(obj);
+		String result = doJSONPost(urlPath, data, false, false);
+		
+		if(result.equalsIgnoreCase("No New Model"))
+		{
+			System.out.println("No new model received");
+			return null;
+		}
 		
 		//parse the result into a GameModel
 		GameModel gameModel = SerializationUtils.deserialize(result, GameModel.class);

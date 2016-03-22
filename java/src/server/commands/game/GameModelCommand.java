@@ -54,7 +54,13 @@ public class GameModelCommand extends CookieCommand
 	public String GetResponse() 
 	{
 		if (sgm != null) 
-			return SerializationUtils.serialize(sgm.ServerGetSerializableModel());
+		{
+			if(sgm.GetVersion() != version)
+				return SerializationUtils.serialize(sgm.ServerGetSerializableModel());
+			else
+				return "No new model";
+		}
+	
 		return null;
 	}
 
