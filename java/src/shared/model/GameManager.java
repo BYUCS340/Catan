@@ -411,7 +411,7 @@ public class GameManager implements ModelSubject
 				GetPlayer(playerIndex).playerBank.buildRoad();
 			}
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
-			map.PlaceRoad(start,end, color);
+			map.PlaceRoad(start, end, color);
 			victoryPointManager.playerBuiltRoad(playerIndex);
 		}
 		catch (MapException e)

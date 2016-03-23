@@ -1,5 +1,14 @@
 package server.commands.moves;
 
+
+import java.util.logging.Level;
+
+import server.Log;
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
+import shared.model.GameModel;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -10,7 +19,7 @@ import shared.networking.cookie.NetworkCookie;
 public class MovesRollNumberCommand extends MovesCommand 
 {
 	private int roll;
-	
+	private GameModel model;
 	/**
 	 * Creates a command object to handle dice rolls.
 	 * @param playerID The player ID.
@@ -21,12 +30,26 @@ public class MovesRollNumberCommand extends MovesCommand
 	{
 		super(cookie, playerIndex);
 		this.roll = roll;
+		
 	}
 
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
+		try 
+		{
+			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
+			if (sgm.ServerRollNumber(playerIndex, roll))
+			{
+				model = sgm.ServerGetModel();
+				return true;
+			}
+		}
+		catch (GameException e) 
+		{ //game not found
+			e.printStackTrace();
+			Log.GetLog().log(Level.SEVERE, "Exception while rolling " + e.getMessage());
+		}
 		return false;
 	}
 
@@ -40,8 +63,10 @@ public class MovesRollNumberCommand extends MovesCommand
 	@Override
 	public String GetResponse() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if (model != null)
+			return SerializationUtils.serialize(model);
+		else 
+			return "Unable to Roll";
 	}
 
 	@Override

@@ -382,7 +382,6 @@ public class GSONServerProxy implements ServerProxy
 
 		String result = doJSONPost(urlPath, postData, false, false);
 		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
-		
 		return ret;
 	}
 
@@ -835,18 +834,26 @@ public class GSONServerProxy implements ServerProxy
 				result = sb.toString();
 				
 				//parse the header, if requested
-				if(getUserCookie){
+				if(getUserCookie)
+				{
 					String uCookie = connection.getHeaderField("Set-cookie");
-					JSONObject obj = new JSONObject(URLDecoder.decode(uCookie));
+					int toRemove = uCookie.indexOf(';');
+					uCookie = uCookie.substring(0, toRemove);
+					
+					JSONObject obj = new JSONObject(uCookie);
 					String tempUsername = obj.getString("name");
 					String tempPassword = obj.getString("password");
 					int tempPlayerID = obj.getInt("playerID");
 					
 					userCookie = new UserCookie(uCookie, tempUsername, tempPassword, tempPlayerID);					
 				}
-				else if(getGameCookie){
+				else if(getGameCookie)
+				{
 					String gCookie = connection.getHeaderField("Set-cookie");
-					JSONObject obj = new JSONObject(URLDecoder.decode(gCookie));
+					int toRemove = gCookie.indexOf(';');
+					gCookie = gCookie.substring(0, toRemove);
+					
+					JSONObject obj = new JSONObject(gCookie);
 					gameID = obj.getInt("gameID");
 					userCookie.setCookie(gCookie);
 				}
@@ -870,6 +877,7 @@ public class GSONServerProxy implements ServerProxy
 			
 		} catch (IOException e)
 		{
+			System.out.println(e.getMessage());
 			throw new ServerProxyException("IOException thrown in client.networking.GSONServerProxy.doJSONPost\n"
 					+e.getStackTrace());
 		} catch (JSONException e)
