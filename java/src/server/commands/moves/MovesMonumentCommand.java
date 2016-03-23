@@ -1,6 +1,9 @@
 package server.commands.moves;
 
 import shared.networking.cookie.NetworkCookie;
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
 
 /**
  * Command class that handles playing of monument card.
