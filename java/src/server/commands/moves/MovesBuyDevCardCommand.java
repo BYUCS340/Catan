@@ -1,5 +1,9 @@
 package server.commands.moves;
 
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -9,9 +13,11 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesBuyDevCardCommand extends MovesCommand 
 {
+	private ServerGameManager sgm;
+
 	/**
 	 * Creates a command object that buys a Dev card.
-	 * @param playerID The player ID.
+	 * @param cookie The player ID/game ID
 	 * @param playerIndex The player index.
 	 */
 	public MovesBuyDevCardCommand(NetworkCookie cookie, int playerIndex) 
@@ -22,7 +28,15 @@ public class MovesBuyDevCardCommand extends MovesCommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
+		try
+		{
+			sgm = GameArcade.games().GetGame(gameID);
+			return sgm.ServerBuyDevCard(this.playerID);
+		}
+		catch (GameException e)
+		{ //game not found
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -37,6 +51,8 @@ public class MovesBuyDevCardCommand extends MovesCommand
 	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
+		if (sgm != null)
+			return SerializationUtils.serialize(sgm.ServerGetSerializableModel());
 		return null;
 	}
 

@@ -1,6 +1,10 @@
 package server.commands.moves;
 
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
 import shared.definitions.ResourceType;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -10,13 +14,14 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesMaritimeTradeCommand extends MovesCommand 
 {
+	private ServerGameManager sgm;
 	private int ratio;
 	private ResourceType input;
 	private ResourceType output;
 	
 	/**
 	 * Creates a command to perform a maritime trade.
-	 * @param playerID The player ID.
+	 * @param cookie The player ID/game ID
 	 * @param playerIndex The player index.
 	 * @param ratio The ratio of the trade (4:1, 3:1, 2:1).
 	 * @param input The input (what is being turned in by the player).
@@ -33,7 +38,15 @@ public class MovesMaritimeTradeCommand extends MovesCommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
+		try
+		{
+			sgm = GameArcade.games().GetGame(gameID);
+			return sgm.ServerMaritimeTrading(this.playerIndex, this.ratio, this.input, this.output);
+		}
+		catch (GameException e)
+		{ //game not found
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -48,6 +61,8 @@ public class MovesMaritimeTradeCommand extends MovesCommand
 	public String GetResponse() 
 	{
 		// TODO Auto-generated method stub
+		if (sgm != null)
+			return SerializationUtils.serialize(sgm.ServerGetSerializableModel());
 		return null;
 	}
 

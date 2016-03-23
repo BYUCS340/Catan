@@ -343,18 +343,37 @@ public class ServerGameManager extends GameManager
 	
 	/**
 	 * 
-	 * @param playerID
+	 * @param playerIndex
 	 * @param p
 	 * @return
 	 */
-	public boolean ServerBuildCity(int playerID, Coordinate p)
+	public boolean ServerBuildCity(int playerIndex, Coordinate p)
 	{
-		return false;
+		if (!this.CanPlayerPlay(playerIndex))
+			return false;
+
+		CatanColor color = this.getPlayerColorByIndex(playerIndex);
+		if (!this.map.CanPlaceCity(p, color))
+			return false;
+
+		try
+		{
+			this.BuildCity(playerIndex, p);
+		}
+		catch (ModelException e)
+		{
+			Log.GetLog().throwing("ServerGameManager", "ServerBuildCity", e);
+			e.printStackTrace();
+			return false;
+		}
+
+		this.updateVersion();
+		return true;
 	}
 	
 	/**
 	 * 
-	 * @param playerID
+	 * @param playerIndex
 	 * @param p
 	 * @return
 	 */
@@ -389,14 +408,33 @@ public class ServerGameManager extends GameManager
 	
 	/**
 	 * 
-	 * @param playerID
-	 * @param playerIndexTo
+	 * @param playerIndexOffering
+	 * @param playerIndexReceiving
 	 * @param resourceList
 	 * @return
 	 */
-	public boolean ServerOfferTrade(int playerID, int playerIndexTo, List<Integer> resourceList )
+	public boolean ServerOfferTrade(int playerIndexOffering, int playerIndexReceiving, List<Integer> resourceList )
 	{
-		return false;
+		if (!this.CanPlayerPlay(playerIndexOffering))
+			return false;
+
+		if(!this.CanOfferTrade(playerIndexOffering))
+			return false;
+
+
+//		//  offer trade
+//		try{
+//
+//
+//
+//
+//		}catch (ModelException e){
+//			Log.GetLog().throwing("ServerGameManager", "ServerOfferTrade", e);
+//			e.printStackTrace();
+//			return false;
+//		}
+
+		return true;
 	}
 	
 	/**
@@ -412,42 +450,117 @@ public class ServerGameManager extends GameManager
 	
 	/**
 	 * 
-	 * @param playerID
-	 * @param in
-	 * @param out
+	 * @param playerIndex
+	 * @param ratio
+	 * @param input
+	 * @param output
 	 * @return
 	 */
-	public boolean ServerMaritimeTrading(int playerID, ResourceType in, ResourceType out)
+	public boolean ServerMaritimeTrading(int playerIndex, int ratio, ResourceType input, ResourceType output)
 	{
-		return false;
+		if (!this.CanPlayerPlay(playerIndex))
+			return false;
+
+		if(!this.CanMaritimeTrade(playerIndex))
+			return false;
+
+
+
+		Player pGiver = players.get(playerIndex);
+		Bank bGame = this.gameBank;
+		Bank bPlayer = pGiver.playerBank;
+
+		//  exchange resources at ratio rate between player and the bank
+		try{
+			bPlayer.getResource(input, ratio);
+			bGame.getResource(output, 1);
+
+			bPlayer.giveResource(output, 1);
+			bGame.giveResource(input, ratio);
+
+		}catch (ModelException e){
+			Log.GetLog().throwing("ServerGameManager", "ServerMaritimeTrading", e);
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
 	}
 	
 	/**
 	 * 
-	 * @param playerID
+	 * @param playerIndex
 	 * @param resourceList
 	 * @return
 	 */
-	public boolean ServerDiscardCards(int playerID, List<Integer> resourceList)
+	public boolean ServerDiscardCards(int playerIndex, List<Integer> resourceList)
 	{
-		return false;
+
+		if(!this.CanDiscardCards(playerIndex, ResourceType.BRICK, resourceList.get(0)) ||
+				!this.CanDiscardCards(playerIndex, ResourceType.ORE, resourceList.get(1)) ||
+				!this.CanDiscardCards(playerIndex, ResourceType.SHEEP, resourceList.get(2)) ||
+				!this.CanDiscardCards(playerIndex, ResourceType.WHEAT, resourceList.get(3)) ||
+				!this.CanDiscardCards(playerIndex, ResourceType.WOOD, resourceList.get(4)))
+			return false;
+
+		Player pGiver = players.get(playerIndex);
+		Bank bReceiver = this.gameBank;
+		Bank bGiver = pGiver.playerBank;
+
+		//  take the specified resource from the player at playerIndex
+		try{
+			bGiver.getResource(ResourceType.BRICK, resourceList.get(0));
+			bGiver.getResource(ResourceType.ORE, resourceList.get(1));
+			bGiver.getResource(ResourceType.SHEEP, resourceList.get(2));
+			bGiver.getResource(ResourceType.WHEAT, resourceList.get(3));
+			bGiver.getResource(ResourceType.WOOD, resourceList.get(4));
+
+		}catch (ModelException e){
+			Log.GetLog().throwing("ServerGameManager", "ServerDiscardCards-GettingResources", e);
+			e.printStackTrace();
+			return false;
+		}
+
+		//give the resource to the game bank
+		try
+		{
+			bReceiver.giveResource(ResourceType.BRICK, resourceList.get(0));
+			bReceiver.giveResource(ResourceType.ORE, resourceList.get(1));
+			bReceiver.giveResource(ResourceType.SHEEP, resourceList.get(2));
+			bReceiver.giveResource(ResourceType.WHEAT, resourceList.get(3));
+			bReceiver.giveResource(ResourceType.WOOD, resourceList.get(4));
+		}
+		catch(ModelException e)
+		{
+			Log.GetLog().throwing("ServerGameManager", "ServerDiscardCards-GivingingResourcesToGameBank", e);
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
 	}
-	
+
+	/**
+	 *
+	 * @param receiver
+	 * @param giver
+     * @return
+     */
 	private ResourceType takeRandomResourceCard(int receiver, int giver)
 	{
 		Player pReceiver = players.get(receiver);
 		Player pGiver = players.get(giver);
 		Bank bReceiver = pReceiver.playerBank;
 		Bank bGiver = pGiver.playerBank;
-		
+
 		ResourceType rGiven = bGiver.giveRandomResource();
-		
+
 		//if the giver can't give a resource, return null
 		if(rGiven == null)
 		{
 			return null;
 		}
-		
+
 		//give the resource to the robbing player
 		try
 		{
@@ -458,8 +571,8 @@ public class ServerGameManager extends GameManager
 			e.printStackTrace();
 			return null;
 		}
-		
-		return rGiven;		
+
+		return rGiven;
 	}
 	
 	
