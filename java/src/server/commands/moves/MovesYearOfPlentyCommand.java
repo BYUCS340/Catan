@@ -28,9 +28,17 @@ public class MovesYearOfPlentyCommand extends MovesCommand
 	}
 
 	@Override
-	public boolean Execute() 
+	public boolean Execute()
 	{
-		// TODO Auto-generated method stub
+		try
+		{
+			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
+			return sgm.ServerYearOfPlenty(playerID, resource1, resource2);
+		}
+		catch (GameException e)
+		{ //game not found
+			e.printStackTrace();
+		}
 		return false;
 	}
 
