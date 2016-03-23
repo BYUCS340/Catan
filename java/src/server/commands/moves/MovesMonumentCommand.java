@@ -20,17 +20,9 @@ public class MovesMonumentCommand extends MovesCommand
 	}
 
 	@Override
-	public boolean Execute()
+	public boolean Execute() 
 	{
-		try
-		{
-			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
-			return sgm.ServerMonument(playerID);
-		}
-		catch (GameException e)
-		{ //game not found
-			e.printStackTrace();
-		}
+		// TODO Auto-generated method stub
 		return false;
 	}
 

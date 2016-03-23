@@ -25,17 +25,9 @@ public class MovesMonopolyCommand extends MovesCommand
 	}
 
 	@Override
-	public boolean Execute()
+	public boolean Execute() 
 	{
-		try
-		{
-			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
-			return sgm.ServerMonopoly(playerID, this.resource);
-		}
-		catch (GameException e)
-		{ //game not found
-			e.printStackTrace();
-		}
+		// TODO Auto-generated method stub
 		return false;
 	}
 
