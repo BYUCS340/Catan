@@ -35,9 +35,17 @@ public class MovesRoadBuildingCommand extends MovesCommand
 	}
 
 	@Override
-	public boolean Execute() 
+	public boolean Execute()
 	{
-		// TODO Auto-generated method stub
+		try
+		{
+			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
+			return sgm.ServerRoadBuilding(playerID, start1, end1, start2, end2);
+		}
+		catch (GameException e)
+		{ //game not found
+			e.printStackTrace();
+		}
 		return false;
 	}
 
