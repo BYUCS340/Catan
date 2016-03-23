@@ -1,5 +1,6 @@
 package server.commands.user;
 
+import server.Log;
 import server.commands.ICommand;
 import server.model.GameArcade;
 import server.model.GameException;
@@ -28,12 +29,13 @@ public class UserLoginCommand implements ICommand
 	{
 		this.username = username;
 		this.password = password;
-		this.response = null;
+		this.response = "FAIL";
 	}
 
 	@Override
 	public boolean Execute() 
 	{
+		Log.GetLog().finest("Login with "+username+"/"+password);
 		try 
 		{
 			playerID = GameArcade.games().Login(username, password);

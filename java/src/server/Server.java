@@ -2,11 +2,12 @@ package server;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.logging.*;
+import java.util.logging.Level;
 
-import com.sun.net.httpserver.*;
+import com.sun.net.httpserver.HttpServer;
 
 import server.swagger.SwaggerHandlers;
 
@@ -65,6 +66,8 @@ public class Server
 	{	
 		try 
 		{
+			
+			
 			Level defaultLevel = Level.FINE;
 			
 			Log.GetLog().log(defaultLevel, "Starting server");
@@ -74,6 +77,18 @@ public class Server
 			server.createContext("/docs/api/data", new SwaggerHandlers.JSONAppender());
 			server.createContext("/docs/api/view", new SwaggerHandlers.BasicFile());
 			SwaggerHandlers.SetRootPath(SwaggerPath);
+			
+			
+			//actually throw exceptions instead of silently dying
+			Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler(){
+
+				@Override
+				public void uncaughtException(Thread arg0, Throwable arg1)
+				{
+					Log.GetLog().log(Level.SEVERE, arg1.getMessage(), arg1);
+				}
+				
+			});
 			
 			server.start();
 			
