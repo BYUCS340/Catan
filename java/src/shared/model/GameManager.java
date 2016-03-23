@@ -389,7 +389,7 @@ public class GameManager
 				GetPlayer(playerIndex).playerBank.buildRoad();
 			}
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
-			map.PlaceRoad(start,end, color);
+			map.PlaceRoad(start, end, color);
 			victoryPointManager.playerBuiltRoad(playerIndex);
 			log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" built a road ");
 		}

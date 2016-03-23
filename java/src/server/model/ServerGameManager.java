@@ -271,21 +271,163 @@ public class ServerGameManager extends GameManager
 	 */
 	public boolean ServerYearOfPlenty(int playerID, ResourceType res1, ResourceType res2)
 	{
-		return false;
+		int playerIndex = this.GetPlayerIndexByID(playerID);
+		if (!this.CanPlayerPlay(playerIndex))
+			return false;
+		
+		if (!this.CanPlayDevCard(playerID, DevCardType.YEAR_OF_PLENTY))
+			return false;
+		
+		try
+		{
+			//take resources from gameBank
+			if (res1 == res2 && gameBank.getResourceCount(res1) > 1)
+			{
+				gameBank.getResource(res1);
+				gameBank.getResource(res2);
+			}
+			else if (gameBank.getResourceCount(res1) > 0 && gameBank.getResourceCount(res2) > 0)
+			{
+				gameBank.getResource(res1);
+				gameBank.getResource(res2);
+			}
+			else
+			{
+				return false;
+			}
+			
+			//give resources to player
+			players.get(playerIndex).playerBank.giveResource(res1);
+			players.get(playerIndex).playerBank.giveResource(res2);
+			
+			//remove dev card from player
+			this.playDevCard(playerID, DevCardType.YEAR_OF_PLENTY);
+		}
+		catch (ModelException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		
+		this.updateVersion();
+		return true;
 	}
 	
+	/**
+	 * @param playerID
+	 * @param res1
+	 * @return
+	 */
+	public boolean ServerMonopoly(int playerID, ResourceType res1)
+	{
+		int playerIndex = this.GetPlayerIndexByID(playerID);
+		if (!this.CanPlayerPlay(playerIndex))
+			return false;
+		
+		if (!this.CanPlayDevCard(playerID, DevCardType.MONOPOLY))
+			return false;
+		
+		try
+		{
+			//take all cards of type res1 from other players
+			int totalResourceCount = 0;
+			for (int i = 0; i < players.size(); i++)
+			{
+				if (i != playerIndex)
+				{
+					totalResourceCount += players.get(i).getResource(res1, players.get(i).getResourceCount(res1));
+				}
+			}
+			
+			//give cards taken to current player
+			players.get(playerIndex).giveResource(res1, totalResourceCount);
+			
+			//remove dev card from player
+			this.playDevCard(playerID, DevCardType.MONOPOLY);
+		}
+		catch (ModelException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		
+		this.updateVersion();
+		return true;
+	}
 	
+	/**
+	 * @param playerID
+	 * @return
+	 */
+	public boolean ServerMonument(int playerID)
+	{
+		int playerIndex = this.GetPlayerIndexByID(playerID);
+		if (!this.CanPlayerPlay(playerIndex)) 
+			return false;
+		
+		if (!this.CanPlayDevCard(playerID, DevCardType.MONUMENT))
+			return false;
+		
+		try 
+		{
+			//give victory point to player
+			this.victoryPointManager.adjustPlayerPoints(playerIndex, 1);
+			
+			//remove dev card from player
+			this.playDevCard(playerID, DevCardType.MONUMENT);
+		}
+		catch (ModelException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		
+		this.updateVersion();
+		return true;
+	}
 
 	/**
 	 * 
 	 * @param playerID
-	 * @param p1
-	 * @param p2
+	 * @param start1
+	 * @param end1
+	 * @param start2
+	 * @param end2
 	 * @return
 	 */
-	public boolean ServerRoadBuilding(int playerID, Coordinate p1, Coordinate p2)
+	public boolean ServerRoadBuilding(int playerID, Coordinate start1, Coordinate end1, Coordinate start2, Coordinate end2)
 	{
-		return false;
+		int playerIndex = this.GetPlayerIndexByID(playerID);
+		if (!this.CanPlayerPlay(playerIndex)) 
+			return false;
+		
+		if (!this.CanPlayDevCard(playerID, DevCardType.ROAD_BUILD))
+			return false;
+		
+		CatanColor color = this.getPlayerColorByIndex(playerIndex);
+		this.map.SetupPhase(free);
+		
+		if (!this.map.CanPlaceRoad(start1, end1, color) || !this.map.CanPlaceRoad(start2, end2, color))
+			return false;
+		
+		try 
+		{
+			//build the roads
+			this.BuildRoad(playerIndex, start1, end1, free);
+			this.BuildRoad(playerIndex, start2, end2, free);
+			this.victoryPointManager.playerBuiltRoad(playerIndex);
+			
+			//remove dev card from player
+			this.playDevCard(playerID, DevCardType.ROAD_BUILD);
+		}
+		catch (ModelException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		
+		this.updateVersion();
+		return true;
 	}
 	
 	/**
