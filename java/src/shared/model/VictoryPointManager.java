@@ -76,6 +76,11 @@ public class VictoryPointManager implements Serializable
 		victoryPoints[playerID] += points;
 	}
 	
+	public void playedMonument(int playerIndex)
+	{
+		this.adjustPlayersPoints(playerIndex, 1);
+	}
+	
 	/**
 	 * Tells the victory point manager which player now has the longest road- determined by map?
 	 * @param playerIndex 0 to 3
