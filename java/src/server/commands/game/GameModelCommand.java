@@ -61,11 +61,11 @@ public class GameModelCommand extends CookieCommand
 			if(sgm.GetVersion() != version)
 				return SerializationUtils.serialize(sgm.ServerGetSerializableModel());
 			else
-				Logger.getLogger("CatanServer").log(Level.INFO, "No new model detected. Current version: " + sgm.GetVersion() + " client version: " + version);
+				//Logger.getLogger("CatanServer").log(Level.INFO, "No new model detected. Current version: " + sgm.GetVersion() + " client version: " + version);
 				return "No new model";
 		}
 	
-		return null;
+		return "No Model";
 	}
 
 	@Override

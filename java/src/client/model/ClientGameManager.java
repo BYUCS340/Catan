@@ -25,6 +25,9 @@ import shared.model.GameManager;
 import shared.model.GameModel;
 import shared.model.GameState;
 import shared.model.ModelException;
+import shared.model.ModelObserver;
+import shared.model.ModelSubject;
+import shared.model.NotificationCenter;
 import shared.model.OfferedTrade;
 import shared.model.Player;
 import shared.model.VictoryPointManager;
@@ -35,7 +38,7 @@ import shared.model.map.model.MapModel;
 import shared.model.map.model.UnmodifiableMapModel;
 import shared.networking.transport.NetResourceList;
 
-public class ClientGameManager extends GameManager
+public class ClientGameManager extends GameManager implements ModelSubject
 {
 	private ServerProxy proxy;
 	private int myPlayerIndex = -1;
@@ -50,6 +53,7 @@ public class ClientGameManager extends GameManager
 	private PieceType lastSelectedPiece = null;
 	private Coordinate lastRoadBuiltStart = null;
 	private Coordinate lastRoadBuiltEnd = null;
+	protected NotificationCenter notifyCenter;
 	/**
 	 * Creates the client game manager with the proxy
 	 * @param clientProxy
@@ -58,6 +62,8 @@ public class ClientGameManager extends GameManager
 	{
 		super();
 		this.proxy = clientProxy;
+		notifyCenter = new NotificationCenter();
+		
 		turnState = TurnState.WAITING_FOR_PLAYERS;
 	}
 
@@ -72,6 +78,36 @@ public class ClientGameManager extends GameManager
 		this.myPlayerIndex = myPlayerIndex;
 	}
 
+	
+
+	//========================================================================================
+	//Notification Center
+
+	/**
+	 * Starts listening to all changes 
+	 */
+	public boolean startListening(ModelObserver listener)
+	{
+		notifyCenter.add(listener);
+		return true;
+	}
+	/**
+	 * starts listening for a specific type of change
+	 */
+	public boolean startListening(ModelObserver listener, ModelNotification type)
+	{
+		notifyCenter.add(listener,type);
+		return true;
+	}
+	
+	/**
+	 * Stops listening on a model observer
+	 */
+	public boolean stopListening(ModelObserver listener)
+	{
+		notifyCenter.remove(listener);
+		return true;
+	}
 
 	/**
 	 * Get the Index of the current player client
@@ -676,6 +712,7 @@ public class ClientGameManager extends GameManager
 		super.PlayerChat(myPlayerIndex, message);
 		try
 		{
+			notifyCenter.notify(ModelNotification.CHAT);
 			GameModel newModel = proxy.sendChat(message);
 			this.reloadGame(newModel, true);
 		}
@@ -1098,7 +1135,7 @@ public class ClientGameManager extends GameManager
 		catch (ServerProxyException e) 
 		{
 			System.err.println("Wasn't able to update");
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw new ModelException("Server proxy wasn't able to update");
 		}
 		this.refreshCount++;
