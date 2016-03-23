@@ -65,7 +65,7 @@ public class Poller implements ActionListener
 		catch (ModelException e)
 		{
 			System.err.println("Unable to poll server");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 }

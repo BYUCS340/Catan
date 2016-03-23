@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import server.commands.CommandFactory;
 import server.commands.ICommand;
@@ -23,6 +24,7 @@ import shared.networking.parameter.PBuildRoad;
 import shared.networking.parameter.PBuildSettlement;
 import shared.networking.parameter.PDiscardCards;
 import shared.networking.parameter.PGetModel;
+import shared.networking.parameter.PRollDice;
 
 public abstract class Personality 
 {
@@ -89,6 +91,33 @@ public abstract class Personality
 		NetworkCookie cookie = GetCookie(username, id, game);
 		
 		return CommandExecutor(param, cookie, GameModel.class);
+	}
+	
+	/**
+	 * Rolls the dice at a specific number
+	 * @param game the game ID
+	 * @param roll
+	 * @return the new model of the game
+	 */
+	protected GameModel RollDice(int game, int roll){
+		StringBuilder param = new StringBuilder("MOVES/ROLLNUMBER");
+		NetworkCookie cookie = GetCookie(username, id, game);
+		PRollDice myroll = new PRollDice(roll);
+		String object = SerializationUtils.serialize(myroll);
+		
+		return CommandExecutor(param, cookie, object, GameModel.class);
+	}
+	
+	
+	/**
+	 * Rolls the dice with a random number (2-12)
+	 * @param game the game ID
+	 * @return the model of the game
+	 */
+	protected GameModel RollDice(int game){
+		Random randomGen = new Random();
+		int diceRoll = randomGen.nextInt(5) + randomGen.nextInt(5) + 2;
+		return RollDice(game,diceRoll);
 	}
 	
 	protected void Discard(int game, List<Integer> resourceList)

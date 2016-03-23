@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import shared.definitions.GameRound;
 import shared.definitions.ResourceType;
 import shared.model.Bank;
 import shared.model.GameModel;
@@ -27,7 +28,22 @@ public class BeginnerPersonality extends Personality
 		if (model.gameState.IsSetup())
 			Setup(model);
 		else
+		{
+			if (model.gameState.state == GameRound.ROLLING){
+				model = this.RollDice(gameID);
+			}
+			//If we roll a 7
+			if (model.gameState.state == GameRound.DISCARDING){
+				//Discard our cards
+			}
+			//Check if we are robbing
+			if (model.gameState.state == GameRound.ROBBING){
+				//TODO: move the robber
+			}
+			
 			Play(model);
+		}
+		
 		
 		FinishTurn(gameID);
 	}
@@ -98,10 +114,13 @@ public class BeginnerPersonality extends Personality
 		Coordinate endVertex = availableRoadEnd.get(road).getPoint();
 		model = BuildRoad(gameID, mainVertex, endVertex, free);
 	}
+	
+	
 
 	@Override
 	protected void Play(GameModel model) 
 	{
+		
 		Bank bank = GetBank(model);
 		
 		if (bank.canBuildCity())
