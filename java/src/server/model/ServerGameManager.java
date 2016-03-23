@@ -130,16 +130,13 @@ public class ServerGameManager extends GameManager
 	 * @param location the new location of the robber
 	 * @return true if successful, false if not
 	 */
-	public boolean ServerRobPlayer(int playerID, int victimIndex, Coordinate location)
+	public boolean ServerRobPlayer(int playerIndex, int victimIndex, Coordinate location)
 	{
-		int playerIndex = this.GetPlayerIndexByID(playerID);
-		
 		if (gameState.state != GameRound.ROBBING) 
 			return false;
 		
 		//Check if it's this player's turn
-		int currentPlayer = this.GetPlayerIndexByID(playerID);
-		if (super.CurrentPlayersTurn() != currentPlayer) 
+		if (super.CurrentPlayersTurn() != playerIndex) 
 			return false;
 		
 		if (!this.map.CanPlaceRobber(location))
@@ -173,10 +170,14 @@ public class ServerGameManager extends GameManager
 		}
 		
 		ResourceType takenResource = this.takeRandomResourceCard(playerIndex, victimIndex);
-		Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex + " took a "
+		if (takenResource != null)
+			Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex + " took a "
 				+ takenResource.toString() + " from Player " + victimIndex);
+		else
+			Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex + " tried to take"
+				+ " a card from Player " + victimIndex);
 		
-		return true;
+		return gameState.stopRobbing();
 	}
 	
 	/**
@@ -435,6 +436,9 @@ public class ServerGameManager extends GameManager
 	
 	private ResourceType takeRandomResourceCard(int receiver, int giver)
 	{
+		if (giver == -1)
+			return null;
+		
 		Player pReceiver = players.get(receiver);
 		Player pGiver = players.get(giver);
 		Bank bReceiver = pReceiver.playerBank;

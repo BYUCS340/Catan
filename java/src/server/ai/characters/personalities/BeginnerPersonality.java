@@ -1,16 +1,22 @@
 package server.ai.characters.personalities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
+import server.Log;
+import shared.definitions.CatanColor;
 import shared.definitions.GameRound;
+import shared.definitions.HexType;
 import shared.definitions.ResourceType;
 import shared.model.Bank;
 import shared.model.GameModel;
 import shared.model.map.Coordinate;
 import shared.model.map.objects.Edge;
+import shared.model.map.objects.Hex;
 import shared.model.map.objects.Vertex;
 
 public class BeginnerPersonality extends Personality 
@@ -23,27 +29,42 @@ public class BeginnerPersonality extends Personality
 	@Override
 	public void TakeTurn(int gameID)
 	{
-		GameModel model = GetModel(gameID);
-		
-		if (model.gameState.IsSetup())
-			Setup(model);
-		else
+		try
 		{
-			if (model.gameState.state == GameRound.ROLLING){
-				model = this.RollDice(gameID);
-			}
-			//If we roll a 7
-			if (model.gameState.state == GameRound.DISCARDING){
-				//Discard our cards
-			}
-			//Check if we are robbing
-			if (model.gameState.state == GameRound.ROBBING){
-				//TODO: move the robber
-			}
+			GameModel model = GetModel(gameID);
 			
-			Play(model);
+			if (model.gameState.IsSetup())
+				Setup(model);
+			else
+			{
+				if (model.gameState.state == GameRound.ROLLING)
+					model = this.RollDice(gameID);
+				
+				//If we roll a 7
+				if (model.gameState.state == GameRound.DISCARDING)
+				{
+					//Discard if necessary.
+					Discard(gameID);
+					
+					do
+					{
+						Thread.sleep(3000);
+						model = GetModel(gameID);
+					} while (model.gameState.state == GameRound.DISCARDING);
+				}
+				
+				//Check if we are robbing
+				if (model.gameState.state == GameRound.ROBBING)
+					Rob(model);
+				else
+					Play(model);
+			}
 		}
-		
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+			Log.GetLog().throwing("BeginnerPersonality", "TakeTurn", e);
+		}
 		
 		FinishTurn(gameID);
 	}
@@ -177,5 +198,54 @@ public class BeginnerPersonality extends Personality
 	{
 		while (GetBank(model).canBuyDevCard())
 			BuyDevCard(model.gameID);
+	}
+	
+	private void Rob(GameModel model)
+	{
+		Hex current = model.mapModel.GetRobberLocation();
+		
+		Iterator<Hex> hexes = model.mapModel.GetHexes();
+		
+		List<Hex> options = new ArrayList<Hex>();
+		while (hexes.hasNext())
+		{
+			Hex hex = hexes.next();
+			
+			if (hex.getType() == HexType.WATER || hex.equals(current))
+				continue;
+			
+			options.add(hex);
+		}
+		
+		Random random = new Random();
+		int selected = random.nextInt(options.size());
+		
+		Hex robber = options.get(selected);
+		
+		CatanColor aiColor = GetColor(model);
+		Set<Integer> robOptions = new HashSet<Integer>();
+		Iterator<CatanColor> colors = model.mapModel.GetOccupiedVertices(robber.getPoint());
+		while (colors.hasNext())
+		{
+			CatanColor color = colors.next();
+			
+			if (color == aiColor)
+				continue;
+			
+			int index = GetIndexByColor(model, color);
+			
+			robOptions.add(index);
+		}
+		
+		int toRob = -1;
+		if (robOptions.size() > 0)
+		{
+			selected = random.nextInt(robOptions.size());
+			Integer[] pickToRob = robOptions.toArray(new Integer[0]);
+			
+			toRob = pickToRob[selected];
+		}
+		
+		Rob(model.gameID, toRob, robber.getPoint());
 	}
 }
