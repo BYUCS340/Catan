@@ -92,11 +92,6 @@ public class ServerGameManager extends GameManager
 		{
 			super.PlayerChat(playerIndex, message);
 			this.updateVersion();
-			for (Player p: this.players)
-			{
-				if (p.isARobot() && playerIndex != p.playerIndex()) 
-					AIHandler.GetHandler().Chat(p.playerID(), this.gameID, message);
-			}
 			return true;
 		}
 		return false;
@@ -212,23 +207,6 @@ public class ServerGameManager extends GameManager
 				}
 			}
 			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Checks if a player is a robot
-	 * @param index
-	 * @return
-	 */
-	private boolean IsPlayerRobot(int index)
-	{
-		for (Player player : this.players)
-		{
-			if (player.playerIndex() == index && player.isARobot())
-			{
-				return true;
-			}
 		}
 		return false;
 	}

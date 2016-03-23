@@ -25,7 +25,7 @@ import shared.model.chat.ChatBox;
  * @author matthewcarlson, garrettegan
  *
  */
-public class GameManager
+public class GameManager implements ModelSubject
 {
 	protected int gameID;
 	protected String gameTitle;
@@ -39,7 +39,7 @@ public class GameManager
 	protected int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;
-	
+	protected NotificationCenter notifyCenter;
 	
 	
 	/**
@@ -68,6 +68,7 @@ public class GameManager
 		gameBank = new Bank();
 		gameState = new GameState();
 		victoryPointManager = new VictoryPointManager();
+		notifyCenter = new NotificationCenter();
 		playerColors = new int[10];
 		//fill the array with -1 by default
 		Arrays.fill(playerColors,-1);
@@ -100,6 +101,34 @@ public class GameManager
 	}
 	
 	
+	//========================================================================================
+	//Notification Center
+
+	/**
+	 * Starts listening to all changes 
+	 */
+	public boolean startListening(ModelObserver listener)
+	{
+		notifyCenter.add(listener);
+		return true;
+	}
+	/**
+	 * starts listening for a specific type of change
+	 */
+	public boolean startListening(ModelObserver listener, ModelNotification type)
+	{
+		notifyCenter.add(listener,type);
+		return true;
+	}
+	
+	/**
+	 * Stops listening on a model observer
+	 */
+	public boolean stopListening(ModelObserver listener)
+	{
+		notifyCenter.remove(listener);
+		return true;
+	}
 	
 	/**
 	 * Adds a players to the game
@@ -112,7 +141,6 @@ public class GameManager
 	 */
 	public int AddPlayer(String name, CatanColor color, boolean isHuman, int playerID) throws ModelException
 	{
-		System.out.println("Adding player to game");
 		//check if that color has already been used
 		if (playerColors[color.ordinal()] != -1)
 			throw new ModelException();
@@ -123,7 +151,6 @@ public class GameManager
 			throw new ModelException("Too many players already to add another");
 		}
 		Player newPlayer = new Player(name, newIndex, color, isHuman, playerID);
-		newPlayer.playerBank.resetToPlayerDefaults();
 		players.add(newPlayer);
 		
 		playerColors[color.ordinal()] = newIndex;
@@ -332,7 +359,7 @@ public class GameManager
 		{
 			if (!gameState.stopRolling()) throw new ModelException("Unable to stop rolling after a non 7");
 		}
-		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" rolled a "+diceRoll);
+		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+"rolled a "+diceRoll);
 		
 		//Call map to update the get the transactions
 		Iterator<Transaction> transList = map.GetTransactions(diceRoll);
@@ -466,7 +493,6 @@ public class GameManager
 		DevCardType devcard = gameBank.getDevCard();
 		playerBank.giveDevCard(devcard);
 		victoryPointManager.playerGotDevCard(playerIndex, devcard);
-		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" bought a Dev card.");
 		return devcard;
 	}
 	
@@ -485,7 +511,7 @@ public class GameManager
 			
 		}
 		players.get(playerIndex).playerBank.getDevCard(type);
-		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" played a "+type.toString()+" card");
+		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" bought a dev card");
 	}
 	
 	/**
@@ -964,6 +990,7 @@ public class GameManager
 	public void PlayerChat(int playerIndex, String message)
 	{
 		waterCooler.put(message, playerIndex);
+		notifyCenter.notify(ModelNotification.CHAT);
 	}
 	
 	//--------------------------------------------------------------------------

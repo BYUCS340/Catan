@@ -26,7 +26,6 @@ import shared.networking.parameter.PDiscardCards;
 import shared.networking.parameter.PGetModel;
 import shared.networking.parameter.PRobPlayer;
 import shared.networking.parameter.PRollDice;
-import shared.networking.parameter.PSendChat;
 
 public abstract class Personality 
 {
@@ -133,23 +132,6 @@ public abstract class Personality
 		NetworkCookie cookie = GetCookie(username, id, game);
 		
 		return CommandExecutor(param, cookie, GameModel.class);
-	}
-	
-	/**
-	 * Sends a chat 
-	 * @param game
-	 * @param message
-	 * @return the game model
-	 */
-	protected GameModel SendChat(int game, String message)
-	{
-		StringBuilder param = new StringBuilder("MOVES/SENDCHAT");
-		NetworkCookie cookie = GetCookie(username, id, game);
-		
-		PSendChat bottle = new PSendChat(message);
-		String object = SerializationUtils.serialize(bottle);
-		
-		return CommandExecutor(param, cookie, object, GameModel.class);
 	}
 	
 	protected void Discard(int game, List<Integer> resourceList)
