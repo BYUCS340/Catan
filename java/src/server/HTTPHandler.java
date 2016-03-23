@@ -51,8 +51,15 @@ public class HTTPHandler implements HttpHandler
 		Headers headers = exchange.getRequestHeaders();
 		if (headers.containsKey("Cookie"))
 		{
-			String jsonCookie = headers.get("Cookie").get(0);
-			cookie = SerializationUtils.deserialize(jsonCookie, NetworkCookie.class);
+			try
+			{
+				String jsonCookie = headers.get("Cookie").get(0);
+				cookie = SerializationUtils.deserialize(jsonCookie, NetworkCookie.class);
+			}
+			catch (Exception e)
+			{
+				SendResponse(exchange, HttpURLConnection.HTTP_NOT_ACCEPTABLE, "Invalid cookie. Try resetting cookie in browser.");
+			}
 		}
 		
 		try 
@@ -75,32 +82,33 @@ public class HTTPHandler implements HttpHandler
 					responseHeaders.set("Content-Type", "text/html");
 				
 				if (cookieHeader != null)
+				{
+					cookieHeader = cookieHeader + ";Path=/;";
 					responseHeaders.set("Set-cookie", cookieHeader);
+				}
 				
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-				OutputStream oStream = exchange.getResponseBody();
-				oStream.write(response.getBytes());
-				oStream.close();
+				SendResponse(exchange, HttpURLConnection.HTTP_OK, response);
 			}
 			else
 			{
 				Log.GetLog().warning("Bad request received");
 				String response = command.GetResponse();
 				
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-				OutputStream oStream = exchange.getResponseBody();
-				oStream.write(response.getBytes());
-				oStream.close();
+				SendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST, response);
 			}
 		}
 		catch (InvalidFactoryParameterException e) 
 		{
 			Log.GetLog().severe("Unable to find needed key");
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, 0);
-			OutputStream oStream = exchange.getResponseBody();
-			oStream.write("Invalid key".getBytes());
-			oStream.close();
+			SendResponse(exchange, HttpURLConnection.HTTP_BAD_METHOD, "Invalid key");
 		} 
 	}
 
+	private void SendResponse(HttpExchange exchange, int responseCode, String responseMessage) throws IOException
+	{
+		exchange.sendResponseHeaders(responseCode, 0);
+		OutputStream oStream = exchange.getResponseBody();
+		oStream.write(responseMessage.getBytes());
+		oStream.close();
+	}
 }
