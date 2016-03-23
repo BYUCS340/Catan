@@ -226,6 +226,11 @@ public class GameManager implements ModelSubject
 		return players.get(playerIndex).name;
 	}
 	
+	public String getCurrentPlayerName()
+	{
+		return this.getPlayerNameByIndex(CurrentPlayersTurn());
+	}
+	
 	/**
 	 * Gets the player index by color
 	 * @param color
@@ -354,7 +359,7 @@ public class GameManager implements ModelSubject
 		{
 			if (!gameState.stopRolling()) throw new ModelException("Unable to stop rolling after a non 7");
 		}
-		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
+		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+"rolled a "+diceRoll);
 		
 		//Call map to update the get the transactions
 		Iterator<Transaction> transList = map.GetTransactions(diceRoll);
@@ -413,6 +418,7 @@ public class GameManager implements ModelSubject
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceRoad(start,end, color);
 			victoryPointManager.playerBuiltRoad(playerIndex);
+			log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" built a road ");
 		}
 		catch (MapException e)
 		{
@@ -439,6 +445,7 @@ public class GameManager implements ModelSubject
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceSettlement(location, color);
 			victoryPointManager.playerBuiltSettlement(playerIndex);
+			log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" built a settlement");
 		}
 		catch (MapException e)
 		{
@@ -464,6 +471,7 @@ public class GameManager implements ModelSubject
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceCity(location,color);
 			victoryPointManager.playerBuiltCity(playerIndex);
+			log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" built a city");
 		}
 		catch (MapException e)
 		{
@@ -503,6 +511,7 @@ public class GameManager implements ModelSubject
 			
 		}
 		players.get(playerIndex).playerBank.getDevCard(type);
+		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" bought a dev card");
 	}
 	
 	/**

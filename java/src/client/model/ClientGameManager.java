@@ -1098,7 +1098,7 @@ public class ClientGameManager extends GameManager
 		catch (ServerProxyException e) 
 		{
 			System.err.println("Wasn't able to update");
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw new ModelException("Server proxy wasn't able to update");
 		}
 		this.refreshCount++;
