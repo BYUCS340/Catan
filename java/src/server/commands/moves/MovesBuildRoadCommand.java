@@ -3,7 +3,9 @@ package server.commands.moves;
 import server.model.GameArcade;
 import server.model.GameException;
 import server.model.ServerGameManager;
+import shared.model.GameModel;
 import shared.model.map.Coordinate;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -16,6 +18,7 @@ public class MovesBuildRoadCommand extends MovesCommand
 	private Coordinate start;
 	private Coordinate end;
 	private boolean free;
+	private GameModel gm;
 	
 	/**
 	 * Creates a command object that builds a road.
@@ -39,7 +42,11 @@ public class MovesBuildRoadCommand extends MovesCommand
 		try 
 		{
 			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
-			return sgm.ServerBuildRoad(playerID, start, end, free);
+			if (sgm.ServerBuildRoad(playerID, start, end, free))
+			{
+				gm = sgm.ServerGetModel();
+				return true;
+			}
 		}
 		catch (GameException e) 
 		{ //game not found
@@ -58,8 +65,9 @@ public class MovesBuildRoadCommand extends MovesCommand
 	@Override
 	public String GetResponse()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if (gm != null) 
+			return SerializationUtils.serialize(gm);
+		return "ERROR";
 	}
 
 	@Override
