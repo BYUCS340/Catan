@@ -2,6 +2,9 @@ package server.commands.moves;
 
 import shared.model.map.Coordinate;
 import shared.networking.cookie.NetworkCookie;
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
 
 /**
  * Command object that handles the road building card.

@@ -2,6 +2,9 @@ package server.commands.moves;
 
 import shared.definitions.ResourceType;
 import shared.networking.cookie.NetworkCookie;
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
 
 /**
  * Command object that allows the playing of the Year of Plenty card.

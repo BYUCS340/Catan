@@ -20,6 +20,7 @@ import shared.model.Player;
 import shared.model.map.Coordinate;
 import shared.model.map.MapException;
 import shared.model.map.model.MapGenerator;
+import shared.model.VictoryPointManager;
 
 /**
  * Special formation of the game manager 
@@ -313,12 +314,13 @@ public class ServerGameManager extends GameManager
 			{
 				if (i != playerIndex)
 				{
-					totalResourceCount += players.get(i).getResource(res1, players.get(i).getResourceCount(res1));
+					totalResourceCount +=
+							players.get(i).playerBank.getResource(res1, players.get(i).playerBank.getResourceCount(res1));
 				}
 			}
 			
 			//give cards taken to current player
-			players.get(playerIndex).giveResource(res1, totalResourceCount);
+			players.get(playerIndex).playerBank.giveResource(res1, totalResourceCount);
 			
 			//remove dev card from player
 			this.playDevCard(playerID, DevCardType.MONOPOLY);
@@ -383,7 +385,6 @@ public class ServerGameManager extends GameManager
 			return false;
 		
 		CatanColor color = this.getPlayerColorByIndex(playerIndex);
-		this.map.SetupPhase(free);
 		
 		if (!this.map.CanPlaceRoad(start1, end1, color) || !this.map.CanPlaceRoad(start2, end2, color))
 			return false;
@@ -391,8 +392,8 @@ public class ServerGameManager extends GameManager
 		try 
 		{
 			//build the roads
-			this.BuildRoad(playerIndex, start1, end1, free);
-			this.BuildRoad(playerIndex, start2, end2, free);
+			this.BuildRoad(playerIndex, start1, end1, true);
+			this.BuildRoad(playerIndex, start2, end2, true);
 			this.victoryPointManager.playerBuiltRoad(playerIndex);
 			
 			//remove dev card from player

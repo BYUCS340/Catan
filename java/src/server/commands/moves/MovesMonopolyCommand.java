@@ -2,6 +2,9 @@ package server.commands.moves;
 
 import shared.definitions.ResourceType;
 import shared.networking.cookie.NetworkCookie;
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
 
 /**
  * Command for handling the monopoly card.
