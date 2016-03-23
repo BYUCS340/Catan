@@ -280,6 +280,7 @@ public class ClientGameManager extends GameManager
 		}
 		catch (ServerProxyException|ModelException e)
 		{
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		return roll;

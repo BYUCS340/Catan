@@ -382,7 +382,6 @@ public class GSONServerProxy implements ServerProxy
 
 		String result = doJSONPost(urlPath, postData, false, false);
 		GameModel ret = SerializationUtils.deserialize(result, GameModel.class);
-		
 		return ret;
 	}
 
@@ -870,6 +869,7 @@ public class GSONServerProxy implements ServerProxy
 			
 		} catch (IOException e)
 		{
+			System.out.println(e.getMessage());
 			throw new ServerProxyException("IOException thrown in client.networking.GSONServerProxy.doJSONPost\n"
 					+e.getStackTrace());
 		} catch (JSONException e)

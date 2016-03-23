@@ -1,5 +1,9 @@
 package server.commands.moves;
 
+
+import java.util.logging.Level;
+
+import server.Log;
 import server.model.GameArcade;
 import server.model.GameException;
 import server.model.ServerGameManager;
@@ -44,6 +48,7 @@ public class MovesRollNumberCommand extends MovesCommand
 		catch (GameException e) 
 		{ //game not found
 			e.printStackTrace();
+			Log.GetLog().log(Level.SEVERE, "Exception while rolling " + e.getMessage());
 		}
 		return false;
 	}

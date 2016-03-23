@@ -42,7 +42,7 @@ public class ServerGameManager extends GameManager
 		this.randomNumbers = randomNumbers;
 		this.randomPorts = randomPorts;
 		this.randomTiles = randomTiles;
-		this.playerIndexLookup = new HashMap<>();
+		this.playerIndexLookup = new HashMap<Integer,Integer>();
 		this.gameID = index;
 		this.map = MapGenerator.GenerateMap(randomTiles, randomNumbers, randomPorts);
 	}
@@ -103,9 +103,9 @@ public class ServerGameManager extends GameManager
 	 * @param number
 	 * @return
 	 */
-	public boolean ServerRollNumber(int playerID, int number)
+	public boolean ServerRollNumber(int playerIndex, int number)
 	{
-		int playerIndex = GetPlayerIndexByID(playerID);
+		Log.GetLog().log(Level.INFO, "Player " + playerIndex + " rolled " +number);
 		if (!super.CanRollNumber(playerIndex)) 
 			return false;
 		
