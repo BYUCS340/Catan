@@ -12,11 +12,7 @@ import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
 import shared.definitions.ResourceType;
-import shared.model.Bank;
-import shared.model.GameManager;
-import shared.model.GameModel;
-import shared.model.ModelException;
-import shared.model.Player;
+import shared.model.*;
 import shared.model.map.Coordinate;
 import shared.model.map.MapException;
 import shared.model.map.model.MapGenerator;
@@ -187,15 +183,12 @@ public class ServerGameManager extends GameManager implements Serializable
 
 		ResourceType takenResource = this.takeRandomResourceCard(playerIndex, victimIndex);
 		if (takenResource != null)
-		{
-			this.LogAction(playerIndex, this.getCurrentPlayerName()+" stole a "+takenResource+" resource from "+this.getPlayerNameByIndex(victimIndex));
 			Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex + " took a "
 				+ takenResource.toString() + " from Player " + victimIndex);
-		}
 		else
 			Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex + " tried to take"
 				+ " a card from Player " + victimIndex);
-		
+
 		return gameState.stopRobbing();
 	}
 
@@ -218,6 +211,7 @@ public class ServerGameManager extends GameManager implements Serializable
 			int current = this.CurrentPlayersTurn();
 			for (Player player : this.players)
 			{
+				player.playerBank.newToOldDevs();
 				if (player.playerIndex() == current && player.isARobot())
 				{
 					int aiID = player.playerID();
@@ -272,6 +266,8 @@ public class ServerGameManager extends GameManager implements Serializable
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		this.updateVersion();
 		return false;
 	}
 
@@ -524,18 +520,37 @@ public class ServerGameManager extends GameManager implements Serializable
 
 	/**
 	 *
-	 * @param playerID
+	 * @param playerIndex
 	 * @param p
 	 * @return
 	 */
-	public boolean ServerBuildCity(int playerID, Coordinate p)
+	public boolean ServerBuildCity(int playerIndex, Coordinate p)
 	{
-		return false;
+		if (!this.CanPlayerPlay(playerIndex))
+			return false;
+
+		CatanColor color = this.getPlayerColorByIndex(playerIndex);
+		if (!this.map.CanPlaceCity(p, color))
+			return false;
+
+		try
+		{
+			this.BuildCity(playerIndex, p);
+		}
+		catch (ModelException e)
+		{
+			Log.GetLog().throwing("ServerGameManager", "ServerBuildCity", e);
+			e.printStackTrace();
+			return false;
+		}
+
+		this.updateVersion();
+		return true;
 	}
 
 	/**
 	 *
-	 * @param playerID
+	 * @param playerIndex
 	 * @param p
 	 * @return
 	 */
@@ -570,56 +585,225 @@ public class ServerGameManager extends GameManager implements Serializable
 
 	/**
 	 *
-	 * @param playerID
-	 * @param playerIndexTo
+	 * @param playerIndexOffering
+	 * @param playerIndexReceiving
 	 * @param resourceList
 	 * @return
 	 */
-	public boolean ServerOfferTrade(int playerID, int playerIndexTo, List<Integer> resourceList )
+	public boolean ServerOfferTrade(int playerIndexOffering, int playerIndexReceiving, List<Integer> resourceList )
 	{
-		return false;
+		if (!this.CanPlayerPlay(playerIndexOffering))
+			return false;
+
+		if(!this.CanOfferTrade(playerIndexOffering))
+			return false;
+
+		System.out.println("Reached Offer0");
+
+
+		//  offer trade
+//		try{
+			OfferedTrade offer = new OfferedTrade();
+			offer.setFromPlayerID(playerIndexOffering);
+			offer.setToPlayerID(playerIndexReceiving);
+			ResourceType[] resourceTypes = {ResourceType.BRICK, ResourceType.ORE, ResourceType.SHEEP, ResourceType.WHEAT, ResourceType.WOOD};
+
+			//  populate the trade offer
+			for(int i = 0; i < resourceList.size(); i++){
+				int resource_count = resourceList.get(i);
+				if (resource_count != 0){
+					if(resource_count < 0){
+						offer.setOfferedResourceAmount(resourceTypes[i], -1 * resource_count);
+					}else{
+						offer.setWantedResourceAmount(resourceTypes[i], resource_count);
+					}
+				}
+			}
+			this.setTradeOffer(offer);
+			System.out.println("Reached Offer1");
+
+//		}catch (ModelException e){
+//			Log.GetLog().throwing("ServerGameManager", "ServerOfferTrade", e);
+//			e.printStackTrace();
+//			return false;
+//		}
+
+		this.updateVersion();
+		return true;
 	}
 
 	/**
 	 *
-	 * @param playerID
+	 * @param playerIndex
 	 * @param willAccept
 	 * @return
 	 */
-	public boolean ServerAcceptTrade(int playerID, boolean willAccept)
+	public boolean ServerAcceptTrade(int playerIndex, boolean willAccept)
 	{
-		return false;
+//		if(!this.canAcceptTrade(playerIndex))
+//			return false;
+
+		//  if the player rejects the trade remove the trade offer, no exchange necessary so return
+		if(!willAccept) {
+			this.removeTradeOffer();
+			this.updateVersion();
+			return true;
+		}
+
+		//  accept trade
+		try{
+			OfferedTrade offer = this.offeredTrade;
+			ResourceType[] resourceTypes = {ResourceType.BRICK, ResourceType.ORE, ResourceType.SHEEP, ResourceType.WHEAT, ResourceType.WOOD};
+
+			//  exchange resources
+			int playerIndexSendingOffer = offer.getFromPlayerID();
+			int playerIndexReceivingOffer = offer.getToPlayerID();
+
+			Player pSending = players.get(playerIndexSendingOffer);
+			Player pReceiving = players.get(playerIndexReceivingOffer);
+			Bank bReceiving = pReceiving.playerBank;
+			Bank bSending = pSending.playerBank;
+
+			//  take all resources from player who sent the trade and give them to the receiving player
+			for(ResourceType resource : resourceTypes){
+				int resource_amount = offer.getOfferedResourceAmount(resource);
+				if(resource_amount > 0){
+					bSending.giveResource(resource, resource_amount);
+					bReceiving.getResource(resource, resource_amount);
+				}
+			}
+
+			//  take all resources from the player who received the offer and give them to the player who sent the original offer
+			for(ResourceType resource : resourceTypes){
+				int resource_amount = offer.getWantedResourceAmount(resource);
+				if(resource_amount > 0){
+					bReceiving.giveResource(resource, resource_amount);
+					bSending.getResource(resource, resource_amount);
+				}
+			}
+
+			this.removeTradeOffer();
+
+
+
+		}catch (ModelException e){
+			Log.GetLog().throwing("ServerGameManager", "ServerAcceptTrade", e);
+			e.printStackTrace();
+			return false;
+		}
+
+		this.updateVersion();
+		return true;
 	}
 
-	/**
-	 *
-	 * @param playerID
-	 * @param in
-	 * @param out
+	/***
+	 * @param playerIndex
+	 * @param ratio
+	 * @param input
+	 * @param output
 	 * @return
 	 */
-	public boolean ServerMaritimeTrading(int playerID, ResourceType in, ResourceType out)
+	public boolean ServerMaritimeTrading(int playerIndex, int ratio, ResourceType input, ResourceType output)
 	{
-		return false;
-	}
+		if (!this.CanPlayerPlay(playerIndex)) {
+			System.out.println("entered 1");
+			return true;
+		}
 
-	/**
-	 *
-	 * @param playerID
-	 * @param resourceList
-	 * @return
-	 */
-	public boolean ServerDiscardCards(int playerID, List<Integer> resourceList)
-	{
-		return false;
+//		if(!this.CanMaritimeTrade(playerIndex)) {
+//			System.out.println("entered 2");
+//
+//			return false;
+//		}
+
+
+
+		Player pGiver = players.get(playerIndex);
+		Bank bGame = this.gameBank;
+		Bank bPlayer = pGiver.playerBank;
+
+		//  exchange resources at ratio rate between player and the bank
+		try{
+			bPlayer.getResource(input, ratio);
+			bGame.getResource(output, 1);
+
+			bPlayer.giveResource(output, 1);
+			bGame.giveResource(input, ratio);
+
+		}catch (ModelException e){
+			System.out.println("entered 3");
+
+			Log.GetLog().throwing("ServerGameManager", "ServerMaritimeTrading", e);
+			e.printStackTrace();
+			return false;
+		}
+
+		this.updateVersion();
+		System.out.println("entered 4");
+
+		return true;
 	}
 
 	/**
 	 * 
-	 * @param receiver
-	 * @param giver
+	 * @param playerIndex
+	 * @param resourceList
 	 * @return
 	 */
+	public boolean ServerDiscardCards(int playerIndex, List<Integer> resourceList)
+	{
+
+		if(!this.CanDiscardCards(playerIndex, ResourceType.BRICK, resourceList.get(0)) ||
+				!this.CanDiscardCards(playerIndex, ResourceType.ORE, resourceList.get(1)) ||
+				!this.CanDiscardCards(playerIndex, ResourceType.SHEEP, resourceList.get(2)) ||
+				!this.CanDiscardCards(playerIndex, ResourceType.WHEAT, resourceList.get(3)) ||
+				!this.CanDiscardCards(playerIndex, ResourceType.WOOD, resourceList.get(4)))
+			return false;
+
+		Player pGiver = players.get(playerIndex);
+		Bank bReceiver = this.gameBank;
+		Bank bGiver = pGiver.playerBank;
+
+		//  take the specified resource from the player at playerIndex
+		try{
+			bGiver.getResource(ResourceType.BRICK, resourceList.get(0));
+			bGiver.getResource(ResourceType.ORE, resourceList.get(1));
+			bGiver.getResource(ResourceType.SHEEP, resourceList.get(2));
+			bGiver.getResource(ResourceType.WHEAT, resourceList.get(3));
+			bGiver.getResource(ResourceType.WOOD, resourceList.get(4));
+
+		}catch (ModelException e){
+			Log.GetLog().throwing("ServerGameManager", "ServerDiscardCards-GettingResources", e);
+			e.printStackTrace();
+			return false;
+		}
+
+		//give the resource to the game bank
+		try
+		{
+			bReceiver.giveResource(ResourceType.BRICK, resourceList.get(0));
+			bReceiver.giveResource(ResourceType.ORE, resourceList.get(1));
+			bReceiver.giveResource(ResourceType.SHEEP, resourceList.get(2));
+			bReceiver.giveResource(ResourceType.WHEAT, resourceList.get(3));
+			bReceiver.giveResource(ResourceType.WOOD, resourceList.get(4));
+		}
+		catch(ModelException e)
+		{
+			Log.GetLog().throwing("ServerGameManager", "ServerDiscardCards-GivingingResourcesToGameBank", e);
+			e.printStackTrace();
+			return false;
+		}
+
+		this.updateVersion();
+		return true;
+	}
+
+	/**
+	 *
+	 * @param receiver
+	 * @param giver
+     * @return
+     */
 	private ResourceType takeRandomResourceCard(int receiver, int giver)
 	{
 		if (giver == -1)
@@ -641,7 +825,7 @@ public class ServerGameManager extends GameManager implements Serializable
 		//give the resource to the robbing player
 		try
 		{
-			bReceiver.giveResource(rGiven);
+			bReceiver.getResource(rGiven);
 		}
 		catch(ModelException e)
 		{
@@ -679,6 +863,8 @@ public class ServerGameManager extends GameManager implements Serializable
 		gm.version = this.version;
 		gm.waterCooler = this.waterCooler;
 		gm.victoryPointManager = this.victoryPointManager;
+		gm.trade =  this.offeredTrade;
+
 
 		return gm;
 	}

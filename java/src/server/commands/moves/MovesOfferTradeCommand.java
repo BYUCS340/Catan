@@ -2,6 +2,10 @@ package server.commands.moves;
 
 import java.util.List;
 
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -11,12 +15,13 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesOfferTradeCommand extends MovesCommand 
 {
+	private ServerGameManager sgm;
 	private int receiverIndex;
 	private List<Integer> offer;
 	
 	/**
 	 * Creates a command that offers a trade.
-	 * @param playerID The player ID.
+	 * @param cookie The player ID/game ID
 	 * @param playerIndex The player index.
 	 * @param receiverIndex The index of the receiver.
 	 * @param offer The resources being offered. (brick, ore, sheep, wheat, wood; + is what is offered by 
@@ -32,7 +37,15 @@ public class MovesOfferTradeCommand extends MovesCommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
+		try
+		{
+			sgm = GameArcade.games().GetGame(gameID);
+			return sgm.ServerOfferTrade(this.playerIndex, this.receiverIndex, this.offer);
+		}
+		catch (GameException e)
+		{ //game not found
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -46,7 +59,8 @@ public class MovesOfferTradeCommand extends MovesCommand
 	@Override
 	public String GetResponse()
 	{
-		// TODO Auto-generated method stub
+		if (sgm != null)
+			return SerializationUtils.serialize(sgm.ServerGetSerializableModel());
 		return null;
 	}
 

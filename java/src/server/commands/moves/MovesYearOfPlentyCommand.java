@@ -1,11 +1,6 @@
 package server.commands.moves;
 
-import server.model.GameArcade;
-import server.model.GameException;
-import server.model.ServerGameManager;
 import shared.definitions.ResourceType;
-import shared.model.GameModel;
-import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 
 /**
@@ -17,7 +12,6 @@ public class MovesYearOfPlentyCommand extends MovesCommand
 {
 	private ResourceType resource1;
 	private ResourceType resource2;
-	private GameModel gm;
 	
 	/**
 	 * Creates a command object that plays the Year of Plenty card.
@@ -34,7 +28,7 @@ public class MovesYearOfPlentyCommand extends MovesCommand
 	}
 
 	@Override
-	public boolean Execute()
+	public boolean Execute() 
 	{
 		try
 		{
@@ -49,22 +43,21 @@ public class MovesYearOfPlentyCommand extends MovesCommand
 	}
 
 	@Override
-	public boolean Unexecute()
+	public boolean Unexecute() 
 	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public String GetResponse()
+	public String GetResponse() 
 	{
-		if (gm != null)
-			return SerializationUtils.serialize(gm);
-		return "ERROR";
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public String GetHeader()
+	public String GetHeader() 
 	{
 		return null;
 	}
