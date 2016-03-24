@@ -36,8 +36,7 @@ public class MovesMonopolyCommand extends MovesCommand
 		try
 		{
 			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
-			sgm.ServerMonopoly(playerID, resource);
-			return true;
+			return sgm.ServerMonopoly(playerID, resource);
 		}
 		catch (GameException e)
 		{ //game not found

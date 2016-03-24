@@ -240,17 +240,16 @@ public class ServerGameManager extends GameManager
 	 */
 	public boolean ServerBuyDevCard(int playerID)
 	{
-		int currentPlayer = this.GetPlayerIndexByID(playerID);
-		if (super.CurrentPlayersTurn() != currentPlayer)
+		if (super.CurrentPlayersTurn() != playerID)
 			return false;
 
-		if (!super.CanBuyDevCard(currentPlayer))
+		if (!super.CanBuyDevCard(playerID))
 			return false;
 
 		//Buy the dev card
 		try
 		{
-			super.BuyDevCard(currentPlayer);
+			super.BuyDevCard(playerID);
 			this.updateVersion();
 			return true;
 		}
@@ -271,8 +270,7 @@ public class ServerGameManager extends GameManager
 	 */
 	public boolean ServerYearOfPlenty(int playerID, ResourceType res1, ResourceType res2)
 	{
-		int playerIndex = this.GetPlayerIndexByID(playerID);
-		if (!this.CanPlayerPlay(playerIndex))
+		if (!this.CanPlayerPlay(playerID))
 			return false;
 
 		if (!this.CanPlayDevCard(playerID, DevCardType.YEAR_OF_PLENTY))
@@ -297,8 +295,8 @@ public class ServerGameManager extends GameManager
 			}
 			
 			//give resources to player
-			players.get(playerIndex).playerBank.giveResource(res1);
-			players.get(playerIndex).playerBank.giveResource(res2);
+			players.get(playerID).playerBank.giveResource(res1);
+			players.get(playerID).playerBank.giveResource(res2);
 
 			//remove dev card from player
 			this.playDevCard(playerID, DevCardType.YEAR_OF_PLENTY);
@@ -320,8 +318,7 @@ public class ServerGameManager extends GameManager
 	 */
 	public boolean ServerMonopoly(int playerID, ResourceType res1)
 	{
-		int playerIndex = this.GetPlayerIndexByID(playerID);
-		if (!this.CanPlayerPlay(playerIndex))
+		if (!this.CanPlayerPlay(playerID))
 			return false;
 
 		if (!this.CanPlayDevCard(playerID, DevCardType.MONOPOLY))
@@ -333,7 +330,7 @@ public class ServerGameManager extends GameManager
 			int totalResourceCount = 0;
 			for (int i = 0; i < players.size(); i++)
 			{
-				if (i != playerIndex)
+				if (i != playerID)
 				{
 					int tempCt = players.get(i).playerBank.getResourceCount(res1);
 					totalResourceCount += tempCt;
@@ -342,7 +339,7 @@ public class ServerGameManager extends GameManager
 			}
 
 			//give cards taken to current player
-			players.get(playerIndex).playerBank.giveResource(res1, totalResourceCount);
+			players.get(playerID).playerBank.giveResource(res1, totalResourceCount);
 
 			//remove dev card from player
 			this.playDevCard(playerID, DevCardType.MONOPOLY);
@@ -363,8 +360,7 @@ public class ServerGameManager extends GameManager
 	 */
 	public boolean ServerMonument(int playerID)
 	{
-		int playerIndex = this.GetPlayerIndexByID(playerID);
-		if (!this.CanPlayerPlay(playerIndex))
+		if (!this.CanPlayerPlay(playerID))
 			return false;
 
 		if (!this.CanPlayDevCard(playerID, DevCardType.MONUMENT))
@@ -373,7 +369,7 @@ public class ServerGameManager extends GameManager
 		try
 		{
 			//give victory point to player
-			this.victoryPointManager.playedMonument(playerIndex);
+			this.victoryPointManager.playedMonument(playerID);
 
 			//remove dev card from player
 			this.playDevCard(playerID, DevCardType.MONUMENT);
@@ -399,14 +395,13 @@ public class ServerGameManager extends GameManager
 	 */
 	public boolean ServerRoadBuilding(int playerID, Coordinate start1, Coordinate end1,  Coordinate start2, Coordinate end2)
 	{
-		int playerIndex = this.GetPlayerIndexByID(playerID);
-		if (!this.CanPlayerPlay(playerIndex))
+		if (!this.CanPlayerPlay(playerID))
 			return false;
 
 		if (!this.CanPlayDevCard(playerID, DevCardType.ROAD_BUILD))
 			return false;
 
-		CatanColor color = this.getPlayerColorByIndex(playerIndex);
+		CatanColor color = this.getPlayerColorByIndex(playerID);
 
 		if (!this.map.CanPlaceRoad(start1, end1, color) || !this.map.CanPlaceRoad(start2, end2, color))
 			return false;
@@ -414,9 +409,9 @@ public class ServerGameManager extends GameManager
 		try
 		{
 			//build the roads
-			this.BuildRoad(playerIndex, start1, end1, true);
-			this.BuildRoad(playerIndex, start2, end2, true);
-			this.victoryPointManager.playerBuiltRoad(playerIndex);
+			this.BuildRoad(playerID, start1, end1, true);
+			this.BuildRoad(playerID, start2, end2, true);
+			this.victoryPointManager.playerBuiltRoad(playerID);
 
 			//remove dev card from player
 			this.playDevCard(playerID, DevCardType.ROAD_BUILD);
@@ -440,29 +435,27 @@ public class ServerGameManager extends GameManager
 	 */
 	public boolean ServerSoldier(int playerID, Coordinate location, int victimIndex)
 	{
-		int playerIndex = this.GetPlayerIndexByID(playerID);
-
-		if(this.CurrentPlayersTurn() != playerIndex)
+		if(this.CurrentPlayersTurn() != playerID)
 		{
 			return false;
 		}
 
-		if(!this.CanPlayDevCard(playerIndex, DevCardType.SOLDIER))
+		if(!this.CanPlayDevCard(playerID, DevCardType.SOLDIER))
 		{
 			return false;
 		}
 
-		boolean couldRob = this.ServerExecuteRob(playerIndex, victimIndex, location);
+		boolean couldRob = this.ServerExecuteRob(playerID, victimIndex, location);
 
 		//ONLY take the soldier card if this player could actually execute the robbing
 		//action
 		if(couldRob)
 		{
-			Player pPlayer = players.get(playerIndex);
+			Player pPlayer = players.get(playerID);
 			Bank bPlayer = pPlayer.playerBank;
 			bPlayer.giveDevCard(DevCardType.SOLDIER);
 			int armySize = pPlayer.incrementArmySize();
-			this.victoryPointManager.checkPlayerArmySize(playerIndex, armySize);
+			this.victoryPointManager.checkPlayerArmySize(playerID, armySize);
 		}
 
 		this.updateVersion();
@@ -477,11 +470,10 @@ public class ServerGameManager extends GameManager
 	 */
 	public boolean ServerBuildRoad(int playerID, Coordinate start, Coordinate end, boolean free)
 	{
-		int playerIndex = this.GetPlayerIndexByID(playerID);
-		if (!this.CanPlayerPlay(playerIndex))
+		if (!this.CanPlayerPlay(playerID))
 			return false;
 
-		CatanColor color = this.getPlayerColorByIndex(playerIndex);
+		CatanColor color = this.getPlayerColorByIndex(playerID);
 		this.map.SetupPhase(free);
 
 		if (!this.map.CanPlaceRoad(start, end, color))
@@ -495,7 +487,7 @@ public class ServerGameManager extends GameManager
 		//Build the road
 		try
 		{
-			this.BuildRoad(playerIndex, start, end, free);
+			this.BuildRoad(playerID, start, end, free);
 		}
 		catch (ModelException e)
 		{
