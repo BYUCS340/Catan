@@ -181,7 +181,7 @@ public class CommandFactoryTest
 		assertTrue(command.getClass() == GamesJoinCommand.class);
 	}
 	
-	@Test
+	/*@Test
 	public void TestGamesSave() throws InvalidFactoryParameterException
 	{
 		String url = "games/save";
@@ -196,10 +196,10 @@ public class CommandFactoryTest
 	{
 		String url = "games/load";
 		StringBuilder param = new StringBuilder(url.toUpperCase());
-		//ICommand command = factory.GetCommand(param, cookie, object);
+		ICommand command = factory.GetCommand(param, cookie, object);
 		
-		//assertTrue(command.getClass() == GamesLoadCommand.class);
-	}
+		assertTrue(command.getClass() == GamesLoadCommand.class);
+	}*/
 	
 	@Test
 	public void TestGameModel() throws InvalidFactoryParameterException
@@ -208,9 +208,9 @@ public class CommandFactoryTest
 		StringBuilder param = new StringBuilder(url.toUpperCase());
 		PGetModel model = new PGetModel(2141);
 		String object = SerializationUtils.serialize(model);
-		//ICommand command = factory.GetCommand(param, cookie, object);
+		ICommand command = factory.GetCommand(param, cookie, object);
 		
-		//assertTrue(command.getClass() == GameModelCommand.class);
+		assertTrue(command.getClass() == GameModelCommand.class);
 	}
 	
 	@Test
