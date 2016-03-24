@@ -510,8 +510,15 @@ public class ServerGameManager extends GameManager implements Serializable
 		try
 		{
 			this.BuildRoad(playerIndex, start, end, free);
+			
+			if (this.map.LongestRoadExists())
+			{
+				CatanColor longestColor = this.map.GetLongestRoadColor();
+				int longestIndex = this.getPlayerIndexByColor(longestColor);
+				this.victoryPointManager.setPlayerToHaveLongestRoad(longestIndex);
+			}
 		}
-		catch (ModelException e)
+		catch (ModelException | MapException e)
 		{
 			e.printStackTrace();
 			return false;
@@ -574,8 +581,15 @@ public class ServerGameManager extends GameManager implements Serializable
 				return false;
 
 			this.BuildSettlement(playerIndex, p, free);
+			
+			if (this.map.LongestRoadExists())
+			{
+				CatanColor longestColor = this.map.GetLongestRoadColor();
+				int longestIndex = this.getPlayerIndexByColor(longestColor);
+				this.victoryPointManager.setPlayerToHaveLongestRoad(longestIndex);
+			}
 		}
-		catch (ModelException e)
+		catch (ModelException | MapException e)
 		{
 			Log.GetLog().throwing("ServerGameManager", "ServerBuildSettlement", e);
 			e.printStackTrace();
