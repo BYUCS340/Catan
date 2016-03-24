@@ -12,12 +12,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.List;
 import java.util.Scanner;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -30,6 +26,7 @@ import shared.model.GameModel;
 import shared.model.Player;
 import shared.model.map.Coordinate;
 import shared.networking.SerializationUtils;
+import shared.networking.cookie.NetworkCookie;
 import shared.networking.cookie.UserCookie;
 import shared.networking.parameter.PAcceptTrade;
 import shared.networking.parameter.PAddAI;
@@ -840,10 +837,11 @@ public class GSONServerProxy implements ServerProxy
 					int toRemove = uCookie.indexOf(';');
 					uCookie = uCookie.substring(0, toRemove);
 					
-					JSONObject obj = new JSONObject(uCookie);
-					String tempUsername = obj.getString("name");
-					String tempPassword = obj.getString("password");
-					int tempPlayerID = obj.getInt("playerID");
+					NetworkCookie temp = SerializationUtils.deserialize(uCookie, NetworkCookie.class);
+					
+					String tempUsername = temp.getName();
+					String tempPassword = temp.getPassword();
+					int tempPlayerID = temp.getPlayerID();
 					
 					userCookie = new UserCookie(uCookie, tempUsername, tempPassword, tempPlayerID);					
 				}
@@ -853,8 +851,8 @@ public class GSONServerProxy implements ServerProxy
 					int toRemove = gCookie.indexOf(';');
 					gCookie = gCookie.substring(0, toRemove);
 					
-					JSONObject obj = new JSONObject(gCookie);
-					gameID = obj.getInt("gameID");
+					NetworkCookie temp = SerializationUtils.deserialize(gCookie, NetworkCookie.class);
+					gameID = temp.getGameID();
 					userCookie.setCookie(gCookie);
 				}
 				connection.disconnect();
@@ -880,10 +878,7 @@ public class GSONServerProxy implements ServerProxy
 			System.out.println(e.getMessage());
 			throw new ServerProxyException("IOException thrown in client.networking.GSONServerProxy.doJSONPost\n"
 					+e.getStackTrace());
-		} catch (JSONException e)
-		{
-			throw new ServerProxyException(e.getMessage(), e.getCause());
-		}
+		} 
 		finally
 		{
 			if(connection != null)
