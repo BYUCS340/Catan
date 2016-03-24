@@ -12,14 +12,7 @@ import shared.model.map.Transaction;
 import shared.model.map.objects.*;
 
 public interface IMapModel extends Serializable
-{
-	/**
-	 * Overrides can do methods. Allows placement of pieces regardless. Used when receiving
-	 * data from the server.
-	 * @param force True to force update, else set as false.
-	 */
-	public void ForceUpdate(boolean force);
-	
+{	
 	/**
 	 * Sets the map to the setup phase.
 	 * @param setup True for setup, else false.

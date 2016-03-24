@@ -25,7 +25,6 @@ public class MapModel implements IMapModel
 {	
 	private static final long serialVersionUID = 5280325974057938585L;
 	
-	private boolean force;
 	private boolean setup;
 	
 	private Map<Integer, List<Hex>> values;
@@ -44,7 +43,6 @@ public class MapModel implements IMapModel
 	 */
 	MapModel()
 	{
-		force = false;
 		setup = false;
 		
 		values = new HashMap<Integer, List<Hex>>();
@@ -57,20 +55,9 @@ public class MapModel implements IMapModel
 		longestRoadColor = null;
 	}
 	
-	public boolean IsForced()
-	{
-		return force;
-	}
-	
 	public boolean IsSetup()
 	{
 		return setup;
-	}
-	
-	@Override
-	public void ForceUpdate(boolean force)
-	{
-		this.force = force;
 	}
 	
 	@Override
@@ -258,29 +245,29 @@ public class MapModel implements IMapModel
 	@Override
 	public void PlaceRoad(Coordinate p1, Coordinate p2, CatanColor color) throws MapException
 	{	
-		if (force || CanPlaceRoad(p1, p2, color))
+		if (CanPlaceRoad(p1, p2, color))
 			edges.AddRoad(p1, p2, color);
 		else
 			throw new MapException("Attempt to place road where not allowed");
 		
-		CheckLongestRoad();
+		longestRoadColor = new RoadCounter(this).Count();
 	}
 	
 	@Override
 	public void PlaceSettlement(Coordinate point, CatanColor color) throws MapException
 	{
-		if (force || CanPlaceSettlement(point, color))
+		if (CanPlaceSettlement(point, color))
 			vertices.SetSettlement(point, color);
 		else
 			throw new MapException("Attempt to place settlement where not allowed");
 		
-		CheckLongestRoad();
+		longestRoadColor = new RoadCounter(this).Count();
 	}
 	
 	@Override
 	public void PlaceCity(Coordinate point, CatanColor color) throws MapException
 	{
-		if (force || CanPlaceCity(point, color))
+		if (CanPlaceCity(point, color))
 			vertices.SetCity(point, color);
 		else
 			throw new MapException("Attempt to place city where not allowed");
@@ -567,11 +554,6 @@ public class MapModel implements IMapModel
 		return java.util.Collections.unmodifiableList(transactions).iterator();
 	}
 	
-	private void CheckLongestRoad()
-	{
-		
-	}
-	
 	/**
 	 * Gets all the hexes associated with the dice role.
 	 * @param role The combined value of the dice.
@@ -615,47 +597,6 @@ public class MapModel implements IMapModel
 		}
 		
 		return java.util.Collections.unmodifiableList(associatedEdges).iterator();
-	}
-	
-	private int GetRoadCount(Vertex vertex, CatanColor color, 
-			Set<Edge> handledEdges, Set<Edge> allHandledEdges)
-	{
-		int totalCount = 0;
-		
-		Iterator<Edge> associatedEdges = GetEdges(vertex);
-		while(associatedEdges.hasNext())
-		{
-			Edge edge = associatedEdges.next();
-			
-			if (edge.getColor() == color && !handledEdges.contains(edge))
-			{
-				try
-				{
-					handledEdges.add(edge);
-					allHandledEdges.add(edge);
-					
-					Vertex newVertex = null;
-					if (edge.getStart() == vertex.getPoint())
-						newVertex = vertices.GetVertex(edge.getEnd());
-					else
-						newVertex = vertices.GetVertex(edge.getStart());
-					
-					int branchCount = 1 + GetRoadCount(newVertex, color, handledEdges, allHandledEdges);
-					
-					handledEdges.remove(edge);
-					
-					if (branchCount > totalCount)
-						totalCount = branchCount;
-				}
-				catch (MapException e)
-				{
-					//This shouldn't occur as the edge can't exist without the vertices.
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		return totalCount;
 	}
 	
 	private boolean RoadsSatisfyRoadPlacement(Edge edge, CatanColor color) throws MapException

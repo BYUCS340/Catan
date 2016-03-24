@@ -22,12 +22,6 @@ public class UnmodifiableMapModel implements IMapModel
 	}
 	
 	@Override
-	public void ForceUpdate(boolean force)
-	{
-		model.ForceUpdate(force);
-	}
-	
-	@Override
 	public void SetupPhase(boolean setup)
 	{
 		model.SetupPhase(setup);
