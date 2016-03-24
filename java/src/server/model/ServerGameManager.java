@@ -546,6 +546,8 @@ public class ServerGameManager extends GameManager
 		if(!this.CanOfferTrade(playerIndexOffering))
 			return false;
 
+		System.out.println("Reached Offer0");
+
 
 		//  offer trade
 //		try{
@@ -558,16 +560,15 @@ public class ServerGameManager extends GameManager
 			for(int i = 0; i < resourceList.size(); i++){
 				int resource_count = resourceList.get(i);
 				if (resource_count != 0){
-					if(resource_count > 0){
-						offer.setOfferedResourceAmount(resourceTypes[i], resource_count);
+					if(resource_count < 0){
+						offer.setOfferedResourceAmount(resourceTypes[i], -1 * resource_count);
 					}else{
-						offer.setWantedResourceAmount(resourceTypes[i], -1 * resource_count);
+						offer.setWantedResourceAmount(resourceTypes[i], resource_count);
 					}
 				}
 			}
 			this.setTradeOffer(offer);
-
-
+			System.out.println("Reached Offer1");
 
 //		}catch (ModelException e){
 //			Log.GetLog().throwing("ServerGameManager", "ServerOfferTrade", e);
@@ -587,8 +588,8 @@ public class ServerGameManager extends GameManager
 	 */
 	public boolean ServerAcceptTrade(int playerIndex, boolean willAccept)
 	{
-		if(!this.canAcceptTrade(playerIndex))
-			return false;
+//		if(!this.canAcceptTrade(playerIndex))
+//			return false;
 
 		//  if the player rejects the trade remove the trade offer, no exchange necessary so return
 		if(!willAccept) {
@@ -615,8 +616,8 @@ public class ServerGameManager extends GameManager
 			for(ResourceType resource : resourceTypes){
 				int resource_amount = offer.getOfferedResourceAmount(resource);
 				if(resource_amount > 0){
-					bSending.getResource(resource, resource_amount);
-					bReceiving.giveResource(resource, resource_amount);
+					bSending.giveResource(resource, resource_amount);
+					bReceiving.getResource(resource, resource_amount);
 				}
 			}
 
@@ -624,8 +625,8 @@ public class ServerGameManager extends GameManager
 			for(ResourceType resource : resourceTypes){
 				int resource_amount = offer.getWantedResourceAmount(resource);
 				if(resource_amount > 0){
-					bReceiving.getResource(resource, resource_amount);
-					bSending.giveResource(resource, resource_amount);
+					bReceiving.giveResource(resource, resource_amount);
+					bSending.getResource(resource, resource_amount);
 				}
 			}
 
