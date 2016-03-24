@@ -352,11 +352,13 @@ public class ServerGameManager extends GameManager
 	/**
 	 *
 	 * @param playerID
-	 * @param p1
-	 * @param p2
+	 * @param start1
+	 * @param end1
+	 * @param start2
+	 * @param end2
 	 * @return
 	 */
-	public boolean ServerRoadBuilding(int playerID, Coordinate p1, Coordinate p2)
+	public boolean ServerRoadBuilding(int playerID, Coordinate start1, Coordinate end1,  Coordinate start2, Coordinate end2)
 	{
 		int playerIndex = this.GetPlayerIndexByID(playerID);
 		if (!this.CanPlayerPlay(playerIndex))
