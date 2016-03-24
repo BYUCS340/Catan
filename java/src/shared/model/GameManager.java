@@ -402,7 +402,7 @@ public class GameManager
 				throw new ModelException("Unable to stop rolling after a non 7");
 		}
 		
-		log.logAction(this.CurrentPlayersTurn(), "rolled a " + diceRoll);
+		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" rolled a " + diceRoll);
 		
 		//Call map to update the get the transactions
 		Iterator<Transaction> transList = map.GetTransactions(diceRoll);
