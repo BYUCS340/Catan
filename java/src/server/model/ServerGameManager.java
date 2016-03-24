@@ -274,7 +274,46 @@ public class ServerGameManager extends GameManager
 	 */
 	public boolean ServerYearOfPlenty(int playerID, ResourceType res1, ResourceType res2)
 	{
-		return false;
+		int playerIndex = this.GetPlayerIndexByID(playerID);
+		if (!this.CanPlayerPlay(playerIndex))
+			return false;
+
+		if (!this.CanPlayDevCard(playerID, DevCardType.YEAR_OF_PLENTY))
+			return false;
+
+		try
+		{
+			//take resources from bank
+			if (res1 == res2 && this.gameBank.getResourceCount(res1) > 1)
+			{
+				this.gameBank.getResource(res1);
+				this.gameBank.getResource(res2);
+			}
+			else if (this.gameBank.getResourceCount(res1) > 0 && this.gameBank.getResourceCount(res2) > 0)
+			{
+				this.gameBank.getResource(res1);
+				this.gameBank.getResource(res2);
+			}
+			else
+			{
+				return false;
+			}
+			
+			//give resources to player
+			players.get(playerIndex).playerBank.giveResource(res1);
+			players.get(playerIndex).playerBank.giveResource(res2);
+
+			//remove dev card from player
+			this.playDevCard(playerID, DevCardType.YEAR_OF_PLENTY);
+		}
+		catch (ModelException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+
+		this.updateVersion();
+		return true;
 	}
 
 	/**
