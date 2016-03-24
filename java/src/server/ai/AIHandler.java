@@ -280,5 +280,5 @@ public class AIHandler
 				e.printStackTrace();
 			}
 		}
-	}
+	}	
 }

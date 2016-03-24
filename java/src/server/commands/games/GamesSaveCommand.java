@@ -1,6 +1,21 @@
 package server.commands.games;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+
+import server.Log;
 import server.commands.ICommand;
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
+import shared.networking.SerializationUtils;
 
 /**
  * Command to handle saving a game.
@@ -20,12 +35,44 @@ public class GamesSaveCommand implements ICommand
 	public GamesSaveCommand(int id, String name) 
 	{
 		this.id = id;
-		this.name = name;
+		this.name = name;	
 	}
 
 	@Override
 	public boolean Execute() {
-		// TODO Auto-generated method stub
+		try
+		{
+			ServerGameManager sgm = GameArcade.games().GetGame(id);
+			String data = SerializationUtils.serialize((Serializable) sgm);
+			
+			String filename = File.separator+"savedata"+File.separator+name+".json";
+			
+			File file = new File(System.getProperty("user.dir") + filename);
+			
+			FileOutputStream fop = new FileOutputStream(file);
+			OutputStreamWriter osw = new OutputStreamWriter(fop, "utf-8");
+			Writer writer = new BufferedWriter(osw);
+			writer.write(data);
+			writer.close();
+			return true;
+		}
+		catch (GameException e)
+		{ //game not found
+			Log.GetLog().finest(e.getMessage());
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			Log.GetLog().finest(e.getMessage());
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			Log.GetLog().finest(e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Log.GetLog().finest(e.getMessage());
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -38,7 +85,7 @@ public class GamesSaveCommand implements ICommand
 	@Override
 	public String GetResponse() {
 		// TODO Auto-generated method stub
-		return null;
+		return "Not Found";
 	}
 
 	@Override
