@@ -65,6 +65,13 @@ public class Bank implements Serializable
 			this.giveDevCard(DevCardType.SOLDIER, 5);
 			this.giveDevCard(DevCardType.YEAR_OF_PLENTY, 5);
 			
+			int resourcesEach = 95/5;
+			this.giveResource(ResourceType.WOOD, resourcesEach);
+			this.giveResource(ResourceType.SHEEP, resourcesEach);
+			this.giveResource(ResourceType.WHEAT, resourcesEach);
+			this.giveResource(ResourceType.ORE, resourcesEach);
+			this.giveResource(ResourceType.BRICK, resourcesEach);
+			
 		}
 		catch (Exception e)
 		{
