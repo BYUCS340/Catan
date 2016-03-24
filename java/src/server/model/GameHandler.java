@@ -92,4 +92,10 @@ public class GameHandler
 			lock.readLock().unlock();
 		}
 	}
+
+	public void SetGame(ServerGameManager sgm) {
+		gameIndex.put(sgm.GetGameID(), sgm);
+		gameNames.add(sgm.GetGameTitle());
+		
+	}
 }
