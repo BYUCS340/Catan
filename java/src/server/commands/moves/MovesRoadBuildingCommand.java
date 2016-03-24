@@ -1,5 +1,8 @@
 package server.commands.moves;
 
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
 import shared.model.map.Coordinate;
 import shared.networking.cookie.NetworkCookie;
 

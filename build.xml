@@ -102,7 +102,7 @@
 		<delete dir="${java.dist}"/>
 	</target>
 	
-	<target name="init" depends="clean" description="create build directories">
+	<target name="init" description="create build directories">
 		<tstamp/>
 		<mkdir dir="${java.build}"/>
 		<mkdir dir="${java.dist}"/>
