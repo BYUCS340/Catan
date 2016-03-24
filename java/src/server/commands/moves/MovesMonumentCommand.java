@@ -25,7 +25,7 @@ public class MovesMonumentCommand extends MovesCommand
 		try
 		{
 			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
-			return sgm.ServerMonument(playerID);
+			return sgm.ServerMonument(playerIndex);
 		}
 		catch (GameException e)
 		{ //game not found

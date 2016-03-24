@@ -33,7 +33,7 @@ public class MovesYearOfPlentyCommand extends MovesCommand
 		try
 		{
 			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
-			return sgm.ServerYearOfPlenty(playerID, resource1, resource2);
+			return sgm.ServerYearOfPlenty(playerIndex, resource1, resource2);
 		}
 		catch (GameException e)
 		{ //game not found

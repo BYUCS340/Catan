@@ -40,7 +40,7 @@ public class MovesRoadBuildingCommand extends MovesCommand
 		try
 		{
 			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
-			return sgm.ServerRoadBuilding(playerID, start1, end1, start2, end2);
+			return sgm.ServerRoadBuilding(playerIndex, start1, end1, start2, end2);
 		}
 		catch (GameException e)
 		{ //game not found
