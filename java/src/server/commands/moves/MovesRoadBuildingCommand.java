@@ -1,7 +1,11 @@
 package server.commands.moves;
 
 import shared.model.map.Coordinate;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
+import server.model.GameException;
+import server.model.ServerGameManager;
+import shared.model.GameModel;
 
 /**
  * Command object that handles the road building card.
@@ -14,6 +18,7 @@ public class MovesRoadBuildingCommand extends MovesCommand
 	private Coordinate end1;
 	private Coordinate start2;
 	private Coordinate end2;
+	private GameModel gm;
 	
 	/**
 	 * Creates a command object for building roads.
@@ -59,8 +64,9 @@ public class MovesRoadBuildingCommand extends MovesCommand
 	@Override
 	public String GetResponse() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if (gm != null) 
+			return SerializationUtils.serialize(gm);
+		return "ERROR";
 	}
 
 	@Override
