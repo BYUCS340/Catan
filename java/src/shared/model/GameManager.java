@@ -25,7 +25,7 @@ import shared.model.chat.ChatBox;
  * @author matthewcarlson, garrettegan
  *
  */
-public class GameManager implements ModelSubject
+public class GameManager
 {
 	protected int gameID;
 	protected String gameTitle;
@@ -40,7 +40,7 @@ public class GameManager implements ModelSubject
 	protected int version;
 	private int[] playerColors;
 	private int playerCanMoveRobber;
-	protected NotificationCenter notifyCenter;
+	
 	
 	
 	/**
@@ -69,8 +69,11 @@ public class GameManager implements ModelSubject
 		gameBank = new Bank();
 		gameState = new GameState();
 		victoryPointManager = new VictoryPointManager();
+<<<<<<< HEAD
 		offeredTrade = null;
 		notifyCenter = new NotificationCenter();
+=======
+>>>>>>> b7c6f001544ab2507cd87165b6316f6d056d3e11
 		playerColors = new int[10];
 		//fill the array with -1 by default
 		Arrays.fill(playerColors,-1);
@@ -104,34 +107,6 @@ public class GameManager implements ModelSubject
 	}
 	
 	
-	//========================================================================================
-	//Notification Center
-
-	/**
-	 * Starts listening to all changes 
-	 */
-	public boolean startListening(ModelObserver listener)
-	{
-		notifyCenter.add(listener);
-		return true;
-	}
-	/**
-	 * starts listening for a specific type of change
-	 */
-	public boolean startListening(ModelObserver listener, ModelNotification type)
-	{
-		notifyCenter.add(listener,type);
-		return true;
-	}
-	
-	/**
-	 * Stops listening on a model observer
-	 */
-	public boolean stopListening(ModelObserver listener)
-	{
-		notifyCenter.remove(listener);
-		return true;
-	}
 	
 	/**
 	 * Adds a players to the game
@@ -144,6 +119,7 @@ public class GameManager implements ModelSubject
 	 */
 	public int AddPlayer(String name, CatanColor color, boolean isHuman, int playerID) throws ModelException
 	{
+		System.out.println("Adding player to game");
 		//check if that color has already been used
 		if (playerColors[color.ordinal()] != -1)
 			throw new ModelException();
@@ -154,6 +130,7 @@ public class GameManager implements ModelSubject
 			throw new ModelException("Too many players already to add another");
 		}
 		Player newPlayer = new Player(name, newIndex, color, isHuman, playerID);
+		newPlayer.playerBank.resetToPlayerDefaults();
 		players.add(newPlayer);
 		
 		playerColors[color.ordinal()] = newIndex;
@@ -227,6 +204,11 @@ public class GameManager implements ModelSubject
 			return null;
 
 		return players.get(playerIndex).name;
+	}
+	
+	public String getCurrentPlayerName()
+	{
+		return this.getPlayerNameByIndex(CurrentPlayersTurn());
 	}
 	
 	/**
@@ -374,7 +356,7 @@ public class GameManager implements ModelSubject
 		{
 			if (!gameState.stopRolling()) throw new ModelException("Unable to stop rolling after a non 7");
 		}
-		log.logAction(this.CurrentPlayersTurn(), "rolled a "+diceRoll);
+		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" rolled a "+diceRoll);
 		
 		//Call map to update the get the transactions
 		Iterator<Transaction> transList = map.GetTransactions(diceRoll);
@@ -431,8 +413,9 @@ public class GameManager implements ModelSubject
 				GetPlayer(playerIndex).playerBank.buildRoad();
 			}
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
-			map.PlaceRoad(start, end, color);
+			map.PlaceRoad(start,end, color);
 			victoryPointManager.playerBuiltRoad(playerIndex);
+			log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" built a road ");
 		}
 		catch (MapException e)
 		{
@@ -459,6 +442,7 @@ public class GameManager implements ModelSubject
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceSettlement(location, color);
 			victoryPointManager.playerBuiltSettlement(playerIndex);
+			log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" built a settlement");
 		}
 		catch (MapException e)
 		{
@@ -484,6 +468,7 @@ public class GameManager implements ModelSubject
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceCity(location,color);
 			victoryPointManager.playerBuiltCity(playerIndex);
+			log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" built a city");
 		}
 		catch (MapException e)
 		{
@@ -505,6 +490,7 @@ public class GameManager implements ModelSubject
 		DevCardType devcard = gameBank.getDevCard();
 		playerBank.giveDevCard(devcard);
 		victoryPointManager.playerGotDevCard(playerIndex, devcard);
+		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" bought a Dev card.");
 		return devcard;
 	}
 	
@@ -523,6 +509,7 @@ public class GameManager implements ModelSubject
 			
 		}
 		players.get(playerIndex).playerBank.getDevCard(type);
+		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" played a "+type.toString()+" card");
 	}
 	
 	/**
@@ -1001,7 +988,6 @@ public class GameManager implements ModelSubject
 	public void PlayerChat(int playerIndex, String message)
 	{
 		waterCooler.put(message, playerIndex);
-		notifyCenter.notify(ModelNotification.CHAT);
 	}
 	
 	//--------------------------------------------------------------------------

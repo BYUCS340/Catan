@@ -1,8 +1,5 @@
 package server.commands.moves;
 
-import server.model.GameArcade;
-import server.model.GameException;
-import server.model.ServerGameManager;
 import shared.definitions.ResourceType;
 import shared.networking.cookie.NetworkCookie;
 
@@ -31,17 +28,9 @@ public class MovesYearOfPlentyCommand extends MovesCommand
 	}
 
 	@Override
-	public boolean Execute()
+	public boolean Execute() 
 	{
-		try
-		{
-			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
-			return sgm.ServerYearOfPlenty(playerID, resource1, resource2);
-		}
-		catch (GameException e)
-		{ //game not found
-			e.printStackTrace();
-		}
+		// TODO Auto-generated method stub
 		return false;
 	}
 

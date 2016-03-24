@@ -158,7 +158,7 @@ public class BeginnerPersonality extends Personality
 	{
 		Iterator<Vertex> settlements = GetSettlements(model).iterator();
 		
-		while (settlements.hasNext() && GetBank(model).canBuildCity())
+		while (settlements.hasNext() && model != null && GetBank(model).canBuildCity())
 		{
 			Vertex vertex = settlements.next();
 			
@@ -172,7 +172,7 @@ public class BeginnerPersonality extends Personality
 		
 		Iterator<Vertex> available = GetAvailableVertices(model).iterator();
 		
-		while (available.hasNext() && GetBank(model).canBuildSettlement())
+		while (available.hasNext() && model != null && GetBank(model).canBuildSettlement())
 		{
 			Vertex vertex = available.next();
 			
@@ -186,7 +186,7 @@ public class BeginnerPersonality extends Personality
 		
 		Iterator<Edge> available = GetAvailableEdges(model).iterator();
 		
-		while (available.hasNext() && GetBank(model).canBuildRoad())
+		while (available.hasNext() && model != null && GetBank(model).canBuildRoad())
 		{
 			Edge edge = available.next();
 			
@@ -196,8 +196,8 @@ public class BeginnerPersonality extends Personality
 	
 	private void AttemptBuyDevCard(GameModel model)
 	{
-		while (GetBank(model).canBuyDevCard())
-			BuyDevCard(model.gameID);
+		while (model != null && GetBank(model).canBuyDevCard())
+			model = BuyDevCard(model.gameID);
 	}
 	
 	private void Rob(GameModel model)

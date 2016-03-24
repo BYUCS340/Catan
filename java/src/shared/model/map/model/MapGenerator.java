@@ -174,6 +174,11 @@ public class MapGenerator
 				int coordinate = random.nextInt(coordinates.size());
 				
 				model.PlaceHex(hex, coordinates.get(coordinate));
+				
+				if(hex == HexType.DESERT)
+				{
+					model.PlaceRobber(coordinates.get(coordinate));
+				}
 				coordinates.remove(coordinate);
 			}
 		}
