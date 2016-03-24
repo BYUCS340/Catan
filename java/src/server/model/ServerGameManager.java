@@ -176,12 +176,15 @@ public class ServerGameManager extends GameManager
 
 		ResourceType takenResource = this.takeRandomResourceCard(playerIndex, victimIndex);
 		if (takenResource != null)
+		{
+			this.LogAction(playerIndex, this.getCurrentPlayerName()+" stole a "+takenResource+" resource from "+this.getPlayerNameByIndex(victimIndex));
 			Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex + " took a "
 				+ takenResource.toString() + " from Player " + victimIndex);
+		}
 		else
 			Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex + " tried to take"
 				+ " a card from Player " + victimIndex);
-
+		
 		return gameState.stopRobbing();
 	}
 
@@ -599,6 +602,12 @@ public class ServerGameManager extends GameManager
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param receiver
+	 * @param giver
+	 * @return
+	 */
 	private ResourceType takeRandomResourceCard(int receiver, int giver)
 	{
 		if (giver == -1)
@@ -609,7 +618,7 @@ public class ServerGameManager extends GameManager
 		Bank bReceiver = pReceiver.playerBank;
 		Bank bGiver = pGiver.playerBank;
 
-		ResourceType rGiven = bGiver.giveRandomResource();
+		ResourceType rGiven = bGiver.takeRandomResource();
 
 		//if the giver can't give a resource, return null
 		if(rGiven == null)
@@ -620,7 +629,7 @@ public class ServerGameManager extends GameManager
 		//give the resource to the robbing player
 		try
 		{
-			bReceiver.getResource(rGiven);
+			bReceiver.giveResource(rGiven);
 		}
 		catch(ModelException e)
 		{
