@@ -2,6 +2,7 @@ package server.commands.moves;
 
 import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
+import server.model.GameArcade;
 import server.model.GameException;
 import server.model.ServerGameManager;
 import shared.model.GameModel;
