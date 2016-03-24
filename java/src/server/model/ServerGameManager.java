@@ -200,6 +200,7 @@ public class ServerGameManager extends GameManager
 			int current = this.CurrentPlayersTurn();
 			for (Player player : this.players)
 			{
+				player.playerBank.newToOldDevs();
 				if (player.playerIndex() == current && player.isARobot())
 				{
 					int aiID = player.playerID();
