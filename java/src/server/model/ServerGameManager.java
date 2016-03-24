@@ -183,8 +183,11 @@ public class ServerGameManager extends GameManager implements Serializable
 
 		ResourceType takenResource = this.takeRandomResourceCard(playerIndex, victimIndex);
 		if (takenResource != null)
+		{
+			this.LogAction(playerIndex, this.getCurrentPlayerName()+" took a "+takenResource+" from "+this.getPlayerNameByIndex(victimIndex));
 			Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex + " took a "
 				+ takenResource.toString() + " from Player " + victimIndex);
+		}
 		else
 			Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex + " tried to take"
 				+ " a card from Player " + victimIndex);
