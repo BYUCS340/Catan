@@ -26,8 +26,12 @@ import shared.model.map.model.MapGenerator;
  * @author matthewcarlson
  *
  */
-public class ServerGameManager extends GameManager
+public class ServerGameManager extends GameManager implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1293281;
 	private	boolean randomTiles;
 	private boolean randomNumbers;
 	private boolean randomPorts;
@@ -63,6 +67,13 @@ public class ServerGameManager extends GameManager
 	public int GetPlayerIndexByID(int playerID)
 	{
 		return playerIndexLookup.get(playerID);
+	}
+	
+	@Override
+	public void reset()
+	{
+		super.reset();
+		this.map = MapGenerator.GenerateMap(randomTiles, randomNumbers, randomPorts);
 	}
 
 	@Override

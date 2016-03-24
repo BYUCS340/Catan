@@ -16,6 +16,7 @@ import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
 import shared.networking.parameter.PCreateGame;
 import shared.networking.parameter.PJoinGame;
+import shared.networking.parameter.PSaveGame;
 import shared.networking.parameter.PCreateGame;
 import shared.networking.parameter.PJoinGame;
 
@@ -205,7 +206,9 @@ public class GamesCommandFactory extends Factory
 		@Override
 		public void SetData(String object) 
 		{
-			// TODO Auto-generated method stub
+			PSaveGame sg = SerializationUtils.deserialize(object, PSaveGame.class);
+			id = sg.getGameID();
+			name = sg.getName();
 			
 		}
 	}
