@@ -84,8 +84,10 @@ public class BeginnerPersonality extends Personality
 		List<Integer> currentResources = new ArrayList<Integer>();
 		List<Integer> selectedResources = new ArrayList<Integer>();
 		
-		for (ResourceType resource : ResourceType.values())
+		for (ResourceType resource : ResourceType.values()) {
 			currentResources.add(GetBank(model).getResourceCount(resource));
+			selectedResources.add(0);
+		}
 		
 		int index = 0;
 		while (selected < toRemove)

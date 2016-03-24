@@ -753,12 +753,12 @@ public class ServerGameManager extends GameManager implements Serializable
 	public boolean ServerDiscardCards(int playerIndex, List<Integer> resourceList)
 	{
 
-		if(!this.CanDiscardCards(playerIndex, ResourceType.BRICK, resourceList.get(0)) ||
-				!this.CanDiscardCards(playerIndex, ResourceType.ORE, resourceList.get(1)) ||
-				!this.CanDiscardCards(playerIndex, ResourceType.SHEEP, resourceList.get(2)) ||
-				!this.CanDiscardCards(playerIndex, ResourceType.WHEAT, resourceList.get(3)) ||
-				!this.CanDiscardCards(playerIndex, ResourceType.WOOD, resourceList.get(4)))
-			return false;
+//		if(!this.CanDiscardCards(playerIndex, ResourceType.BRICK, resourceList.get(0)) ||
+//				!this.CanDiscardCards(playerIndex, ResourceType.ORE, resourceList.get(1)) ||
+//				!this.CanDiscardCards(playerIndex, ResourceType.SHEEP, resourceList.get(2)) ||
+//				!this.CanDiscardCards(playerIndex, ResourceType.WHEAT, resourceList.get(3)) ||
+//				!this.CanDiscardCards(playerIndex, ResourceType.WOOD, resourceList.get(4)))
+//			return false;
 
 		Player pGiver = players.get(playerIndex);
 		Bank bReceiver = this.gameBank;
@@ -766,11 +766,11 @@ public class ServerGameManager extends GameManager implements Serializable
 
 		//  take the specified resource from the player at playerIndex
 		try{
-			bGiver.getResource(ResourceType.BRICK, resourceList.get(0));
-			bGiver.getResource(ResourceType.ORE, resourceList.get(1));
-			bGiver.getResource(ResourceType.SHEEP, resourceList.get(2));
-			bGiver.getResource(ResourceType.WHEAT, resourceList.get(3));
-			bGiver.getResource(ResourceType.WOOD, resourceList.get(4));
+			bGiver.giveResource(ResourceType.BRICK, resourceList.get(0));
+			bGiver.giveResource(ResourceType.ORE, resourceList.get(1));
+			bGiver.giveResource(ResourceType.SHEEP, resourceList.get(2));
+			bGiver.giveResource(ResourceType.WHEAT, resourceList.get(3));
+			bGiver.giveResource(ResourceType.WOOD, resourceList.get(4));
 
 		}catch (ModelException e){
 			Log.GetLog().throwing("ServerGameManager", "ServerDiscardCards-GettingResources", e);
@@ -781,11 +781,11 @@ public class ServerGameManager extends GameManager implements Serializable
 		//give the resource to the game bank
 		try
 		{
-			bReceiver.giveResource(ResourceType.BRICK, resourceList.get(0));
-			bReceiver.giveResource(ResourceType.ORE, resourceList.get(1));
-			bReceiver.giveResource(ResourceType.SHEEP, resourceList.get(2));
-			bReceiver.giveResource(ResourceType.WHEAT, resourceList.get(3));
-			bReceiver.giveResource(ResourceType.WOOD, resourceList.get(4));
+			bReceiver.getResource(ResourceType.BRICK, resourceList.get(0));
+			bReceiver.getResource(ResourceType.ORE, resourceList.get(1));
+			bReceiver.getResource(ResourceType.SHEEP, resourceList.get(2));
+			bReceiver.getResource(ResourceType.WHEAT, resourceList.get(3));
+			bReceiver.getResource(ResourceType.WOOD, resourceList.get(4));
 		}
 		catch(ModelException e)
 		{
