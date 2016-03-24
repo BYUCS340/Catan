@@ -467,13 +467,8 @@ public class ServerGameManager extends GameManager
 	}
 
 	/**
-<<<<<<< HEAD
-	 * 
-	 * @param playerIndex
-=======
 	 *
-	 * @param playerID
->>>>>>> b7c6f001544ab2507cd87165b6316f6d056d3e11
+	 * @param playerIndex
 	 * @param p
 	 * @return
 	 */
@@ -502,13 +497,8 @@ public class ServerGameManager extends GameManager
 	}
 
 	/**
-<<<<<<< HEAD
-	 * 
-	 * @param playerIndex
-=======
 	 *
-	 * @param playerID
->>>>>>> b7c6f001544ab2507cd87165b6316f6d056d3e11
+	 * @param playerIndex
 	 * @param p
 	 * @return
 	 */
@@ -542,15 +532,9 @@ public class ServerGameManager extends GameManager
 	}
 
 	/**
-<<<<<<< HEAD
-	 * 
+	 *
 	 * @param playerIndexOffering
 	 * @param playerIndexReceiving
-=======
-	 *
-	 * @param playerID
-	 * @param playerIndexTo
->>>>>>> b7c6f001544ab2507cd87165b6316f6d056d3e11
 	 * @param resourceList
 	 * @return
 	 */
@@ -596,13 +580,8 @@ public class ServerGameManager extends GameManager
 	}
 
 	/**
-<<<<<<< HEAD
-	 * 
-	 * @param playerIndex
-=======
 	 *
-	 * @param playerID
->>>>>>> b7c6f001544ab2507cd87165b6316f6d056d3e11
+	 * @param playerIndex
 	 * @param willAccept
 	 * @return
 	 */
@@ -664,19 +643,11 @@ public class ServerGameManager extends GameManager
 		return true;
 	}
 
-	/**
-<<<<<<< HEAD
-	 * 
+	/***
 	 * @param playerIndex
 	 * @param ratio
 	 * @param input
 	 * @param output
-=======
-	 *
-	 * @param playerID
-	 * @param in
-	 * @param out
->>>>>>> b7c6f001544ab2507cd87165b6316f6d056d3e11
 	 * @return
 	 */
 	public boolean ServerMaritimeTrading(int playerIndex, int ratio, ResourceType input, ResourceType output)
@@ -712,13 +683,8 @@ public class ServerGameManager extends GameManager
 	}
 
 	/**
-<<<<<<< HEAD
 	 * 
 	 * @param playerIndex
-=======
-	 *
-	 * @param playerID
->>>>>>> b7c6f001544ab2507cd87165b6316f6d056d3e11
 	 * @param resourceList
 	 * @return
 	 */
@@ -770,15 +736,12 @@ public class ServerGameManager extends GameManager
 		return true;
 	}
 
-<<<<<<< HEAD
 	/**
 	 *
 	 * @param receiver
 	 * @param giver
      * @return
      */
-=======
->>>>>>> b7c6f001544ab2507cd87165b6316f6d056d3e11
 	private ResourceType takeRandomResourceCard(int receiver, int giver)
 	{
 		if (giver == -1)
@@ -838,11 +801,8 @@ public class ServerGameManager extends GameManager
 		gm.version = this.version;
 		gm.waterCooler = this.waterCooler;
 		gm.victoryPointManager = this.victoryPointManager;
-<<<<<<< HEAD
 		gm.trade =  this.offeredTrade;
 
-=======
->>>>>>> b7c6f001544ab2507cd87165b6316f6d056d3e11
 
 		return gm;
 	}
