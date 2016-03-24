@@ -652,11 +652,16 @@ public class ServerGameManager extends GameManager
 	 */
 	public boolean ServerMaritimeTrading(int playerIndex, int ratio, ResourceType input, ResourceType output)
 	{
-		if (!this.CanPlayerPlay(playerIndex))
-			return false;
+		if (!this.CanPlayerPlay(playerIndex)) {
+			System.out.println("entered 1");
+			return true;
+		}
 
-		if(!this.CanMaritimeTrade(playerIndex))
-			return false;
+//		if(!this.CanMaritimeTrade(playerIndex)) {
+//			System.out.println("entered 2");
+//
+//			return false;
+//		}
 
 
 
@@ -673,12 +678,16 @@ public class ServerGameManager extends GameManager
 			bGame.giveResource(input, ratio);
 
 		}catch (ModelException e){
+			System.out.println("entered 3");
+
 			Log.GetLog().throwing("ServerGameManager", "ServerMaritimeTrading", e);
 			e.printStackTrace();
 			return false;
 		}
 
 		this.updateVersion();
+		System.out.println("entered 4");
+
 		return true;
 	}
 

@@ -46,8 +46,8 @@ public class MovesMaritimeTradeCommand extends MovesCommand
 		catch (GameException e)
 		{ //game not found
 			e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
 
 	@Override
