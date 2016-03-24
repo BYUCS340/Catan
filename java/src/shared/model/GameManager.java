@@ -313,6 +313,26 @@ public class GameManager
 	}
 	
 	/**
+	 * Determines if there is a player with over 7 cards
+	 * @return
+	 */
+	protected boolean NeedToDiscard()
+	{
+		//
+		return false;
+	}
+	
+	/**
+	 * Logs a action into the state log
+	 * @param playerIndex
+	 * @param message
+	 */
+	protected void LogAction(int playerIndex, String message)
+	{
+		log.logAction(playerIndex,message);
+	}
+	
+	/**
 	 * Handles the roll of a die
 	 * @param roll
 	 * @throws ModelException 
@@ -325,6 +345,9 @@ public class GameManager
 		
 		if (diceRoll == 7 )
 		{
+			//TODO: put in discard state if have over 7 cards
+			if (NeedToDiscard()) this.gameState.state = GameRound.DISCARDING;
+			
 			this.playerCanMoveRobber = this.CurrentPlayersTurn();
 			if (!gameState.startRobbing()) throw new ModelException("Unable to stop rolling after 7");
 		}
