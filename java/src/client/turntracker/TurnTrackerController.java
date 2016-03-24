@@ -114,18 +114,18 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			String soundName = "images"+File.separator+"yourTurn.wav";    
 			AudioInputStream audioInputStream;
 			audioInputStream = null;
-//			try 
-//			{
-//				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
-//				
-//				Clip clip = AudioSystem.getClip();
-//				clip.open(audioInputStream);
-//				clip.start();
-//			}
-//			catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
-//			{
-//				e.printStackTrace();
-//			}	
+			try 
+			{
+				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+				
+				Clip clip = AudioSystem.getClip();
+				clip.open(audioInputStream);
+				clip.start();
+			}
+			catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
+			{
+				e.printStackTrace();
+			}	
 		}
 
 		//check first to see if the game is over
@@ -207,18 +207,18 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			String soundName = "images" + File.separator + "chat.wav";    
 			AudioInputStream audioInputStream;
 			audioInputStream = null;
-//			try 
-//			{
-//				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
-//				
-//				Clip clip = AudioSystem.getClip();
-//				clip.open(audioInputStream);
-//				clip.start();
-//			}
-//			catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
-//			{
-//				e.printStackTrace();
-//			}
+			try 
+			{
+				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+				
+				Clip clip = AudioSystem.getClip();
+				clip.open(audioInputStream);
+				clip.start();
+			}
+			catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
+			{
+				e.printStackTrace();
+			}
 		}
 	};
 }
