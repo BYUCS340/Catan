@@ -482,8 +482,8 @@ public class GameManager
 			//check to see if player has resources
 			if (!this.CanBuildCity(playerIndex, location))
 				throw new ModelException("Cannot place city");
-			
-			GetPlayer(playerIndex).playerBank.buildRoad();
+
+			GetPlayer(playerIndex).playerBank.buildCity();
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceCity(location,color);
 			victoryPointManager.playerBuiltCity(playerIndex);
