@@ -984,11 +984,9 @@ public class ClientGameManager extends GameManager implements ModelSubject
 		
 		if (!this.map.equals(newmap) && newmap != null)
 		{
-			boolean force = this.map.IsForced();
 			boolean setup = this.map.IsSetup();
 			
 			this.map = newmap;
-			this.map.ForceUpdate(force);
 			this.map.SetupPhase(setup);
 			
 			this.notifyCenter.notify(ModelNotification.MAP);

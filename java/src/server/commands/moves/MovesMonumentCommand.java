@@ -1,6 +1,11 @@
 package server.commands.moves;
 
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
+import shared.model.GameModel;
 
 /**
  * Command class that handles playing of monument card.
@@ -9,6 +14,8 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesMonumentCommand extends MovesCommand 
 {
+	private GameModel gm;
+	
 	/**
 	 * Creates a command object to play the monument card.
 	 * @param playerID The player ID.
@@ -22,7 +29,15 @@ public class MovesMonumentCommand extends MovesCommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
+		try
+		{
+			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
+			return sgm.ServerMonument(playerIndex);
+		}
+		catch (GameException e)
+		{ //game not found
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -36,8 +51,9 @@ public class MovesMonumentCommand extends MovesCommand
 	@Override
 	public String GetResponse() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if (gm != null) 
+			return SerializationUtils.serialize(gm);
+		return "ERROR";
 	}
 
 	@Override

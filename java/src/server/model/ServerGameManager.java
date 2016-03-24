@@ -22,8 +22,12 @@ import shared.model.map.model.MapGenerator;
  * @author matthewcarlson
  *
  */
-public class ServerGameManager extends GameManager
+public class ServerGameManager extends GameManager implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1293281;
 	private	boolean randomTiles;
 	private boolean randomNumbers;
 	private boolean randomPorts;
@@ -59,6 +63,13 @@ public class ServerGameManager extends GameManager
 	public int GetPlayerIndexByID(int playerID)
 	{
 		return playerIndexLookup.get(playerID);
+	}
+	
+	@Override
+	public void reset()
+	{
+		super.reset();
+		this.map = MapGenerator.GenerateMap(randomTiles, randomNumbers, randomPorts);
 	}
 
 	@Override
@@ -237,17 +248,16 @@ public class ServerGameManager extends GameManager
 	 */
 	public boolean ServerBuyDevCard(int playerID)
 	{
-		int currentPlayer = this.GetPlayerIndexByID(playerID);
-		if (super.CurrentPlayersTurn() != currentPlayer)
+		if (super.CurrentPlayersTurn() != playerID)
 			return false;
 
-		if (!super.CanBuyDevCard(currentPlayer))
+		if (!super.CanBuyDevCard(playerID))
 			return false;
 
 		//Buy the dev card
 		try
 		{
-			super.BuyDevCard(currentPlayer);
+			super.BuyDevCard(playerID);
 			this.updateVersion();
 			return true;
 		}
@@ -263,28 +273,65 @@ public class ServerGameManager extends GameManager
 
 	/**
 	 *
-	 * @param playerID
+	 * @param playerIndex
 	 * @param res1
 	 * @param res2
 	 * @return
 	 */
-	public boolean ServerYearOfPlenty(int playerID, ResourceType res1, ResourceType res2)
+	public boolean ServerYearOfPlenty(int playerIndex, ResourceType res1, ResourceType res2)
 	{
-		return false;
-	}
-
-	/**
-	 * @param playerID
-	 * @param res1
-	 * @return
-	 */
-	public boolean ServerMonopoly(int playerID, ResourceType res1)
-	{
-		int playerIndex = this.GetPlayerIndexByID(playerID);
 		if (!this.CanPlayerPlay(playerIndex))
 			return false;
 
-		if (!this.CanPlayDevCard(playerID, DevCardType.MONOPOLY))
+		if (!this.CanPlayDevCard(playerIndex, DevCardType.YEAR_OF_PLENTY))
+			return false;
+
+		try
+		{
+			//take resources from bank
+			if (res1 == res2 && this.gameBank.getResourceCount(res1) > 1)
+			{
+				this.gameBank.getResource(res1);
+				this.gameBank.getResource(res2);
+			}
+			else if (this.gameBank.getResourceCount(res1) > 0 && this.gameBank.getResourceCount(res2) > 0)
+			{
+				this.gameBank.getResource(res1);
+				this.gameBank.getResource(res2);
+			}
+			else
+			{
+				return false;
+			}
+			
+			//give resources to player
+			players.get(playerIndex).playerBank.giveResource(res1);
+			players.get(playerIndex).playerBank.giveResource(res2);
+
+			//remove dev card from player
+			this.playDevCard(playerIndex, DevCardType.YEAR_OF_PLENTY);
+		}
+		catch (ModelException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+
+		this.updateVersion();
+		return true;
+	}
+
+	/**
+	 * @param playerIndex
+	 * @param res1
+	 * @return
+	 */
+	public boolean ServerMonopoly(int playerIndex, ResourceType res1)
+	{
+		if (!this.CanPlayerPlay(playerIndex))
+			return false;
+
+		if (!this.CanPlayDevCard(playerIndex, DevCardType.MONOPOLY))
 			return false;
 
 		try
@@ -305,7 +352,7 @@ public class ServerGameManager extends GameManager
 			players.get(playerIndex).playerBank.giveResource(res1, totalResourceCount);
 
 			//remove dev card from player
-			this.playDevCard(playerID, DevCardType.MONOPOLY);
+			this.playDevCard(playerIndex, DevCardType.MONOPOLY);
 		}
 		catch (ModelException e)
 		{
@@ -318,16 +365,15 @@ public class ServerGameManager extends GameManager
 	}
 
 	/**
-	 * @param playerID
+	 * @param playerIndex
 	 * @return
 	 */
-	public boolean ServerMonument(int playerID)
+	public boolean ServerMonument(int playerIndex)
 	{
-		int playerIndex = this.GetPlayerIndexByID(playerID);
 		if (!this.CanPlayerPlay(playerIndex))
 			return false;
 
-		if (!this.CanPlayDevCard(playerID, DevCardType.MONUMENT))
+		if (!this.CanPlayDevCard(playerIndex, DevCardType.MONUMENT))
 			return false;
 
 		try
@@ -336,7 +382,7 @@ public class ServerGameManager extends GameManager
 			this.victoryPointManager.playedMonument(playerIndex);
 
 			//remove dev card from player
-			this.playDevCard(playerID, DevCardType.MONUMENT);
+			this.playDevCard(playerIndex, DevCardType.MONUMENT);
 		}
 		catch (ModelException e)
 		{
@@ -350,20 +396,19 @@ public class ServerGameManager extends GameManager
 
 	/**
 	 *
-	 * @param playerID
+	 * @param playerIndex
 	 * @param start1
 	 * @param end1
 	 * @param start2
 	 * @param end2
 	 * @return
 	 */
-	public boolean ServerRoadBuilding(int playerID, Coordinate start1, Coordinate end1,  Coordinate start2, Coordinate end2)
+	public boolean ServerRoadBuilding(int playerIndex, Coordinate start1, Coordinate end1,  Coordinate start2, Coordinate end2)
 	{
-		int playerIndex = this.GetPlayerIndexByID(playerID);
 		if (!this.CanPlayerPlay(playerIndex))
 			return false;
 
-		if (!this.CanPlayDevCard(playerID, DevCardType.ROAD_BUILD))
+		if (!this.CanPlayDevCard(playerIndex, DevCardType.ROAD_BUILD))
 			return false;
 
 		CatanColor color = this.getPlayerColorByIndex(playerIndex);
@@ -379,7 +424,7 @@ public class ServerGameManager extends GameManager
 			this.victoryPointManager.playerBuiltRoad(playerIndex);
 
 			//remove dev card from player
-			this.playDevCard(playerID, DevCardType.ROAD_BUILD);
+			this.playDevCard(playerIndex, DevCardType.ROAD_BUILD);
 		}
 		catch (ModelException e)
 		{
@@ -400,29 +445,35 @@ public class ServerGameManager extends GameManager
 	 */
 	public boolean ServerSoldier(int playerID, Coordinate location, int victimIndex)
 	{
-		int playerIndex = this.GetPlayerIndexByID(playerID);
-
-		if(this.CurrentPlayersTurn() != playerIndex)
+		if(this.CurrentPlayersTurn() != playerID)
 		{
 			return false;
 		}
 
-		if(!this.CanPlayDevCard(playerIndex, DevCardType.SOLDIER))
+		if(!this.CanPlayDevCard(playerID, DevCardType.SOLDIER))
 		{
 			return false;
 		}
 
-		boolean couldRob = this.ServerExecuteRob(playerIndex, victimIndex, location);
+		boolean couldRob = this.ServerExecuteRob(playerID, victimIndex, location);
 
 		//ONLY take the soldier card if this player could actually execute the robbing
 		//action
 		if(couldRob)
 		{
-			Player pPlayer = players.get(playerIndex);
+			Player pPlayer = players.get(playerID);
 			Bank bPlayer = pPlayer.playerBank;
 			bPlayer.giveDevCard(DevCardType.SOLDIER);
 			int armySize = pPlayer.incrementArmySize();
-			this.victoryPointManager.checkPlayerArmySize(playerIndex, armySize);
+			this.victoryPointManager.checkPlayerArmySize(playerID, armySize);
+			try
+			{
+				players.get(playerID).playerBank.getDevCard(DevCardType.SOLDIER);
+			}
+			catch(ModelException e)
+			{
+				e.printStackTrace();
+			}
 		}
 
 		this.updateVersion();

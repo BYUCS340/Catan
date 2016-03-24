@@ -1,7 +1,15 @@
 package server.commands.moves;
 
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
 import shared.definitions.ResourceType;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
+import shared.model.GameModel;
 
 /**
  * Command for handling the monopoly card.
@@ -11,6 +19,7 @@ import shared.networking.cookie.NetworkCookie;
 public class MovesMonopolyCommand extends MovesCommand 
 {
 	private ResourceType resource;
+	private GameModel gm;
 	
 	/**
 	 * Creates a command object to play the monopoly card.
@@ -27,7 +36,15 @@ public class MovesMonopolyCommand extends MovesCommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
+		try
+		{
+			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
+			return sgm.ServerMonopoly(playerIndex, resource);
+		}
+		catch (GameException e)
+		{ //game not found
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -41,8 +58,9 @@ public class MovesMonopolyCommand extends MovesCommand
 	@Override
 	public String GetResponse() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if (gm != null) 
+			return SerializationUtils.serialize(gm);
+		return "ERROR";
 	}
 
 	@Override

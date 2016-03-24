@@ -1,5 +1,16 @@
 package server.model;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,6 +24,7 @@ import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.model.ModelException;
 import shared.model.Player;
+import shared.networking.SerializationUtils;
 import shared.data.GameInfo;
 import shared.data.PlayerInfo;
 
@@ -195,9 +207,29 @@ public class GameTable
 	 * @param filePath 
 	 * @return
 	 */
-	public boolean LoadGame(String filePath)
+	public boolean LoadGame(String name)
 	{
+		
+		try 
+		{
+			String filePath = File.separator+"savedata"+File.separator+name+".json";
+			byte[] encoded;
+			encoded = Files.readAllBytes(Paths.get(System.getProperty("user.dir") + filePath));
+			String data = new String(encoded, "utf-8");
+			ServerGameManager sgm = SerializationUtils.deserialize(data, ServerGameManager.class);
+			System.out.println(sgm.toString());
+			System.out.println(sgm.GetGameTitle());
+			games.SetGame(sgm);
+			return true;
+		} 
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 
 		return false;
+		
 	}
 	
 	/**
@@ -206,8 +238,41 @@ public class GameTable
 	 * @param filePath the file destination to write to
 	 * @return true if succeeded
 	 */
-	public boolean SaveGame(int id, String filePath)
+	public boolean SaveGame(int id, String name)
 	{
+		try
+		{
+			ServerGameManager sgm = this.GetGame(id);
+			String data = SerializationUtils.serialize((Serializable) sgm);
+			
+			String filename = File.separator+"savedata"+File.separator+name+".json";
+			
+			File file = new File(System.getProperty("user.dir") + filename);
+			
+			FileOutputStream fop = new FileOutputStream(file);
+			OutputStreamWriter osw = new OutputStreamWriter(fop, "utf-8");
+			Writer writer = new BufferedWriter(osw);
+			writer.write(data);
+			writer.close();
+			return true;
+		}
+		catch (GameException e)
+		{ //game not found
+			Log.GetLog().finest(e.getMessage());
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			Log.GetLog().finest(e.getMessage());
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			Log.GetLog().finest(e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Log.GetLog().finest(e.getMessage());
+			e.printStackTrace();
+		}
 		return false;
 	}
 	

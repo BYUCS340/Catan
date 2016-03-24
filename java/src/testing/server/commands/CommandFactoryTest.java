@@ -181,7 +181,7 @@ public class CommandFactoryTest
 		assertTrue(command.getClass() == GamesJoinCommand.class);
 	}
 	
-	@Test
+	/*@Test
 	public void TestGamesSave() throws InvalidFactoryParameterException
 	{
 		String url = "games/save";
@@ -199,7 +199,7 @@ public class CommandFactoryTest
 		ICommand command = factory.GetCommand(param, cookie, object);
 		
 		assertTrue(command.getClass() == GamesLoadCommand.class);
-	}
+	}*/
 	
 	@Test
 	public void TestGameModel() throws InvalidFactoryParameterException
