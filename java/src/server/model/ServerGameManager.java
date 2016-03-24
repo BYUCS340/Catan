@@ -12,11 +12,7 @@ import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
 import shared.definitions.ResourceType;
-import shared.model.Bank;
-import shared.model.GameManager;
-import shared.model.GameModel;
-import shared.model.ModelException;
-import shared.model.Player;
+import shared.model.*;
 import shared.model.map.Coordinate;
 import shared.model.map.MapException;
 import shared.model.map.model.MapGenerator;
@@ -237,6 +233,8 @@ public class ServerGameManager extends GameManager
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		this.updateVersion();
 		return false;
 	}
 	
@@ -565,30 +563,100 @@ public class ServerGameManager extends GameManager
 			return false;
 
 
-//		//  offer trade
+		//  offer trade
 //		try{
-//
-//
-//
-//
+			OfferedTrade offer = new OfferedTrade();
+			offer.setFromPlayerID(playerIndexOffering);
+			offer.setToPlayerID(playerIndexReceiving);
+			ResourceType[] resourceTypes = {ResourceType.BRICK, ResourceType.ORE, ResourceType.SHEEP, ResourceType.WHEAT, ResourceType.WOOD};
+
+			//  populate the trade offer
+			for(int i = 0; i < resourceList.size(); i++){
+				int resource_count = resourceList.get(i);
+				if (resource_count != 0){
+					if(resource_count > 0){
+						offer.setOfferedResourceAmount(resourceTypes[i], resource_count);
+					}else{
+						offer.setWantedResourceAmount(resourceTypes[i], -1 * resource_count);
+					}
+				}
+			}
+			this.setTradeOffer(offer);
+
+
+
 //		}catch (ModelException e){
 //			Log.GetLog().throwing("ServerGameManager", "ServerOfferTrade", e);
 //			e.printStackTrace();
 //			return false;
 //		}
 
+		this.updateVersion();
 		return true;
 	}
 	
 	/**
 	 * 
-	 * @param playerID
+	 * @param playerIndex
 	 * @param willAccept
 	 * @return
 	 */
-	public boolean ServerAcceptTrade(int playerID, boolean willAccept)
+	public boolean ServerAcceptTrade(int playerIndex, boolean willAccept)
 	{
-		return false;
+		if(!this.canAcceptTrade(playerIndex))
+			return false;
+
+		//  if the player rejects the trade remove the trade offer, no exchange necessary so return
+		if(!willAccept) {
+			this.removeTradeOffer();
+			this.updateVersion();
+			return true;
+		}
+
+		//  accept trade
+		try{
+			OfferedTrade offer = this.offeredTrade;
+			ResourceType[] resourceTypes = {ResourceType.BRICK, ResourceType.ORE, ResourceType.SHEEP, ResourceType.WHEAT, ResourceType.WOOD};
+
+			//  exchange resources
+			int playerIndexSendingOffer = offer.getFromPlayerID();
+			int playerIndexReceivingOffer = offer.getToPlayerID();
+
+			Player pSending = players.get(playerIndexSendingOffer);
+			Player pReceiving = players.get(playerIndexReceivingOffer);
+			Bank bReceiving = pReceiving.playerBank;
+			Bank bSending = pSending.playerBank;
+
+			//  take all resources from player who sent the trade and give them to the receiving player
+			for(ResourceType resource : resourceTypes){
+				int resource_amount = offer.getOfferedResourceAmount(resource);
+				if(resource_amount > 0){
+					bSending.getResource(resource, resource_amount);
+					bReceiving.giveResource(resource, resource_amount);
+				}
+			}
+
+			//  take all resources from the player who received the offer and give them to the player who sent the original offer
+			for(ResourceType resource : resourceTypes){
+				int resource_amount = offer.getWantedResourceAmount(resource);
+				if(resource_amount > 0){
+					bReceiving.getResource(resource, resource_amount);
+					bSending.giveResource(resource, resource_amount);
+				}
+			}
+
+			this.removeTradeOffer();
+
+
+
+		}catch (ModelException e){
+			Log.GetLog().throwing("ServerGameManager", "ServerAcceptTrade", e);
+			e.printStackTrace();
+			return false;
+		}
+
+		this.updateVersion();
+		return true;
 	}
 	
 	/**
@@ -627,6 +695,7 @@ public class ServerGameManager extends GameManager
 			return false;
 		}
 
+		this.updateVersion();
 		return true;
 	}
 	
@@ -680,6 +749,7 @@ public class ServerGameManager extends GameManager
 			return false;
 		}
 
+		this.updateVersion();
 		return true;
 	}
 
@@ -748,7 +818,9 @@ public class ServerGameManager extends GameManager
 		gm.version = this.version;
 		gm.waterCooler = this.waterCooler;
 		gm.victoryPointManager = this.victoryPointManager;
-		
+		gm.trade =  this.offeredTrade;
+
+
 		return gm;
 	}
 	

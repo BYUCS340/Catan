@@ -21,7 +21,7 @@ public class MovesOfferTradeCommand extends MovesCommand
 	
 	/**
 	 * Creates a command that offers a trade.
-	 * @param playerIndex The player ID.
+	 * @param cookie The player ID/game ID
 	 * @param playerIndex The player index.
 	 * @param receiverIndex The index of the receiver.
 	 * @param offer The resources being offered. (brick, ore, sheep, wheat, wood; + is what is offered by 
@@ -59,7 +59,6 @@ public class MovesOfferTradeCommand extends MovesCommand
 	@Override
 	public String GetResponse()
 	{
-		// TODO Auto-generated method stub
 		if (sgm != null)
 			return SerializationUtils.serialize(sgm.ServerGetSerializableModel());
 		return null;
