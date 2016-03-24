@@ -492,10 +492,11 @@ public class ServerGameManager extends GameManager implements Serializable
 	 */
 	public boolean ServerBuildRoad(int playerID, Coordinate start, Coordinate end, boolean free)
 	{
-		if (!this.CanPlayerPlay(playerID))
+		int playerIndex = this.GetPlayerIndexByID(playerID);
+		if (!this.CanPlayerPlay(playerIndex))
 			return false;
 
-		CatanColor color = this.getPlayerColorByIndex(playerID);
+		CatanColor color = this.getPlayerColorByIndex(playerIndex);
 		this.map.SetupPhase(free);
 
 		if (!this.map.CanPlaceRoad(start, end, color))
@@ -509,7 +510,7 @@ public class ServerGameManager extends GameManager implements Serializable
 		//Build the road
 		try
 		{
-			this.BuildRoad(playerID, start, end, free);
+			this.BuildRoad(playerIndex, start, end, free);
 		}
 		catch (ModelException e)
 		{
