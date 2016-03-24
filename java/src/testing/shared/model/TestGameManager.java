@@ -104,10 +104,6 @@ public class TestGameManager
 			DevCardType card = gm.BuyDevCard(gm.CurrentPlayersTurn());
 			System.out.print("Bought card: ");
 			System.out.println(card.toString());
-			assertEquals(1,gm.playerDevCardCount(gm.CurrentPlayersTurn()));
-			assertTrue(gm.CanPlayDevCard(gm.CurrentPlayersTurn(), card));
-			gm.playDevCard(gm.CurrentPlayersTurn(), card);
-			assertEquals(0,gm.playerDevCardCount(gm.CurrentPlayersTurn()));
 		}
 		catch (Exception e){
 			e.printStackTrace();

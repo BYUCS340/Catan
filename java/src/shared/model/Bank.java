@@ -543,6 +543,14 @@ public class Bank implements Serializable
 	{
 		this.newDevCards[type.ordinal()]++;
 	}
+	public void newToOldDevs()
+	{
+		for(int i = 0; i < this.numberDevCardTypes; i++)
+		{
+			this.devCards[i] = this.devCards[i] + this.newDevCards[i];
+			this.newDevCards[i] = 0;
+		}
+	}
 	//TEMP DEV CARD STUFF  ==========================================
 	
 	

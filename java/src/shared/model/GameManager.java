@@ -35,6 +35,7 @@ public class GameManager
 	protected List<Player> players;
 	protected VictoryPointManager victoryPointManager;
 	protected ChatBox waterCooler;
+	protected OfferedTrade offeredTrade;
 	protected GameActionLog log;
 	protected MapModel map;
 	protected int version;
@@ -69,6 +70,7 @@ public class GameManager
 		gameBank = new Bank();
 		gameState = new GameState();
 		victoryPointManager = new VictoryPointManager();
+		offeredTrade = null;
 		playerColors = new int[10];
 		//fill the array with -1 by default
 		Arrays.fill(playerColors,-1);
@@ -91,6 +93,10 @@ public class GameManager
 		gameState = new GameState();
 		map = MapGenerator.BeginnerMap();
 		victoryPointManager = new VictoryPointManager();
+		offeredTrade = null;
+		playerColors = new int[10];
+		//fill the array with -1 by default
+		Arrays.fill(playerColors,-1);
 		playerCanMoveRobber = -1;
 		gameBank.resetToBankDefaults();
 		
@@ -283,6 +289,23 @@ public class GameManager
 	public int NumberActivePlayers()
 	{
 		return players.size();
+	}
+
+
+	/**
+	 * Sets the trade offer when one is made, it doesn't need to notify because this is already checked in the client
+	 * @param offeredTrade
+     */
+	public void setTradeOffer(OfferedTrade offeredTrade){
+		//  TODO:  actually might need to notify here, test
+		this.offeredTrade = offeredTrade;
+	}
+
+	/**
+	 * Removes any trade offers, if any exist
+	 */
+	public void removeTradeOffer(){
+		this.offeredTrade = null;
 	}
 	
 	
@@ -511,7 +534,7 @@ public class GameManager
 		Bank playerBank = GetPlayer(playerIndex).playerBank;
 		playerBank.buyDevCard();
 		DevCardType devcard = gameBank.getDevCard();
-		playerBank.giveDevCard(devcard);
+		playerBank.giveNewDevCard(devcard);
 		victoryPointManager.playerGotDevCard(playerIndex, devcard);
 		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" bought a Dev card.");
 		return devcard;
@@ -1140,33 +1163,4 @@ public class GameManager
 	public int getBankResourceCount(ResourceType resourceType){
 		return gameBank.getResourceCount(resourceType);
 	}
-	
-//	public void initializeBankTempTesting(){
-//		try {
-//			gameBank.giveResource(ResourceType.BRICK, 60);
-//			gameBank.giveResource(ResourceType.SHEEP, 60);
-//			gameBank.giveResource(ResourceType.WHEAT, 60);
-//			gameBank.giveResource(ResourceType.ORE, 60);
-//			gameBank.giveResource(ResourceType.WOOD, 60);
-//
-//		} catch (ModelException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		ResourceType type = ResourceType.BRICK;
-//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
-//		type = ResourceType.SHEEP;
-//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
-//		 type = ResourceType.WHEAT;
-//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
-//		 type = ResourceType.ORE;
-//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
-//		 type = ResourceType.WOOD;
-//		System.out.println("The bank has" + gameBank.getResourceCount(type) + " of " + type);
-//		
-//
-//	}
-
-	
-	
 }
