@@ -780,15 +780,6 @@ public class GameManager
 		if (!CanPlayerPlay(playerIndex))
 			return false;
 		
-		try 
-		{
-			GetPlayer(playerIndex).playerBank.canBuildCity();
-		}
-		catch (ModelException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
 		return true;
 	}
 	
