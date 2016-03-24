@@ -251,16 +251,17 @@ public class ServerGameManager extends GameManager implements Serializable
 	 */
 	public boolean ServerBuyDevCard(int playerID)
 	{
-		if (super.CurrentPlayersTurn() != playerID)
+		int playerIndex = this.GetPlayerIndexByID(playerID);
+		if (super.CurrentPlayersTurn() != playerIndex)
 			return false;
 
-		if (!super.CanBuyDevCard(playerID))
+		if (!super.CanBuyDevCard(playerIndex))
 			return false;
 
 		//Buy the dev card
 		try
 		{
-			super.BuyDevCard(playerID);
+			super.BuyDevCard(playerIndex);
 			this.updateVersion();
 			return true;
 		}
