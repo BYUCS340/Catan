@@ -4,7 +4,9 @@ import server.model.GameArcade;
 import server.model.GameException;
 import server.model.ServerGameManager;
 import shared.definitions.ResourceType;
+import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
+import shared.model.GameModel;
 
 /**
  * Command object that allows the playing of the Year of Plenty card.
@@ -15,6 +17,7 @@ public class MovesYearOfPlentyCommand extends MovesCommand
 {
 	private ResourceType resource1;
 	private ResourceType resource2;
+	private GameModel gm;
 	
 	/**
 	 * Creates a command object that plays the Year of Plenty card.
@@ -55,8 +58,9 @@ public class MovesYearOfPlentyCommand extends MovesCommand
 	@Override
 	public String GetResponse() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if (gm != null) 
+			return SerializationUtils.serialize(gm);
+		return "ERROR";
 	}
 
 	@Override

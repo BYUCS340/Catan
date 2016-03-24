@@ -1,6 +1,16 @@
 package server.commands.games;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import server.commands.ICommand;
+import server.model.GameArcade;
+import server.model.ServerGameManager;
+import shared.networking.SerializationUtils;
 
 /**
  * Command that handles loading games that have been previously saved.
@@ -23,8 +33,9 @@ public class GamesLoadCommand implements ICommand
 	@Override
 	public boolean Execute() 
 	{
-		// TODO Auto-generated method stub
-		return false;
+		
+			 return GameArcade.games().LoadGame(name);
+			 
 	}
 
 	@Override

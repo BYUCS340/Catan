@@ -40,40 +40,7 @@ public class GamesSaveCommand implements ICommand
 
 	@Override
 	public boolean Execute() {
-		try
-		{
-			ServerGameManager sgm = GameArcade.games().GetGame(id);
-			String data = SerializationUtils.serialize((Serializable) sgm);
-			
-			String filename = File.separator+"savedata"+File.separator+name+".json";
-			
-			File file = new File(System.getProperty("user.dir") + filename);
-			
-			FileOutputStream fop = new FileOutputStream(file);
-			OutputStreamWriter osw = new OutputStreamWriter(fop, "utf-8");
-			Writer writer = new BufferedWriter(osw);
-			writer.write(data);
-			writer.close();
-			return true;
-		}
-		catch (GameException e)
-		{ //game not found
-			Log.GetLog().finest(e.getMessage());
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			Log.GetLog().finest(e.getMessage());
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			Log.GetLog().finest(e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			Log.GetLog().finest(e.getMessage());
-			e.printStackTrace();
-		}
-		return false;
+		return GameArcade.games().SaveGame(id, name);
 	}
 
 	@Override
