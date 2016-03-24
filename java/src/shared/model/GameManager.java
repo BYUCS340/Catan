@@ -69,11 +69,7 @@ public class GameManager
 		gameBank = new Bank();
 		gameState = new GameState();
 		victoryPointManager = new VictoryPointManager();
-<<<<<<< HEAD
 		offeredTrade = null;
-		notifyCenter = new NotificationCenter();
-=======
->>>>>>> b7c6f001544ab2507cd87165b6316f6d056d3e11
 		playerColors = new int[10];
 		//fill the array with -1 by default
 		Arrays.fill(playerColors,-1);
