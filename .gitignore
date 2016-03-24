@@ -140,3 +140,4 @@ tester/images/building/card.jpg
 tester.zip
 java/src/server/docs/java/
 java/src/server/docs/javascript/
+*.lck
