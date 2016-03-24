@@ -83,21 +83,21 @@ public class GameManager
 	 * Resets a game to default state
 	 */
 	public void reset()
-	{
-		Arrays.fill(playerColors,-1);
+	{;
 		version = -1;
 		waterCooler = new ChatBox();
 		log = new GameActionLog();
-		players = new ArrayList<>();
 		gameBank = new Bank();
 		gameState = new GameState();
 		map = MapGenerator.BeginnerMap();
 		victoryPointManager = new VictoryPointManager();
-		playerColors = new int[10];
-		//fill the array with -1 by default
-		Arrays.fill(playerColors,-1);
 		playerCanMoveRobber = -1;
 		gameBank.resetToBankDefaults();
+		
+		for (Player p: players)
+		{
+			p.playerBank.resetToPlayerDefaults();
+		}
 	}
 	
 	
