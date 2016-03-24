@@ -202,75 +202,27 @@ public class Bank implements Serializable
 	 * @return the resourcetype taken; null if this player doesn't have any
 	 * resources
 	 */
-	public ResourceType giveRandomResource()
+	public ResourceType takeRandomResource()
 	{
 		if(this.getResourceCount() == 0)
 		{
 			return null;
 		}
 		
-		int randNum = (int) ((Math.random() * this.getResourceCount()));
-		int count = 0;
-		if(randNum < (count += this.getResourceCount(ResourceType.BRICK)))
-		{
-			try {
-				this.giveResource(ResourceType.BRICK);
-				return ResourceType.BRICK;
-			} 
-			catch (ModelException e) 
-			{
-				e.printStackTrace();
-				return null;
-			}
-		}
-		else if(randNum < (count += this.getResourceCount(ResourceType.ORE)))
-		{
-			try {
-				this.giveResource(ResourceType.ORE);
-				return ResourceType.ORE;
-			} 
-			catch (ModelException e) 
-			{
-				e.printStackTrace();
-				return null;
-			}
-		}
-		else if(randNum < (count += this.getResourceCount(ResourceType.SHEEP)))
-		{
-			try {
-				this.giveResource(ResourceType.SHEEP);
-				return ResourceType.SHEEP;
-			} 
-			catch (ModelException e) 
-			{
-				e.printStackTrace();
-				return null;
-			}
-		}
-		else if(randNum < (count += this.getResourceCount(ResourceType.WHEAT)))
-		{
-			try {
-				this.giveResource(ResourceType.WHEAT);
-				return ResourceType.WHEAT;
-			} 
-			catch (ModelException e) 
-			{
-				e.printStackTrace();
-				return null;
-			}
-		}
-		else
-		{
-			try {
-				this.giveResource(ResourceType.WOOD);
-				return ResourceType.WOOD;
-			} 
-			catch (ModelException e) 
-			{
-				e.printStackTrace();
-				return null;
-			}
-		}
+		//create a list of the resources
+		List<ResourceType> resourcesCanTake = new ArrayList<>();
+		
+		for (int i=0; i < this.getResourceCount(ResourceType.WOOD);  i++) resourcesCanTake.add(ResourceType.WOOD);
+		for (int i=0; i < this.getResourceCount(ResourceType.SHEEP); i++) resourcesCanTake.add(ResourceType.SHEEP);
+		for (int i=0; i < this.getResourceCount(ResourceType.WHEAT); i++) resourcesCanTake.add(ResourceType.WHEAT);
+		for (int i=0; i < this.getResourceCount(ResourceType.BRICK); i++) resourcesCanTake.add(ResourceType.BRICK);
+		for (int i=0; i < this.getResourceCount(ResourceType.ORE);   i++) resourcesCanTake.add(ResourceType.ORE);
+		
+		if (resourcesCanTake.isEmpty()) return null;
+		
+		int resourceIndex = (int) (Math.random() * resourcesCanTake.size() );
+		
+		return resourcesCanTake.get(resourceIndex);		
 	}
 	
 	/**
