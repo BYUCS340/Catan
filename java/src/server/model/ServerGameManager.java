@@ -251,16 +251,17 @@ public class ServerGameManager extends GameManager implements Serializable
 	 */
 	public boolean ServerBuyDevCard(int playerID)
 	{
-		if (super.CurrentPlayersTurn() != playerID)
+		int playerIndex = this.GetPlayerIndexByID(playerID);
+		if (super.CurrentPlayersTurn() != playerIndex)
 			return false;
 
-		if (!super.CanBuyDevCard(playerID))
+		if (!super.CanBuyDevCard(playerIndex))
 			return false;
 
 		//Buy the dev card
 		try
 		{
-			super.BuyDevCard(playerID);
+			super.BuyDevCard(playerIndex);
 			this.updateVersion();
 			return true;
 		}
@@ -510,8 +511,15 @@ public class ServerGameManager extends GameManager implements Serializable
 		try
 		{
 			this.BuildRoad(playerIndex, start, end, free);
+			
+			if (this.map.LongestRoadExists())
+			{
+				CatanColor longestColor = this.map.GetLongestRoadColor();
+				int longestIndex = this.getPlayerIndexByColor(longestColor);
+				this.victoryPointManager.setPlayerToHaveLongestRoad(longestIndex);
+			}
 		}
-		catch (ModelException e)
+		catch (ModelException | MapException e)
 		{
 			e.printStackTrace();
 			return false;
@@ -574,8 +582,15 @@ public class ServerGameManager extends GameManager implements Serializable
 				return false;
 
 			this.BuildSettlement(playerIndex, p, free);
+			
+			if (this.map.LongestRoadExists())
+			{
+				CatanColor longestColor = this.map.GetLongestRoadColor();
+				int longestIndex = this.getPlayerIndexByColor(longestColor);
+				this.victoryPointManager.setPlayerToHaveLongestRoad(longestIndex);
+			}
 		}
-		catch (ModelException e)
+		catch (ModelException | MapException e)
 		{
 			Log.GetLog().throwing("ServerGameManager", "ServerBuildSettlement", e);
 			e.printStackTrace();
@@ -844,7 +859,7 @@ public class ServerGameManager extends GameManager implements Serializable
 		//give the resource to the robbing player
 		try
 		{
-			bReceiver.getResource(rGiven);
+			bReceiver.giveResource(rGiven);
 		}
 		catch(ModelException e)
 		{
