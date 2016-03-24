@@ -833,7 +833,7 @@ public class ServerGameManager extends GameManager implements Serializable
 		//give the resource to the robbing player
 		try
 		{
-			bReceiver.getResource(rGiven);
+			bReceiver.giveResource(rGiven);
 		}
 		catch(ModelException e)
 		{
