@@ -177,7 +177,7 @@ public class ServerGameManager extends GameManager
 		ResourceType takenResource = this.takeRandomResourceCard(playerIndex, victimIndex);
 		if (takenResource != null)
 		{
-			this.LogAction(playerIndex, this.getCurrentPlayerName()+" stole a "+takenResource+" resource from "+this.getPlayerNameByIndex(victimIndex));
+			this.LogAction(playerIndex, this.getCurrentPlayerName()+" stole a "+takenResource+" from "+this.getPlayerNameByIndex(victimIndex));
 			Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex + " took a "
 				+ takenResource.toString() + " from Player " + victimIndex);
 		}
