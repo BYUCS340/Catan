@@ -466,6 +466,14 @@ public class ServerGameManager extends GameManager
 			bPlayer.giveDevCard(DevCardType.SOLDIER);
 			int armySize = pPlayer.incrementArmySize();
 			this.victoryPointManager.checkPlayerArmySize(playerIndex, armySize);
+			try
+			{
+				players.get(playerIndex).playerBank.getDevCard(DevCardType.SOLDIER);
+			}
+			catch(ModelException e)
+			{
+				e.printStackTrace();
+			}
 		}
 
 		this.updateVersion();
