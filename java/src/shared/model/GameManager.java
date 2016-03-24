@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import server.ai.AIHandler;
 import shared.data.DataTranslator;
 import shared.data.PlayerInfo;
 import shared.definitions.CatanColor;
@@ -337,8 +338,8 @@ public class GameManager
 	 * @param roll
 	 * @throws ModelException 
 	 */
-	protected void DiceRoll(int diceRoll) throws ModelException{
-		
+	protected void DiceRoll(int diceRoll) throws ModelException
+	{	
 		//check if we can move the robber
 		if (diceRoll < 2 || diceRoll > 12 ) 
 			throw new ModelException("Bad Dice Value");
@@ -349,13 +350,36 @@ public class GameManager
 			if (NeedToDiscard()) this.gameState.state = GameRound.DISCARDING;
 			
 			this.playerCanMoveRobber = this.CurrentPlayersTurn();
-			if (!gameState.startRobbing()) throw new ModelException("Unable to stop rolling after 7");
+			
+			boolean requireDiscard = false;
+			for (Player player : players)
+			{
+				if (player.playerBank.getResourceCount() > 7)
+				{
+					requireDiscard = true;
+					break;
+				}
+			}
+			
+			if (!gameState.startRobbing(requireDiscard)) 
+				throw new ModelException("Unable to stop rolling after 7");
+			
+			if (requireDiscard)
+			{
+				for (Player player : players)
+				{
+					if (player.isARobot() && player.playerBank.getResourceCount() > 7)
+						AIHandler.GetHandler().Discard(player.playerID(), this.gameID);
+				}
+			}
 		}
 		else
 		{
-			if (!gameState.stopRolling()) throw new ModelException("Unable to stop rolling after a non 7");
+			if (!gameState.stopRolling()) 
+				throw new ModelException("Unable to stop rolling after a non 7");
 		}
-		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" rolled a "+diceRoll);
+		
+		log.logAction(this.CurrentPlayersTurn(), "rolled a " + diceRoll);
 		
 		//Call map to update the get the transactions
 		Iterator<Transaction> transList = map.GetTransactions(diceRoll);

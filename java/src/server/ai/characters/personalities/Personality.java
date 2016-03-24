@@ -152,7 +152,7 @@ public abstract class Personality
 		return CommandExecutor(param, cookie, object, GameModel.class);
 	}
 	
-	protected void Discard(int game, List<Integer> resourceList)
+	protected GameModel Discard(int game, List<Integer> resourceList)
 	{
 		StringBuilder param = new StringBuilder("MOVES/DISCARDCARDS");
 		NetworkCookie cookie = GetCookie(username, id, game);
@@ -160,7 +160,7 @@ public abstract class Personality
 		PDiscardCards discard = new PDiscardCards(resourceList);
 		String object = SerializationUtils.serialize(discard);
 		
-		CommandExecutor(param, cookie, object);
+		return CommandExecutor(param, cookie, object, GameModel.class);
 	}
 	
 	protected void FinishTurn(int game)

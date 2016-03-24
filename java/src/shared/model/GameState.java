@@ -77,10 +77,15 @@ public class GameState implements Serializable
 	 * @todo throw an excpetion here
 	 * @return
 	 */
-	public boolean startRobbing()
+	public boolean startRobbing(boolean requireDiscard)
 	{
-		if (state != GameRound.ROLLING && state != GameRound.PLAYING) return false;
-		state = GameRound.ROBBING;
+		if (state != GameRound.ROLLING && state != GameRound.PLAYING) 
+			return false;
+		
+		if (requireDiscard)
+			state = GameRound.DISCARDING;
+		else
+			state = GameRound.ROBBING;
 		
 		return true;
 	}
