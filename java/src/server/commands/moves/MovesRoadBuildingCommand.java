@@ -1,8 +1,5 @@
 package server.commands.moves;
 
-import server.model.GameArcade;
-import server.model.GameException;
-import server.model.ServerGameManager;
 import shared.model.map.Coordinate;
 import shared.networking.cookie.NetworkCookie;
 
@@ -38,17 +35,9 @@ public class MovesRoadBuildingCommand extends MovesCommand
 	}
 
 	@Override
-	public boolean Execute()
+	public boolean Execute() 
 	{
-		try
-		{
-			ServerGameManager sgm = GameArcade.games().GetGame(gameID);
-			return sgm.ServerRoadBuilding(playerID, start1, end1, start2, end2);
-		}
-		catch (GameException e)
-		{ //game not found
-			e.printStackTrace();
-		}
+		// TODO Auto-generated method stub
 		return false;
 	}
 

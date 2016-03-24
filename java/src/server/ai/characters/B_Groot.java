@@ -1,6 +1,7 @@
 package server.ai.characters;
 
 import server.ai.characters.personalities.BeginnerPersonality;
+import server.ai.characters.personalities.GrootPersonality;
 import shared.definitions.AIType;
 
 /**
@@ -16,7 +17,7 @@ public class B_Groot extends AI
 	 */
 	public B_Groot() 
 	{
-		super(AIType.BEGINNER, new BeginnerPersonality(NAME));
+		super(AIType.BEGINNER, new GrootPersonality(NAME));
 	}
 	
 	@Override
@@ -24,4 +25,6 @@ public class B_Groot extends AI
 	{
 		return NAME;
 	}
+	
+	
 }

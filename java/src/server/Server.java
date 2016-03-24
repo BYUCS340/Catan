@@ -86,6 +86,7 @@ public class Server
 				public void uncaughtException(Thread arg0, Throwable arg1)
 				{
 					Log.GetLog().log(Level.SEVERE, arg1.getMessage(), arg1);
+					arg1.printStackTrace();
 				}
 				
 			});
