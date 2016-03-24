@@ -507,7 +507,7 @@ public class GameManager
 		Bank playerBank = GetPlayer(playerIndex).playerBank;
 		playerBank.buyDevCard();
 		DevCardType devcard = gameBank.getDevCard();
-		playerBank.giveDevCard(devcard);
+		playerBank.giveNewDevCard(devcard);
 		victoryPointManager.playerGotDevCard(playerIndex, devcard);
 		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" bought a Dev card.");
 		return devcard;
