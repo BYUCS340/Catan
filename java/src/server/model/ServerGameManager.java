@@ -802,6 +802,17 @@ public class ServerGameManager extends GameManager implements Serializable
 			return false;
 		}
 
+
+		boolean allLessThen7 = true;
+		for(Player player : this.players){
+
+			if(player.playerBank.getResourceCount() > 7)
+				allLessThen7 = false;
+		}
+
+		if(allLessThen7)
+			this.gameState.state = GameRound.ROBBING;
+
 		this.updateVersion();
 		return true;
 	}
