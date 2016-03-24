@@ -752,7 +752,7 @@ public class ServerGameManager extends GameManager
 		Bank bReceiver = pReceiver.playerBank;
 		Bank bGiver = pGiver.playerBank;
 
-		ResourceType rGiven = bGiver.giveRandomResource();
+		ResourceType rGiven = bGiver.takeRandomResource();
 
 		//if the giver can't give a resource, return null
 		if(rGiven == null)
