@@ -137,6 +137,7 @@
 			<classpath refid="build-classpath"/>
 		</manifestclasspath>
  		<jar jarfile="${java.dist}/catan-client.jar" basedir="${java.build}">
+			<zipgroupfileset includes="*.jar" dir="${java.lib.dir}"/>
 			<manifest>
 				<attribute name="Main-Class" value="client.main.Catan"/>
 				<attribute name="Class-Path" 
@@ -148,6 +149,7 @@
 			<classpath refid="build-classpath"/>
 		</manifestclasspath>
  		<jar jarfile="${java.dist}/catan-server.jar" basedir="${java.build}">
+			<zipgroupfileset includes="*.jar" dir="${java.lib.dir}"/>
 			<manifest>
 				<attribute name="Main-Class" value="server.Server"/>
 				<attribute name="Class-Path" value="${lib.list.server}" />
