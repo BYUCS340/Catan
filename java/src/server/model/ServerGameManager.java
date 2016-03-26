@@ -847,9 +847,16 @@ public class ServerGameManager extends GameManager implements Serializable
 		Player pGiver = players.get(giver);
 		Bank bReceiver = pReceiver.playerBank;
 		Bank bGiver = pGiver.playerBank;
-
-		ResourceType rGiven = bGiver.takeRandomResource();
-
+		
+		ResourceType rGiven = null;
+		try
+		{
+			rGiven = bGiver.takeRandomResource();
+		}
+		catch(ModelException e)
+		{
+			e.printStackTrace();
+		}
 		//if the giver can't give a resource, return null
 		if(rGiven == null)
 		{
@@ -859,7 +866,7 @@ public class ServerGameManager extends GameManager implements Serializable
 		//give the resource to the robbing player
 		try
 		{
-			bReceiver.giveResource(rGiven);
+			bReceiver.getResource(rGiven);
 		}
 		catch(ModelException e)
 		{
