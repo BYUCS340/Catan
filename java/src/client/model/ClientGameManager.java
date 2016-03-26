@@ -874,16 +874,28 @@ public class ClientGameManager extends GameManager implements ModelSubject
 			return;
 		}
 		
-		Bank oldPlayerbank = this.players.get(this.myPlayerIndex).playerBank;
-		Bank newPlayerbank = newplayers.get(this.myPlayerIndex).playerBank;
-		//check if resources have changed
-		if (!newPlayerbank.equals(oldPlayerbank) && newPlayerbank != null)
+		
+		boolean changedNumResources = false;
+		if(newplayers.size() == oldplayers.size())
 		{
-			this.players.get(this.myPlayerIndex).playerBank = newPlayerbank;
+			for(int i = 0; i < oldplayers.size(); i++)
+			{
+				Bank oldPlayerbank = this.players.get(i).playerBank;
+				Bank newPlayerbank = newplayers.get(i).playerBank;
+				//check if resources have changed
+				if (!newPlayerbank.equals(oldPlayerbank) && newPlayerbank != null)
+				{
+					this.players.get(i).playerBank = newPlayerbank;
+					changedNumResources = true;
+				}
+			}
+		}
+		//notify if any player had a resource change
+		if(changedNumResources)
+		{
 			this.notifyCenter.notify(ModelNotification.RESOURCES);
 		}
-
-
+		
 		//Update our chat
 		if (game.waterCooler.size() > this.waterCooler.size())
 		{
