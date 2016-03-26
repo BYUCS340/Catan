@@ -832,7 +832,7 @@ public class ClientGameManager extends GameManager implements ModelSubject
 		//Check if we need to got our player index
 		if (this.myPlayerIndex == -1)
 		{
-			Iterator<Player> iter = this.players.iterator();
+			Iterator<Player> iter = newplayers.iterator();
 			while (iter.hasNext())
 			{
 				Player p = iter.next();
@@ -848,7 +848,7 @@ public class ClientGameManager extends GameManager implements ModelSubject
 		//Check if we have a different size
 		if (newplayers.size() != oldplayers.size() || !newplayers.equals(oldplayers))
 		{
-			//System.out.println("Updated the players");
+			System.out.println("Updated the players");
 			this.SetPlayers(newplayers);
 			this.notifyCenter.notify(ModelNotification.PLAYERS);
 		}
@@ -868,8 +868,9 @@ public class ClientGameManager extends GameManager implements ModelSubject
 			}
 		}
 		
-		if (this.players.size() != 4)
+		if (this.players.size() != 4 || this.myPlayerIndex == -1)
 		{
+			System.out.println("updated aborted");
 			this.updateInProgress = false;
 			return;
 		}
