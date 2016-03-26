@@ -229,7 +229,7 @@ public class Bank implements Serializable
 		
 		int resourceIndex = (int) (Math.random() * resourcesCanTake.size() );
 		
-		this.giveResource(resourcesCanTake.get(resourceIndex));
+		this.getResource(resourcesCanTake.get(resourceIndex));
 		
 		return resourcesCanTake.get(resourceIndex);		
 	}
