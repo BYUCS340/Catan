@@ -231,19 +231,21 @@ public class ServerGameManager extends GameManager implements Serializable
 
 	/**
 	 * Checks if a player is a robot
-	 * @param index
+	 * @param index the player index
 	 * @return
 	 */
 	private boolean IsPlayerRobot(int index)
 	{
-		for (Player player : this.players)
+		try 
 		{
-			if (player.playerIndex() == index && player.isARobot())
-			{
-				return true;
-			}
+			return GetPlayer(index).isARobot();
+		} 
+		catch (ModelException e) 
+		{
+			e.printStackTrace();
+			return false;
 		}
-		return false;
+		
 	}
 
 	/**
@@ -635,7 +637,7 @@ public class ServerGameManager extends GameManager implements Serializable
 		if(!this.CanOfferTrade(playerIndexOffering))
 			return false;
 
-		System.out.println("Reached Offer0");
+		System.out.println("Reached Offer");
 
 
 		//  offer trade
@@ -658,6 +660,12 @@ public class ServerGameManager extends GameManager implements Serializable
 			}
 			this.setTradeOffer(offer);
 			System.out.println("Reached Offer1");
+			
+			if (this.IsPlayerRobot(playerIndexReceiving))
+			{
+				int aiID = this.GetPlayerIDbyIndex(playerIndexReceiving);
+				AIHandler.GetHandler().Trade(aiID, this.gameID, offer);
+			}
 
 //		}catch (ModelException e){
 //			Log.GetLog().throwing("ServerGameManager", "ServerOfferTrade", e);
@@ -677,11 +685,18 @@ public class ServerGameManager extends GameManager implements Serializable
 	 */
 	public boolean ServerAcceptTrade(int playerIndex, boolean willAccept)
 	{
-//		if(!this.canAcceptTrade(playerIndex))
-//			return false;
-
+		OfferedTrade offer = this.offeredTrade;
+		
+		//THIS SAYS ID but it's actually an index
+		//TODO Chris sorts this out?
+		if (offer.getToPlayerID() != playerIndex)
+		{
+			Log.GetLog().finest("Player with index: "+playerIndex+" and ID:"+this.GetPlayerIDbyIndex(playerIndex)+" cannot accept offer for playerID:"+offer.getToPlayerID());
+			return false;
+		}
 		//  if the player rejects the trade remove the trade offer, no exchange necessary so return
 		if(!willAccept) {
+			this.LogAction(playerIndex, this.getPlayerNameByIndex(playerIndex) + " turned down offer from "+this.getCurrentPlayerName());
 			this.removeTradeOffer();
 			this.updateVersion();
 			return true;
@@ -689,7 +704,6 @@ public class ServerGameManager extends GameManager implements Serializable
 
 		//  accept trade
 		try{
-			OfferedTrade offer = this.offeredTrade;
 			ResourceType[] resourceTypes = {ResourceType.BRICK, ResourceType.ORE, ResourceType.SHEEP, ResourceType.WHEAT, ResourceType.WOOD};
 
 			//  exchange resources
@@ -720,10 +734,11 @@ public class ServerGameManager extends GameManager implements Serializable
 			}
 
 			this.removeTradeOffer();
+			this.LogAction(playerIndex, this.getPlayerNameByIndex(playerIndex) + " accepted an offer from "+this.getCurrentPlayerName());
 
 
-
-		}catch (ModelException e){
+		}
+		catch (ModelException e){
 			Log.GetLog().throwing("ServerGameManager", "ServerAcceptTrade", e);
 			e.printStackTrace();
 			return false;

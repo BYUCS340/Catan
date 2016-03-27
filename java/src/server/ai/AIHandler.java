@@ -15,6 +15,7 @@ import server.ai.characters.B_JarJar;
 import server.ai.characters.B_Trogdor;
 import shared.definitions.AIType;
 import shared.definitions.CatanColor;
+import shared.model.OfferedTrade;
 
 /**
  * Class used for interacting with AI objects.
@@ -150,7 +151,7 @@ public class AIHandler
 	 */
 	public void RunAI(int aiID, int gameID)
 	{
-		new AITakeTurn(aiID, gameID).start();;
+		new AITakeTurn(aiID, gameID).start();
 	}
 	
 	/**
@@ -172,6 +173,12 @@ public class AIHandler
 	public void Chat(int aiID, int gameID, String message)
 	{
 		new AIChat(aiID, gameID, message).start();
+	}
+	
+	public void Trade(int aiID, int gameID, OfferedTrade trade)
+	{
+		Log.GetLog().fine("AI is considering Offer");
+		new AITrade(aiID, gameID, trade).start();
 	}
 	
 	private void CompileTypes()
@@ -281,4 +288,32 @@ public class AIHandler
 			}
 		}
 	}	
+	private class AITrade extends Thread
+	{
+		private int aiID;
+		private int gameID;
+		private OfferedTrade trade;
+		
+		public AITrade(int aiID, int gameID, OfferedTrade trade)
+		{
+			this.aiID = aiID;
+			this.gameID = gameID;
+			this.trade = trade;
+		}
+		
+		@Override
+		public void run()
+		{
+			try 
+			{
+				Thread.sleep(1000);
+				AIbyIndex.get(aiID).ReceivedOffer(gameID, trade);
+			}
+			catch (InterruptedException e) 
+			{
+				Log.GetLog().throwing("AIThread", "run", e);
+				e.printStackTrace();
+			}
+		}
+	}
 }

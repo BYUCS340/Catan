@@ -206,6 +206,23 @@ public class GameManager
 		return players.get(playerIndex).name;
 	}
 	
+	/**
+	 * Gets a player's ID
+	 * @param playerIndexReceiving
+	 * @return -1 if player is not found
+	 */
+	protected int GetPlayerIDbyIndex(int playerIndex) {
+		try 
+		{
+			return this.GetPlayer(playerIndex).playerID();
+		} 
+		catch (ModelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
 	public String getCurrentPlayerName()
 	{
 		return this.getPlayerNameByIndex(CurrentPlayersTurn());

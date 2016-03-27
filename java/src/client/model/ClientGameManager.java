@@ -888,6 +888,13 @@ public class ClientGameManager extends GameManager implements ModelSubject
 			this.players.get(this.myPlayerIndex).playerBank = newPlayerbank;
 			this.notifyCenter.notify(ModelNotification.RESOURCES);
 		}
+		
+		//Update the other players's banks
+		for(Player p: newplayers)
+		{
+			if (!p.playerBank.equals(players.get(p.playerIndex()).playerBank))
+				players.get(p.playerIndex()).playerBank = p.playerBank;
+		}
 
 
 		//Update our chat
@@ -959,6 +966,9 @@ public class ClientGameManager extends GameManager implements ModelSubject
 					
 					if (this.playerIndexSendingOffer == this.myPlayerIndex)
 						this.turnState = TurnState.OFFERED_TRADE;
+					
+					if (this.playerIndexWithTradeOffer == this.myPlayerIndex)
+						this.turnState = TurnState.DOMESTIC_TRADE;
 					
 					break;
 				default:

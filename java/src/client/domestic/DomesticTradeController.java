@@ -52,11 +52,11 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 //		ClientGame.getGame().startListening(this, ModelNotification.ALL);
 
 		this.alert();
-		System.out.println(ResourcePositions.iBRICK.ordinal());
+		/*System.out.println(ResourcePositions.iBRICK.ordinal());
 		System.out.println(ResourcePositions.iWHEAT.ordinal());
 		System.out.println(ResourcePositions.iSHEEP.ordinal());
 		System.out.println(ResourcePositions.iWOOD.ordinal());
-		System.out.println(ResourcePositions.iORE.ordinal());
+		System.out.println(ResourcePositions.iORE.ordinal());*/
 	}
 	
 	public IDomesticTradeView getTradeView() {
