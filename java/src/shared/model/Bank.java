@@ -126,7 +126,7 @@ public class Bank implements Serializable
 	 * @param type it can be anything but the robber
 	 * @throws if there don't have the resource or if type robber
 	 */
-	private void getPiece(PieceType type) throws ModelException
+	public void getPiece(PieceType type) throws ModelException
 	{
 		if (type == PieceType.ROBBER) throw new ModelException();
 		int resourceIndex = type.ordinal();
@@ -136,7 +136,7 @@ public class Bank implements Serializable
 		}
 		else
 		{
-			throw new ModelException ();
+			throw new ModelException ("Not enough resources to buy "+type);
 		}
 	}
 	
@@ -588,4 +588,17 @@ public class Bank implements Serializable
 			return false;
 		return true;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Bank [" + (resources != null ? "resources=" + Arrays.toString(resources) + ", " : "")
+				+ (devCards != null ? "devCards=" + Arrays.toString(devCards) + ", " : "")
+				+ (pieces != null ? "pieces=" + Arrays.toString(pieces) + ", " : "")
+				+ (newDevCards != null ? "newDevCards=" + Arrays.toString(newDevCards) : "") + "]";
+	}
+
+	
 }

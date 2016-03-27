@@ -335,6 +335,37 @@ public class MapModel implements IMapModel
 		}
 	}
 	
+	/**
+	 * Gets the hexes around a vertex
+	 * @param p
+	 */
+	public Iterator<Hex> GetHexes(Coordinate p) 
+	{
+		if (!vertices.ContainsVertex(p))
+			return null;
+		List<Hex> hexs = new ArrayList<>(3);
+		try 
+		{
+			Vertex v = this.GetVertex(p);
+			
+			Iterator<Hex> allHexs = this.GetHexes();
+			while (allHexs.hasNext())
+			{
+				Hex hex = allHexs.next();
+				if (hex.hasVertex(v)) hexs.add(hex);
+			}
+			
+		}
+		catch (MapException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return java.util.Collections.unmodifiableList(hexs).iterator();
+		
+	}
+	
+	
 	@Override
 	public Hex GetHex(Coordinate point) throws MapException
 	{
@@ -684,4 +715,6 @@ public class MapModel implements IMapModel
 		
 		return true;
 	}
+
+	
 }

@@ -2,6 +2,7 @@ package server.model;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -16,6 +17,7 @@ import shared.model.*;
 import shared.model.map.Coordinate;
 import shared.model.map.MapException;
 import shared.model.map.model.MapGenerator;
+import shared.model.map.objects.Hex;
 
 /**
  * Special formation of the game manager
@@ -518,6 +520,7 @@ public class ServerGameManager extends GameManager implements Serializable
 				int longestIndex = this.getPlayerIndexByColor(longestColor);
 				this.victoryPointManager.setPlayerToHaveLongestRoad(longestIndex);
 			}
+			
 		}
 		catch (ModelException | MapException e)
 		{
@@ -583,11 +586,27 @@ public class ServerGameManager extends GameManager implements Serializable
 
 			this.BuildSettlement(playerIndex, p, free);
 			
+			
+			//TODO does settlement affect the longest road?
 			if (this.map.LongestRoadExists())
 			{
 				CatanColor longestColor = this.map.GetLongestRoadColor();
 				int longestIndex = this.getPlayerIndexByColor(longestColor);
 				this.victoryPointManager.setPlayerToHaveLongestRoad(longestIndex);
+			}
+			
+			//give them the resources
+			if (this.gameState.state == GameRound.SECONDROUND){
+				//Log.GetLog().finest("Awarding resources for second round");
+				Iterator<Hex> hexs = map.GetHexes(p);
+				while (hexs.hasNext())
+				{
+					Hex hex = hexs.next();
+					//Log.GetLog().finest("Awarding "+hex.getType()+" to "+playerIndex+" for second round"+hex);
+					ResourceType rt = hex.getType().toResource();
+					if (rt == null) Log.GetLog().finest("Unknown type to award");
+					else this.GetPlayer(playerIndex).playerBank.giveResource(rt);
+				}
 			}
 		}
 		catch (ModelException | MapException e)

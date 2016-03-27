@@ -383,6 +383,7 @@ public class GameManager
 					break;
 				}
 			}
+			requireDiscard = false;
 			
 			if (!gameState.startRobbing(requireDiscard)) 
 				throw new ModelException("Unable to stop rolling after 7");
@@ -455,8 +456,12 @@ public class GameManager
 			{
 				//check to see if player has resources
 				if (!this.CanBuildRoad(playerIndex, start,end))
-					throw new ModelException();
+					throw new ModelException("Not enough Resources");
 				GetPlayer(playerIndex).playerBank.buildRoad();
+			}
+			else{
+				Bank b = GetPlayer(playerIndex).playerBank;
+				b.getPiece(PieceType.ROAD);
 			}
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceRoad(start,end, color);
@@ -484,6 +489,10 @@ public class GameManager
 				if (!this.CanBuildSettlement(playerIndex, location))
 					throw new ModelException();
 				GetPlayer(playerIndex).playerBank.buildSettlement();
+			}
+			else{
+				Bank b = GetPlayer(playerIndex).playerBank;
+				b.getPiece(PieceType.SETTLEMENT);
 			}
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceSettlement(location, color);
@@ -1061,7 +1070,7 @@ public class GameManager
 	 * @param playerIndex 0 to 3
 	 * @return
 	 */
-	private Player GetPlayer(int playerIndex) throws ModelException
+	protected Player GetPlayer(int playerIndex) throws ModelException
 	{
 		if (playerIndex >= 0 && playerIndex < 4 && playerIndex < players.size())
 		{
@@ -1077,7 +1086,7 @@ public class GameManager
 	 * Gets the current player
 	 * @return the player
 	 */
-	private Player GetCurrentPlayer() throws ModelException
+	protected Player GetCurrentPlayer() throws ModelException
 	{
 		return this.GetPlayer(gameState.activePlayerIndex);
 	}
