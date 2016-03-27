@@ -9,6 +9,7 @@ import java.util.Set;
 import server.ai.characters.personalities.Personality;
 import shared.definitions.AIType;
 import shared.definitions.CatanColor;
+import shared.model.OfferedTrade;
 
 /**
  * Abstract AI object. Implements general methods needed by AI characters and defines
@@ -100,6 +101,15 @@ public abstract class AI
 	public void TakeTurn(int gameID)
 	{
 		personality.TakeTurn(gameID);
+	}
+	
+	/**
+	 * Called to tell the AI to take its turn.
+	 * @param gameID The ID of the game they are playing in.
+	 */
+	public void ReceivedOffer(int gameID, OfferedTrade trade)
+	{
+		personality.ReceivedOffer(gameID, trade);
 	}
 	
 	/**

@@ -13,12 +13,14 @@ import shared.definitions.CatanColor;
 import shared.definitions.PieceType;
 import shared.model.Bank;
 import shared.model.GameModel;
+import shared.model.OfferedTrade;
 import shared.model.Player;
 import shared.model.map.Coordinate;
 import shared.model.map.objects.Edge;
 import shared.model.map.objects.Vertex;
 import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
+import shared.networking.parameter.PAcceptTrade;
 import shared.networking.parameter.PBuildCity;
 import shared.networking.parameter.PBuildRoad;
 import shared.networking.parameter.PBuildSettlement;
@@ -163,6 +165,17 @@ public abstract class Personality
 		return CommandExecutor(param, cookie, object, GameModel.class);
 	}
 	
+	protected GameModel AcceptTrade(int game, boolean willAccept)
+	{
+		StringBuilder param = new StringBuilder("MOVES/ACCEPTTRADE");
+		NetworkCookie cookie = GetCookie(username, id, game);
+		
+		PAcceptTrade accept = new PAcceptTrade(willAccept);
+		String object = SerializationUtils.serialize(accept);
+		
+		return CommandExecutor(param, cookie, object, GameModel.class);
+	}
+	
 	protected void FinishTurn(int game)
 	{
 		StringBuilder param = new StringBuilder("MOVES/FINISHTURN");
@@ -298,7 +311,11 @@ public abstract class Personality
 	
 	public abstract void ChatReceived(int gameID, String message);
 	
+	public abstract void ReceivedOffer(int gameID, OfferedTrade trade);
+	
 	protected abstract void Setup(GameModel model);
 	
 	protected abstract void Play(GameModel model);
+
+	
 }

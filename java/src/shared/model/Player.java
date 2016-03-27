@@ -91,13 +91,7 @@ public class Player implements Serializable
 	
 	public int totalResources()
 	{
-		int resources = 0;
-		resources += this.playerBank.getResourceCount(ResourceType.BRICK);
-		resources += this.playerBank.getResourceCount(ResourceType.ORE);
-		resources += this.playerBank.getResourceCount(ResourceType.SHEEP);
-		resources += this.playerBank.getResourceCount(ResourceType.WHEAT);
-		resources += this.playerBank.getResourceCount(ResourceType.WOOD);
-		return resources;
+		return this.playerBank.getResourceCount();
 	}
 	
 	/**
