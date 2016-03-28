@@ -352,7 +352,8 @@ public class ServerGameManager extends GameManager implements Serializable
 				{
 					int tempCt = players.get(i).playerBank.getResourceCount(res1);
 					totalResourceCount += tempCt;
-					players.get(i).playerBank.getResource(res1, players.get(i).playerBank.getResourceCount(res1));
+					if(tempCt > 0)
+						players.get(i).playerBank.getResource(res1, tempCt);
 				}
 			}
 
@@ -881,9 +882,16 @@ public class ServerGameManager extends GameManager implements Serializable
 		Player pGiver = players.get(giver);
 		Bank bReceiver = pReceiver.playerBank;
 		Bank bGiver = pGiver.playerBank;
-
-		ResourceType rGiven = bGiver.takeRandomResource();
-
+		
+		ResourceType rGiven = null;
+		try
+		{
+			rGiven = bGiver.takeRandomResource();
+		}
+		catch(ModelException e)
+		{
+			e.printStackTrace();
+		}
 		//if the giver can't give a resource, return null
 		if(rGiven == null)
 		{
