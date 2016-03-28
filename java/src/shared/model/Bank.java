@@ -147,6 +147,9 @@ public class Bank implements Serializable
 	 */
 	public DevCardType getDevCard() throws ModelException
 	{
+		//TODO rewrite 
+		
+		
 		//Make sure we have at least one dev card
 		if (this.getDevCardCount() == 0) throw new ModelException();
 		
@@ -168,7 +171,7 @@ public class Bank implements Serializable
 		//Check to make sure just in case
 		if (isThisYourCard == null)
 		{
-			throw new ModelException();
+			throw new ModelException("No more dev cards left");
 		}
 		else
 		{
