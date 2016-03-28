@@ -587,31 +587,36 @@ public class ClientGameManager extends GameManager implements ModelSubject
 			map.PlaceRobber(point);
 			
 			Iterator<CatanColor> colors = map.GetOccupiedVertices(point);
-			PlayerInfo[] infoArray = allCurrentPlayers();
+			List<RobPlayerInfo> toRob = new ArrayList<>();
 			
-			List<PlayerInfo> toRob = new ArrayList<PlayerInfo>(3);
-			List<Player> playerInfo = new ArrayList<Player>(3);
 			while (colors.hasNext())
 			{
 				CatanColor color = colors.next();
 				int index = getPlayerIndexByColor(color);
 				
-				if (infoArray[index].getPlayerIndex() != myPlayerIndex)
+				if (index != myPlayerIndex)
 				{
-					toRob.add(infoArray[index]);
-					playerInfo.add(players.get(index));
+					
+					Player p = this.players.get(index);
+					System.out.print("Rob:"+p);
+					System.out.println("\t Bank:"+p.playerBank);
+					if (p.playerIndex() != index) {
+						System.err.println("Index should match on player index"+p.playerIndex() +" and "+index);
+						continue;
+					}
+					RobPlayerInfo rpi = new RobPlayerInfo();
+					rpi.setId(p.playerID());
+					rpi.setName(p.name);
+					rpi.setColor(color);
+					rpi.setPlayerIndex(index);
+					rpi.setNumCards(p.totalResources());
+					toRob.add(rpi);
 				}
 			}
+			RobPlayerInfo[] robArray = new RobPlayerInfo[0];
+			robArray = toRob.toArray(robArray);
 			
-			RobPlayerInfo[] robArray = new RobPlayerInfo[toRob.size()];
-			for (int i = 0; i < toRob.size(); i++)
-			{
-				PlayerInfo player = toRob.get(i);
-				
-				robArray[i] = new RobPlayerInfo(player);
-				robArray[i].setNumCards(playerInfo.get(i).totalResources());
-			}
-			
+			//TODO This is really bad practice
 			RobView view = new RobView();
 			view.setPlayers(robArray);
 			view.showModal();
@@ -832,7 +837,7 @@ public class ClientGameManager extends GameManager implements ModelSubject
 		//Check if we need to got our player index
 		if (this.myPlayerIndex == -1)
 		{
-			Iterator<Player> iter = this.players.iterator();
+			Iterator<Player> iter = newplayers.iterator();
 			while (iter.hasNext())
 			{
 				Player p = iter.next();
@@ -848,7 +853,7 @@ public class ClientGameManager extends GameManager implements ModelSubject
 		//Check if we have a different size
 		if (newplayers.size() != oldplayers.size() || !newplayers.equals(oldplayers))
 		{
-			//System.out.println("Updated the players");
+			System.out.println("Updated the players");
 			this.SetPlayers(newplayers);
 			this.notifyCenter.notify(ModelNotification.PLAYERS);
 		}
@@ -868,8 +873,9 @@ public class ClientGameManager extends GameManager implements ModelSubject
 			}
 		}
 		
-		if (this.players.size() != 4)
+		if (this.players.size() != 4 || this.myPlayerIndex == -1)
 		{
+			System.out.println("updated aborted");
 			this.updateInProgress = false;
 			return;
 		}
@@ -896,6 +902,13 @@ public class ClientGameManager extends GameManager implements ModelSubject
 			this.notifyCenter.notify(ModelNotification.RESOURCES);
 		}
 		
+		//Update the other players's banks
+		for(Player p: newplayers)
+		{
+			if (!p.playerBank.equals(players.get(p.playerIndex()).playerBank))
+				players.get(p.playerIndex()).playerBank = p.playerBank;
+		}
+
 		//Update our chat
 		if (game.waterCooler.size() > this.waterCooler.size())
 		{
@@ -965,6 +978,9 @@ public class ClientGameManager extends GameManager implements ModelSubject
 					
 					if (this.playerIndexSendingOffer == this.myPlayerIndex)
 						this.turnState = TurnState.OFFERED_TRADE;
+					
+					if (this.playerIndexWithTradeOffer == this.myPlayerIndex)
+						this.turnState = TurnState.DOMESTIC_TRADE;
 					
 					break;
 				default:

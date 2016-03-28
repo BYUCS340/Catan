@@ -14,6 +14,7 @@ import shared.definitions.HexType;
 import shared.definitions.ResourceType;
 import shared.model.Bank;
 import shared.model.GameModel;
+import shared.model.OfferedTrade;
 import shared.model.map.Coordinate;
 import shared.model.map.objects.Edge;
 import shared.model.map.objects.Hex;
@@ -110,6 +111,13 @@ public class BeginnerPersonality extends Personality
 	public void ChatReceived(int gameID, String message) 
 	{
 		return;
+	}
+	
+	@Override
+	public void ReceivedOffer(int gameID, OfferedTrade trade)
+	{
+		Log.GetLog().fine(this.username+" is Rejecting offer");
+		AcceptTrade(gameID, false);
 	}
 
 	@Override

@@ -148,4 +148,22 @@ public class Hex implements Serializable
 	{
 		return type.toString() + "-" + point.toString(); 
 	}
+
+	/**
+	 * Checks if the hex borders the vertex
+	 * @param v
+	 * @return
+	 */
+	public boolean hasVertex(Vertex v) 
+	{
+		Coordinate p = v.getPoint();
+		if (this.getBottomLeftCoordinate().equals(p)) return true;
+		if (this.getBottomRightCoordinate().equals(p)) return true;
+		if (this.getLeftCoordinate().equals( p)) return true;
+		if (this.getRightCoordinate().equals( p)) return true;
+		if (this.getTopLeftCoordinate().equals(p)) return true;
+		if (this.getTopRightCoordinate().equals( p)) return true;
+		
+		return false;
+	}
 }

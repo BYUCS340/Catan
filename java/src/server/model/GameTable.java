@@ -246,8 +246,9 @@ public class GameTable
 			String data = SerializationUtils.serialize((Serializable) sgm);
 			
 			String filename = File.separator+"savedata"+File.separator+name+".json";
-			
-			File file = new File(System.getProperty("user.dir") + filename);
+			String filePath = System.getProperty("user.dir") + filename;
+			Log.GetLog().finest("Saved to :"+filePath);
+			File file = new File(filePath);
 			
 			FileOutputStream fop = new FileOutputStream(file);
 			OutputStreamWriter osw = new OutputStreamWriter(fop, "utf-8");
@@ -256,23 +257,31 @@ public class GameTable
 			writer.close();
 			return true;
 		}
+		
 		catch (GameException e)
 		{ //game not found
 			Log.GetLog().finest(e.getMessage());
 			e.printStackTrace();
-		} catch (FileNotFoundException e) {
+		} 
+		catch (FileNotFoundException e) 
+		{
 			// TODO Auto-generated catch block
 			Log.GetLog().finest(e.getMessage());
 			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			Log.GetLog().finest(e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
+		} 
+		catch (UnsupportedEncodingException e) 
+		{
 			// TODO Auto-generated catch block
 			Log.GetLog().finest(e.getMessage());
 			e.printStackTrace();
 		}
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			Log.GetLog().finest(e.getMessage());
+			e.printStackTrace();
+		}
+		Log.GetLog().finest("Unable to save");
 		return false;
 	}
 	
