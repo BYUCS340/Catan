@@ -352,7 +352,8 @@ public class ServerGameManager extends GameManager implements Serializable
 				{
 					int tempCt = players.get(i).playerBank.getResourceCount(res1);
 					totalResourceCount += tempCt;
-					players.get(i).playerBank.getResource(res1, players.get(i).playerBank.getResourceCount(res1));
+					if(tempCt > 0)
+						players.get(i).playerBank.getResource(res1, tempCt);
 				}
 			}
 
