@@ -212,7 +212,7 @@ public class Bank implements Serializable
 	 * @return the resourcetype taken; null if this player doesn't have any
 	 * resources
 	 */
-	public ResourceType takeRandomResource()
+	public ResourceType takeRandomResource() throws ModelException
 	{
 		if(this.getResourceCount() == 0)
 		{
@@ -231,6 +231,8 @@ public class Bank implements Serializable
 		if (resourcesCanTake.isEmpty()) return null;
 		
 		int resourceIndex = (int) (Math.random() * resourcesCanTake.size() );
+		
+		this.getResource(resourcesCanTake.get(resourceIndex));
 		
 		return resourcesCanTake.get(resourceIndex);		
 	}
