@@ -72,13 +72,7 @@ public class TestGameManager
 		try
 		{
 			assertFalse(gm.CanBuyDevCard(gm.CurrentPlayersTurn()));
-			int roll = gm.RollDice();
-			//If we roll a 7 then we're robbing
-			if (roll ==7)
-			{
-				//assertEquals(GameRound.ROBBING,gm.CurrentState());
-				gm.placeRobber(gm.CurrentPlayersTurn());
-			}
+			gm.DiceRoll(2);
 			
 			assertEquals(GameRound.PLAYING,gm.CurrentState());
 		}
@@ -91,7 +85,7 @@ public class TestGameManager
 		//Make sure we can't roll the dice again
 		try
 		{
-			gm.RollDice();
+			gm.DiceRoll(2);
 			fail("We should have got an exceptions rolling the dice!");
 		}
 		catch (Exception e){
@@ -117,12 +111,7 @@ public class TestGameManager
 			gm.FinishTurn();
 			assertEquals(GameRound.ROLLING,gm.CurrentState());
 			assertEquals(gm.CurrentPlayersTurn(),1);
-			int roll = gm.RollDice();
-			if (roll ==7)
-			{
-				assertEquals(GameRound.ROBBING,gm.CurrentState());
-				gm.placeRobber(gm.CurrentPlayersTurn());
-			}
+			gm.DiceRoll(2);
 			assertEquals(GameRound.PLAYING,gm.CurrentState());
 			
 		}
