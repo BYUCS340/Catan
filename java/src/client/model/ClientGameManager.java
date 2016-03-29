@@ -902,6 +902,12 @@ public class ClientGameManager extends GameManager implements ModelSubject
 			this.notifyCenter.notify(ModelNotification.RESOURCES);
 		}
 		
+		//Update the game bank
+		if (!game.gameBank.equals(gameBank))
+		{
+			gameBank = game.gameBank;
+		}
+		
 		//Update the other players's banks
 		for(Player p: newplayers)
 		{
@@ -1223,6 +1229,22 @@ public class ClientGameManager extends GameManager implements ModelSubject
 		this.notifyCenter.notify(ModelNotification.RESOURCES);
 		this.proxy.maritimeTrade(ratio, inputResource, outputResource);
 		
+	}
+
+	/**
+	 * Gets the number of soliders the current player has
+	 * @return
+	 */
+	public int GetPlayerSoliderCount() 
+	{
+		try 
+		{
+			return GetCurrentPlayer().playerBank.getNumberSolidersRecruited();
+		}
+		catch (ModelException e) 
+		{
+			return -1;
+		}
 	}
 	
 

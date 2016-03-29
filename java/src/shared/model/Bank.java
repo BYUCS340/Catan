@@ -27,6 +27,8 @@ public class Bank implements Serializable
 	private int numberDevCardTypes  = 5;
 	private int numberPieceTypes    = 3; 
 	
+	private int solidersInPlay = 0;
+	
 	/**
 	 * Creates a bank
 	 */
@@ -111,7 +113,23 @@ public class Bank implements Serializable
 	}
 	
 	/**
-	 * Gets a dev card of the specific type
+	 * Returns the number of soliders you've played
+	 * @return
+	 */
+	public int getNumberSolidersRecruited()
+	{
+		return this.solidersInPlay;
+	}
+	
+	/**
+	 * Adds one to the number of soliders you've played
+	 */
+	public void recruitSolider()
+	{
+		solidersInPlay++;
+	}
+	/**
+	 * Gets a dev card of the specific type (taking it from the bank)
 	 * @param type
 	 * @throws ModelException
 	 */
@@ -151,34 +169,42 @@ public class Bank implements Serializable
 		
 		
 		//Make sure we have at least one dev card
-		if (this.getDevCardCount() == 0) throw new ModelException();
+		if (this.getDevCardCount() == 0) throw new ModelException("No Dev Cards");
 		
-		//Create a list of cards with at least one card
-		List<DevCardType> availableCards = new ArrayList<DevCardType>();
-		for (int i = 0; i < this.numberDevCardTypes; i++)
+		//implemented this http://stackoverflow.com/questions/6737283/weighted-randomness-in-java
+		
+		
+		// Compute the total weight of all items together
+		int totalWeight = 0;
+		for (Integer i : this.devCards)
 		{
-			if (this.devCards[i] > 0)
-				availableCards.add(DevCardType.fromInt(i));
+		    totalWeight += i;
 		}
-		//Shuffle that up
-		Collections.shuffle(availableCards);
+		// Now choose a random item
+		int randomIndex = -1;
+		double random = Math.random() * totalWeight;
+		for (int i = 0; i < this.devCards.length; i++)
+		{
+		    random -= this.devCards[i];
+		    if (random <= 0 && this.devCards[i]> 0)
+		    {
+		        randomIndex = i;
+		        break;
+		    }
+		}
 		
+		if (randomIndex == -1)
+			throw new ModelException("No Dev Card was found");
+		
+		//take one from the array
+		this.devCards[randomIndex] --;
 		
 		//Get the first one on the stack
-		DevCardType isThisYourCard = availableCards.get(0);
+		DevCardType isThisYourCard = DevCardType.fromInt(randomIndex);
 		
+			
+		return isThisYourCard;
 		
-		//Check to make sure just in case
-		if (isThisYourCard == null)
-		{
-			throw new ModelException("No more dev cards left");
-		}
-		else
-		{
-			//take one from the array
-			this.devCards[isThisYourCard.ordinal()] --;
-			return isThisYourCard;
-		}
 		//WTF David Blane! (You'll thank me later)
 		// https://youtu.be/AYxu_MQSTTY
 		// https://youtu.be/wTqsV3q7rRU
@@ -440,7 +466,7 @@ public class Bank implements Serializable
 		}
 		else
 		{
-			throw new ModelException();
+			throw new ModelException("You can't afford a city");
 		}
 	}
 	
@@ -603,6 +629,67 @@ public class Bank implements Serializable
 				+ (devCards != null ? "devCards=" + Arrays.toString(devCards) + ", " : "")
 				+ (pieces != null ? "pieces=" + Arrays.toString(pieces) + ", " : "")
 				+ (newDevCards != null ? "newDevCards=" + Arrays.toString(newDevCards) : "") + "]";
+	}
+	
+	public String resourcesToString()
+	{
+		return "resources=" + Arrays.toString(resources);
+	}
+
+	/**
+	 * Gives the bank the resources to buy this piece 
+	 * @param piece
+	 */
+	public void giveResourcesFor(PieceType piece) 
+	{
+		try 
+		{
+			switch(piece)
+			{
+			case ROAD:
+				this.giveResource(ResourceType.BRICK, 1);
+				this.giveResource(ResourceType.WOOD, 1);
+				break;
+			case CITY:
+				this.giveResource(ResourceType.ORE, 3);
+				this.giveResource(ResourceType.WHEAT, 2);
+				break;
+			case SETTLEMENT:		
+				this.giveResource(ResourceType.BRICK, 1);
+				this.giveResource(ResourceType.WOOD, 1);
+				this.giveResource(ResourceType.SHEEP, 1);
+				this.giveResource(ResourceType.WHEAT, 1);
+				break;
+	
+			default:
+				break;
+			}
+		} 
+		catch (ModelException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	/**
+	 * Gives the bank the resources for a dev card
+	 */
+	public void giveResourcesForDevCard() 
+	{
+		try
+		{
+			this.giveResource(ResourceType.ORE, 1);
+			this.giveResource(ResourceType.SHEEP, 1);
+			this.giveResource(ResourceType.WHEAT, 1);
+		}
+		catch (ModelException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	

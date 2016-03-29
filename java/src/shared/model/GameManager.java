@@ -445,10 +445,19 @@ public class GameManager
 				else if (harvester == PieceType.SETTLEMENT) amount = 1;
 				//Get the resource
 				ResourceType resource = ResourceType.fromHex(trans.getHexType());
-				//Give it to them
-				//TODO get the resources from the game bank and give them to the player
-				player.playerBank.giveResource(resource, amount);
-				//player.playerBank
+				
+				// check if the bank has enough of this resource
+				if (gameBank.getResourceCount(resource) < amount)
+				{
+					this.LogAction(playerIndex, "Should have been give a "+resource+" but there are not enough cards");
+				}
+				else
+				{
+					//Give it to them
+					gameBank.getResource(resource, amount);
+					//TODO get the resources from the game bank and give them to the player
+					player.playerBank.giveResource(resource, amount);
+				}
 			} 
 			catch (ModelException e) 
 			{
@@ -478,12 +487,14 @@ public class GameManager
 				if (!this.CanBuildRoad(playerIndex, start,end))
 					throw new ModelException("Not enough Resources");
 				GetPlayer(playerIndex).playerBank.buildRoad();
+				gameBank.giveResourcesFor(PieceType.ROAD);
 			}
 			else{
 				Bank b = GetPlayer(playerIndex).playerBank;
 				b.getPiece(PieceType.ROAD);
 			}
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
+			
 			map.PlaceRoad(start,end, color);
 			victoryPointManager.playerBuiltRoad(playerIndex);
 			log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" built a road ");
@@ -513,6 +524,7 @@ public class GameManager
 			else{
 				Bank b = GetPlayer(playerIndex).playerBank;
 				b.getPiece(PieceType.SETTLEMENT);
+				gameBank.giveResourcesFor(PieceType.SETTLEMENT);
 			}
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceSettlement(location, color);
@@ -542,6 +554,7 @@ public class GameManager
 			GetPlayer(playerIndex).playerBank.buildCity();
 			CatanColor color = this.getPlayerColorByIndex(playerIndex);
 			map.PlaceCity(location,color);
+			gameBank.giveResourcesFor(PieceType.CITY);
 			victoryPointManager.playerBuiltCity(playerIndex);
 			log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" built a city");
 		}
@@ -559,11 +572,13 @@ public class GameManager
 	 */
 	public DevCardType BuyDevCard(int playerIndex) throws ModelException
 	{
-		if (!this.CanBuyDevCard(playerIndex)) throw new ModelException("Player can't buy dev card");
+		if (!this.CanBuyDevCard(playerIndex)) 
+			throw new ModelException("Player can't buy dev card");
 		Bank playerBank = GetPlayer(playerIndex).playerBank;
 		playerBank.buyDevCard();
 		DevCardType devcard = gameBank.getDevCard();
 		playerBank.giveNewDevCard(devcard);
+		gameBank.giveResourcesForDevCard();
 		victoryPointManager.playerGotDevCard(playerIndex, devcard);
 		log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" bought a Dev card.");
 		return devcard;
@@ -577,7 +592,8 @@ public class GameManager
 	 */
 	public void playDevCard(int playerIndex, DevCardType type) throws ModelException
 	{
-		if (players.get(playerIndex).playerBank.getDevCardCount(type) < 1) throw new ModelException("Player doesn't have a dev card of that type to play");
+		if (players.get(playerIndex).playerBank.getDevCardCount(type) < 1) 
+			throw new ModelException("Player doesn't have a dev card of that type to play");
 		if (type == DevCardType.SOLDIER)
 		{
 			this.playerCanMoveRobber = playerIndex;
@@ -893,7 +909,7 @@ public class GameManager
 		//This is a total message chain but eh
 		try 
 		{
-			return this.GetPlayer(playerIndex).playerBank.canBuyDevCard();
+			return this.GetPlayer(playerIndex).playerBank.canBuyDevCard() && this.gameBank.getDevCardCount() > 0;
 		} 
 		catch (ModelException e) 
 		{
@@ -1011,14 +1027,16 @@ public class GameManager
 	 */
 	public boolean CanPlayDevCard(int playerIndex, DevCardType type)
 	{
+		if (this.CurrentState() != GameRound.PLAYING) 
+			return false;
 		switch (type)
 		{
-		case MONOPOLY:  return this.CanUseMonopoly(playerIndex);
-		case MONUMENT:  return this.CanUseMonument(playerIndex);
-		case ROAD_BUILD:return this.CanUseRoadBuilder(playerIndex);
-		case SOLDIER:   return this.CanUseSoldier(playerIndex);
-		case YEAR_OF_PLENTY: return this.CanUseYearOfPlenty(playerIndex);
-		default:
+			case MONOPOLY:  return this.CanUseMonopoly(playerIndex);
+			case MONUMENT:  return this.CanUseMonument(playerIndex);
+			case ROAD_BUILD:return this.CanUseRoadBuilder(playerIndex);
+			case SOLDIER:   return this.CanUseSoldier(playerIndex);
+			case YEAR_OF_PLENTY: return this.CanUseYearOfPlenty(playerIndex);
+			default:
 			return false;
 			
 		}
