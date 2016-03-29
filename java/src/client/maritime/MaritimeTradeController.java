@@ -66,8 +66,11 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		//  TODO:  this should be more efficient later, should probably check for changed in state before updating everything
 		if(game.CurrentState() == GameRound.PLAYING && (game.getTurnState() == TurnState.PLAYING || game.getTurnState() == TurnState.OFFERED_TRADE))
 		{
-			getTradeView().enableMaritimeTrade(true);
-			//  TODO:  probably need more fucntionality here to check why we're being alerted
+			if (game.getTurnState() != TurnState.GAME_OVER)
+			{
+				getTradeView().enableMaritimeTrade(true);
+			}
+			//  TODO:  probably need more functionality here to check why we're being alerted
 		}
 		else	//  Maritime Trade is disabled when not playing
 		{	

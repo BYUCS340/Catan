@@ -99,7 +99,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		{
 //			System.out.println("Player index in alert (my turn): " + game.myPlayerIndex());
 			
-			if (game.CurrentPlayersTurn() == game.myPlayerIndex())
+			if (game.CurrentPlayersTurn() == game.myPlayerIndex() && game.getTurnState() != TurnState.GAME_OVER)
 			{
 				getTradeView().enableDomesticTrade(true);
 			}
