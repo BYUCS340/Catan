@@ -88,7 +88,8 @@ public class VictoryPointManager implements Serializable
 	 */
 	public boolean setPlayerToHaveLongestRoad(int playerIndex)
 	{
-		if (playerIndex < 0 || playerIndex > 3) return false;
+		if (playerIndex < 0 || playerIndex > 3) 
+			return false;
 		
 		if (currentLongestRoadPlayer != -1)
 		{

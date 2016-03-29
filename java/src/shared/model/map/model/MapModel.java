@@ -335,37 +335,6 @@ public class MapModel implements IMapModel
 		}
 	}
 	
-	/**
-	 * Gets the hexes around a vertex
-	 * @param p
-	 */
-	public Iterator<Hex> GetHexes(Coordinate p) 
-	{
-		if (!vertices.ContainsVertex(p))
-			return null;
-		List<Hex> hexs = new ArrayList<>(3);
-		try 
-		{
-			Vertex v = this.GetVertex(p);
-			
-			Iterator<Hex> allHexs = this.GetHexes();
-			while (allHexs.hasNext())
-			{
-				Hex hex = allHexs.next();
-				if (hex.hasVertex(v)) hexs.add(hex);
-			}
-			
-		}
-		catch (MapException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return java.util.Collections.unmodifiableList(hexs).iterator();
-		
-	}
-	
-	
 	@Override
 	public Hex GetHex(Coordinate point) throws MapException
 	{
@@ -532,6 +501,40 @@ public class MapModel implements IMapModel
 	}
 	
 	@Override
+	public Iterator<HexType> GetResources(Coordinate point)
+	{
+		List<HexType> resources = new ArrayList<HexType>();
+		
+		try
+		{
+			if (point.isRightHandCoordinate())
+			{
+				if (hexes.ContainsHex(point.GetWest()))
+					resources.add(hexes.GetHex(point.GetWest()).getType());
+				if (hexes.ContainsHex(point.GetNorth()))
+					resources.add(hexes.GetHex(point.GetNorth()).getType());
+				if (hexes.ContainsHex(point.GetSouth()))
+					resources.add(hexes.GetHex(point.GetSouth()).getType());
+			}
+			else
+			{
+				if (hexes.ContainsHex(point))
+					resources.add(hexes.GetHex(point).getType());
+				if (hexes.ContainsHex(point.GetNorthWest()))
+					resources.add(hexes.GetHex(point.GetNorthWest()).getType());
+				if (hexes.ContainsHex(point.GetSouthWest()))
+					resources.add(hexes.GetHex(point.GetSouthWest()).getType());
+			}
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return java.util.Collections.unmodifiableList(resources).iterator();
+	}
+	
+	@Override
 	public Iterator<Entry<Integer, List<Hex>>> GetPips()
 	{
 		return java.util.Collections.unmodifiableSet(values.entrySet()).iterator();
@@ -633,21 +636,27 @@ public class MapModel implements IMapModel
 	private boolean RoadsSatisfyRoadPlacement(Edge edge, CatanColor color) throws MapException
 	{
 		Vertex vStart = vertices.GetVertex(edge.getStart());
-		Iterator<Edge> startEdges = GetEdges(vStart);
-		while(startEdges.hasNext())
+		if (vStart.getType() == PieceType.NONE || vStart.getColor() == color)
 		{
-			Edge edgeToCheck = startEdges.next();
-			if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
-				return true;
+			Iterator<Edge> startEdges = GetEdges(vStart);
+			while(startEdges.hasNext())
+			{
+				Edge edgeToCheck = startEdges.next();
+				if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
+					return true;
+			}
 		}
 		
 		Vertex vEnd = vertices.GetVertex(edge.getEnd());
-		Iterator<Edge> endEdges = GetEdges(vEnd);
-		while(endEdges.hasNext())
+		if (vEnd.getType() == PieceType.NONE || vEnd.getColor() == color)
 		{
-			Edge edgeToCheck = endEdges.next();
-			if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
-				return true;
+			Iterator<Edge> endEdges = GetEdges(vEnd);
+			while(endEdges.hasNext())
+			{
+				Edge edgeToCheck = endEdges.next();
+				if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
+					return true;
+			}
 		}
 		
 		return false;
@@ -657,15 +666,49 @@ public class MapModel implements IMapModel
 	{
 		Vertex vStart = vertices.GetVertex(edge.getStart());
 		if (vStart.getType() != PieceType.NONE && vStart.getColor() == color)
+		{
+			if (setup && !IsGoodSetup(vStart))
+				return false;
+			
 			return true;
+		}
 		
 		Vertex vEnd = vertices.GetVertex(edge.getEnd());
 		if (vEnd.getType() != PieceType.NONE && vEnd.getColor() == color)
+		{
+			if (setup && !IsGoodSetup(vEnd))
+				return false;
+			
 			return true;
+		}
 		
 		return false;
 	}
 
+	private boolean IsGoodSetup(Vertex vertex)
+	{
+		try
+		{
+			Iterator<Vertex> surrounding = GetVertices(vertex);
+			while (surrounding.hasNext())
+			{
+				Vertex end = surrounding.next();
+				
+				Edge edge = GetEdge(vertex.getPoint(), end.getPoint());
+				
+				if (edge.doesRoadExists())
+					return false;
+			}
+			
+			return true;
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	@Override
 	public int hashCode() 
 	{

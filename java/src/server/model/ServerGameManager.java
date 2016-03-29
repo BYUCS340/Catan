@@ -12,6 +12,7 @@ import server.ai.AIHandler;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
+import shared.definitions.HexType;
 import shared.definitions.ResourceType;
 import shared.model.*;
 import shared.model.map.Coordinate;
@@ -27,7 +28,7 @@ import shared.model.map.objects.Hex;
 public class ServerGameManager extends GameManager implements Serializable
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1293281;
 	private	boolean randomTiles;
@@ -66,7 +67,7 @@ public class ServerGameManager extends GameManager implements Serializable
 	{
 		return playerIndexLookup.get(playerID);
 	}
-	
+
 	@Override
 	public void reset()
 	{
@@ -161,7 +162,7 @@ public class ServerGameManager extends GameManager implements Serializable
 
 		if (!gameState.stopRobbing())
 			return false;
-		
+
 		this.updateVersion();
 		return couldRob;
 	}
@@ -240,16 +241,16 @@ public class ServerGameManager extends GameManager implements Serializable
 	 */
 	private boolean IsPlayerRobot(int index)
 	{
-		try 
+		try
 		{
 			return GetPlayer(index).isARobot();
-		} 
-		catch (ModelException e) 
+		}
+		catch (ModelException e)
 		{
 			e.printStackTrace();
 			return false;
 		}
-		
+
 	}
 
 	/**
@@ -282,22 +283,22 @@ public class ServerGameManager extends GameManager implements Serializable
 		this.updateVersion();
 		return false;
 	}
-	
+
 	private void ServerChatCommand(int playerIndex, String message)
 	{
 		message = message.toLowerCase();
-		try 
+		try
 		{
 			switch(message)
 			{
 				case "give me dev card":
 					DevCardType devcard = gameBank.getDevCard();
-					
+
 						GetPlayer(playerIndex).playerBank.giveNewDevCard(devcard);
-				
+
 					victoryPointManager.playerGotDevCard(playerIndex, devcard);
 					log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" stole a "+devcard+" card");
-					
+
 					break;
 				case "player banks":
 					for(Player p: players)
@@ -306,7 +307,7 @@ public class ServerGameManager extends GameManager implements Serializable
 					}
 					break;
 			}
-		} 
+		}
 		catch (ModelException e)
 		{
 			// TODO Auto-generated catch block
@@ -346,7 +347,7 @@ public class ServerGameManager extends GameManager implements Serializable
 			{
 				return false;
 			}
-			
+
 			//give resources to player
 			players.get(playerIndex).playerBank.giveResource(res1);
 			players.get(playerIndex).playerBank.giveResource(res2);
@@ -454,7 +455,7 @@ public class ServerGameManager extends GameManager implements Serializable
 			return false;
 
 		CatanColor color = this.getPlayerColorByIndex(playerIndex);
-		
+
 		//Log.GetLog().finest("Playing the roadbuilder card on color ");
 
 		if (!this.map.CanPlaceRoad(start1, end1, color) && !this.map.CanPlaceRoad(start2, end2, color))
@@ -465,7 +466,7 @@ public class ServerGameManager extends GameManager implements Serializable
 			//Log.GetLog().finest("Playing the roadbuilder card");
 			//remove dev card from player
 			this.playDevCard(playerIndex, DevCardType.ROAD_BUILD);
-			
+
 			//build the roads
 			if (this.map.CanPlaceRoad(start1, end1, color))
 			{
@@ -482,7 +483,7 @@ public class ServerGameManager extends GameManager implements Serializable
 			this.victoryPointManager.playerBuiltRoad(playerIndex);
 			this.victoryPointManager.playerBuiltRoad(playerIndex);
 
-			
+
 		}
 		catch (ModelException e)
 		{
@@ -503,9 +504,9 @@ public class ServerGameManager extends GameManager implements Serializable
 	 */
 	public boolean ServerSoldier(int playerID, Coordinate location, int victimIndex)
 	{
-		
+
 		int playerIndex = this.GetPlayerIndexByID(playerID);
-		
+
 		if(this.CurrentPlayersTurn() != playerIndex)
 		{
 			return false;
@@ -525,14 +526,14 @@ public class ServerGameManager extends GameManager implements Serializable
 			try
 			{
 				players.get(playerIndex).playerBank.getDevCard(DevCardType.SOLDIER);
-				
+
 				Player pPlayer = players.get(playerIndex);
 				Bank bPlayer = pPlayer.playerBank;
 				bPlayer.recruitSolider();
 				//Log.GetLog().finest("Adding to solider count! current count "+bPlayer.getNumberSolidersRecruited());
 				int armySize = pPlayer.incrementArmySize();
 				this.victoryPointManager.checkPlayerArmySize(playerIndex, armySize);
-				
+
 			}
 			catch(ModelException e)
 			{
@@ -572,14 +573,14 @@ public class ServerGameManager extends GameManager implements Serializable
 		try
 		{
 			this.BuildRoad(playerIndex, start, end, free);
-			
+
 			if (this.map.LongestRoadExists())
 			{
 				CatanColor longestColor = this.map.GetLongestRoadColor();
 				int longestIndex = this.getPlayerIndexByColor(longestColor);
 				this.victoryPointManager.setPlayerToHaveLongestRoad(longestIndex);
 			}
-			
+
 		}
 		catch (ModelException | MapException e)
 		{
@@ -644,25 +645,25 @@ public class ServerGameManager extends GameManager implements Serializable
 				return false;
 
 			this.BuildSettlement(playerIndex, p, free);
-			
-			
-			//TODO does settlement affect the longest road?
+
 			if (this.map.LongestRoadExists())
 			{
 				CatanColor longestColor = this.map.GetLongestRoadColor();
 				int longestIndex = this.getPlayerIndexByColor(longestColor);
 				this.victoryPointManager.setPlayerToHaveLongestRoad(longestIndex);
 			}
-			
+
 			//give them the resources
-			if (this.gameState.state == GameRound.SECONDROUND){
-				//Log.GetLog().finest("Awarding resources for second round");
-				Iterator<Hex> hexs = map.GetHexes(p);
-				while (hexs.hasNext())
+			if (this.gameState.state == GameRound.SECONDROUND)
+			{
+				Iterator<HexType> hexTypes = map.GetResources(p);
+
+				
+				while (hexTypes.hasNext())
 				{
-					Hex hex = hexs.next();
-					//Log.GetLog().finest("Awarding "+hex.getType()+" to "+playerIndex+" for second round"+hex);
-					ResourceType rt = hex.getType().toResource();
+					HexType hexType = hexTypes.next();
+					
+					ResourceType rt = ResourceType.fromHex(hexType);
 					if (rt != null)
 					{
 						gameBank.getResource(rt);
@@ -720,7 +721,7 @@ public class ServerGameManager extends GameManager implements Serializable
 			}
 			this.setTradeOffer(offer);
 			System.out.println("Reached Offer1");
-			
+
 			if (this.IsPlayerRobot(playerIndexReceiving))
 			{
 				int aiID = this.GetPlayerIDbyIndex(playerIndexReceiving);
@@ -746,7 +747,7 @@ public class ServerGameManager extends GameManager implements Serializable
 	public boolean ServerAcceptTrade(int playerIndex, boolean willAccept)
 	{
 		OfferedTrade offer = this.offeredTrade;
-		
+
 		//THIS SAYS ID but it's actually an index
 		//TODO Chris sorts this out?
 		if (offer.getToPlayerID() != playerIndex)
@@ -822,14 +823,6 @@ public class ServerGameManager extends GameManager implements Serializable
 			return true;
 		}
 
-//		if(!this.CanMaritimeTrade(playerIndex)) {
-//			System.out.println("entered 2");
-//
-//			return false;
-//		}
-
-
-
 		Player pGiver = players.get(playerIndex);
 		Bank bGame = this.gameBank;
 		Bank bPlayer = pGiver.playerBank;
@@ -860,7 +853,7 @@ public class ServerGameManager extends GameManager implements Serializable
 	}
 
 	/**
-	 * 
+	 *
 	 * @param playerIndex
 	 * @param resourceList
 	 * @return
@@ -944,7 +937,7 @@ public class ServerGameManager extends GameManager implements Serializable
 		Player pGiver = players.get(giver);
 		Bank bReceiver = pReceiver.playerBank;
 		Bank bGiver = pGiver.playerBank;
-		
+
 		ResourceType rGiven = null;
 		try
 		{

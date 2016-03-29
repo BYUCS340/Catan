@@ -201,6 +201,12 @@ public class UnmodifiableMapModel implements IMapModel
 	{
 		return model.GetRobberLocation();
 	}
+	
+	@Override
+	public Iterator<HexType> GetResources(Coordinate point)
+	{
+		return model.GetResources(point);
+	}
 
 	@Override
 	public Iterator<Entry<Integer, List<Hex>>> GetPips()

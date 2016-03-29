@@ -102,7 +102,8 @@ public class Hex implements Serializable
 	/**
 	 * @return the port
 	 */
-	public PortType getPort() {
+	public PortType getPort() 
+	{
 		return port;
 	}
 
@@ -110,7 +111,8 @@ public class Hex implements Serializable
 	 * @param port the port to set
 	 * @throws MapException Thrown when a port can't be added to the hex.
 	 */
-	public void setPort(PortType port) throws MapException {
+	public void setPort(PortType port) throws MapException 
+	{
 		if (this.type != HexType.WATER)
 			throw new MapException("Whoa there. You can't add a port to dry land. Who do you think you are? Noah?");
 		
@@ -147,23 +149,5 @@ public class Hex implements Serializable
 	public String toString()
 	{
 		return type.toString() + "-" + point.toString(); 
-	}
-
-	/**
-	 * Checks if the hex borders the vertex
-	 * @param v
-	 * @return
-	 */
-	public boolean hasVertex(Vertex v) 
-	{
-		Coordinate p = v.getPoint();
-		if (this.getBottomLeftCoordinate().equals(p)) return true;
-		if (this.getBottomRightCoordinate().equals(p)) return true;
-		if (this.getLeftCoordinate().equals( p)) return true;
-		if (this.getRightCoordinate().equals( p)) return true;
-		if (this.getTopLeftCoordinate().equals(p)) return true;
-		if (this.getTopRightCoordinate().equals( p)) return true;
-		
-		return false;
 	}
 }
