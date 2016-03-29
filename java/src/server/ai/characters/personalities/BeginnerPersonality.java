@@ -85,8 +85,14 @@ public class BeginnerPersonality extends Personality
 		List<Integer> currentResources = new ArrayList<Integer>();
 		List<Integer> selectedResources = new ArrayList<Integer>();
 		
+		
+		currentResources.add(GetBank(model).getResourceCount(ResourceType.BRICK));
+		currentResources.add(GetBank(model).getResourceCount(ResourceType.ORE));
+		currentResources.add(GetBank(model).getResourceCount(ResourceType.SHEEP));
+		currentResources.add(GetBank(model).getResourceCount(ResourceType.WHEAT));
+		currentResources.add(GetBank(model).getResourceCount(ResourceType.WOOD));
+
 		for (ResourceType resource : ResourceType.values()) {
-			currentResources.add(GetBank(model).getResourceCount(resource));
 			selectedResources.add(0);
 		}
 		
@@ -97,6 +103,7 @@ public class BeginnerPersonality extends Personality
 			{
 				currentResources.set(index, currentResources.get(index) - 1);
 				selectedResources.set(index, selectedResources.get(index) + 1);
+				selected++;
 			}
 			
 			index++;
