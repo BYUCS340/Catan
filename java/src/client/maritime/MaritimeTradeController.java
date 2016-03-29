@@ -64,7 +64,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	{
 		ClientGameManager game = ClientGame.getGame();
 		//  TODO:  this should be more efficient later, should probably check for changed in state before updating everything
-		if(game.CurrentState() == GameRound.PLAYING && game.getTurnState() == TurnState.PLAYING)
+		if(game.CurrentState() == GameRound.PLAYING && (game.getTurnState() == TurnState.PLAYING || game.getTurnState() == TurnState.OFFERED_TRADE))
 		{
 			getTradeView().enableMaritimeTrade(true);
 			//  TODO:  probably need more fucntionality here to check why we're being alerted
