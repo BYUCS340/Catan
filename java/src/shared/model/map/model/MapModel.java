@@ -636,21 +636,27 @@ public class MapModel implements IMapModel
 	private boolean RoadsSatisfyRoadPlacement(Edge edge, CatanColor color) throws MapException
 	{
 		Vertex vStart = vertices.GetVertex(edge.getStart());
-		Iterator<Edge> startEdges = GetEdges(vStart);
-		while(startEdges.hasNext())
+		if (vStart.getType() == PieceType.NONE || vStart.getColor() == color)
 		{
-			Edge edgeToCheck = startEdges.next();
-			if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
-				return true;
+			Iterator<Edge> startEdges = GetEdges(vStart);
+			while(startEdges.hasNext())
+			{
+				Edge edgeToCheck = startEdges.next();
+				if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
+					return true;
+			}
 		}
 		
 		Vertex vEnd = vertices.GetVertex(edge.getEnd());
-		Iterator<Edge> endEdges = GetEdges(vEnd);
-		while(endEdges.hasNext())
+		if (vEnd.getType() == PieceType.NONE || vEnd.getColor() == color)
 		{
-			Edge edgeToCheck = endEdges.next();
-			if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
-				return true;
+			Iterator<Edge> endEdges = GetEdges(vEnd);
+			while(endEdges.hasNext())
+			{
+				Edge edgeToCheck = endEdges.next();
+				if (edgeToCheck.doesRoadExists() && edgeToCheck.getColor() == color)
+					return true;
+			}
 		}
 		
 		return false;
