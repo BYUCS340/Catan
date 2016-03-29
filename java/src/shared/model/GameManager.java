@@ -382,7 +382,7 @@ public class GameManager
 	 * @param roll
 	 * @throws ModelException 
 	 */
-	protected void DiceRoll(int diceRoll) throws ModelException
+	public void DiceRoll(int diceRoll) throws ModelException
 	{	
 		//check if we can move the robber
 		if (diceRoll < 2 || diceRoll > 12 ) 
