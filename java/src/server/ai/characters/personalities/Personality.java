@@ -283,8 +283,9 @@ public abstract class Personality
 		try
 		{
 			ICommand command = CommandFactory.GetCommandFactory().GetCommand(param, cookie, object);
-			command.Execute();
-			return command.GetResponse();
+			if (command.Execute())
+				return command.GetResponse();
+			return null;
 		}
 		catch (InvalidFactoryParameterException e)
 		{
@@ -301,6 +302,8 @@ public abstract class Personality
 	private <T extends Serializable> T CommandExecutor(StringBuilder param, NetworkCookie cookie, String object, java.lang.Class<T> objClass)
 	{
 		String response = CommandExecutor(param, cookie, object);
+		
+		if (response == null) return null;
 		
 		return SerializationUtils.deserialize(response, objClass);
 	}

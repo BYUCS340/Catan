@@ -27,6 +27,8 @@ public class Bank implements Serializable
 	private int numberDevCardTypes  = 5;
 	private int numberPieceTypes    = 3; 
 	
+	private int solidersInPlay = 0;
+	
 	/**
 	 * Creates a bank
 	 */
@@ -111,7 +113,23 @@ public class Bank implements Serializable
 	}
 	
 	/**
-	 * Gets a dev card of the specific type
+	 * Returns the number of soliders you've played
+	 * @return
+	 */
+	public int getNumberSolidersRecruited()
+	{
+		return this.solidersInPlay;
+	}
+	
+	/**
+	 * Adds one to the number of soliders you've played
+	 */
+	public void recruitSolider()
+	{
+		solidersInPlay++;
+	}
+	/**
+	 * Gets a dev card of the specific type (taking it from the bank)
 	 * @param type
 	 * @throws ModelException
 	 */
@@ -448,7 +466,7 @@ public class Bank implements Serializable
 		}
 		else
 		{
-			throw new ModelException();
+			throw new ModelException("You can't afford a city");
 		}
 	}
 	
@@ -611,6 +629,67 @@ public class Bank implements Serializable
 				+ (devCards != null ? "devCards=" + Arrays.toString(devCards) + ", " : "")
 				+ (pieces != null ? "pieces=" + Arrays.toString(pieces) + ", " : "")
 				+ (newDevCards != null ? "newDevCards=" + Arrays.toString(newDevCards) : "") + "]";
+	}
+	
+	public String resourcesToString()
+	{
+		return "resources=" + Arrays.toString(resources);
+	}
+
+	/**
+	 * Gives the bank the resources to buy this piece 
+	 * @param piece
+	 */
+	public void giveResourcesFor(PieceType piece) 
+	{
+		try 
+		{
+			switch(piece)
+			{
+			case ROAD:
+				this.giveResource(ResourceType.BRICK, 1);
+				this.giveResource(ResourceType.WOOD, 1);
+				break;
+			case CITY:
+				this.giveResource(ResourceType.ORE, 3);
+				this.giveResource(ResourceType.WHEAT, 2);
+				break;
+			case SETTLEMENT:		
+				this.giveResource(ResourceType.BRICK, 1);
+				this.giveResource(ResourceType.WOOD, 1);
+				this.giveResource(ResourceType.SHEEP, 1);
+				this.giveResource(ResourceType.WHEAT, 1);
+				break;
+	
+			default:
+				break;
+			}
+		} 
+		catch (ModelException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	/**
+	 * Gives the bank the resources for a dev card
+	 */
+	public void giveResourcesForDevCard() 
+	{
+		try
+		{
+			this.giveResource(ResourceType.ORE, 1);
+			this.giveResource(ResourceType.SHEEP, 1);
+			this.giveResource(ResourceType.WHEAT, 1);
+		}
+		catch (ModelException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	

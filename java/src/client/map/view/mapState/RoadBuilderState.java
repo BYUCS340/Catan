@@ -31,6 +31,6 @@ public class RoadBuilderState implements IMapState
 	@Override
 	public Boolean AllowCancel()
 	{
-		return false;
+		return true;
 	}
 }

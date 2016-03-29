@@ -101,10 +101,14 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		this.getView().setElementAmount(ResourceBarElement.CITY, game.playerPieceCount(PieceType.CITY));
 		this.getView().setElementAmount(ResourceBarElement.SETTLEMENT, game.playerPieceCount(PieceType.SETTLEMENT));
 		
+		this.getView().setElementAmount(ResourceBarElement.SOLDIERS, game.GetPlayerSoliderCount());
+		
 		this.getView().setElementEnabled(ResourceBarElement.BUY_CARD, game.CanBuyDevCard(game.myPlayerIndex()));
 		this.getView().setElementEnabled(ResourceBarElement.ROAD, game.CanBuildRoad(game.myPlayerIndex()));
 		this.getView().setElementEnabled(ResourceBarElement.SETTLEMENT, game.CanBuildSettlement(game.myPlayerIndex()));
 		this.getView().setElementEnabled(ResourceBarElement.CITY, game.CanBuildCity(game.myPlayerIndex()));
+		
+		
 	}
 
 	@Override

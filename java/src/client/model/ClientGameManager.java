@@ -1230,6 +1230,22 @@ public class ClientGameManager extends GameManager implements ModelSubject
 		this.proxy.maritimeTrade(ratio, inputResource, outputResource);
 		
 	}
+
+	/**
+	 * Gets the number of soliders the current player has
+	 * @return
+	 */
+	public int GetPlayerSoliderCount() 
+	{
+		try 
+		{
+			return GetCurrentPlayer().playerBank.getNumberSolidersRecruited();
+		}
+		catch (ModelException e) 
+		{
+			return -1;
+		}
+	}
 	
 
 	

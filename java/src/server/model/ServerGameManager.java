@@ -159,6 +159,9 @@ public class ServerGameManager extends GameManager implements Serializable
 
 		boolean couldRob = this.ServerExecuteRob(playerIndex, victimIndex, location);
 
+		if (!gameState.stopRobbing())
+			return false;
+		
 		this.updateVersion();
 		return couldRob;
 	}
@@ -195,7 +198,7 @@ public class ServerGameManager extends GameManager implements Serializable
 			Log.GetLog().log(Level.INFO, "Game " + this.gameID + ": Player " + playerIndex + " tried to take"
 				+ " a card from Player " + victimIndex);
 
-		return gameState.stopRobbing();
+		return true;
 	}
 
 	/**
@@ -295,6 +298,12 @@ public class ServerGameManager extends GameManager implements Serializable
 					victoryPointManager.playerGotDevCard(playerIndex, devcard);
 					log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" stole a "+devcard+" card");
 					
+					break;
+				case "player banks":
+					for(Player p: players)
+					{
+						super.PlayerChat(p.playerIndex(), p.playerBank.resourcesToString());
+					}
 					break;
 			}
 		} 
@@ -494,34 +503,41 @@ public class ServerGameManager extends GameManager implements Serializable
 	 */
 	public boolean ServerSoldier(int playerID, Coordinate location, int victimIndex)
 	{
-		if(this.CurrentPlayersTurn() != playerID)
+		
+		int playerIndex = this.GetPlayerIndexByID(playerID);
+		
+		if(this.CurrentPlayersTurn() != playerIndex)
 		{
 			return false;
 		}
 
-		if(!this.CanPlayDevCard(playerID, DevCardType.SOLDIER))
+		if(!this.CanPlayDevCard(playerIndex, DevCardType.SOLDIER))
 		{
 			return false;
 		}
 
-		boolean couldRob = this.ServerExecuteRob(playerID, victimIndex, location);
+		boolean couldRob = this.ServerExecuteRob(playerIndex, victimIndex, location);
 
 		//ONLY take the soldier card if this player could actually execute the robbing
 		//action
 		if(couldRob)
 		{
-			Player pPlayer = players.get(playerID);
-			Bank bPlayer = pPlayer.playerBank;
-			bPlayer.giveDevCard(DevCardType.SOLDIER);
-			int armySize = pPlayer.incrementArmySize();
-			this.victoryPointManager.checkPlayerArmySize(playerID, armySize);
 			try
 			{
-				players.get(playerID).playerBank.getDevCard(DevCardType.SOLDIER);
+				players.get(playerIndex).playerBank.getDevCard(DevCardType.SOLDIER);
+				
+				Player pPlayer = players.get(playerIndex);
+				Bank bPlayer = pPlayer.playerBank;
+				bPlayer.recruitSolider();
+				//Log.GetLog().finest("Adding to solider count! current count "+bPlayer.getNumberSolidersRecruited());
+				int armySize = pPlayer.incrementArmySize();
+				this.victoryPointManager.checkPlayerArmySize(playerIndex, armySize);
+				
 			}
 			catch(ModelException e)
 			{
 				e.printStackTrace();
+				return false;
 			}
 		}
 
@@ -647,8 +663,11 @@ public class ServerGameManager extends GameManager implements Serializable
 					Hex hex = hexs.next();
 					//Log.GetLog().finest("Awarding "+hex.getType()+" to "+playerIndex+" for second round"+hex);
 					ResourceType rt = hex.getType().toResource();
-					if (rt == null) Log.GetLog().finest("Unknown type to award");
-					else this.GetPlayer(playerIndex).playerBank.giveResource(rt);
+					if (rt != null)
+					{
+						gameBank.getResource(rt);
+						GetPlayer(playerIndex).playerBank.giveResource(rt);
+					}
 				}
 			}
 		}
@@ -816,14 +835,17 @@ public class ServerGameManager extends GameManager implements Serializable
 		Bank bPlayer = pGiver.playerBank;
 
 		//  exchange resources at ratio rate between player and the bank
-		try{
+		try
+		{
 			bPlayer.getResource(input, ratio);
 			bGame.getResource(output, 1);
 
 			bPlayer.giveResource(output, 1);
 			bGame.giveResource(input, ratio);
 
-		}catch (ModelException e){
+		}
+		catch (ModelException e)
+		{
 			System.out.println("entered 3");
 
 			Log.GetLog().throwing("ServerGameManager", "ServerMaritimeTrading", e);
