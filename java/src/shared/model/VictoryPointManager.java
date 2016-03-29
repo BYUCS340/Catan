@@ -136,7 +136,7 @@ public class VictoryPointManager implements Serializable
 	 */
 	public void checkPlayerArmySize(int playerIndex, int armySize)
 	{
-		if (this.currentLargestArmySize < armySize)
+		if (this.currentLargestArmySize < armySize && armySize > 2)
 		{
 			this.currentLargestArmySize = armySize;
 			this.setPlayerToHaveLargestArmy(playerIndex);

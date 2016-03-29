@@ -342,10 +342,10 @@ public class ServerGameManager extends GameManager implements Serializable
 				case "give me dev card":
 					DevCardType devcard = gameBank.getDevCard();
 
-						GetPlayer(playerIndex).playerBank.giveNewDevCard(devcard);
+					GetPlayer(playerIndex).playerBank.giveNewDevCard(devcard);
 
 					victoryPointManager.playerGotDevCard(playerIndex, devcard);
-					log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" stole a "+devcard+" card");
+					log.logAction(playerIndex, getPlayerNameByIndex(playerIndex)+" stole a "+devcard+" card");
 
 					break;
 				case "player banks":

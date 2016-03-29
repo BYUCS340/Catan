@@ -1240,7 +1240,7 @@ public class ClientGameManager extends GameManager implements ModelSubject
 	{
 		try 
 		{
-			return GetCurrentPlayer().playerBank.getNumberSolidersRecruited();
+			return GetPlayer(this.myPlayerIndex).playerBank.getNumberSolidersRecruited();
 		}
 		catch (ModelException e) 
 		{
