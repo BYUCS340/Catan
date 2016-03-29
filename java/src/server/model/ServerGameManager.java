@@ -12,6 +12,7 @@ import server.ai.AIHandler;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
+import shared.definitions.HexType;
 import shared.definitions.ResourceType;
 import shared.model.*;
 import shared.model.map.Coordinate;
@@ -589,8 +590,6 @@ public class ServerGameManager extends GameManager implements Serializable
 
 			this.BuildSettlement(playerIndex, p, free);
 			
-			
-			//TODO does settlement affect the longest road?
 			if (this.map.LongestRoadExists())
 			{
 				CatanColor longestColor = this.map.GetLongestRoadColor();
@@ -599,16 +598,18 @@ public class ServerGameManager extends GameManager implements Serializable
 			}
 			
 			//give them the resources
-			if (this.gameState.state == GameRound.SECONDROUND){
-				//Log.GetLog().finest("Awarding resources for second round");
-				Iterator<Hex> hexs = map.GetHexes(p);
-				while (hexs.hasNext())
+			if (this.gameState.state == GameRound.SECONDROUND)
+			{
+				Iterator<HexType> hexTypes = map.GetResources(p);
+				
+				while (hexTypes.hasNext())
 				{
-					Hex hex = hexs.next();
-					//Log.GetLog().finest("Awarding "+hex.getType()+" to "+playerIndex+" for second round"+hex);
-					ResourceType rt = hex.getType().toResource();
-					if (rt == null) Log.GetLog().finest("Unknown type to award");
-					else this.GetPlayer(playerIndex).playerBank.giveResource(rt);
+					HexType hexType = hexTypes.next();
+					
+					ResourceType rt = ResourceType.fromHex(hexType);
+					
+					if (rt != null)
+						this.GetPlayer(playerIndex).playerBank.giveResource(rt);
 				}
 			}
 		}

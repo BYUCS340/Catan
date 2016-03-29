@@ -234,6 +234,13 @@ public interface IMapModel extends Serializable
 	public Hex GetRobberLocation();
 	
 	/**
+	 * Gets the resources sourrounding a vertex.
+	 * @param point The coordinate of the vertex.
+	 * @return The surrounding hex types.
+	 */
+	public Iterator<HexType> GetResources(Coordinate point);
+	
+	/**
 	 * Gets all the pips.
 	 * @return All the pips.
 	 */

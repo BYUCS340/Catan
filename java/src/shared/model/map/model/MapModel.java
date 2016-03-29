@@ -335,37 +335,6 @@ public class MapModel implements IMapModel
 		}
 	}
 	
-	/**
-	 * Gets the hexes around a vertex
-	 * @param p
-	 */
-	public Iterator<Hex> GetHexes(Coordinate p) 
-	{
-		if (!vertices.ContainsVertex(p))
-			return null;
-		List<Hex> hexs = new ArrayList<>(3);
-		try 
-		{
-			Vertex v = this.GetVertex(p);
-			
-			Iterator<Hex> allHexs = this.GetHexes();
-			while (allHexs.hasNext())
-			{
-				Hex hex = allHexs.next();
-				if (hex.hasVertex(v)) hexs.add(hex);
-			}
-			
-		}
-		catch (MapException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return java.util.Collections.unmodifiableList(hexs).iterator();
-		
-	}
-	
-	
 	@Override
 	public Hex GetHex(Coordinate point) throws MapException
 	{
@@ -529,6 +498,40 @@ public class MapModel implements IMapModel
 	public Hex GetRobberLocation()
 	{
 		return robber.GetHex();
+	}
+	
+	@Override
+	public Iterator<HexType> GetResources(Coordinate point)
+	{
+		List<HexType> resources = new ArrayList<HexType>();
+		
+		try
+		{
+			if (point.isRightHandCoordinate())
+			{
+				if (hexes.ContainsHex(point.GetWest()))
+					resources.add(hexes.GetHex(point.GetWest()).getType());
+				if (hexes.ContainsHex(point.GetNorth()))
+					resources.add(hexes.GetHex(point.GetNorth()).getType());
+				if (hexes.ContainsHex(point.GetSouth()))
+					resources.add(hexes.GetHex(point.GetSouth()).getType());
+			}
+			else
+			{
+				if (hexes.ContainsHex(point))
+					resources.add(hexes.GetHex(point).getType());
+				if (hexes.ContainsHex(point.GetNorthWest()))
+					resources.add(hexes.GetHex(point.GetNorthWest()).getType());
+				if (hexes.ContainsHex(point.GetSouthWest()))
+					resources.add(hexes.GetHex(point.GetSouthWest()).getType());
+			}
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return java.util.Collections.unmodifiableList(resources).iterator();
 	}
 	
 	@Override

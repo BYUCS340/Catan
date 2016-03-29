@@ -32,7 +32,8 @@ public enum ResourceType implements Serializable
 		return null;
 	}
 	
-	public static ResourceType fromHex(HexType hex){
+	public static ResourceType fromHex(HexType hex)
+	{
 		switch (hex)
 		{
 			case ORE:   return ResourceType.ORE;

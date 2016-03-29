@@ -20,15 +20,5 @@ public enum HexType implements Serializable
 		}
 		
 	}
-
-	public ResourceType toResource() {
-		if (this == WOOD) return ResourceType.WOOD;
-		if (this == ORE) return ResourceType.ORE;
-		if (this == BRICK) return ResourceType.BRICK;
-		if (this == WHEAT) return ResourceType.WHEAT;
-		if (this == SHEEP) return ResourceType.SHEEP;
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
 
