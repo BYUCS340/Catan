@@ -944,7 +944,8 @@ public class ClientGameManager extends GameManager implements ModelSubject
 		//TODO implement maritime_trade turnstate
 		else
 		{
-			switch (newstate){
+			switch (newstate)
+			{
 				case FIRSTROUND: 
 					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
 						this.turnState = TurnState.FIRST_ROUND_MY_TURN;
