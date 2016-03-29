@@ -357,9 +357,13 @@ public class GameManager
 	 * Determines if there is a player with over 7 cards
 	 * @return
 	 */
-	protected boolean NeedToDiscard()
+	protected boolean NeedToDiscardAfterRoll()
 	{
-		//
+		for(Player p : players)
+		{
+			if(p.playerBank.getResourceCount() > 7)
+				return true;
+		}
 		return false;
 	}
 	
@@ -387,7 +391,7 @@ public class GameManager
 		if (diceRoll == 7 )
 		{
 			//TODO: put in discard state if have over 7 cards
-			if (NeedToDiscard()) this.gameState.state = GameRound.DISCARDING;
+//			if (NeedToDiscardAfterRoll()) this.gameState.state = GameRound.DISCARDING;
 			
 			this.playerCanMoveRobber = this.CurrentPlayersTurn();
 			
@@ -400,19 +404,18 @@ public class GameManager
 					break;
 				}
 			}
-			requireDiscard = false;
 			
 			if (!gameState.startRobbing(requireDiscard)) 
 				throw new ModelException("Unable to stop rolling after 7");
 			
-			if (requireDiscard)
-			{
-				for (Player player : players)
-				{
-					if (player.isARobot() && player.playerBank.getResourceCount() > 7)
-						AIHandler.GetHandler().Discard(player.playerID(), this.gameID);
-				}
-			}
+//			if (requireDiscard)
+//			{
+//				for (Player player : players)
+//				{
+//					if (player.isARobot() && player.playerBank.getResourceCount() > 7)
+//						AIHandler.GetHandler().Discard(player.playerID(), this.gameID);
+//				}
+//			}
 		}
 		else
 		{

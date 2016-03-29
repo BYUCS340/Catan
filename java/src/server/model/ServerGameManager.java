@@ -1,6 +1,7 @@
 package server.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +14,12 @@ import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
 import shared.definitions.ResourceType;
-import shared.model.*;
+import shared.model.Bank;
+import shared.model.GameManager;
+import shared.model.GameModel;
+import shared.model.ModelException;
+import shared.model.OfferedTrade;
+import shared.model.Player;
 import shared.model.map.Coordinate;
 import shared.model.map.MapException;
 import shared.model.map.model.MapGenerator;
@@ -35,6 +41,8 @@ public class ServerGameManager extends GameManager implements Serializable
 	private boolean randomPorts;
 
 	private Map<Integer,Integer> playerIndexLookup;
+	
+	private List<Boolean> discardList;
 
 	public ServerGameManager(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts, int index)
 	{
@@ -49,6 +57,31 @@ public class ServerGameManager extends GameManager implements Serializable
 		this.map = MapGenerator.GenerateMap(randomTiles, randomNumbers, randomPorts);
 	}
 
+	/**
+	 * Initializes the discard list. One entry is allocated per player in the game.
+	 * If shouldBeBlank is true, all of the entries in the list are set to false.
+	 * If shouldBeBlank is false, each entry is set to true if the corresponding player
+	 * should discard, or false if the player does not need to discard (ie, they have
+	 * 7 or less cards)
+	 * @param shouldBeBlank whether to set all values to false
+	 */
+	private void initDiscard(boolean shouldBeBlank)
+	{
+		discardList = new ArrayList<Boolean>();
+		for(int i = 0; i < players.size(); i++)
+		{
+			Player tempPlayer = players.get(i);
+			if(!shouldBeBlank && tempPlayer.playerBank.getResourceCount() > 7)
+			{				
+				discardList.add(true);
+			}
+			else
+			{
+				discardList.add(false);
+			}
+		}
+	}
+	
 	/**
 	 * Updates the version when doing an action
 	 */
@@ -126,6 +159,21 @@ public class ServerGameManager extends GameManager implements Serializable
 		try
 		{
 			super.DiceRoll(number);
+			
+			//initialize the serverside discard list
+			if(number == 7 && this.NeedToDiscardAfterRoll())
+			{
+				this.initDiscard(false);
+				
+				//have the AI discard cards 
+				for(int i = 0; i < players.size(); i++)
+				{
+					Player p = players.get(i);
+					if (p.isARobot() && this.discardList.get(i))
+						AIHandler.GetHandler().Discard(p.playerID(), gameID);
+				}
+			}
+			
 			this.updateVersion();
 			return true;
 		}
@@ -832,15 +880,30 @@ public class ServerGameManager extends GameManager implements Serializable
 		//  take the specified resource from the player at playerIndex
 		try{
 			if(resourceList.get(0) > 0)
-			bGiver.getResource(ResourceType.BRICK, resourceList.get(0));
+			{
+				bGiver.getResource(ResourceType.BRICK, resourceList.get(0));
+				discardList.set(playerIndex, false);
+			}
 			if(resourceList.get(1) > 0)
+			{
 				bGiver.getResource(ResourceType.ORE, resourceList.get(1));
+				discardList.set(playerIndex, false);
+			}
 			if(resourceList.get(2) > 0)
+			{
 				bGiver.getResource(ResourceType.SHEEP, resourceList.get(2));
+				discardList.set(playerIndex, false);
+			}
 			if(resourceList.get(3) > 0)
+			{
 				bGiver.getResource(ResourceType.WHEAT, resourceList.get(3));
+				discardList.set(playerIndex, false);
+			}
 			if(resourceList.get(4) > 0)
+			{
 				bGiver.getResource(ResourceType.WOOD, resourceList.get(4));
+				discardList.set(playerIndex, false);
+			}
 
 		}catch (ModelException e){
 			Log.GetLog().throwing("ServerGameManager", "ServerDiscardCards-GettingResources", e);
@@ -865,14 +928,15 @@ public class ServerGameManager extends GameManager implements Serializable
 		}
 
 
-		boolean allLessThen7 = true;
-		for(Player player : this.players){
-
-			if(player.playerBank.getResourceCount() > 7)
-				allLessThen7 = false;
+		boolean stillNeedToDiscard = false;
+		for(int i = 0; i < players.size(); i++){
+			if(discardList.get(i))
+			{
+				stillNeedToDiscard = true;
+			}
 		}
 
-		if(allLessThen7)
+		if(!stillNeedToDiscard)
 			this.gameState.state = GameRound.ROBBING;
 
 		this.updateVersion();
