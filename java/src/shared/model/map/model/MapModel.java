@@ -660,15 +660,49 @@ public class MapModel implements IMapModel
 	{
 		Vertex vStart = vertices.GetVertex(edge.getStart());
 		if (vStart.getType() != PieceType.NONE && vStart.getColor() == color)
+		{
+			if (setup && !IsGoodSetup(vStart))
+				return false;
+			
 			return true;
+		}
 		
 		Vertex vEnd = vertices.GetVertex(edge.getEnd());
 		if (vEnd.getType() != PieceType.NONE && vEnd.getColor() == color)
+		{
+			if (setup && !IsGoodSetup(vEnd))
+				return false;
+			
 			return true;
+		}
 		
 		return false;
 	}
 
+	private boolean IsGoodSetup(Vertex vertex)
+	{
+		try
+		{
+			Iterator<Vertex> surrounding = GetVertices(vertex);
+			while (surrounding.hasNext())
+			{
+				Vertex end = surrounding.next();
+				
+				Edge edge = GetEdge(vertex.getPoint(), end.getPoint());
+				
+				if (edge.doesRoadExists())
+					return false;
+			}
+			
+			return true;
+		}
+		catch (MapException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	@Override
 	public int hashCode() 
 	{
