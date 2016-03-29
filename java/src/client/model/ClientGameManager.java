@@ -902,6 +902,12 @@ public class ClientGameManager extends GameManager implements ModelSubject
 			this.notifyCenter.notify(ModelNotification.RESOURCES);
 		}
 		
+		//Update the game bank
+		if (!game.gameBank.equals(gameBank))
+		{
+			gameBank = game.gameBank;
+		}
+		
 		//Update the other players's banks
 		for(Player p: newplayers)
 		{

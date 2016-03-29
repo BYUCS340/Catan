@@ -890,7 +890,7 @@ public class GameManager
 		//This is a total message chain but eh
 		try 
 		{
-			return this.GetPlayer(playerIndex).playerBank.canBuyDevCard();
+			return this.GetPlayer(playerIndex).playerBank.canBuyDevCard() && this.gameBank.getDevCardCount() > 0;
 		} 
 		catch (ModelException e) 
 		{

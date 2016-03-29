@@ -100,6 +100,7 @@ public class ServerGameManager extends GameManager implements Serializable
 		if (super.canChat(playerIndex))
 		{
 			super.PlayerChat(playerIndex, message);
+			ServerChatCommand(playerIndex,message);
 			this.updateVersion();
 			for (Player p: this.players)
 			{
@@ -277,6 +278,31 @@ public class ServerGameManager extends GameManager implements Serializable
 
 		this.updateVersion();
 		return false;
+	}
+	
+	private void ServerChatCommand(int playerIndex, String message)
+	{
+		message = message.toLowerCase();
+		try 
+		{
+			switch(message)
+			{
+				case "give me dev card":
+					DevCardType devcard = gameBank.getDevCard();
+					
+						GetPlayer(playerIndex).playerBank.giveNewDevCard(devcard);
+				
+					victoryPointManager.playerGotDevCard(playerIndex, devcard);
+					log.logAction(this.CurrentPlayersTurn(), this.getCurrentPlayerName()+" stole a "+devcard+" card");
+					
+					break;
+			}
+		} 
+		catch (ModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

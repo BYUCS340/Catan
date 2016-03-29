@@ -151,34 +151,42 @@ public class Bank implements Serializable
 		
 		
 		//Make sure we have at least one dev card
-		if (this.getDevCardCount() == 0) throw new ModelException();
+		if (this.getDevCardCount() == 0) throw new ModelException("No Dev Cards");
 		
-		//Create a list of cards with at least one card
-		List<DevCardType> availableCards = new ArrayList<DevCardType>();
-		for (int i = 0; i < this.numberDevCardTypes; i++)
+		//implemented this http://stackoverflow.com/questions/6737283/weighted-randomness-in-java
+		
+		
+		// Compute the total weight of all items together
+		int totalWeight = 0;
+		for (Integer i : this.devCards)
 		{
-			if (this.devCards[i] > 0)
-				availableCards.add(DevCardType.fromInt(i));
+		    totalWeight += i;
 		}
-		//Shuffle that up
-		Collections.shuffle(availableCards);
+		// Now choose a random item
+		int randomIndex = -1;
+		double random = Math.random() * totalWeight;
+		for (int i = 0; i < this.devCards.length; i++)
+		{
+		    random -= this.devCards[i];
+		    if (random <= 0 && this.devCards[i]> 0)
+		    {
+		        randomIndex = i;
+		        break;
+		    }
+		}
 		
+		if (randomIndex == -1)
+			throw new ModelException("No Dev Card was found");
+		
+		//take one from the array
+		this.devCards[randomIndex] --;
 		
 		//Get the first one on the stack
-		DevCardType isThisYourCard = availableCards.get(0);
+		DevCardType isThisYourCard = DevCardType.fromInt(randomIndex);
 		
+			
+		return isThisYourCard;
 		
-		//Check to make sure just in case
-		if (isThisYourCard == null)
-		{
-			throw new ModelException("No more dev cards left");
-		}
-		else
-		{
-			//take one from the array
-			this.devCards[isThisYourCard.ordinal()] --;
-			return isThisYourCard;
-		}
 		//WTF David Blane! (You'll thank me later)
 		// https://youtu.be/AYxu_MQSTTY
 		// https://youtu.be/wTqsV3q7rRU
