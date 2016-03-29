@@ -574,7 +574,8 @@ public class GameManager
 	 */
 	public void playDevCard(int playerIndex, DevCardType type) throws ModelException
 	{
-		if (players.get(playerIndex).playerBank.getDevCardCount(type) < 1) throw new ModelException("Player doesn't have a dev card of that type to play");
+		if (players.get(playerIndex).playerBank.getDevCardCount(type) < 1) 
+			throw new ModelException("Player doesn't have a dev card of that type to play");
 		if (type == DevCardType.SOLDIER)
 		{
 			this.playerCanMoveRobber = playerIndex;
@@ -1008,14 +1009,16 @@ public class GameManager
 	 */
 	public boolean CanPlayDevCard(int playerIndex, DevCardType type)
 	{
+		if (this.CurrentState() != GameRound.PLAYING) 
+			return false;
 		switch (type)
 		{
-		case MONOPOLY:  return this.CanUseMonopoly(playerIndex);
-		case MONUMENT:  return this.CanUseMonument(playerIndex);
-		case ROAD_BUILD:return this.CanUseRoadBuilder(playerIndex);
-		case SOLDIER:   return this.CanUseSoldier(playerIndex);
-		case YEAR_OF_PLENTY: return this.CanUseYearOfPlenty(playerIndex);
-		default:
+			case MONOPOLY:  return this.CanUseMonopoly(playerIndex);
+			case MONUMENT:  return this.CanUseMonument(playerIndex);
+			case ROAD_BUILD:return this.CanUseRoadBuilder(playerIndex);
+			case SOLDIER:   return this.CanUseSoldier(playerIndex);
+			case YEAR_OF_PLENTY: return this.CanUseYearOfPlenty(playerIndex);
+			default:
 			return false;
 			
 		}

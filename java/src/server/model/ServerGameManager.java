@@ -440,26 +440,40 @@ public class ServerGameManager extends GameManager implements Serializable
 	 */
 	public boolean ServerRoadBuilding(int playerIndex, Coordinate start1, Coordinate end1,  Coordinate start2, Coordinate end2)
 	{
-		if (!this.CanPlayerPlay(playerIndex))
-			return false;
 
 		if (!this.CanPlayDevCard(playerIndex, DevCardType.ROAD_BUILD))
 			return false;
 
 		CatanColor color = this.getPlayerColorByIndex(playerIndex);
+		
+		//Log.GetLog().finest("Playing the roadbuilder card on color ");
 
-		if (!this.map.CanPlaceRoad(start1, end1, color) || !this.map.CanPlaceRoad(start2, end2, color))
+		if (!this.map.CanPlaceRoad(start1, end1, color) && !this.map.CanPlaceRoad(start2, end2, color))
 			return false;
 
 		try
 		{
-			//build the roads
-			this.BuildRoad(playerIndex, start1, end1, true);
-			this.BuildRoad(playerIndex, start2, end2, true);
-			this.victoryPointManager.playerBuiltRoad(playerIndex);
-
+			//Log.GetLog().finest("Playing the roadbuilder card");
 			//remove dev card from player
 			this.playDevCard(playerIndex, DevCardType.ROAD_BUILD);
+			
+			//build the roads
+			if (this.map.CanPlaceRoad(start1, end1, color))
+			{
+				this.BuildRoad(playerIndex, start1, end1, true);
+			}
+			if (this.map.CanPlaceRoad(start2, end2, color))
+			{
+				this.BuildRoad(playerIndex, start2, end2, true);
+			}
+			if (this.map.CanPlaceRoad(start1, end1, color))
+			{
+				this.BuildRoad(playerIndex, start1, end1, true);
+			}
+			this.victoryPointManager.playerBuiltRoad(playerIndex);
+			this.victoryPointManager.playerBuiltRoad(playerIndex);
+
+			
 		}
 		catch (ModelException e)
 		{
