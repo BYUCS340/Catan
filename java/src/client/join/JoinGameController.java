@@ -241,6 +241,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		if (createdGame){
 			getJoinGameView().showModal();
 			createdGame = false;
+			refreshGameList(); 
 			return;
 		}
 		createdGame = false;
