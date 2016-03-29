@@ -757,12 +757,17 @@ public class ServerGameManager extends GameManager implements Serializable
 			ResourceType[] resourceTypes = {ResourceType.BRICK, ResourceType.ORE, ResourceType.SHEEP, ResourceType.WHEAT, ResourceType.WOOD};
 
 			//  populate the trade offer
-			for(int i = 0; i < resourceList.size(); i++){
+			for(int i = 0; i < resourceList.size(); i++)
+			{
 				int resource_count = resourceList.get(i);
-				if (resource_count != 0){
-					if(resource_count < 0){
+				if (resource_count != 0)
+				{
+					if(resource_count < 0)
+					{
 						offer.setOfferedResourceAmount(resourceTypes[i], -1 * resource_count);
-					}else{
+					}
+					else
+					{
 						offer.setWantedResourceAmount(resourceTypes[i], resource_count);
 					}
 				}
@@ -804,7 +809,8 @@ public class ServerGameManager extends GameManager implements Serializable
 			return false;
 		}
 		//  if the player rejects the trade remove the trade offer, no exchange necessary so return
-		if(!willAccept) {
+		if(!willAccept)
+		{
 			this.LogAction(playerIndex, this.getPlayerNameByIndex(playerIndex) + " turned down offer from "+this.getCurrentPlayerName());
 			this.removeTradeOffer();
 			this.updateVersion();
@@ -812,7 +818,8 @@ public class ServerGameManager extends GameManager implements Serializable
 		}
 
 		//  accept trade
-		try{
+		try
+		{
 			ResourceType[] resourceTypes = {ResourceType.BRICK, ResourceType.ORE, ResourceType.SHEEP, ResourceType.WHEAT, ResourceType.WOOD};
 
 			//  exchange resources
@@ -825,18 +832,22 @@ public class ServerGameManager extends GameManager implements Serializable
 			Bank bSending = pSending.playerBank;
 
 			//  take all resources from player who sent the trade and give them to the receiving player
-			for(ResourceType resource : resourceTypes){
+			for(ResourceType resource : resourceTypes)
+			{
 				int resource_amount = offer.getOfferedResourceAmount(resource);
-				if(resource_amount > 0){
+				if(resource_amount > 0)
+				{
 					bSending.giveResource(resource, resource_amount);
 					bReceiving.getResource(resource, resource_amount);
 				}
 			}
 
 			//  take all resources from the player who received the offer and give them to the player who sent the original offer
-			for(ResourceType resource : resourceTypes){
+			for(ResourceType resource : resourceTypes)
+			{
 				int resource_amount = offer.getWantedResourceAmount(resource);
-				if(resource_amount > 0){
+				if(resource_amount > 0)
+				{
 					bReceiving.giveResource(resource, resource_amount);
 					bSending.getResource(resource, resource_amount);
 				}
@@ -847,7 +858,8 @@ public class ServerGameManager extends GameManager implements Serializable
 
 
 		}
-		catch (ModelException e){
+		catch (ModelException e)
+		{
 			Log.GetLog().throwing("ServerGameManager", "ServerAcceptTrade", e);
 			e.printStackTrace();
 			return false;
