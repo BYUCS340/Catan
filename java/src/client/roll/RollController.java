@@ -50,16 +50,16 @@ public class RollController extends Controller implements IRollController, Model
 	
 	@Override
 	public void rollDice() {
-		int roll = ClientGame.getGame().RollDice();
-		if (roll == 0) return;
-		getResultView().setRollValue(roll);
-		getResultView().showModal();
-		
 		//the timer should be stopped
 		if(timer.isRunning())
 		{
 			timer.stop();
 		}
+		
+		int roll = ClientGame.getGame().RollDice();
+		if (roll == 0) return;
+		getResultView().setRollValue(roll);
+		getResultView().showModal();
 	}
 
 	@Override
