@@ -825,10 +825,7 @@ public class ClientGameManager extends GameManager implements ModelSubject
 		updateInProgress = true;
 
 		System.out.println("\n--------------------- Refresh: "+this.refreshCount+" -------------------------");
-		/*if (forced)
-			System.out.println("Forced update of game");
-		else
-			System.out.println("Reloading the game from "+this.version+" to "+model.getVersion());*/
+		
 		
 		//If there are new players or the number of resources have changed
 		List<Player> newplayers = game.players;
@@ -919,12 +916,41 @@ public class ClientGameManager extends GameManager implements ModelSubject
 		if (game.waterCooler.size() > this.waterCooler.size())
 		{
 			this.waterCooler = game.waterCooler;
-			//System.out.println("New watercooler size: " + waterCooler.size());
 			this.notifyCenter.notify(ModelNotification.CHAT);
 		}
+		
+	//  check for trade offer, set to -1 if there is no trade in process
+			OfferedTrade offer = game.trade;
+
+			if(offer != null)
+			{
+				playerIndexWithTradeOffer =  offer.getToPlayerID();
+				playerIndexSendingOffer = offer.getFromPlayerID();
+
+				if(playerIndexWithTradeOffer == this.myPlayerIndex())
+				{
+					//  if the player has a trade waiting for them, get resources, then notify
+					resourceToTrade = new int[5];
+					resourceToTrade[0] = offer.getWantedResourceAmount(ResourceType.BRICK)
+							- offer.getOfferedResourceAmount(ResourceType.BRICK);
+					resourceToTrade[1] = offer.getWantedResourceAmount(ResourceType.ORE)
+							- offer.getOfferedResourceAmount(ResourceType.ORE);
+					resourceToTrade[2] = offer.getWantedResourceAmount(ResourceType.SHEEP)
+							- offer.getOfferedResourceAmount(ResourceType.SHEEP);
+					resourceToTrade[3] = offer.getWantedResourceAmount(ResourceType.WHEAT)
+							- offer.getOfferedResourceAmount(ResourceType.WHEAT);
+					resourceToTrade[4] = offer.getWantedResourceAmount(ResourceType.WOOD)
+							- offer.getOfferedResourceAmount(ResourceType.WOOD);
+				}
+			}
+			else
+			{
+				playerIndexWithTradeOffer = -2;
+				playerIndexSendingOffer = -2;
+				resourceToTrade = null;
+			}
 
 		GameState newgamestate = game.gameState;
-		GameRound oldstate = game.gameState.state;
 		GameRound newstate = game.gameState.state;
 		
 		TurnState oldTurnState = this.turnState;
@@ -938,10 +964,6 @@ public class ClientGameManager extends GameManager implements ModelSubject
 			this.turnState = TurnState.GAME_OVER;
 			this.gameState.endGame();
 		}
-		//TODO implement trade offer turnstate
-		//TODO implement placing piece turnstate
-		//TODO implement domestic_trade turnstate
-		//TODO implement maritime_trade turnstate
 		else
 		{
 			switch (newstate)
@@ -983,10 +1005,10 @@ public class ClientGameManager extends GameManager implements ModelSubject
 					else
 						this.turnState = TurnState.WAITING;
 					
-					if (this.playerIndexSendingOffer == this.myPlayerIndex)
+					if (this.playerIndexWithTradeOffer == this.myPlayerIndex)
 						this.turnState = TurnState.OFFERED_TRADE;
 					
-					if (this.playerIndexWithTradeOffer == this.myPlayerIndex)
+					if (this.playerIndexSendingOffer == this.myPlayerIndex)
 						this.turnState = TurnState.DOMESTIC_TRADE;
 					
 					break;
@@ -1005,7 +1027,6 @@ public class ClientGameManager extends GameManager implements ModelSubject
 		if (this.turnState != oldTurnState || (!this.gameState.equals(newgamestate) && newstate != null))
 		{
 			gameState = newgamestate;
-			//handle the logic from this
 			System.out.println("STATE Refreshed to "+newstate+ " current player:"+newgamestate.activePlayerIndex);
 			System.out.println("Old TS: "+oldTurnState+" New: "+this.turnState);
 			this.notifyCenter.notify(ModelNotification.STATE);
@@ -1055,54 +1076,6 @@ public class ClientGameManager extends GameManager implements ModelSubject
 			this.notifyCenter.notify(ModelNotification.ALL);
 		
 		this.version = game.version;
-		//throw new ModelException();
-
-
-		//  check for trade offer, set to -1 if there is no trade in process
-		OfferedTrade offer = game.trade;
-
-		if(offer != null)
-		{
-			playerIndexWithTradeOffer =  offer.getToPlayerID();
-			playerIndexSendingOffer = offer.getFromPlayerID();
-
-			if(playerIndexWithTradeOffer == this.myPlayerIndex())
-			{
-				//  if the player has a trade waiting for them, get resources, then notify
-				resourceToTrade = new int[5];
-				resourceToTrade[0] = offer.getWantedResourceAmount(ResourceType.BRICK)
-						- offer.getOfferedResourceAmount(ResourceType.BRICK);
-				resourceToTrade[1] = offer.getWantedResourceAmount(ResourceType.ORE)
-						- offer.getOfferedResourceAmount(ResourceType.ORE);
-				resourceToTrade[2] = offer.getWantedResourceAmount(ResourceType.SHEEP)
-						- offer.getOfferedResourceAmount(ResourceType.SHEEP);
-				resourceToTrade[3] = offer.getWantedResourceAmount(ResourceType.WHEAT)
-						- offer.getOfferedResourceAmount(ResourceType.WHEAT);
-				resourceToTrade[4] = offer.getWantedResourceAmount(ResourceType.WOOD)
-						- offer.getOfferedResourceAmount(ResourceType.WOOD);
-				
-				this.notifyCenter.notify(ModelNotification.STATE);
-				this.notifyCenter.notify(ModelNotification.TRADE);
-			}
-		}
-		else
-		{
-			//  if the offer previously existed then send out a noficication as you update
-			if(playerIndexWithTradeOffer >= 0)
-			{
-				playerIndexWithTradeOffer = -2;
-				playerIndexSendingOffer = -2;
-				resourceToTrade = null;
-				this.notifyCenter.notify(ModelNotification.STATE);
-			}
-			else
-			{
-				//  set them all the the default if there is not offer just to be safe
-				playerIndexWithTradeOffer = -2;
-				playerIndexSendingOffer = -2;
-				resourceToTrade = null;
-			}
-		}
 		updateInProgress = false;
 	}
 
@@ -1158,21 +1131,18 @@ public class ClientGameManager extends GameManager implements ModelSubject
 			}
 			GameModel model = proxy.getGameModel(this.version);
 			if (model == null) 
-			{
-				//throw new ModelException("Model was null from server");
 				return;
-			}
+			
 			//Refresh the game
 			this.reloadGame(model);
 		} 
 		catch (ServerProxyException e) 
 		{
 			System.err.println("Wasn't able to update");
-			//e.printStackTrace();
 			throw new ModelException("Server proxy wasn't able to update");
 		}
+		
 		this.refreshCount++;
-
 	}
 
 	/**

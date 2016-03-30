@@ -41,7 +41,6 @@ public class DomesticTradeView extends PanelView implements IDomesticTradeView
 	@Override
 	public void enableDomesticTrade(boolean value)
 	{
-		
 		button.setEnabled(value);
 	}
 	

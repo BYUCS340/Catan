@@ -1027,4 +1027,34 @@ public class TestMapModel
 		model.PlaceRoad(new Coordinate(5, 3), new Coordinate(6, 3), CatanColor.GREEN);
 		assertTrue(model.GetLongestRoadColor() == CatanColor.GREEN);
 	}
+	
+	@Test
+	public void testGetLongestRoadSpecialCase() throws MapException
+	{
+		model.SetupPhase(true);
+		model.PlaceSettlement(new Coordinate(2, 0), CatanColor.BLUE);
+		model.PlaceRoad(new Coordinate(2,0), new Coordinate(3,0), CatanColor.BLUE);
+		
+		model.PlaceSettlement(new Coordinate(3, -2), CatanColor.GREEN);
+		model.PlaceRoad(new Coordinate(3, -2), new Coordinate(3, -1), CatanColor.GREEN);
+		model.SetupPhase(false);
+		
+		model.PlaceRoad(new Coordinate(3, 0), new Coordinate(3, -1), CatanColor.BLUE);
+		model.PlaceRoad(new Coordinate(3, -1), new Coordinate(4, -1), CatanColor.BLUE);
+		model.PlaceRoad(new Coordinate(4, -1), new Coordinate(4, -2), CatanColor.BLUE);
+		model.PlaceRoad(new Coordinate(4, -1), new Coordinate(4, 0), CatanColor.BLUE);
+		model.PlaceRoad(new Coordinate(4, -2), new Coordinate(5, -2), CatanColor.BLUE);
+		
+		assertTrue(model.GetLongestRoadColor() == CatanColor.BLUE);
+		
+		model.PlaceRoad(new Coordinate(3, -2), new Coordinate(3, -3), CatanColor.GREEN);
+		model.PlaceRoad(new Coordinate(3, -3), new Coordinate(3, -4), CatanColor.GREEN);
+		model.PlaceRoad(new Coordinate(3, -3), new Coordinate(4, -3), CatanColor.GREEN);
+		model.PlaceRoad(new Coordinate(4, -3), new Coordinate(4, -4), CatanColor.GREEN);
+		model.PlaceRoad(new Coordinate(4, -4), new Coordinate(4, -5), CatanColor.GREEN);
+		model.PlaceRoad(new Coordinate(4, -5), new Coordinate(3, -5), CatanColor.GREEN);
+		model.PlaceRoad(new Coordinate(4, -4), new Coordinate(5, -4), CatanColor.GREEN);
+		
+		assertTrue(model.GetLongestRoadColor() == CatanColor.GREEN);
+	}
 }

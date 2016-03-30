@@ -42,7 +42,7 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	protected boolean randomPorts;
 
 	protected Map<Integer,Integer> playerIndexLookup;
-	
+
 	protected List<Boolean> discardList;
 
 	public ServerGameManager(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts, int index)
@@ -57,7 +57,7 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 		this.map = MapGenerator.GenerateMap(randomTiles, randomNumbers, randomPorts);
 	}
 
-	public ServerGameManager() 
+	public ServerGameManager()
 	{
 		super();
 		this.gameTitle = "Default";
@@ -66,7 +66,7 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 		this.randomPorts = false;
 		this.randomTiles = false;
 		this.playerIndexLookup = new HashMap<Integer,Integer>();
-		
+
 		this.map = MapGenerator.GenerateMap(false, false, false);
 	}
 
@@ -79,7 +79,7 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	 * @param shouldBeBlank whether to set all values to false
 	 */
 	protected abstract void initDiscard(boolean shouldBeBlank);
-	
+
 	/**
 	 * Updates the version when doing an action
 	 */
@@ -92,8 +92,6 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	 */
 	public abstract int GetPlayerIndexByID(int playerID);
 
-	
-	public abstract void reset();
 
 	/**
 	 * Sends a chat for the user

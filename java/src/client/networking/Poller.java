@@ -57,7 +57,6 @@ public class Poller implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		//System.out.println("Poller has fired :"+this.toString());
 		try
 		{	
 			ClientGame.getGame().RefreshFromServer();

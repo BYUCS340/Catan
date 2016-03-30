@@ -56,6 +56,4 @@ public class TradePanel extends JPanel
 		this.add(maritimeView);
 		this.add(Box.createRigidArea(new Dimension(3, 0)));
 	}
-	
 }
-

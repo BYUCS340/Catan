@@ -28,7 +28,6 @@ public class RoadCounter
 	{
 		try
 		{
-			Set<Edge> counted = new HashSet<Edge>();
 			RoadComparer lengths = new RoadComparer();
 			
 			Iterator<Vertex> vList = model.GetVertices();
@@ -36,17 +35,7 @@ public class RoadCounter
 			{
 				Vertex vertex = vList.next();
 				
-				Road road = BeginCountIntersection(vertex, counted);
-				
-				lengths.AddRoad(road);
-			}
-			
-			vList = model.GetVertices();
-			while (vList.hasNext())
-			{
-				Vertex vertex = vList.next();
-				
-				List<Road> roads = BeginCountRoad(vertex, counted);
+				List<Road> roads = BeginCountRoad(vertex);
 				
 				lengths.AddRoads(roads);
 			}
@@ -65,87 +54,30 @@ public class RoadCounter
 		}
 	}
 	
-	private Road BeginCountIntersection(Vertex start, Set<Edge> counted) throws MapException
+	private List<Road> BeginCountRoad(Vertex start) throws MapException
 	{
-		CatanColor color = null;
+		Set<Edge> counted = new HashSet<Edge>();
+		List<Road> roads = new ArrayList<Road>(3);
 		
-		//Verify the vertex is an intersection.
-		int count = 0;
 		Iterator<Vertex> endPoints = model.GetVertices(start);
+		
 		while (endPoints.hasNext())
 		{
 			Vertex end = endPoints.next();
-			count++;
 			
 			Edge edge = model.GetEdge(start.getPoint(), end.getPoint());
+			
 			if (!edge.doesRoadExists())
-				return null;
-			
-			if (color == null)
-				color = edge.getColor();
-			else if (color != edge.getColor())
-				return null;
-		}
-		
-		if (count != 3)
-			return null;
-		
-		//Count the road as it is an intersection.
-		Set<Edge> path = new HashSet<Edge>();
-		return CountIntersection(start, path, counted, color);
-	}
-	
-	private Road CountIntersection(Vertex start, Set<Edge> path, Set<Edge> counted, CatanColor color) throws MapException
-	{
-		if (start.getType() != PieceType.NONE && start.getColor() != color)
-			return new Road(color);
-		
-		Iterator<Vertex> endPoints = model.GetVertices(start);
-		
-		List<Road> roads = new ArrayList<Road>();
-		while (endPoints.hasNext())
-		{
-			Vertex end = endPoints.next();
-			
-			//If the edge has already been counted on the current path, continue.
-			Edge edge = model.GetEdge(start.getPoint(), end.getPoint());
-			if (!edge.doesRoadExists() || edge.getColor() != color || path.contains(edge))
 				continue;
 			
 			counted.add(edge);
-			path.add(edge);
-			Road road = CountIntersection(end, path, counted, color).IncrementLength();
-			roads.add(road);
-			path.remove(edge);
-		}
-		
-		if (roads.size() > 0)
-			return GetLongestRoad(roads);
-		else
-			return new Road(color);
-	}
-	
-	private List<Road> BeginCountRoad(Vertex start, Set<Edge> counted) throws MapException
-	{
-		List<Road> roads = new ArrayList<Road>();
-		
-		Iterator<Vertex> endPoints = model.GetVertices(start);
-		
-		while (endPoints.hasNext())
-		{
-			Vertex end = endPoints.next();
-			
-			Edge edge = model.GetEdge(start.getPoint(), end.getPoint());
-			if (counted.contains(edge) || !edge.doesRoadExists())
-				continue;
-			
-			counted.add(edge);
-			
 			Road road = CountRoad(end, counted, edge.getColor()).IncrementLength();
+			counted.remove(edge);
+			
 			roads.add(road);
 		}
 		
-		return MergeRoads(roads);
+		return roads;
 	}
 	
 	private Road CountRoad(Vertex start, Set<Edge> counted, CatanColor color) throws MapException
@@ -155,6 +87,7 @@ public class RoadCounter
 		
 		Iterator<Vertex> endPoints = model.GetVertices(start);
 		
+		List<Road> roads = new ArrayList<Road>(3);
 		while (endPoints.hasNext())
 		{
 			Vertex end = endPoints.next();
@@ -164,14 +97,17 @@ public class RoadCounter
 			if (counted.contains(edge) || !edge.doesRoadExists() || edge.getColor() != color)
 				continue;
 			
-			counted.add(edge);
-			
+			counted.add(edge);	
 			Road road = CountRoad(end, counted, edge.getColor()).IncrementLength();
+			counted.remove(edge);
 			
-			return road;
+			roads.add(road);
 		}
 		
-		return new Road(color);
+		if (roads.size() > 0)
+			return GetLongestRoad(roads);
+		else
+			return new Road(color);
 	}
 	
 	private Road GetLongestRoad(List<Road> roads)
@@ -187,66 +123,6 @@ public class RoadCounter
 		return longestRoad;
 	}
 	
-	private List<Road> MergeRoads(Road a, Road b)
-	{
-		List<Road> result = new ArrayList<Road>();
-		
-		if (a.GetColor() == b.GetColor())
-		{
-			int length = a.GetLength() + b.GetLength();
-			CatanColor color = a.GetColor();
-			
-			result.add(new Road(color, length));
-		}
-		else
-		{
-			result.add(a);
-			result.add(b);
-		}
-		
-		return result;
-	}
-	
-	private List<Road> MergeRoads(Road a, Road b, Road c)
-	{
-		List<Road> result;
-		
-		if (a.GetColor() == b.GetColor())
-		{
-			result = MergeRoads(a, b);
-			result.add(c);
-		}
-		else if (a.GetColor() == c.GetColor())
-		{
-			result = MergeRoads(a, c);
-			result.add(b);
-		}
-		else if (b.GetColor() == c.GetColor())
-		{
-			result = MergeRoads(b, c);
-			result.add(a);
-		}
-		else
-		{
-			result = new ArrayList<Road>();
-			result.add(a);
-			result.add(b);
-			result.add(c);
-		}
-		
-		return result;
-	}
-	
-	private List<Road> MergeRoads(List<Road> roads)
-	{
-		if (roads.size() == 2)
-			return MergeRoads(roads.get(0), roads.get(1));
-		else if (roads.size() == 3)
-			return MergeRoads(roads.get(0), roads.get(1), roads.get(2));
-		else
-			return roads;
-	}
-	
 	private class Road
 	{
 		private int length;
@@ -255,12 +131,6 @@ public class RoadCounter
 		public Road(CatanColor color)
 		{
 			this.length = 0;
-			this.color = color;
-		}
-		
-		public Road(CatanColor color, int length)
-		{
-			this.length = length;
 			this.color = color;
 		}
 		

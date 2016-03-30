@@ -47,7 +47,7 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 	private boolean randomPorts;
 
 	private Map<Integer,Integer> playerIndexLookup;
-	
+
 	private List<Boolean> discardList;
 
 	public RealServerGameManager(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts, int index)
@@ -78,7 +78,7 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 		{
 			Player tempPlayer = players.get(i);
 			if(!shouldBeBlank && tempPlayer.playerBank.getResourceCount() > 7)
-			{				
+			{
 				discardList.add(true);
 			}
 			else
@@ -87,7 +87,7 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 			}
 		}
 	}
-	
+
 	/**
 	 * Updates the version when doing an action
 	 */
@@ -123,7 +123,7 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 		Arrays.fill(playerColors,-1);
 		playerCanMoveRobber = -1;
 		gameBank.resetToBankDefaults();
-		
+
 		for (Player p: players)
 		{
 			p.playerBank.resetToPlayerDefaults();
@@ -185,13 +185,13 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 		try
 		{
 			super.DiceRoll(number);
-			
+
 			//initialize the serverside discard list
 			if(number == 7 && this.NeedToDiscardAfterRoll())
 			{
 				this.initDiscard(false);
-				
-				//have the AI discard cards 
+
+				//have the AI discard cards
 				for(int i = 0; i < players.size(); i++)
 				{
 					Player p = players.get(i);
@@ -199,7 +199,7 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 						AIHandler.GetHandler().Discard(p.playerID(), gameID);
 				}
 			}
-			
+
 			this.updateVersion();
 			return true;
 		}
@@ -359,7 +359,7 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 		return false;
 	}
 
-	
+
 	private void ServerChatCommand(int playerIndex, String message)
 	{
 		message = message.toLowerCase();
@@ -742,11 +742,11 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 			{
 				Iterator<HexType> hexTypes = map.GetResources(p);
 
-				
+
 				while (hexTypes.hasNext())
 				{
 					HexType hexType = hexTypes.next();
-					
+
 					ResourceType rt = ResourceType.fromHex(hexType);
 					if (rt != null)
 					{
@@ -783,46 +783,35 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 		if(!this.CanOfferTrade(playerIndexOffering))
 			return false;
 
-		System.out.println("Reached Offer");
+		OfferedTrade offer = new OfferedTrade();
+		offer.setFromPlayerID(playerIndexOffering);
+		offer.setToPlayerID(playerIndexReceiving);
+		ResourceType[] resourceTypes = {ResourceType.BRICK, ResourceType.ORE, ResourceType.SHEEP, ResourceType.WHEAT, ResourceType.WOOD};
 
-
-		//  offer trade
-//		try{
-			OfferedTrade offer = new OfferedTrade();
-			offer.setFromPlayerID(playerIndexOffering);
-			offer.setToPlayerID(playerIndexReceiving);
-			ResourceType[] resourceTypes = {ResourceType.BRICK, ResourceType.ORE, ResourceType.SHEEP, ResourceType.WHEAT, ResourceType.WOOD};
-
-			//  populate the trade offer
-			for(int i = 0; i < resourceList.size(); i++)
+		//  populate the trade offer
+		for(int i = 0; i < resourceList.size(); i++)
+		{
+			int resource_count = resourceList.get(i);
+			if (resource_count != 0)
 			{
-				int resource_count = resourceList.get(i);
-				if (resource_count != 0)
+				if(resource_count < 0)
 				{
-					if(resource_count < 0)
-					{
-						offer.setOfferedResourceAmount(resourceTypes[i], -1 * resource_count);
-					}
-					else
-					{
-						offer.setWantedResourceAmount(resourceTypes[i], resource_count);
-					}
+					offer.setOfferedResourceAmount(resourceTypes[i], -1 * resource_count);
+				}
+				else
+				{
+					offer.setWantedResourceAmount(resourceTypes[i], resource_count);
 				}
 			}
-			this.setTradeOffer(offer);
-			System.out.println("Reached Offer1");
+		}
+		this.setTradeOffer(offer);
+		System.out.println("Reached Offer1");
 
-			if (this.IsPlayerRobot(playerIndexReceiving))
-			{
-				int aiID = this.GetPlayerIDbyIndex(playerIndexReceiving);
-				AIHandler.GetHandler().Trade(aiID, this.gameID, offer);
-			}
-
-//		}catch (ModelException e){
-//			Log.GetLog().throwing("ServerGameManager", "ServerOfferTrade", e);
-//			e.printStackTrace();
-//			return false;
-//		}
+		if (this.IsPlayerRobot(playerIndexReceiving))
+		{
+			int aiID = this.GetPlayerIDbyIndex(playerIndexReceiving);
+			AIHandler.GetHandler().Trade(aiID, this.gameID, offer);
+		}
 
 		this.updateVersion();
 		return true;

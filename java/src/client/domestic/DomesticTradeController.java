@@ -39,8 +39,8 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	 * @param acceptOverlay Accept trade overlay which lets the user accept or reject a proposed trade
 	 */
 	public DomesticTradeController(IDomesticTradeView tradeView, IDomesticTradeOverlay tradeOverlay,
-									IWaitView waitOverlay, IAcceptTradeOverlay acceptOverlay) {
-
+									IWaitView waitOverlay, IAcceptTradeOverlay acceptOverlay) 
+	{
 		super(tradeView);
 		
 		setTradeOverlay(tradeOverlay);
@@ -49,42 +49,42 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		playersToTradeWithAlreadySet = false;
 
 		ClientGame.getGame().startListening(this, ModelNotification.STATE);
-//		ClientGame.getGame().startListening(this, ModelNotification.ALL);
 
 		this.alert();
-		/*System.out.println(ResourcePositions.iBRICK.ordinal());
-		System.out.println(ResourcePositions.iWHEAT.ordinal());
-		System.out.println(ResourcePositions.iSHEEP.ordinal());
-		System.out.println(ResourcePositions.iWOOD.ordinal());
-		System.out.println(ResourcePositions.iORE.ordinal());*/
 	}
 	
-	public IDomesticTradeView getTradeView() {
-		
+	public IDomesticTradeView getTradeView() 
+	{	
 		return (IDomesticTradeView)super.getView();
 	}
 
-	public IDomesticTradeOverlay getTradeOverlay() {
+	public IDomesticTradeOverlay getTradeOverlay() 
+	{
 		return tradeOverlay;
 	}
 
-	public void setTradeOverlay(IDomesticTradeOverlay tradeOverlay) {
+	public void setTradeOverlay(IDomesticTradeOverlay tradeOverlay)
+	{
 		this.tradeOverlay = tradeOverlay;
 	}
 
-	public IWaitView getWaitOverlay() {
+	public IWaitView getWaitOverlay()
+	{
 		return waitOverlay;
 	}
 
-	public void setWaitOverlay(IWaitView waitView) {
+	public void setWaitOverlay(IWaitView waitView) 
+	{
 		this.waitOverlay = waitView;
 	}
 
-	public IAcceptTradeOverlay getAcceptOverlay() {
+	public IAcceptTradeOverlay getAcceptOverlay() 
+	{
 		return acceptOverlay;
 	}
 
-	public void setAcceptOverlay(IAcceptTradeOverlay acceptOverlay) {
+	public void setAcceptOverlay(IAcceptTradeOverlay acceptOverlay) 
+	{
 		this.acceptOverlay = acceptOverlay;
 	}
 	
@@ -93,99 +93,59 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	public void alert()
 	{
 		ClientGameManager game = ClientGame.getGame();
-		//  TODO:  this should be more efficient later, should probably check for changed in state before updating everything
-//		System.out.println("TurnState: " + game.getTurnState());
-		if(game.CurrentState() == GameRound.PLAYING && (game.getTurnState() == TurnState.PLAYING || game.getTurnState() == TurnState.OFFERED_TRADE))
-		{
-//			System.out.println("Player index in alert (my turn): " + game.myPlayerIndex());
-			
-			if (game.CurrentPlayersTurn() == game.myPlayerIndex() && game.getTurnState() != TurnState.GAME_OVER)
-			{
-				getTradeView().enableDomesticTrade(true);
-			}
-			else
-			{
-				getTradeView().enableDomesticTrade(false);
-			}
-			//  TODO:  probably need more functionality here to check why we're being alerted
-		}
-		else	//  Maritime Trade is disabled when not playing
-		{	
+
+		if (game.getTurnState() == TurnState.PLAYING)
+			getTradeView().enableDomesticTrade(true);
+		else
 			getTradeView().enableDomesticTrade(false);
 			
-			
-			//  TODO:  check to see if I have an offer
-//			System.out.println("Player index in alert: " + game.myPlayerIndex());
-//			System.out.println("Other: " + game.getPlayerIndexWithTradeOffer());
-//			System.out.println("Truth Value: " + (game.getPlayerIndexWithTradeOffer() == game.myPlayerIndex()));
+		if (game.getTurnState() == TurnState.OFFERED_TRADE)
+		{
 			if(game.getPlayerIndexWithTradeOffer() == game.myPlayerIndex())
 			{
-//				System.out.println("Inside");
 				if (!this.getAcceptOverlay().isModalShowing())
 				{
-//					System.out.println("Setting up modal");
 					this.getAcceptOverlay().reset();
 					this.getAcceptOverlay().setPlayerName(game.getPlayerNameByIndex(game.getPlayerSendingOfferIndex()));
 					int[] resourcesToTrade = game.getResourceToTrade();
 					if(resourcesToTrade[0] != 0)
 					{
 						if(resourcesToTrade[0] < 0)
-						{
 							this.getAcceptOverlay().addGiveResource(ResourceType.BRICK, Math.abs(resourcesToTrade[0]));
-						}
 						else
-						{
 							this.getAcceptOverlay().addGetResource(ResourceType.BRICK, resourcesToTrade[0]);
-						}
 					}
 					if(resourcesToTrade[1] != 0)
 					{
 						if(resourcesToTrade[1] < 0)
-						{
 							this.getAcceptOverlay().addGiveResource(ResourceType.ORE, Math.abs(resourcesToTrade[1]));
-						}
 						else
-						{
 							this.getAcceptOverlay().addGetResource(ResourceType.ORE, resourcesToTrade[1]);
-						}
 					}
 					if(resourcesToTrade[2] != 0)
 					{
 						if(resourcesToTrade[2] < 0)
-						{
 							this.getAcceptOverlay().addGiveResource(ResourceType.SHEEP, Math.abs(resourcesToTrade[2]));
-						}
 						else
-						{
 							this.getAcceptOverlay().addGetResource(ResourceType.SHEEP, resourcesToTrade[2]);
-						}
 					}
 					if(resourcesToTrade[3] != 0)
 					{
 						if(resourcesToTrade[3] < 0)
-						{
 							this.getAcceptOverlay().addGiveResource(ResourceType.WHEAT, Math.abs(resourcesToTrade[3]));
-						}
 						else
-						{
 							this.getAcceptOverlay().addGetResource(ResourceType.WHEAT, resourcesToTrade[3]);
-						}
 					}
 					if(resourcesToTrade[4] != 0)
 					{
 						if(resourcesToTrade[4] < 0)
-						{
 							this.getAcceptOverlay().addGiveResource(ResourceType.WOOD, Math.abs(resourcesToTrade[4]));
-						}
 						else
-						{
 							this.getAcceptOverlay().addGetResource(ResourceType.WOOD, resourcesToTrade[4]);
-						}
 					}
 
-//					System.out.println("Showing accept modal");
 					this.getAcceptOverlay().showModal();
-					//  TODO: implement accept logic here
+					
 					if(playerCanAcceptTrade(resourcesToTrade))
 						this.getAcceptOverlay().setAcceptEnabled(true);
 					else
@@ -203,12 +163,10 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 				{
 					this.getWaitOverlay().closeModal();
 					ClientGame.getGame().RefreshFromServer();
-//					System.out.println("Refreshing in domestic trade");
 				}
 				catch (ModelException e)
 				{
 					e.printStackTrace();
-//					System.out.println("Couldn't refresh from Domestic Trade Controller");
 				}
 			}
 			if(this.getTradeOverlay().isModalShowing())
@@ -223,17 +181,17 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	private boolean playerCanAcceptTrade(int[] resources)
 	{
 		ClientGameManager game = ClientGame.getGame();
-		if(resources[0] < -1 * game.playerResourceCount(ResourceType.BRICK)){
+		if(resources[0] < -1 * game.playerResourceCount(ResourceType.BRICK))
 			return false;
-		}else if(resources[1] < -1 * game.playerResourceCount(ResourceType.ORE)){
+		else if(resources[1] < -1 * game.playerResourceCount(ResourceType.ORE))
 			return false;
-		}else if(resources[2] < -1 * game.playerResourceCount(ResourceType.SHEEP)){
+		else if(resources[2] < -1 * game.playerResourceCount(ResourceType.SHEEP))
 			return false;
-		}else if(resources[3] < -1 * game.playerResourceCount(ResourceType.WHEAT)){
+		else if(resources[3] < -1 * game.playerResourceCount(ResourceType.WHEAT))
 			return false;
-		}else if(resources[4] < -1 * game.playerResourceCount(ResourceType.WOOD)){
+		else if(resources[4] < -1 * game.playerResourceCount(ResourceType.WOOD))
 			return false;
-		}
+		
 		return true;
 	}
 	
@@ -251,15 +209,10 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		
 		if(!getTradeOverlay().isModalShowing())
 			getTradeOverlay().showModal();
-		
-
-				
-		//  TODO:  I need to test to make sure the button numbers line up with the internal trade numbers
 	}
 	
 	private void initializePlayersToTradeWith()
 	{
-//		System.out.println("Game Players: " + ClientGame.getGame().allCurrentPlayers());
 		if(!playersToTradeWithAlreadySet)
 		{
 			PlayerInfo[] currentPlayers = ClientGame.getGame().allCurrentPlayers();
@@ -281,21 +234,6 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	}
 	
 	/**
-	 * Sets initial settings for upDown buttons for all resources
-	 */
-	private void initializeAllUpDown()
-	{
-		//  TODO: probably not necessary
-		updateUpDownForResource(ResourceType.BRICK);
-		updateUpDownForResource(ResourceType.ORE);
-		updateUpDownForResource(ResourceType.WHEAT);
-		updateUpDownForResource(ResourceType.WOOD);
-		updateUpDownForResource(ResourceType.SHEEP);
-	}
-	
-	
-	
-	/**
 	 * Just resets the resource to trade each time it's called
 	 */
 	private void resetResourcesToTrade()
@@ -304,7 +242,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	}
 	
 	/**
-	 * Researchs the internal button states each time it's called, should only be called when
+	 * Researches the internal button states each time it's called, should only be called when
 	 * domestic trade modal opens
 	 */
 	private void resetTradeResesourceStates()
@@ -322,27 +260,18 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	 */
 	private void checkIfTradeIsReady()
 	{
-//		System.out.println("Resources to Trade: " + this.resourcesToTrade[0]);
-//		System.out.println("Resources to Trade: " + this.resourcesToTrade[1]);
-//		System.out.println("Resources to Trade: " + this.resourcesToTrade[2]);
-//		System.out.println("Resources to Trade: " + this.resourcesToTrade[3]);
-//		System.out.println("Resources to Trade: " + this.resourcesToTrade[4]);
-
 		if(!sendAndReceiveResourcesSet())
 		{
-//			System.out.println("need resources");
 			getTradeOverlay().setStateMessage("Select Send and Receive Resources");
 			getTradeOverlay().setTradeEnabled(false);
 		}
 		else if(playerIndexToTradeWith < 0)
 		{
-//			System.out.println("need players");
 			getTradeOverlay().setStateMessage("Select Player to Trade With");	
 			getTradeOverlay().setTradeEnabled(false);
 		}
 		else
 		{
-//			System.out.println("can trade");
 			getTradeOverlay().setStateMessage("Trade!");	
 			getTradeOverlay().setTradeEnabled(true);
 		}
