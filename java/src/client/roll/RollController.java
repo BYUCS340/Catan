@@ -51,6 +51,7 @@ public class RollController extends Controller implements IRollController, Model
 	@Override
 	public void rollDice() {
 		int roll = ClientGame.getGame().RollDice();
+		if (roll == 0) return;
 		getResultView().setRollValue(roll);
 		getResultView().showModal();
 		
