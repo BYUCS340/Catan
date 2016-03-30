@@ -39,8 +39,8 @@ public class GameManager
 	protected GameActionLog log;
 	protected MapModel map;
 	protected int version;
-	private int[] playerColors;
-	private int playerCanMoveRobber;
+	protected int[] playerColors;
+	protected int playerCanMoveRobber;
 	
 	
 	
@@ -85,7 +85,7 @@ public class GameManager
 	 * Resets a game to default state
 	 */
 	public void reset()
-	{;
+	{
 		version = -1;
 		waterCooler = new ChatBox();
 		log = new GameActionLog();

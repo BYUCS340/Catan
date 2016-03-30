@@ -56,7 +56,7 @@ public class GameHandler
 		try
 		{
 			int index = gameIndex.size();
-			ServerGameManager sgm = new ServerGameManager(name, randomTiles, randomNumbers, randomPorts, index);
+			ServerGameManager sgm = new RealServerGameManager(name, randomTiles, randomNumbers, randomPorts, index);
 			gameIndex.put(index, sgm);
 			gameNames.add(name);
 			
