@@ -745,47 +745,36 @@ public class ServerGameManager extends GameManager implements Serializable
 
 		if(!this.CanOfferTrade(playerIndexOffering))
 			return false;
+		
+		OfferedTrade offer = new OfferedTrade();
+		offer.setFromPlayerID(playerIndexOffering);
+		offer.setToPlayerID(playerIndexReceiving);
+		ResourceType[] resourceTypes = {ResourceType.BRICK, ResourceType.ORE, ResourceType.SHEEP, ResourceType.WHEAT, ResourceType.WOOD};
 
-		System.out.println("Reached Offer");
-
-
-		//  offer trade
-//		try{
-			OfferedTrade offer = new OfferedTrade();
-			offer.setFromPlayerID(playerIndexOffering);
-			offer.setToPlayerID(playerIndexReceiving);
-			ResourceType[] resourceTypes = {ResourceType.BRICK, ResourceType.ORE, ResourceType.SHEEP, ResourceType.WHEAT, ResourceType.WOOD};
-
-			//  populate the trade offer
-			for(int i = 0; i < resourceList.size(); i++)
+		//  populate the trade offer
+		for(int i = 0; i < resourceList.size(); i++)
+		{
+			int resource_count = resourceList.get(i);
+			if (resource_count != 0)
 			{
-				int resource_count = resourceList.get(i);
-				if (resource_count != 0)
+				if(resource_count < 0)
 				{
-					if(resource_count < 0)
-					{
-						offer.setOfferedResourceAmount(resourceTypes[i], -1 * resource_count);
-					}
-					else
-					{
-						offer.setWantedResourceAmount(resourceTypes[i], resource_count);
-					}
+					offer.setOfferedResourceAmount(resourceTypes[i], -1 * resource_count);
+				}
+				else
+				{
+					offer.setWantedResourceAmount(resourceTypes[i], resource_count);
 				}
 			}
-			this.setTradeOffer(offer);
-			System.out.println("Reached Offer1");
+		}
+		this.setTradeOffer(offer);
+		System.out.println("Reached Offer1");
 
-			if (this.IsPlayerRobot(playerIndexReceiving))
-			{
-				int aiID = this.GetPlayerIDbyIndex(playerIndexReceiving);
-				AIHandler.GetHandler().Trade(aiID, this.gameID, offer);
-			}
-
-//		}catch (ModelException e){
-//			Log.GetLog().throwing("ServerGameManager", "ServerOfferTrade", e);
-//			e.printStackTrace();
-//			return false;
-//		}
+		if (this.IsPlayerRobot(playerIndexReceiving))
+		{
+			int aiID = this.GetPlayerIDbyIndex(playerIndexReceiving);
+			AIHandler.GetHandler().Trade(aiID, this.gameID, offer);
+		}
 
 		this.updateVersion();
 		return true;

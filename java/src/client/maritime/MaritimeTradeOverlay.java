@@ -51,7 +51,8 @@ public class MaritimeTradeOverlay extends OverlayView implements IMaritimeTradeO
 	private JPanel buttonPanel;
 	
 
-	public MaritimeTradeOverlay() {
+	public MaritimeTradeOverlay() 
+	{
 		initImages();
 		
 		this.setOpaque(true);
@@ -60,11 +61,11 @@ public class MaritimeTradeOverlay extends OverlayView implements IMaritimeTradeO
 
 		mainPane = createWholePanel();
 
-		//create the view elsewhere and add it here
 		this.add(mainPane, BorderLayout.CENTER);
 	}
 
-	private void initImages() {
+	private void initImages() 
+	{
 		resourceImageFolder = "images"+File.separator+"resources"+File.separator;
 	
 		
@@ -78,19 +79,22 @@ public class MaritimeTradeOverlay extends OverlayView implements IMaritimeTradeO
 	}
 	
 	@Override
-	public IMaritimeTradeController getController() {
+	public IMaritimeTradeController getController() 
+	{
 		return (IMaritimeTradeController)super.getController();
 	}
 
 	@Override
-	public void reset() {
+	public void reset() 
+	{
 		this.removeAll();
 		mainPane = this.createWholePanel();
 		this.add(mainPane, BorderLayout.CENTER);
 	}
 	
 	@Override
-	public void hideGetOptions() {
+	public void hideGetOptions() 
+	{
 		getwood.setVisible(false);
 		getbrick.setVisible(false);
 		getsheep.setVisible(false);
@@ -101,7 +105,8 @@ public class MaritimeTradeOverlay extends OverlayView implements IMaritimeTradeO
 	}
 
 	@Override
-	public void hideGiveOptions() {
+	public void hideGiveOptions() 
+	{
 		givewood.setVisible(false);
 		givebrick.setVisible(false);
 		givesheep.setVisible(false);
@@ -112,7 +117,8 @@ public class MaritimeTradeOverlay extends OverlayView implements IMaritimeTradeO
 	}
 
 	@Override
-	public void selectGetOption(ResourceType selectedResource, int amount) {
+	public void selectGetOption(ResourceType selectedResource, int amount) 
+	{
 		getAmount.setText(Integer.toString(amount));
 		getAmount.setVisible(true);
 		

@@ -313,7 +313,8 @@ public class GameManager
 	 * Sets the trade offer when one is made, it doesn't need to notify because this is already checked in the client
 	 * @param offeredTrade
      */
-	public void setTradeOffer(OfferedTrade offeredTrade){
+	public void setTradeOffer(OfferedTrade offeredTrade)
+	{
 		//  TODO:  actually might need to notify here, test
 		this.offeredTrade = offeredTrade;
 	}

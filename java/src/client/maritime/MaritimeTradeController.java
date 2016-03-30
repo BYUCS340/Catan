@@ -16,9 +16,10 @@ import client.networking.ServerProxyException;
 /**
  * Implementation for the maritime trade controller
  */
-public class MaritimeTradeController extends Controller implements IMaritimeTradeController, ModelObserver {
-	//  NOTE: use 		ClientGameManager game = ClientGame.getGame();   to access the ClientGameManager
-	
+public class MaritimeTradeController extends Controller implements IMaritimeTradeController, ModelObserver 
+{
+	//  NOTE: use ClientGameManager game = ClientGame.getGame();   
+	//  to access the ClientGameManager
 	
 	private IMaritimeTradeOverlay tradeOverlay;
 	private ResourceType giveResource;
@@ -32,7 +33,8 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	
 	
 	
-	public MaritimeTradeController(IMaritimeTradeView tradeView, IMaritimeTradeOverlay tradeOverlay){
+	public MaritimeTradeController(IMaritimeTradeView tradeView, IMaritimeTradeOverlay tradeOverlay)
+	{
 		super(tradeView);
 		setTradeOverlay(tradeOverlay);
 		tradeRates = new int[]{4,4,4,4,4};  //  default trade rates
@@ -44,55 +46,42 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		ClientGame.getGame().startListening(this, ModelNotification.STATE);
 	}
 	
-	public IMaritimeTradeView getTradeView() {
-		
+	public IMaritimeTradeView getTradeView() 
+	{
 		return (IMaritimeTradeView)super.getView();
 	}
 	
-	public IMaritimeTradeOverlay getTradeOverlay() {
+	public IMaritimeTradeOverlay getTradeOverlay() 
+	{
 		return tradeOverlay;
 	}
 
-	public void setTradeOverlay(IMaritimeTradeOverlay tradeOverlay) {
+	public void setTradeOverlay(IMaritimeTradeOverlay tradeOverlay) 
+	{
 		this.tradeOverlay = tradeOverlay;
 	}
-	
-		
 	
 	@Override
 	public void alert()
 	{
 		ClientGameManager game = ClientGame.getGame();
-		//  TODO:  this should be more efficient later, should probably check for changed in state before updating everything
-		if(game.CurrentState() == GameRound.PLAYING && (game.getTurnState() == TurnState.PLAYING || game.getTurnState() == TurnState.OFFERED_TRADE))
-		{
-			if (game.getTurnState() != TurnState.GAME_OVER)
-			{
-				getTradeView().enableMaritimeTrade(true);
-			}
-			//  TODO:  probably need more functionality here to check why we're being alerted
-		}
-		else	//  Maritime Trade is disabled when not playing
-		{	
+		
+		if (game.getTurnState() == TurnState.PLAYING)
+			getTradeView().enableMaritimeTrade(true);
+		else
 			getTradeView().enableMaritimeTrade(false);
-		}
 	}
 	
 	
 	@Override
-	public void startTrade() {
-//		System.out.println("ORE: " + ClientGame.getGame().playerResourceCount(ResourceType.ORE));
-//		System.out.println("WHEAT: " + ClientGame.getGame().playerResourceCount(ResourceType.WHEAT));
-//		System.out.println("WOOD: " + ClientGame.getGame().playerResourceCount(ResourceType.WOOD));
-//		System.out.println("BRICK: " + ClientGame.getGame().playerResourceCount(ResourceType.BRICK));
-//		System.out.println("SHEEP: " + ClientGame.getGame().playerResourceCount(ResourceType.SHEEP));
-		
-		if (!ClientGame.getGame().CanOfferTrade(ClientGame.getGame().CurrentPlayersTurn())){
+	public void startTrade() 
+	{
+		if (!ClientGame.getGame().CanOfferTrade(ClientGame.getGame().CurrentPlayersTurn()))
+		{
 			System.out.println("GM says current player can't make a trade right now");
 			cancelTrade();
 			return;
 		}
-		
 		
 		getResource = null;
 		giveResource = null;
@@ -108,18 +97,21 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		getTradeOverlay().showGiveOptions(resourcesPlayerCanGive.toArray(new ResourceType[]{}));
 		getTradeOverlay().hideGetOptions();
 		if(resourcesPlayerCanGive.size() <= 0)
-			getTradeOverlay().setStateMessage("No Resources to give");  //  TODO:  probably need to handle this more intelligently!
+			getTradeOverlay().setStateMessage("No Resources to give");
 		else
 			getTradeOverlay().setStateMessage("Choose what to give up");
 	}
 
 	@Override
-	public void makeTrade(){
-		try{
-			if(giveResource != null && getResource != null){
-			
+	public void makeTrade()
+	{
+		try
+		{
+			if(giveResource != null && getResource != null)
+			{
 				int giveResourceRate = getResourceTradeRate(giveResource);
-				if (giveResourceRate <= 0){
+				if (giveResourceRate <= 0)
+				{
 					//  something failed so start over gracefully
 					throw new ModelException("Maritime Trade: Error with trade rates");
 				}
@@ -132,11 +124,15 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 				resourcesPlayerCanGive = new ArrayList<ResourceType>();
 				resourcesPlayerCanGet = new ArrayList<ResourceType>();
 				startTrade();
-			}else{
+			}
+			else
+			{
 				//  something failed so start over gracefully
 				throw new ModelException("Maritime Trade: Unknown error");
 			}
-		}catch(ModelException | ServerProxyException e){
+		}
+		catch(ModelException | ServerProxyException e)
+		{
 			startTrade();
 			System.out.println("Error processing trade, please try again. Choose what to give up");
 			getTradeOverlay().setStateMessage("Error processing trade, please try again. Choose what to give up");
@@ -146,7 +142,8 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	
 
 	@Override
-	public void cancelTrade() {
+	public void cancelTrade() 
+	{
 		getResource = null;
 		giveResource = null;
 		if(getTradeOverlay().isModalShowing())
@@ -154,7 +151,8 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	}
 
 	@Override
-	public void setGiveResource(ResourceType resource) {
+	public void setGiveResource(ResourceType resource) 
+	{
 		getTradeOverlay().selectGiveOption(resource, getResourceTradeRate(resource));
 		giveResource = resource;
 		getTradeOverlay().showGetOptions(resourcesPlayerCanGet.toArray(new ResourceType[]{}));
@@ -162,7 +160,8 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	}
 	
 	@Override
-	public void setGetResource(ResourceType resource) {
+	public void setGetResource(ResourceType resource) 
+	{
 		getTradeOverlay().selectGetOption(resource, 1);
 		getResource = resource;
 		getTradeOverlay().setStateMessage("Trade?");
@@ -170,7 +169,8 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	}
 	
 	@Override
-	public void unsetGiveValue() {
+	public void unsetGiveValue() 
+	{
 		getTradeOverlay().hideGetOptions();
 		getTradeOverlay().setTradeEnabled(false);
 		giveResource = null;
@@ -181,12 +181,12 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	}
 
 	@Override
-	public void unsetGetValue() {
+	public void unsetGetValue() 
+	{
 		getTradeOverlay().setTradeEnabled(false);
 		getResource = null;
 		getTradeOverlay().showGetOptions(resourcesPlayerCanGet.toArray(new ResourceType[]{}));
 		getTradeOverlay().setStateMessage("Choose what to get");
-
 	}
 
 	
@@ -194,17 +194,20 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	/**
 	 * Checks a player's ports and changes trade rates accordingly
 	 */
-	private void updateTradeRates(){
+	private void updateTradeRates()
+	{
 		//  reset trade rates
 		tradeRates = new int[]{4,4,4,4,4};
 		//  get current ports :)
 		Iterator<PortType> portsItr = ClientGame.getGame().GetMapModel().GetPorts(ClientGame.getGame().myPlayerColor());
 		
-		for(;portsItr.hasNext();){
+		for(;portsItr.hasNext();)
+		{
 			PortType port = portsItr.next();
 			if(port != PortType.NONE){
 				
-				switch(port){
+				switch(port)
+				{
 				case THREE:
 					tradeRates = new int[]{3,3,3,3,3};
 					break;
@@ -232,42 +235,54 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	 * Checks to make sure the player has enough to trade of each type of resource at the corresponding
 	 * trade rate for that resource. Updates the list of resources the player can give 
 	 */
-	private void updateResourcesPlayerCanGive(){
+	private void updateResourcesPlayerCanGive()
+	{
 		resourcesPlayerCanGive = new ArrayList<ResourceType>();
 		ClientGameManager game = ClientGame.getGame();
-		if(game.playerResourceCount(ResourceType.ORE) >= tradeRates[ResourcePositions.iORE.ordinal()]){
+		if(game.playerResourceCount(ResourceType.ORE) >= tradeRates[ResourcePositions.iORE.ordinal()])
+		{
 			resourcesPlayerCanGive.add(ResourceType.ORE);
 		}
-		if(game.playerResourceCount(ResourceType.BRICK) >= tradeRates[ResourcePositions.iBRICK.ordinal()]){
+		if(game.playerResourceCount(ResourceType.BRICK) >= tradeRates[ResourcePositions.iBRICK.ordinal()])
+		{
 			resourcesPlayerCanGive.add(ResourceType.BRICK);
 		}
-		if(game.playerResourceCount(ResourceType.WHEAT) >= tradeRates[ResourcePositions.iWHEAT.ordinal()]){
+		if(game.playerResourceCount(ResourceType.WHEAT) >= tradeRates[ResourcePositions.iWHEAT.ordinal()])
+		{
 			resourcesPlayerCanGive.add(ResourceType.WHEAT);
 		}
-		if(game.playerResourceCount(ResourceType.SHEEP) >= tradeRates[ResourcePositions.iSHEEP.ordinal()]){
+		if(game.playerResourceCount(ResourceType.SHEEP) >= tradeRates[ResourcePositions.iSHEEP.ordinal()])
+		{
 			resourcesPlayerCanGive.add(ResourceType.SHEEP);
 		}
-		if(game.playerResourceCount(ResourceType.WOOD) >= tradeRates[ResourcePositions.iWOOD.ordinal()]){
+		if(game.playerResourceCount(ResourceType.WOOD) >= tradeRates[ResourcePositions.iWOOD.ordinal()])
+		{
 			resourcesPlayerCanGive.add(ResourceType.WOOD);
 		}
 	}
 	
-	private void updateResourcesPlayerCanGet(){
+	private void updateResourcesPlayerCanGet()
+	{
 		resourcesPlayerCanGet = new ArrayList<ResourceType>();
 		ClientGameManager game = ClientGame.getGame();
-		if(game.getBankResourceCount(ResourceType.ORE) > 0){
+		if(game.getBankResourceCount(ResourceType.ORE) > 0)
+		{
 			resourcesPlayerCanGet.add(ResourceType.ORE);
 		}
-		if(game.getBankResourceCount(ResourceType.BRICK) > 0){
+		if(game.getBankResourceCount(ResourceType.BRICK) > 0)
+		{
 			resourcesPlayerCanGet.add(ResourceType.BRICK);
 		}
-		if(game.getBankResourceCount(ResourceType.WHEAT) > 0){
+		if(game.getBankResourceCount(ResourceType.WHEAT) > 0)
+		{
 			resourcesPlayerCanGet.add(ResourceType.WHEAT);
 		}
-		if(game.getBankResourceCount(ResourceType.SHEEP) > 0){
+		if(game.getBankResourceCount(ResourceType.SHEEP) > 0)
+		{
 			resourcesPlayerCanGet.add(ResourceType.SHEEP);
 		}
-		if(game.getBankResourceCount(ResourceType.WOOD) > 0){
+		if(game.getBankResourceCount(ResourceType.WOOD) > 0)
+		{
 			resourcesPlayerCanGet.add(ResourceType.WOOD);
 		}
 	}
