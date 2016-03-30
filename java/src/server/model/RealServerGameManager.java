@@ -391,6 +391,13 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 					pBank.giveResource(ResourceType.SHEEP,1);
 					break;
 					
+				case "skip you":
+					if (gameState.state == GameRound.PLAYING)
+					{
+						gameState.nextTurn();
+					}
+					break;
+					
 			}
 		}
 		catch (ModelException e)
