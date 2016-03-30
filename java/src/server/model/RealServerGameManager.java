@@ -382,6 +382,15 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 						super.PlayerChat(p.playerIndex(), p.playerBank.resourcesToString());
 					}
 					break;
+				case "pay dayz":
+					Bank pBank = GetPlayer(playerIndex).playerBank;
+					pBank.giveResource(ResourceType.BRICK,1);
+					pBank.giveResource(ResourceType.WOOD,1);
+					pBank.giveResource(ResourceType.ORE,1);
+					pBank.giveResource(ResourceType.WHEAT,1);
+					pBank.giveResource(ResourceType.SHEEP,1);
+					break;
+					
 			}
 		}
 		catch (ModelException e)
