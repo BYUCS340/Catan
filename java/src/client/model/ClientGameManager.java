@@ -504,7 +504,6 @@ public class ClientGameManager extends GameManager implements ModelSubject
 	{
 		if (!super.CanPlayDevCard(this.myPlayerIndex, DevCardType.ROAD_BUILD))
 			return false;
-	
 		this.turnState = TurnState.ROAD_BUILDER;
 		this.notifyCenter.notify(ModelNotification.STATE);
 		return true;
@@ -988,7 +987,12 @@ public class ClientGameManager extends GameManager implements ModelSubject
 					break;
 				case ROBBING:
 					if (newgamestate.activePlayerIndex == this.myPlayerIndex)
-						this.turnState = TurnState.ROBBING;
+					{
+						if (oldTurnState == TurnState.DISCARDED_WAITING)
+							this.turnState = TurnState.DISCARDED_CLOSING;
+						else
+							this.turnState = TurnState.ROBBING;
+					}
 					else
 						this.turnState = TurnState.WAITING;
 					break;
