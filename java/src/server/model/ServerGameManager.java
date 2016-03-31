@@ -22,7 +22,7 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	 *
 	 */
 	protected static final long serialVersionUID = 1293281;
-	protected	boolean randomTiles;
+	protected boolean randomTiles;
 	protected boolean randomNumbers;
 	protected boolean randomPorts;
 
@@ -125,7 +125,7 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	public abstract boolean ServerBuyDevCard(int playerID);
 
 	/**
-	 *
+	 * plays a year of plenty card
 	 * @param playerIndex
 	 * @param res1
 	 * @param res2
@@ -134,6 +134,7 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	public abstract boolean ServerYearOfPlenty(int playerIndex, ResourceType res1, ResourceType res2);
 
 	/**
+	 * plays a monopoly card
 	 * @param playerIndex
 	 * @param res1
 	 * @return
@@ -141,13 +142,14 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	public abstract boolean ServerMonopoly(int playerIndex, ResourceType res1);
 
 	/**
+	 * plays a monument card
 	 * @param playerIndex
 	 * @return
 	 */
 	public abstract boolean ServerMonument(int playerIndex);
 
 	/**
-	 *
+	 * plays a road building card
 	 * @param playerIndex
 	 * @param start1
 	 * @param end1
@@ -158,7 +160,7 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	public abstract boolean ServerRoadBuilding(int playerIndex, Coordinate start1, Coordinate end1,  Coordinate start2, Coordinate end2);
 
 	/**
-	 *
+	 * plays a solider card
 	 * @param playerID
 	 * @param location
 	 * @param victimIndex the victim
@@ -166,7 +168,7 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	 */
 	public abstract boolean ServerSoldier(int playerID, Coordinate location, int victimIndex);
 	/**
-	 *
+	 * builds a road
 	 * @param playerID
 	 * @param p
 	 * @return
@@ -174,14 +176,15 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	public abstract boolean ServerBuildRoad(int playerID, Coordinate start, Coordinate end, boolean free);
 
 	/**
-	 *
+	 * builds a city
 	 * @param playerIndex
 	 * @param p
 	 * @return
 	 */
 	public abstract boolean ServerBuildCity(int playerIndex, Coordinate p);
+	
 	/**
-	 *
+	 * builds settlement
 	 * @param playerIndex
 	 * @param p
 	 * @return
@@ -189,7 +192,7 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	public abstract boolean ServerBuildSettlement(int playerIndex, Coordinate p, boolean free);
 
 	/**
-	 *
+	 * offers a trade
 	 * @param playerIndexOffering
 	 * @param playerIndexReceiving
 	 * @param resourceList
@@ -198,7 +201,7 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	public abstract boolean ServerOfferTrade(int playerIndexOffering, int playerIndexReceiving, List<Integer> resourceList );
 
 	/**
-	 *
+	 * accepts a trade
 	 * @param playerIndex
 	 * @param willAccept
 	 * @return
@@ -206,6 +209,7 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	public abstract boolean ServerAcceptTrade(int playerIndex, boolean willAccept);
 
 	/***
+	 * trades in the maritime
 	 * @param playerIndex
 	 * @param ratio
 	 * @param input
@@ -215,13 +219,15 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	public abstract boolean ServerMaritimeTrading(int playerIndex, int ratio, ResourceType input, ResourceType output);
 
 	/**
-	 *
+	 * discards cards
 	 * @param playerIndex
 	 * @param resourceList
 	 * @return
 	 */
-	public abstract boolean ServerDiscardCards(int playerIndex, List<Integer> resourceList);	/**
-	 *
+	public abstract boolean ServerDiscardCards(int playerIndex, List<Integer> resourceList);	
+	
+	/**
+	 * takes a random resource from one player and gives it to another
 	 * @param receiver
 	 * @param giver
      * @return
