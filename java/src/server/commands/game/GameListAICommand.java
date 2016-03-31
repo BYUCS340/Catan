@@ -2,7 +2,6 @@ package server.commands.game;
 
 import java.util.List;
 
-import server.ai.AIHandler;
 import server.commands.CookieCommand;
 import server.model.GameArcade;
 import shared.networking.SerializationUtils;

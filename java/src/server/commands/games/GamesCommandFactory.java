@@ -18,8 +18,6 @@ import shared.networking.parameter.PCreateGame;
 import shared.networking.parameter.PJoinGame;
 import shared.networking.parameter.PLoadGame;
 import shared.networking.parameter.PSaveGame;
-import shared.networking.parameter.PCreateGame;
-import shared.networking.parameter.PJoinGame;
 
 /**
  * Creates games (notice the s) command objects.

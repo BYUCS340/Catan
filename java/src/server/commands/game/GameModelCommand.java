@@ -1,8 +1,5 @@
 package server.commands.game;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import server.commands.CookieCommand;
 import server.model.GameArcade;
 import server.model.GameException;

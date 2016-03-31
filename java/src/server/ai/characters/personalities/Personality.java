@@ -30,16 +30,30 @@ import shared.networking.parameter.PRobPlayer;
 import shared.networking.parameter.PRollDice;
 import shared.networking.parameter.PSendChat;
 
+/**
+ * Personality objects allow AIs to share aspects of their playing style with
+ * other AIs. This is the root personality object which allows better functionality.
+ * @author Jonathan Sadler
+ *
+ */
 public abstract class Personality 
 {
 	protected String username;
 	protected int id;
 	
+	/**
+	 * Base personality constructor.
+	 * @param username The username of the player.
+	 */
 	public Personality(String username) 
 	{ 
 		this.username = username;
 	}
 	
+	/**
+	 * The ID associated with the AI.
+	 * @param id
+	 */
 	public void SetID(int id)
 	{
 		this.id = id;

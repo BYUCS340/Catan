@@ -2,7 +2,6 @@ package server.commands;
 
 import server.model.GameArcade;
 import server.model.GameException;
-import shared.model.Player;
 import shared.networking.cookie.NetworkCookie;
 
 /**

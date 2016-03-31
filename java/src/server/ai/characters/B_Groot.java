@@ -12,6 +12,7 @@ import shared.definitions.AIType;
 public class B_Groot extends AI 
 {
 	private static final String NAME = "Groot";
+	
 	/**
 	 * Plants Groot.
 	 */

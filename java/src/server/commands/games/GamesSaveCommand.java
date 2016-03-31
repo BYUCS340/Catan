@@ -1,21 +1,7 @@
 package server.commands.games;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-
-import server.Log;
 import server.commands.ICommand;
 import server.model.GameArcade;
-import server.model.GameException;
-import server.model.ServerGameManager;
-import shared.networking.SerializationUtils;
 
 /**
  * Command to handle saving a game.

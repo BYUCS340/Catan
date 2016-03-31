@@ -20,8 +20,17 @@ import shared.model.map.objects.Edge;
 import shared.model.map.objects.Hex;
 import shared.model.map.objects.Vertex;
 
+/**
+ * Personality and playing style that can be used by beginner AIs.
+ * @author Jonathan Sadler
+ *
+ */
 public class BeginnerPersonality extends Personality 
 {
+	/**
+	 * Creates a beginner personality.
+	 * @param username The AIs username.
+	 */
 	public BeginnerPersonality(String username) 
 	{
 		super(username);
@@ -92,9 +101,8 @@ public class BeginnerPersonality extends Personality
 		currentResources.add(GetBank(model).getResourceCount(ResourceType.WHEAT));
 		currentResources.add(GetBank(model).getResourceCount(ResourceType.WOOD));
 
-		for (ResourceType resource : ResourceType.values()) {
+		for (@SuppressWarnings("unused") ResourceType resource : ResourceType.values())
 			selectedResources.add(0);
-		}
 		
 		int index = 0;
 		while (selected < toRemove)
@@ -158,7 +166,6 @@ public class BeginnerPersonality extends Personality
 	@Override
 	protected void Play(GameModel model) 
 	{
-		
 		Bank bank = GetBank(model);
 		
 		if (bank.canBuildCity())
