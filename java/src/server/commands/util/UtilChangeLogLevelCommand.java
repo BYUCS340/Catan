@@ -3,6 +3,7 @@ package server.commands.util;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import server.Log;
 import server.commands.ICommand;
 
 /**
@@ -23,7 +24,7 @@ public class UtilChangeLogLevelCommand implements ICommand
 	 */
 	public UtilChangeLogLevelCommand(Level level)
 	{
-		this.logger = Logger.getLogger("CatanServer");
+		this.logger = Log.GetLog();
 		
 		this.level = level;
 	}
@@ -56,5 +57,4 @@ public class UtilChangeLogLevelCommand implements ICommand
 	{
 		return null;
 	}
-
 }
