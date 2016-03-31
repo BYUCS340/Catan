@@ -1,7 +1,9 @@
 package server.commands.games;
 
 import server.commands.ICommand;
+import server.model.ServerGameManager;
 import server.model.GameArcade;
+import server.model.RealServerGameManager;
 import shared.data.GameInfo;
 import shared.networking.SerializationUtils;
 
@@ -12,10 +14,7 @@ import shared.networking.SerializationUtils;
  */
 public class GamesCreateCommand implements ICommand 
 {
-	private boolean randomTiles;
-	private boolean randomNumbers;
-	private boolean randomPorts;
-	private String name;
+	ServerGameManager sgm;
 	
 	private GameInfo info;
 	
@@ -28,16 +27,22 @@ public class GamesCreateCommand implements ICommand
 	 */
 	public GamesCreateCommand(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String name) 
 	{
-		this.randomTiles = randomTiles;
-		this.randomNumbers = randomNumbers;
-		this.randomPorts = randomPorts;
-		this.name = name;
+		this.sgm = new RealServerGameManager(name, randomTiles, randomNumbers, randomPorts);
+	}
+	
+	/**
+	 * Creates a command object to create a game.
+	 * @param sgm The server game manager to use.
+	 */
+	public GamesCreateCommand(ServerGameManager sgm)
+	{
+		this.sgm = sgm;
 	}
 
 	@Override
 	public boolean Execute() 
 	{
-		info = GameArcade.games().CreateGame(name, randomTiles, randomNumbers, randomPorts);
+		info = GameArcade.games().CreateGame(sgm);
 		return info != null;
 	}
 

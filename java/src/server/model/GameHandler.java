@@ -50,19 +50,20 @@ public class GameHandler
 		}
 	}
 	
-	public GameInfo AddGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
+	public GameInfo AddGame(ServerGameManager sgm)
 	{
 		lock.writeLock().lock();
 		try
 		{
 			int index = gameIndex.size();
-			ServerGameManager sgm = new RealServerGameManager(name, randomTiles, randomNumbers, randomPorts, index);
+			sgm.SetGameID(index);
+			
 			gameIndex.put(index, sgm);
-			gameNames.add(name);
+			gameNames.add(sgm.GetGameTitle());
 			
 			GameInfo info = new GameInfo();
 			info.setId(index);
-			info.setTitle(name);
+			info.setTitle(sgm.GetGameTitle());
 			return info;
 		}
 		finally

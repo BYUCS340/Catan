@@ -104,12 +104,12 @@ public class GameTable
 	 * Creates a new game on the server 
 	 * @return the game info of the new game created. Null if unable to create.
 	 */
-	public GameInfo CreateGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
+	public GameInfo CreateGame(ServerGameManager sgm)
 	{
-		if (games.ContainsGame(name))
+		if (games.ContainsGame(sgm.GetGameTitle()))
 			return null;
 		
-		return games.AddGame(name, randomTiles, randomNumbers, randomPorts);
+		return games.AddGame(sgm);
 	}
 	
 	/**
@@ -325,25 +325,5 @@ public class GameTable
 		}
 		
 		return false;
-	}
-	
-	/**
-	 * Gets the player in the server by id
-	 * @param playerID
-	 * @return
-	 */
-	private Player PlayerInServer(int playerID)
-	{
-		return null;
-	}
-	
-	/**
-	 * Looks up a player in the server by name
-	 * @param name
-	 * @return
-	 */
-	private Player PlayerInServer(String name)
-	{
-		return null;
 	}
 }

@@ -1,30 +1,15 @@
 package server.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
-import server.Log;
-import server.ai.AIHandler;
-import shared.definitions.CatanColor;
-import shared.definitions.DevCardType;
-import shared.definitions.GameRound;
-import shared.definitions.HexType;
 import shared.definitions.ResourceType;
-import shared.model.Bank;
 import shared.model.GameManager;
 import shared.model.GameModel;
-import shared.model.ModelException;
-import shared.model.OfferedTrade;
-import shared.model.Player;
 import shared.model.map.Coordinate;
-import shared.model.map.MapException;
 import shared.model.map.model.MapGenerator;
-import shared.model.map.objects.Hex;
 
 /**
  * Special formation of the game manager
@@ -45,11 +30,10 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 
 	protected List<Boolean> discardList;
 
-	public ServerGameManager(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts, int index)
+	public ServerGameManager(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
 	{
 		super();
 		this.gameTitle = name;
-		this.gameID = index;
 		this.randomNumbers = randomNumbers;
 		this.randomPorts = randomPorts;
 		this.randomTiles = randomTiles;
@@ -68,6 +52,15 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 		this.playerIndexLookup = new HashMap<Integer,Integer>();
 
 		this.map = MapGenerator.GenerateMap(false, false, false);
+	}
+	
+	/**
+	 * Sets the game ID of the Game Manager
+	 * @param id The game ID.
+	 */
+	public void SetGameID(int id)
+	{
+		this.gameID = id;
 	}
 
 	/**

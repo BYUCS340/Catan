@@ -18,7 +18,6 @@ import shared.definitions.HexType;
 import shared.definitions.ResourceType;
 import shared.model.Bank;
 import shared.model.GameActionLog;
-import shared.model.GameManager;
 import shared.model.GameModel;
 import shared.model.GameState;
 import shared.model.ModelException;
@@ -29,7 +28,6 @@ import shared.model.chat.ChatBox;
 import shared.model.map.Coordinate;
 import shared.model.map.MapException;
 import shared.model.map.model.MapGenerator;
-import shared.model.map.objects.Hex;
 
 /**
  * Special formation of the game manager
@@ -38,9 +36,6 @@ import shared.model.map.objects.Hex;
  */
 public class RealServerGameManager extends ServerGameManager implements Serializable
 {
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1293281;
 	private	boolean randomTiles;
 	private boolean randomNumbers;
@@ -50,16 +45,14 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 
 	private List<Boolean> discardList;
 
-	public RealServerGameManager(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts, int index)
+	public RealServerGameManager(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
 	{
 		super();
 		this.gameTitle = name;
-		this.gameID = index;
 		this.randomNumbers = randomNumbers;
 		this.randomPorts = randomPorts;
 		this.randomTiles = randomTiles;
 		this.playerIndexLookup = new HashMap<Integer,Integer>();
-		this.gameID = index;
 		this.map = MapGenerator.GenerateMap(randomTiles, randomNumbers, randomPorts);
 	}
 

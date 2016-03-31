@@ -14,9 +14,9 @@ import shared.model.map.Coordinate;
  */
 public class MockServerGame extends ServerGameManager {
 
-	public MockServerGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts, int index) 
+	public MockServerGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) 
 	{
-		super(name, randomTiles, randomNumbers, randomPorts, index);
+		super(name, randomTiles, randomNumbers, randomPorts);
 		// TODO Auto-generated constructor stub
 	}
 
