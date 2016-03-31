@@ -11,6 +11,11 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+/**
+ * Handles logging for the server.
+ * @author Jonathan Sadler
+ *
+ */
 public class Log 
 {
 	private static final Level DEFAULT_CONSOLE_LEVEL = Level.FINEST;
@@ -19,6 +24,10 @@ public class Log
 	
 	private static Logger logger = null;
 	
+	/**
+	 * Gets the logger for the server.
+	 * @return The logger.
+	 */
 	public static Logger GetLog()
 	{
 		if (logger == null)

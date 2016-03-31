@@ -11,6 +11,11 @@ import com.sun.net.httpserver.HttpServer;
 
 import server.swagger.SwaggerHandlers;
 
+/**
+ * Awesome server. Oh yeah.
+ * @author Jonathan Sadler
+ *
+ */
 public class Server 
 {
 	private static final int DEFAULT_PORT = 8081;
@@ -18,6 +23,14 @@ public class Server
 	
 	private static String SwaggerPath = "";
 	
+	/**
+	 * Starts the server.
+	 * @param args
+	 * <br/>Command line arguments can be the following:
+	 * <br/>[port];
+	 * <br/>[swagger path (path to swagger documentation)];
+	 * <br/>[port] [swagger path]
+	 */
 	public static void main(final String[] args) 
 	{
 		int port = DEFAULT_PORT;
@@ -66,8 +79,6 @@ public class Server
 	{	
 		try 
 		{
-			
-			
 			Level defaultLevel = Level.FINE;
 			
 			Log.GetLog().log(defaultLevel, "Starting server");
@@ -80,8 +91,8 @@ public class Server
 			
 			
 			//actually throw exceptions instead of silently dying
-			Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler(){
-
+			Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()
+			{
 				@Override
 				public void uncaughtException(Thread arg0, Throwable arg1)
 				{
