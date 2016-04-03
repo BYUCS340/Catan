@@ -5,17 +5,18 @@ package server.model;
  * @author matthewcarlson
  *
  */
-public class ServerPlayer {
+public class ServerPlayer 
+{
 	private String name;
-	private int index;
+	private int ID;
 	private String password;
 	
 		
-	public ServerPlayer(String name, String password, int index)
+	public ServerPlayer(String name, String password, int id)
 	{
 		this.name = name;
 		this.password = password;
-		this.index = index;
+		this.ID = id;
 	}
 	
 	public String GetName()
@@ -25,7 +26,17 @@ public class ServerPlayer {
 	
 	public int GetID()
 	{
-		return this.index;
+		return this.ID;
+	}
+	
+	/**
+	 * Checks if password matches
+	 * @param pass
+	 * @return
+	 */
+	public boolean PasswordMatches(String pass)
+	{
+		return password.equals(pass);
 	}
 
 }
