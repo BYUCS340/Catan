@@ -17,26 +17,32 @@ public interface IUserDAO
 	 * @param password
 	 * @return
 	 */
-	boolean AddUser(String username, String password);
-	
+	boolean AddUser(String id, String username, String password);
+
 	/**
-	 * 
+	 *
 	 * @param username
 	 * @return
 	 */
-	ServerPlayer GetPlayer(String username);
-	
+	ServerPlayer GetUser(String username);
+
 	/**
-	 * 
+	 *
 	 * @param playerID
 	 * @return
 	 */
-	ServerPlayer GetPlayer(int playerID);
+	ServerPlayer GetUser(int playerID);
 
 	/**
 	 * Gets all the players in the DAO
 	 * @return
 	 */
-	List<ServerPlayer> GetAllPlayers();
+	List<ServerPlayer> GetAllUsers();
+
+	/**
+	 * Deletes all users on server
+	 * @return
+     */
+	boolean DeleteAllUsers();
 	
 }
