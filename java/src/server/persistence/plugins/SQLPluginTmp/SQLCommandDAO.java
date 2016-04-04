@@ -10,11 +10,10 @@ import java.util.List;
  */
 public class SQLCommandDAO implements ICommandDAO {
     /**
-     *  Set mysql db connection
-     * @param mysqlDb
+     *  Setup mysql db connection
      */
-    public SQLCommandDAO(String mysqlDb){
-        this.mysqlDb = mysqlDb;
+    public SQLCommandDAO(){
+
     }
 
     /**

@@ -9,11 +9,10 @@ import java.util.Map;
  */
 public class SQLGameDAO implements IGameDAO {
     /**
-     *  Set mysql db connection
-     * @param mysqlDb
+     *  Setup mysql db connection
      */
-    public SQLGameDAO(String mysqlDb){
-        this.mysqlDb = mysqlDb;
+    public SQLGameDAO(){
+
     }
 
     /**

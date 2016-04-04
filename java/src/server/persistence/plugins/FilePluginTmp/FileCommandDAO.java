@@ -9,11 +9,10 @@ import java.util.List;
  */
 public class FileCommandDAO implements ICommandDAO {
     /**
-     * Save path to persistant file system
-     * @param pathToFileSystem
+     * Initialize path to persistant local file system
      */
-    public FileCommandDAO(String pathToFileSystem){
-        this.pathToFileSystem = pathToFileSystem;
+    public FileCommandDAO(){
+
     }
 
     /**

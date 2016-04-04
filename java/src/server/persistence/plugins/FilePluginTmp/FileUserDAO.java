@@ -10,11 +10,10 @@ import java.util.List;
  */
 public class FileUserDAO implements IUserDAO {
     /**
-     * Save path to persistant file system
-     * @param pathToFileSystem
+     * initialize path to persistant local file system
      */
-    public FileUserDAO(String pathToFileSystem){
-        this.pathToFileSystem = pathToFileSystem;
+    public FileUserDAO(){
+
     }
 
     /**

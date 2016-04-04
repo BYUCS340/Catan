@@ -10,12 +10,10 @@ import java.util.List;
  */
 public class SQLUserDAO implements IUserDAO {
     /**
-     *  Set mysql db connection
-     *
-     * @param mysqlDb
+     *  Setup mysql db connection
      */
-    public SQLUserDAO(String mysqlDb){
-        this.mysqlDb = mysqlDb;
+    public SQLUserDAO(){
+
     }
 
     /**

@@ -9,11 +9,10 @@ import java.util.Map;
  */
 public class FileGameDAO implements IGameDAO {
     /**
-     * Save path to persistant file system
-     * @param pathToFileSystem
+     * Initialize path to persistant local file system
      */
-    public FileGameDAO(String pathToFileSystem){
-        this.pathToFileSystem = pathToFileSystem;
+    public FileGameDAO(){
+
     }
 
     /**
