@@ -133,7 +133,7 @@ public class SQLGameDAO implements IGameDAO
     		String gameBlob = null;
     		
     		Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM GAMES WHERE ID=" + gameID + ";");
+            ResultSet rs = stmt.executeQuery("SELECT * from GAMES where ID=" + gameID + ";");
             while (rs.next())
             {
                gameBlob = rs.getString("BLOB");
@@ -144,7 +144,7 @@ public class SQLGameDAO implements IGameDAO
     	}
         catch (SQLException e)
         {
-        	System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        	e.printStackTrace();
         	return null;
         }
     }
@@ -160,7 +160,7 @@ public class SQLGameDAO implements IGameDAO
     		Map<Integer, String> games = new HashMap<Integer, String>();
     		
     		Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM GAMES;");
+            ResultSet rs = stmt.executeQuery("SELECT * from GAMES;");
             while (rs.next())
             {
                int gameID = rs.getInt("ID");
@@ -173,7 +173,7 @@ public class SQLGameDAO implements IGameDAO
     	}
         catch (SQLException e)
         {
-        	System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        	e.printStackTrace();
         	return null;
         }
     }

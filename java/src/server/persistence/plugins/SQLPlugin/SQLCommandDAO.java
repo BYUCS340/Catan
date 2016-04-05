@@ -38,7 +38,7 @@ public class SQLCommandDAO implements ICommandDAO
     		List<String> commands = new ArrayList<String>();
     		
     		Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM COMMANDS where ID=" + gameID + ";");
+            ResultSet rs = stmt.executeQuery("SELECT * from COMMANDS where ID=" + gameID + ";");
             while (rs.next())
             {
                String  commandBlob = rs.getString("BLOB");
@@ -50,7 +50,7 @@ public class SQLCommandDAO implements ICommandDAO
     	}
         catch (SQLException e)
         {
-        	System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        	e.printStackTrace();
         	return null;
         }
     }
@@ -139,7 +139,15 @@ public class SQLCommandDAO implements ICommandDAO
     @Override
     public int GetCommandCountFor(int gameID)
     {
-    	return GetCommandsFor(gameID).size();
+    	List<String> commands = GetCommandsFor(gameID);
+    	if (commands!= null)
+    	{
+    		return commands.size();
+    	}
+    	else
+    	{
+    		return 0;
+    	}
     }
 
     String mysqlDb;

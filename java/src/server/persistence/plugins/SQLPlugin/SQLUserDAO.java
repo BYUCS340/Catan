@@ -65,7 +65,7 @@ public class SQLUserDAO implements IUserDAO
     		ServerPlayer user = null;
     		
     		Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM USERS WHERE USERNAME=" + username + ";");
+            ResultSet rs = stmt.executeQuery("SELECT * from USERS where USERNAME=" + username + ";");
             while (rs.next())
             {
                int userID = rs.getInt("ID");
@@ -79,7 +79,7 @@ public class SQLUserDAO implements IUserDAO
     	}
         catch (SQLException e)
         {
-        	System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        	e.printStackTrace();
         	return null;
         }
     }
@@ -96,7 +96,7 @@ public class SQLUserDAO implements IUserDAO
     		ServerPlayer user = null;
     		
     		Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM USERS WHERE ID=" + playerID + ";");
+            ResultSet rs = stmt.executeQuery("SELECT * from USERS where ID=" + playerID + ";");
             while (rs.next())
             {
                int userID = rs.getInt("ID");
@@ -110,7 +110,7 @@ public class SQLUserDAO implements IUserDAO
     	}
         catch (SQLException e)
         {
-        	System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        	e.printStackTrace();
         	return null;
         }
     }
@@ -128,7 +128,7 @@ public class SQLUserDAO implements IUserDAO
     		List<ServerPlayer> players = new ArrayList<ServerPlayer>();
     		
     		Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM USERS;");
+            ResultSet rs = stmt.executeQuery("SELECT * from USERS;");
             while (rs.next())
             {
                int userID = rs.getInt("ID");
@@ -143,7 +143,7 @@ public class SQLUserDAO implements IUserDAO
     	}
         catch (SQLException e)
         {
-        	System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        	e.printStackTrace();
         	return null;
         }
     }
