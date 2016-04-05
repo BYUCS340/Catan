@@ -40,7 +40,7 @@ public class SQLUserDAO implements IUserDAO
 			Statement stmt = connection.createStatement();
 			
 			String sql = "INSERT INTO USERS (ID, USERNAME, PASSWORD) " +
-		            "VALUES (userID, username, password);";
+		            "VALUES (" + userID + ", " + username + ", " + password + ");";
 		    stmt.executeUpdate(sql);
 
 		    stmt.close();

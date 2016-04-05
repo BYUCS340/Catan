@@ -37,7 +37,7 @@ public class SQLGameDAO implements IGameDAO
 			Statement stmt = connection.createStatement();
 			
 			String sql = "INSERT INTO GAMES (ID, BLOB) " +
-		            "VALUES (gameID, blob);";
+		            "VALUES (" + gameID + ", " + blob + ");";
 		    stmt.executeUpdate(sql);
 
 		    stmt.close();

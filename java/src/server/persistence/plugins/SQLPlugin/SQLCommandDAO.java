@@ -70,7 +70,7 @@ public class SQLCommandDAO implements ICommandDAO
 			Statement stmt = connection.createStatement();
 			
 			String sql = "INSERT INTO COMMANDS (ID, BLOB) " +
-		            "VALUES (gameID, blob);";
+		            "VALUES (" + gameID + ", " + blob + ");";
 		    stmt.executeUpdate(sql);
 
 		    stmt.close();
