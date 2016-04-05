@@ -3,6 +3,7 @@ package server.persistence.plugins.FilePlugin;
 import server.model.ServerPlayer;
 import server.persistence.IUserDAO;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -26,7 +27,14 @@ public class FileUserDAO implements IUserDAO {
      */
     @Override
     public boolean AddUser(String id, String username, String password) {
-        return false;
+    	String userDir = FilenameUtils.userDirFull;
+    	File theDir = new File(userDir);
+    	FilePersistenceUtils.makeDirs(theDir);
+    	
+    	
+    	File theFile = new File(userDir + File.separator + id);
+    	String blob = username + "," + password;
+    	return FilePersistenceUtils.writeFile(theFile, blob);
     }
 
     /**
