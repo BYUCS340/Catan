@@ -13,6 +13,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 
+import server.Log;
+
 /**
  * This class is used to load the plugin. Like a registry
  * @author matthewcarlson
@@ -25,39 +27,66 @@ public class PersistenceHandler
 	 
 	public PersistenceHandler(String type)
 	{
-		DAOType = type;
-		String pathToJar = "plugins"+File.separator+"file-plugin.jar";
-		
-		try 
+		DAOType = type.toLowerCase().trim();
+		if (DAOType != null && DAOType.length() >= 3)
 		{
-			File file  = new File(pathToJar);
-			
-			URL url = file.toURI().toURL();  
-			//URL[] urls = new URL[]{url};
-			URL jarURL = new URL("jar:file://" + pathToJar + "!/");
-			URL[] urls = new URL[]{jarURL,url};
-			String className = this.getPluginClass(pathToJar);
-			System.out.println("PLUGIN: "+className);
-			URLClassLoader loader = URLClassLoader.newInstance(urls,System.class.getClassLoader());
-			Class<?> clazz;
-			
-			String classPath = "server.persistence.plugins.FilePlugin.FilePlugin";
-			
-			clazz = loader.loadClass(classPath);
-			System.out.println(clazz.getName());
-		} 
-		catch (ClassNotFoundException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		catch (MalformedURLException e1)
-		{// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//Get the path to the JAR
+			String pathToJar = "plugins"+File.separator+DAOType+"-plugin.jar";
+			//Load the jar
+			LoadJar(pathToJar);
 		}
 		
 	}
 	
+	@SuppressWarnings("unchecked")
+	private void LoadJar(String pathToJar)
+	{
+		try 
+		{
+			//get the file
+			File file  = new File(pathToJar);
+			URL url = file.toURI().toURL();  
+			URL[] urls = new URL[]{url};
+			//figure out the main class in the jar
+			String className = this.getPluginClass(pathToJar);
+			if (className == null)
+			{
+				throw new ClassNotFoundException("Bad Class");
+			}
+			//get the loader from the jar
+			URLClassLoader loader = URLClassLoader.newInstance(urls);
+			
+			//load the class
+			Class<?> clazz = loader.loadClass(className);
+			
+			//check to make sure we can assign it to provider
+			if (IPersistenceProvider.class.isAssignableFrom(clazz))
+			{
+				provider = (Class<IPersistenceProvider>) clazz;
+			}
+			else
+			{
+				Log.GetLog().severe("Unable to Load: "+clazz.getName());
+				
+			}
+			
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+			Log.GetLog().severe("Unable to Load: "+DAOType);
+		} 
+		catch (MalformedURLException e1)
+		{
+			e1.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Gets the class in a jar that ends in Plugin.class
+	 * @param jarName
+	 * @return
+	 */
 	private String getPluginClass(String jarName) 
 	{
 		JarInputStream jarFile = null;
@@ -120,6 +149,10 @@ public class PersistenceHandler
 		
 	}
 	
+	/**
+	 * Returns the type of the plugin
+	 * @return sql or file
+	 */
 	public String GetType()
 	{
 		return DAOType;

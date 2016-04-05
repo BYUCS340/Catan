@@ -21,6 +21,7 @@ public class SQLPlugin implements IPersistenceProvider
 	@Override
 	public void Clear() 
 	{
+		System.out.println("Cleared SQL");
 		// TODO Auto-generated method stub
 		
 	}
