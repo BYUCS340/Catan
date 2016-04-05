@@ -1109,6 +1109,23 @@ public class ClientGameManager extends GameManager implements ModelSubject
 			this.setTurnState(TurnState.DISCARDED_WAITING);
 		}
 		
+		
+	}
+	
+	public void doneClosingDiscard()
+	{
+		if(this.turnState == TurnState.DISCARDED_CLOSING)
+		{
+			try 
+			{
+				ForceRefreshFromServer();
+			}
+			catch (ModelException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -1139,6 +1156,32 @@ public class ClientGameManager extends GameManager implements ModelSubject
 			
 			//Refresh the game
 			this.reloadGame(model);
+		} 
+		catch (ServerProxyException e) 
+		{
+			System.err.println("Wasn't able to update");
+			throw new ModelException("Server proxy wasn't able to update");
+		}
+		
+		this.refreshCount++;
+	}
+	
+	public void ForceRefreshFromServer() throws ModelException
+	{
+
+		try 
+		{
+			if (proxy == null)
+			{
+				System.err.println("Proxy was null");
+				return;
+			}
+			GameModel model = proxy.getGameModel(this.version);
+			if (model == null) 
+				return;
+			
+			//Refresh the game
+			this.reloadGame(model,true);
 		} 
 		catch (ServerProxyException e) 
 		{

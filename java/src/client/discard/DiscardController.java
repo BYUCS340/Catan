@@ -218,9 +218,14 @@ public class DiscardController extends Controller implements IDiscardController,
 				this.getWaitView().showModal();
 		}
 		
+		
+		
 		//if we shouldn't have a modal up, close the waiting modal
 		else if (this.getWaitView().isModalShowing())
+		{
 			this.getWaitView().closeModal();
+			if (cTurnState == TurnState.DISCARDED_CLOSING) game.doneClosingDiscard();
+		}
 	}
 	
 	private void initDiscardView()
