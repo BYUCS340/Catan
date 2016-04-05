@@ -1,6 +1,5 @@
-package server.persistence.plugins.SQLPluginTmp;
+package server.persistence.plugins.FilePlugin;
 
-import server.commands.ICommand;
 import server.persistence.ICommandDAO;
 
 import java.util.List;
@@ -8,13 +7,11 @@ import java.util.List;
 /**
  * Created by Tunadude09 on 4/4/2016.
  */
-public class SQLCommandDAO implements ICommandDAO
-{
+public class FileCommandDAO implements ICommandDAO {
     /**
-     *  Setup mysql db connection
+     * Initialize path to persistant local file system
      */
-    public SQLCommandDAO()
-    {
+    public FileCommandDAO(){
 
     }
 
@@ -25,8 +22,7 @@ public class SQLCommandDAO implements ICommandDAO
      * @return
      */
     @Override
-    public List<String> GetCommandsFor(int gameID)
-    {
+    public List<String> GetCommandsFor(int gameID) {
         return null;
     }
 
@@ -38,8 +34,7 @@ public class SQLCommandDAO implements ICommandDAO
      * @return
      */
     @Override
-    public boolean AddCommand(int gameID, String blob)
-    {
+    public boolean AddCommand(int gameID, String blob) {
         return false;
     }
 
@@ -48,8 +43,7 @@ public class SQLCommandDAO implements ICommandDAO
      * @return
      */
     @Override
-    public boolean DeleteCommandFor(int gameID)
-    {
+    public boolean DeleteCommandFor(int gameID) {
         return false;
     }
 
@@ -59,8 +53,7 @@ public class SQLCommandDAO implements ICommandDAO
      * @return
      */
     @Override
-    public boolean DeleteAllCommands()
-    {
+    public boolean DeleteAllCommands() {
         return false;
     }
 
@@ -71,10 +64,9 @@ public class SQLCommandDAO implements ICommandDAO
      * @return
      */
     @Override
-    public int GetCommandCountFor(int gameID)
-    {
+    public int GetCommandCountFor(int gameID) {
         return 0;
     }
 
-    String mysqlDb;
+    private String pathToFileSystem = "";
 }

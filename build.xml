@@ -1,20 +1,20 @@
 ﻿<project name="Demo Server" default="server" basedir=".">
 
 	<!-- PROPERTIES -->
-	<!-- ********** -->	
-    
+	<!-- ********** -->
+
 	<!-- Directory paths for the java server, javascript, and dest dir for the student copy -->
     <property name="port.arg" value="8081"/>
     <property name="web.arg" value="gameplay"/>
     <property name="options.arg" value="ug"/>
-     
+
     <!-- Input folders -->
     <property name="java.dir" value="java"/>
     <property name="java.src.dir" value="${java.dir}/src"/>
     <property name="java.lib.dir" value="${java.dir}/lib"/>
     <!-- JavaScript source folder -->
     <property name="javascript.dir" value="gameplay/js"/>
-    
+
     <!-- Base output folder -->
     <property name="dest.dir" value="docs"/>
     <!-- Javadoc output folder -->
@@ -25,18 +25,18 @@
 	<property name="demo.dir" value="demo"/>
     <property name="server.jar.file" value="${demo.dir}/server.jar"/>
     <property name="client.jar.file" value="${demo.dir}/client.jar"/>
-	<property name="server" value="localhost"/>
+    <property name="server" value="localhost"/>
 	<property name="port" value="8081"/>
- 
+
 	<!-- CLASSPATHS -->
 	<!-- ********** -->
-    
+
 	<path id="build-classpath">
     <fileset dir="${java.lib.dir}">
         <include name="*.jar"/>
 		</fileset>
 	</path>
-	
+
 	<path id="java.lib.classpath">
 		<fileset dir="${java.lib.dir}">
 			<include name="**/*.jar" />
@@ -46,7 +46,7 @@
 
 	<!-- TARGETS -->
 	<!-- ******* -->
-     
+
 	<target name="server" description="Runs the demo server">
 		<java jar="${server.jar.file}" fork="true" dir="${demo.dir}">
 			<arg value="${port.arg}"/>
@@ -57,7 +57,7 @@
 			</assertions>
 		</java>
 	</target>
-    
+
 	<target name="client" description="Runs the demo client">
 		<java jar="${client.jar.file}" fork="true" dir="${demo.dir}">
 			<assertions>
@@ -65,7 +65,7 @@
 			</assertions>
 		</java>
 	</target>
-    
+
     <target name="make-java-doc" description="Generate the Java docs">
         <echo> Making Java documentation </echo>
         <delete dir="${javadoc.dir}"/>
@@ -77,7 +77,7 @@
 			</packageset>
 		</javadoc>
    </target>
-    
+
     <!--
     <target name="make-js-doc" description="Generate the JavaScript docs">
         <echo> Making JavaScript documentation </echo>
@@ -96,24 +96,24 @@
 	<property name="java.dist" location="${java.dir}/dist"/>
 	<property name="java.lib" location="${java.dir}/lib"/>
 	<property name="java.swagger" location="${java.src}/server/docs"/>
-		
+
 	<target name="clean" description="clean build files" >
 		<delete dir="${java.build}"/>
 		<delete dir="${java.dist}"/>
 	</target>
-	
+
 	<target name="init" description="create build directories">
 		<tstamp/>
 		<mkdir dir="${java.build}"/>
 		<mkdir dir="${java.dist}"/>
 	</target>
-    
+
 	<target name="compile" depends="init" description="compile the source " >
 		<javac srcdir="${java.src}" destdir="${java.build}" debug="true" includeantruntime="true">
 			<classpath refid="java.lib.classpath" />
 		</javac>
 	</target>
-	
+
 	<target name="package" depends="compile" description="package the jar file" >
 		<mkdir dir="${java.dist}/lib"/>
 		<copy todir="${java.dist}/lib">
@@ -136,15 +136,16 @@
 		<manifestclasspath property="lib.list.client" jarfile="${java.dist}/catan-client.jar">
 			<classpath refid="build-classpath"/>
 		</manifestclasspath>
- 		<jar jarfile="${java.dist}/catan-client.jar" basedir="${java.build}">
+
+        <jar jarfile="${java.dist}/catan-client.jar" basedir="${java.build}">
 			<zipgroupfileset includes="*.jar" dir="${java.lib.dir}"/>
 			<manifest>
 				<attribute name="Main-Class" value="client.main.Catan"/>
-				<attribute name="Class-Path" 
+				<attribute name="Class-Path"
 					value="${lib.list.client}" />
 			</manifest>
 		</jar>
-		
+
 		<manifestclasspath property="lib.list.server" jarfile="${java.dist}/catan-client.jar">
 			<classpath refid="build-classpath"/>
 		</manifestclasspath>
@@ -155,8 +156,16 @@
 				<attribute name="Class-Path" value="${lib.list.server}" />
 			</manifest>
 		</jar>
+
+        <jar jarfile="${java.dist}/plugin/file-plugin.jar" basedir="${java.build}/server/persistence/plugins/FilePluginTmp">
+			<zipgroupfileset includes="*.jar" dir="${java.lib.dir}"/>
+			<manifest>
+				<attribute name="Class-Path"
+					value="${lib.list.server}" />
+			</manifest>
+		</jar>
 	</target>
-	
+
 
 	<target name="our-client" depends="package" description="compiles, packages, and runs the student client">
 		<java jar="${java.dist}/catan-client.jar" dir="${java.dist}" fork="yes">
@@ -168,7 +177,7 @@
 			</assertions>
 		</java>
 	</target>
- 	
+
 	<target name="our-server" depends="package" description="compiles, packages, and runs the student server">
 		<java jar="${java.dist}/catan-server.jar" dir="${java.dist}" fork="yes">
 			<arg value="${port}"/>
@@ -178,18 +187,18 @@
 			</assertions>
 		</java>
 	</target>
-	
+
 	<path id="lib-classpath">
 		<fileset dir="${java.lib}">
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
-	
+
 	<path id="all-classpath">
 		<path refid="lib-classpath"/>
 		<pathelement location="${java.build}"/>
 	</path>
-	
+
 	<target name="test" depends="compile" description="compiles and runs the JUNIT tests">
 		<java classname="testing.UnitTests" fork="yes">
 			<classpath>
@@ -200,7 +209,7 @@
 			</assertions>
 		</java>
 	</target>
-	
+
 	<target name="test-travisci" depends="compile" description="compiles and runs all JUNIT tests, fails if a test fails">
 		<junit printsummary="yes" haltonfailure="yes" fork="yes">
 			<classpath>
@@ -223,10 +232,9 @@
 			<formatter type="plain" usefile="false"/>
         </junit>
 	</target>
-    
+
     <target name="make-tester-zip" depends="package" description="makes a zip file for your testing team">
         <zip destfile="./tester.zip" basedir="${java.dist}" />
     </target>
-  
-</project>
 
+</project>

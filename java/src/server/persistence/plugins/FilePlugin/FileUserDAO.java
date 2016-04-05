@@ -1,4 +1,4 @@
-package server.persistence.plugins.SQLPluginTmp;
+package server.persistence.plugins.FilePlugin;
 
 import server.model.ServerPlayer;
 import server.persistence.IUserDAO;
@@ -8,13 +8,11 @@ import java.util.List;
 /**
  * Created by Tunadude09 on 4/4/2016.
  */
-public class SQLUserDAO implements IUserDAO
-{
+public class FileUserDAO implements IUserDAO {
     /**
-     *  Setup mysql db connection
+     * initialize path to persistant local file system
      */
-    public SQLUserDAO()
-    {
+    public FileUserDAO(){
 
     }
 
@@ -27,8 +25,7 @@ public class SQLUserDAO implements IUserDAO
      * @return
      */
     @Override
-    public boolean AddUser(String id, String username, String password)
-    {
+    public boolean AddUser(String id, String username, String password) {
         return false;
     }
 
@@ -37,8 +34,7 @@ public class SQLUserDAO implements IUserDAO
      * @return
      */
     @Override
-    public ServerPlayer GetUser(String username)
-    {
+    public ServerPlayer GetUser(String username) {
         return null;
     }
 
@@ -47,8 +43,7 @@ public class SQLUserDAO implements IUserDAO
      * @return
      */
     @Override
-    public ServerPlayer GetUser(int playerID)
-    {
+    public ServerPlayer GetUser(int playerID) {
         return null;
     }
 
@@ -58,8 +53,7 @@ public class SQLUserDAO implements IUserDAO
      * @return
      */
     @Override
-    public List<ServerPlayer> GetAllUsers()
-    {
+    public List<ServerPlayer> GetAllUsers() {
         return null;
     }
 
@@ -69,10 +63,9 @@ public class SQLUserDAO implements IUserDAO
      * @return
      */
     @Override
-    public boolean DeleteAllUsers()
-    {
+    public boolean DeleteAllUsers() {
         return false;
     }
 
-    String mysqlDb;
+    private String pathToFileSystem = "";
 }

@@ -1,4 +1,4 @@
-package server.persistence.plugins.SQLPluginTmp;
+package server.persistence.plugins.FilePlugin;
 
 import server.persistence.ICommandDAO;
 import server.persistence.IGameDAO;
@@ -8,12 +8,11 @@ import server.persistence.IUserDAO;
 /**
  * Created by Tunadude09 on 4/4/2016.
  */
-public class SQLPlugin implements IPersistenceProvider
-{
+public class FilePlugin implements IPersistenceProvider {
     /**
-     * Initialize sqlite db in plugins/sqlPlugin
+     * Initialize filesystem in plugins/filePlugin
      */
-    public SQLPlugin()
+    public FilePlugin()
     {
         super();
     }
