@@ -3,6 +3,9 @@ package server.persistence.plugins.FilePlugin;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import server.persistence.IGameDAO;
@@ -88,6 +91,22 @@ public class FileGameDAO implements IGameDAO {
      */
     @Override
     public String GetCheckpoint(int gameID) {
+    	String gameDirStr = FilenameUtils.getFullGameDir(gameID);
+    	String cp = gameDirStr + File.separator + FilenameUtils.gameFilename;
+    	
+    	//read all bytes and encode them into a string
+    	Charset encoding = Charset.defaultCharset();
+    	byte[] encoded = null;
+		try
+		{
+			encoded = Files.readAllBytes(Paths.get(cp));
+			return new String(encoded, encoding);
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+    	 
+    	//if we get here, and exception has been thrown
         return null;
     }
 
