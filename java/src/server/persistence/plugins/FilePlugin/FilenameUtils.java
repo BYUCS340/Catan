@@ -8,10 +8,13 @@ public class FilenameUtils
 	public static final String dataDir = "data";
 	public static final String userDir = "users";
 	public static final String commandDir = "commands";
+	public static final String gameDir = "game";
 	public static final String userDirFull = dataDir + File.separator + userDir;
 	
-	public static final String gameFilename = "blob.catan";
-	
+	public static final String fileSuffix = ".catan";
+	public static final String gameFilePrefix = "GameBlob";
+	public static final String gameFilename = gameFilePrefix + fileSuffix;
+	public static final String commandPrefix = "Command";
 	
 	/**
 	 * Returns a string that represents what the game directory is called
@@ -32,7 +35,7 @@ public class FilenameUtils
 	 */
 	public static int getGameIDFromDirString(String gameStr)
 	{
-		if(!gameStr.contains("Game"))
+		if(!gameStr.contains(gameDir))
 		{
 			return -1;
 		}

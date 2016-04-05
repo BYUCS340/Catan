@@ -82,7 +82,14 @@ public class FileCommandDAO implements ICommandDAO {
     	String commandsDir = FilenameUtils.getFullCommandsDir(gameID);
     	File dir = new File(commandsDir);
     	if(!dir.exists()) return 0;
-    	int numCommands = dir.listFiles().length;
+    	int numCommands = 0;
+    	for(File f : dir.listFiles())
+    	{
+    		if(f.getName().contains(FilenameUtils.commandPrefix))
+    		{
+    			numCommands++;
+    		}
+    	}
         return numCommands;
     }
 

@@ -76,7 +76,7 @@ public class FileGameDAO implements IGameDAO {
         File rootDir = new File(gamesRootDir);
         for(File f : rootDir.listFiles())
         {
-        	if(f.isDirectory() && f.getName().contains("Game"))
+        	if(f.isDirectory() && f.getName().contains(FilenameUtils.commandDir))
         	{
         		FilePersistenceUtils.deleteFolder(f);
         	}
