@@ -36,6 +36,8 @@ public class Server
 	public static void main(final String[] args) 
 	{
 		int port = DEFAULT_PORT;
+		int commands = 10;
+		String plugin = "";
 		
 		if (args.length >= 1)
 		{
@@ -52,9 +54,21 @@ public class Server
 				if (args.length == 2)
 					TrySettingSwaggerPath(args[1]);
 			}
+			
 		}
 		
-		new Server().Initialize(port);
+		if (args.length >= 2)
+		{
+			plugin = args[1];
+		}
+		
+		if (args.length >= 3)
+		{
+			commands = Integer.parseInt(args[2]);
+			if (commands == -1) commands = 10;
+		}
+		
+		new Server().Initialize(port,plugin,commands);
 	}
 	
 	private static int TrySettingPort(String value)
@@ -78,11 +92,16 @@ public class Server
 	}
 	
 	private void Initialize(int port)
+	{
+		Initialize(port,"",10);
+	}
+	
+	private void Initialize(int port, String plugin, int commandLimit)
 	{	
 		try 
 		{
 			
-			PersistenceHandler ph = new PersistenceHandler("SQL");
+			PersistenceHandler ph = new PersistenceHandler(plugin);
 			
 			try {
 				ph.GetPlugin().Clear();

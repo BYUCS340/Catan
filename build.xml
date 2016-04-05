@@ -166,13 +166,15 @@
 			</manifest>
 		</jar>
 
-        <jar jarfile="${java.dist}/plugins/file-plugin.jar" basedir="${java.build}/server/persistence/plugins/FilePlugin" update="yes">
-			<manifest>
-                <attribute name="Class-Path" value="${java.dist}/plugins/file-plugin.jar" />
+        <jar jarfile="${java.dist}/plugins/file-plugin.jar" update="yes">
+            <fileset dir="${java.build}" includes="server/persistence/plugins/FilePlugin/*.class"/>
+            <manifest>
+
 			</manifest>
 		</jar>
 
-        <jar jarfile="${java.dist}/plugins/sql-plugin.jar" basedir="${java.build}/server/persistence/plugins/SQLPlugin" update="yes">
+        <jar jarfile="${java.dist}/plugins/sql-plugin.jar"  update="yes">
+            <fileset dir="${java.build}" includes="server/persistence/plugins/SQLPlugin/*.class"/>
 			<manifest>
 
 			</manifest>
@@ -196,6 +198,8 @@
 	<target name="our-server" depends="package" description="compiles, packages, and runs the student server">
 		<java jar="${java.dist}/catan-server.jar" dir="${java.dist}" fork="yes">
 			<arg value="${port}"/>
+            <arg value="${plugin}"/>
+            <arg value="${commands}"/>
 			<sysproperty key="com.sun.management.jmxremote" value=""/>
 			<assertions>
 				<enable/>
