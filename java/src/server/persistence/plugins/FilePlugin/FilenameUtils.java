@@ -6,12 +6,11 @@ public class FilenameUtils
 {
 	
 	public static final String dataDir = "data";
-	public static final String precommitDir = "temp";
-	public static final String precommitDirFull = dataDir + File.separator + precommitDir;
 	public static final String userDir = "users";
 	public static final String commandDir = "commands";
 	public static final String userDirFull = dataDir + File.separator + userDir;
-	public static final String userPrecommitDirFull = precommitDirFull +  File.separator + userDir;
+	
+	public static final String gameFilename = "blob.catan";
 	
 	
 	/**
@@ -61,34 +60,5 @@ public class FilenameUtils
 	{
 		return dataDir + File.separator + getGameDirString(gameID) + File.separator + commandDir;
 	}
-	
-	/**
-	 * Gets a precommit path from a full path that is postcommit
-	 * @param fullPath that is postcommit
-	 * @return a precommit path
-	 */
-	public static String getPrecommitPath(String fullPath)
-	{
-		if(!fullPath.contains(dataDir))
-		{
-			return null;
-		}
-		
-		return fullPath.substring(0, dataDir.length()) + File.separator + precommitDir + fullPath.substring(dataDir.length());
-	}
-	
-	/**
-	 * returns a postcommit path from a path that is precommit
-	 * @param fullPath that is precommit
-	 * @return a postcommit path
-	 */
-	public static String getPostCommitPath(String fullPath)
-	{
-		if(!fullPath.contains(precommitDirFull))
-		{
-			return null;
-		}
-		
-		return dataDir + File.separator + fullPath.substring(precommitDirFull.length());
-	}
+
 }
