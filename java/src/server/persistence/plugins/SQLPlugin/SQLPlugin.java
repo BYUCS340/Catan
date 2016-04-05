@@ -1,5 +1,6 @@
 package server.persistence.plugins.SQLPlugin;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -25,7 +26,7 @@ public class SQLPlugin implements IPersistenceProvider
         try
         {
           Class.forName("org.sqlite.JDBC");
-          connection = DriverManager.getConnection("jdbc:sqlite:test.db");
+          connection = DriverManager.getConnection("jdbc:sqlite:savedata"+File.separator+"sqlite"+File.separator+"db.db");
           connection.setAutoCommit(false);
         }
         catch ( Exception e )
