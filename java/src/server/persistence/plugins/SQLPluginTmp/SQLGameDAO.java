@@ -7,11 +7,13 @@ import java.util.Map;
 /**
  * Created by Tunadude09 on 4/4/2016.
  */
-public class SQLGameDAO implements IGameDAO {
+public class SQLGameDAO implements IGameDAO
+{
     /**
      *  Setup mysql db connection
      */
-    public SQLGameDAO(){
+    public SQLGameDAO()
+    {
 
     }
 
@@ -21,7 +23,8 @@ public class SQLGameDAO implements IGameDAO {
      * @return
      */
     @Override
-    public boolean AddGame(int gameID, String blob) {
+    public boolean AddGame(int gameID, String blob)
+    {
         return false;
     }
 
@@ -31,7 +34,8 @@ public class SQLGameDAO implements IGameDAO {
      * @return
      */
     @Override
-    public boolean UpdateGame(int gameID, String blob) {
+    public boolean UpdateGame(int gameID, String blob)
+    {
         return false;
     }
 
@@ -40,7 +44,8 @@ public class SQLGameDAO implements IGameDAO {
      * @return
      */
     @Override
-    public boolean DeleteGame(int gameID) {
+    public boolean DeleteGame(int gameID)
+    {
         return false;
     }
 
@@ -50,7 +55,8 @@ public class SQLGameDAO implements IGameDAO {
      * @return
      */
     @Override
-    public boolean DeleteAllGames() {
+    public boolean DeleteAllGames()
+    {
         return false;
     }
 
@@ -59,7 +65,8 @@ public class SQLGameDAO implements IGameDAO {
      * @return
      */
     @Override
-    public String GetCheckpoint(int gameID) {
+    public String GetCheckpoint(int gameID)
+    {
         return null;
     }
 
@@ -67,7 +74,8 @@ public class SQLGameDAO implements IGameDAO {
      * @return a map of Game ID to blobs
      */
     @Override
-    public Map<Integer, String> GetAllGames() {
+    public Map<Integer, String> GetAllGames()
+    {
         return null;
     }
 

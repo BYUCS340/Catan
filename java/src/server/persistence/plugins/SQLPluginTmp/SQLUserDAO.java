@@ -8,11 +8,13 @@ import java.util.List;
 /**
  * Created by Tunadude09 on 4/4/2016.
  */
-public class SQLUserDAO implements IUserDAO {
+public class SQLUserDAO implements IUserDAO
+{
     /**
      *  Setup mysql db connection
      */
-    public SQLUserDAO(){
+    public SQLUserDAO()
+    {
 
     }
 
@@ -25,7 +27,8 @@ public class SQLUserDAO implements IUserDAO {
      * @return
      */
     @Override
-    public boolean AddUser(String id, String username, String password) {
+    public boolean AddUser(String id, String username, String password)
+    {
         return false;
     }
 
@@ -34,7 +37,8 @@ public class SQLUserDAO implements IUserDAO {
      * @return
      */
     @Override
-    public ServerPlayer GetUser(String username) {
+    public ServerPlayer GetUser(String username)
+    {
         return null;
     }
 
@@ -43,7 +47,8 @@ public class SQLUserDAO implements IUserDAO {
      * @return
      */
     @Override
-    public ServerPlayer GetUser(int playerID) {
+    public ServerPlayer GetUser(int playerID)
+    {
         return null;
     }
 
@@ -53,7 +58,8 @@ public class SQLUserDAO implements IUserDAO {
      * @return
      */
     @Override
-    public List<ServerPlayer> GetAllUsers() {
+    public List<ServerPlayer> GetAllUsers()
+    {
         return null;
     }
 
@@ -63,7 +69,8 @@ public class SQLUserDAO implements IUserDAO {
      * @return
      */
     @Override
-    public boolean DeleteAllUsers() {
+    public boolean DeleteAllUsers()
+    {
         return false;
     }
 
