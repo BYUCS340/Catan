@@ -2,6 +2,11 @@ package server.persistence.plugins.SQLPluginTmp;
 
 import server.persistence.IGameDAO;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -9,12 +14,14 @@ import java.util.Map;
  */
 public class SQLGameDAO implements IGameDAO
 {
+	Connection connection;
+	
     /**
      *  Setup mysql db connection
      */
-    public SQLGameDAO()
+    public SQLGameDAO(Connection c)
     {
-
+    	connection = c;
     }
 
     /**
@@ -25,7 +32,22 @@ public class SQLGameDAO implements IGameDAO
     @Override
     public boolean AddGame(int gameID, String blob)
     {
-        return false;
+    	try
+    	{
+			Statement stmt = connection.createStatement();
+			
+			String sql = "INSERT INTO GAMES (ID, BLOB) " +
+		            "VALUES (gameID, blob);";
+		    stmt.executeUpdate(sql);
+
+		    stmt.close();
+		    return true;
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+			return false;
+		}
     }
 
     /**
@@ -36,7 +58,20 @@ public class SQLGameDAO implements IGameDAO
     @Override
     public boolean UpdateGame(int gameID, String blob)
     {
-        return false;
+    	try
+    	{
+    		Statement stmt = connection.createStatement();
+    	    String sql = "UPDATE GAMES set BLOB = " + blob + " where ID=" + gameID + ";";
+    	    stmt.executeUpdate(sql);
+    	    
+    	    stmt.close();
+		    return true;
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+			return false;
+		}
     }
 
     /**
@@ -46,7 +81,20 @@ public class SQLGameDAO implements IGameDAO
     @Override
     public boolean DeleteGame(int gameID)
     {
-        return false;
+    	try
+    	{
+    		Statement stmt = connection.createStatement();
+    	    String sql = "DELETE from GAMES where ID=" + gameID + ";";
+    	    stmt.executeUpdate(sql);
+    	    
+    	    stmt.close();
+		    return true;
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+			return false;
+		}
     }
 
     /**
@@ -57,7 +105,20 @@ public class SQLGameDAO implements IGameDAO
     @Override
     public boolean DeleteAllGames()
     {
-        return false;
+        try
+    	{
+    		Statement stmt = connection.createStatement();
+    	    String sql = "DELETE from GAMES;";
+    	    stmt.executeUpdate(sql);
+    	    
+    	    stmt.close();
+		    return true;
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+			return false;
+		}
     }
 
     /**
@@ -67,7 +128,25 @@ public class SQLGameDAO implements IGameDAO
     @Override
     public String GetCheckpoint(int gameID)
     {
-        return null;
+    	try
+    	{
+    		String gameBlob = null;
+    		
+    		Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM GAMES WHERE ID=" + gameID + ";");
+            while (rs.next())
+            {
+               gameBlob = rs.getString("BLOB");
+            }
+            rs.close();
+            stmt.close();
+            return gameBlob;
+    	}
+        catch (SQLException e)
+        {
+        	System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        	return null;
+        }
     }
 
     /**
@@ -76,7 +155,27 @@ public class SQLGameDAO implements IGameDAO
     @Override
     public Map<Integer, String> GetAllGames()
     {
-        return null;
+    	try
+    	{
+    		Map<Integer, String> games = new HashMap<Integer, String>();
+    		
+    		Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM GAMES;");
+            while (rs.next())
+            {
+               int gameID = rs.getInt("ID");
+               String  gameBlob = rs.getString("USERNAME");
+               games.put(gameID, gameBlob);
+            }
+            rs.close();
+            stmt.close();
+            return games;
+    	}
+        catch (SQLException e)
+        {
+        	System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        	return null;
+        }
     }
 
     String mysqlDb;

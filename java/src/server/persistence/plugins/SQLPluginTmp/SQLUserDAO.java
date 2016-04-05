@@ -3,6 +3,11 @@ package server.persistence.plugins.SQLPluginTmp;
 import server.model.ServerPlayer;
 import server.persistence.IUserDAO;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,12 +15,13 @@ import java.util.List;
  */
 public class SQLUserDAO implements IUserDAO
 {
+	Connection connection;
     /**
      *  Setup mysql db connection
      */
-    public SQLUserDAO()
+    public SQLUserDAO(Connection c)
     {
-
+    	connection = c;
     }
 
     /**
@@ -27,9 +33,24 @@ public class SQLUserDAO implements IUserDAO
      * @return
      */
     @Override
-    public boolean AddUser(String id, String username, String password)
+    public boolean AddUser(int userID, String username, String password)
     {
-        return false;
+    	try
+    	{
+			Statement stmt = connection.createStatement();
+			
+			String sql = "INSERT INTO USERS (ID, USERNAME, PASSWORD) " +
+		            "VALUES (userID, username, password);";
+		    stmt.executeUpdate(sql);
+
+		    stmt.close();
+		    return true;
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+			return false;
+		}
     }
 
     /**
@@ -39,7 +60,28 @@ public class SQLUserDAO implements IUserDAO
     @Override
     public ServerPlayer GetUser(String username)
     {
-        return null;
+    	try
+    	{
+    		ServerPlayer user = null;
+    		
+    		Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM USERS WHERE USERNAME=" + username + ";");
+            while (rs.next())
+            {
+               int userID = rs.getInt("ID");
+               String  userName = rs.getString("USERNAME");
+               String  password = rs.getString("PASSWORD");
+               user = new ServerPlayer(userName, password, userID);
+            }
+            rs.close();
+            stmt.close();
+            return user;
+    	}
+        catch (SQLException e)
+        {
+        	System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        	return null;
+        }
     }
 
     /**
@@ -49,7 +91,28 @@ public class SQLUserDAO implements IUserDAO
     @Override
     public ServerPlayer GetUser(int playerID)
     {
-        return null;
+    	try
+    	{
+    		ServerPlayer user = null;
+    		
+    		Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM USERS WHERE ID=" + playerID + ";");
+            while (rs.next())
+            {
+               int userID = rs.getInt("ID");
+               String  userName = rs.getString("USERNAME");
+               String  password = rs.getString("PASSWORD");
+               user = new ServerPlayer(userName, password, userID);
+            }
+            rs.close();
+            stmt.close();
+            return user;
+    	}
+        catch (SQLException e)
+        {
+        	System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        	return null;
+        }
     }
 
     /**
@@ -60,7 +123,29 @@ public class SQLUserDAO implements IUserDAO
     @Override
     public List<ServerPlayer> GetAllUsers()
     {
-        return null;
+    	try
+    	{
+    		List<ServerPlayer> players = new ArrayList<ServerPlayer>();
+    		
+    		Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM USERS;");
+            while (rs.next())
+            {
+               int userID = rs.getInt("ID");
+               String  userName = rs.getString("USERNAME");
+               String  password = rs.getString("PASSWORD");
+               ServerPlayer user = new ServerPlayer(userName, password, userID);
+               players.add(user);
+            }
+            rs.close();
+            stmt.close();
+            return players;
+    	}
+        catch (SQLException e)
+        {
+        	System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        	return null;
+        }
     }
 
     /**
@@ -71,7 +156,20 @@ public class SQLUserDAO implements IUserDAO
     @Override
     public boolean DeleteAllUsers()
     {
-        return false;
+    	try
+    	{
+    		Statement stmt = connection.createStatement();
+    	    String sql = "DELETE from USERS;";
+    	    stmt.executeUpdate(sql);
+    	    
+    	    stmt.close();
+		    return true;
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+			return false;
+		}
     }
 
     String mysqlDb;

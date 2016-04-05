@@ -1,8 +1,12 @@
 package server.persistence.plugins.SQLPluginTmp;
 
-import server.commands.ICommand;
 import server.persistence.ICommandDAO;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,12 +14,14 @@ import java.util.List;
  */
 public class SQLCommandDAO implements ICommandDAO
 {
+	Connection connection;
+	
     /**
      *  Setup mysql db connection
      */
-    public SQLCommandDAO()
+    public SQLCommandDAO(Connection c)
     {
-
+    	connection = c;
     }
 
     /**
@@ -27,7 +33,26 @@ public class SQLCommandDAO implements ICommandDAO
     @Override
     public List<String> GetCommandsFor(int gameID)
     {
-        return null;
+    	try
+    	{
+    		List<String> commands = new ArrayList<String>();
+    		
+    		Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM COMMANDS where ID=" + gameID + ";");
+            while (rs.next())
+            {
+               String  commandBlob = rs.getString("BLOB");
+               commands.add(commandBlob);
+            }
+            rs.close();
+            stmt.close();
+            return commands;
+    	}
+        catch (SQLException e)
+        {
+        	System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        	return null;
+        }
     }
 
     /**
@@ -40,7 +65,22 @@ public class SQLCommandDAO implements ICommandDAO
     @Override
     public boolean AddCommand(int gameID, String blob)
     {
-        return false;
+    	try
+    	{
+			Statement stmt = connection.createStatement();
+			
+			String sql = "INSERT INTO COMMANDS (ID, BLOB) " +
+		            "VALUES (gameID, blob);";
+		    stmt.executeUpdate(sql);
+
+		    stmt.close();
+		    return true;
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+			return false;
+		}
     }
 
     /**
@@ -50,7 +90,20 @@ public class SQLCommandDAO implements ICommandDAO
     @Override
     public boolean DeleteCommandFor(int gameID)
     {
-        return false;
+    	try
+    	{
+    		Statement stmt = connection.createStatement();
+    	    String sql = "DELETE from COMMANDS where ID=" + gameID + ";";
+    	    stmt.executeUpdate(sql);
+    	    
+    	    stmt.close();
+		    return true;
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+			return false;
+		}
     }
 
     /**
@@ -61,7 +114,20 @@ public class SQLCommandDAO implements ICommandDAO
     @Override
     public boolean DeleteAllCommands()
     {
-        return false;
+    	try
+    	{
+    		Statement stmt = connection.createStatement();
+    	    String sql = "DELETE from COMMANDS;";
+    	    stmt.executeUpdate(sql);
+    	    
+    	    stmt.close();
+		    return true;
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+			return false;
+		}
     }
 
     /**
@@ -73,7 +139,7 @@ public class SQLCommandDAO implements ICommandDAO
     @Override
     public int GetCommandCountFor(int gameID)
     {
-        return 0;
+    	return GetCommandsFor(gameID).size();
     }
 
     String mysqlDb;

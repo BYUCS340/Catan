@@ -25,7 +25,7 @@ public class FileUserDAO implements IUserDAO {
      * @return
      */
     @Override
-    public boolean AddUser(String id, String username, String password) {
+    public boolean AddUser(int id, String username, String password) {
         return false;
     }
 

@@ -17,7 +17,7 @@ public interface IUserDAO
 	 * @param password
 	 * @return
 	 */
-	boolean AddUser(String id, String username, String password);
+	boolean AddUser(int id, String username, String password);
 
 	/**
 	 *
