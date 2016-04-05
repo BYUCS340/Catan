@@ -45,7 +45,15 @@ public class FileCommandDAO implements ICommandDAO {
      */
     @Override
     public boolean AddCommand(int gameID, String blob) {
-        return false;
+    	String commandsDir = FilenameUtils.getFullCommandsDir(gameID);
+    	File theDir = new File(commandsDir);
+    	FilePersistenceUtils.makeDirs(theDir);
+    	
+    	int num = this.GetCommandCountFor(gameID) + 1;
+    	
+    	//Format: data/game1/commands/Command21.catan
+    	File theFile = new File(commandsDir + File.separator + FilenameUtils.commandPrefix + num + FilenameUtils.fileSuffix);
+    	return FilePersistenceUtils.writeFile(theFile, blob);
     }
 
     /**
