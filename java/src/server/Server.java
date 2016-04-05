@@ -9,6 +9,7 @@ import java.util.logging.Level;
 
 import com.sun.net.httpserver.HttpServer;
 
+import server.persistence.IPersistenceProvider;
 import server.persistence.PersistenceException;
 import server.persistence.PersistenceHandler;
 import server.swagger.SwaggerHandlers;
@@ -91,10 +92,6 @@ public class Server
 			SwaggerPath = file.getPath() + "\\";
 	}
 	
-	private void Initialize(int port)
-	{
-		Initialize(port,"",10);
-	}
 	
 	private void Initialize(int port, String plugin, int commandLimit)
 	{	
@@ -103,10 +100,18 @@ public class Server
 			
 			PersistenceHandler ph = new PersistenceHandler(plugin);
 			
-			try {
-				ph.GetPlugin().Clear();
-				ph.GetPlugin().GetUserDAO().AddUser(5, "Matthew", "password");
-			} catch (PersistenceException e) {
+			try 
+			{
+				IPersistenceProvider pp = ph.GetPlugin();
+				pp.StartTransaction();
+				if (!ph.GetPlugin().GetUserDAO().AddUser(8, "Matthew", "password")) System.err.println("UNABLE TO SAVE");
+				pp.EndTransaction(true);
+				//System.out.println("User: "+ph.GetPlugin().GetUserDAO().GetUser(5));
+				//System.out.println("User: "+ph.GetPlugin().GetUserDAO().GetUser(3));
+				
+			} 
+			catch (PersistenceException e) 
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

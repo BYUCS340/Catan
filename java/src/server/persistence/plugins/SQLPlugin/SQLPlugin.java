@@ -57,6 +57,7 @@ public class SQLPlugin implements IPersistenceProvider
 	public void StartTransaction()
 	{
 		//do nothing...?
+		
 	}
 
 	@Override
@@ -66,12 +67,17 @@ public class SQLPlugin implements IPersistenceProvider
 		{
 			if (commit)
 			{
+				
 				connection.commit();
+				System.out.println("Committed");
+				
 			}
 			else
 			{
 				connection.rollback();
 			}
+			connection.close();
+			System.out.println("Closed");
 		}
 		catch (SQLException e)
 		{
