@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class SQLUserDAO implements IUserDAO
 {
-	Connection connection;
+	public Connection connection;
     /**
      *  Setup mysql db connection
      */
@@ -40,10 +40,12 @@ public class SQLUserDAO implements IUserDAO
 			Statement stmt = connection.createStatement();
 			
 			String sql = "INSERT INTO USERS (ID, USERNAME, PASSWORD) " +
-		            "VALUES (" + userID + ", " + username + ", " + password + ");";
+		            "VALUES (" + userID + ", '"+ username + "', '"+ password + "');";
 		    stmt.executeUpdate(sql);
 
 		    stmt.close();
+		    //if we commit here it works but that defeats the purpose of the DAO plugin facade
+		    //connection.commit();
 		    return true;
 		}
     	catch (SQLException e)
@@ -65,7 +67,7 @@ public class SQLUserDAO implements IUserDAO
     		ServerPlayer user = null;
     		
     		Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * from USERS where USERNAME=" + username + ";");
+            ResultSet rs = stmt.executeQuery("SELECT * from USERS where USERNAME='" + username + "';");
             while (rs.next())
             {
                int userID = rs.getInt("ID");
