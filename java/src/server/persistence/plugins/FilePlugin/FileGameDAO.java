@@ -31,11 +31,11 @@ public class FileGameDAO implements IGameDAO {
     public boolean AddGame(int gameID, String blob) {
     	String gameDir = FilenameUtils.getFullGameDir(gameID);
     	File theDir = new File(gameDir);
-    	makeDirs(theDir);
+    	FilePersistenceUtils.makeDirs(theDir);
     	
     	
     	File theFile = new File(gameDir + File.separator + FilenameUtils.gameFilename);
-    	return writeFile(theFile, blob);
+    	return FilePersistenceUtils.writeFile(theFile, blob);
     }
 
     /**
@@ -48,7 +48,7 @@ public class FileGameDAO implements IGameDAO {
     	String gameDir = FilenameUtils.getFullGameDir(gameID);
     	
     	File theFile = new File(gameDir + File.separator + FilenameUtils.gameFilename);
-    	return writeFile(theFile, blob);
+    	return FilePersistenceUtils.writeFile(theFile, blob);
     }
 
     /**
@@ -60,7 +60,7 @@ public class FileGameDAO implements IGameDAO {
     	String gameDir = FilenameUtils.getFullGameDir(gameID);
     	File theDir = new File(gameDir);
     	
-    	deleteFolder(theDir);
+    	FilePersistenceUtils.deleteFolder(theDir);
     	
     	return true;
     }
@@ -78,7 +78,7 @@ public class FileGameDAO implements IGameDAO {
         {
         	if(f.isDirectory() && f.getName().contains("Game"))
         	{
-        		deleteFolder(f);
+        		FilePersistenceUtils.deleteFolder(f);
         	}
         }
         
@@ -120,42 +120,5 @@ public class FileGameDAO implements IGameDAO {
 
     private String pathToFileSystem = "";
 
-    private static boolean makeDirs(File theDir)
-    {
-    	boolean created = true;
-    	if(!theDir.exists()) created = theDir.mkdirs();
-    	return created;
-    }
     
-    private static boolean writeFile(File theFile, String blob)
-    {
-    	try
-    	{
-    		FileWriter fw = new FileWriter(theFile, false);
-    		fw.write(blob);
-    		fw.close();
-    	}
-    	catch(IOException e)
-    	{
-    		e.printStackTrace();
-    		return false;
-    	}
-    	
-    	return true;
-    }
-    
-    private static void deleteFolder(File folder)
-    {
-    	File[] files = folder.listFiles();
-        if(files!=null) { //some JVMs return null for empty dirs
-            for(File f: files) {
-                if(f.isDirectory()) {
-                    deleteFolder(f);
-                } else {
-                    f.delete();
-                }
-            }
-        }
-        folder.delete();
-    }
 }

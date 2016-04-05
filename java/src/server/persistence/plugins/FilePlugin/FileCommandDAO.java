@@ -1,6 +1,7 @@
 package server.persistence.plugins.FilePlugin;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import server.persistence.ICommandDAO;
@@ -25,7 +26,14 @@ public class FileCommandDAO implements ICommandDAO {
      */
     @Override
     public List<String> GetCommandsFor(int gameID) {
-        return null;
+    	List<String> retList = new ArrayList<String>();
+    	
+    	String commandsDir = FilenameUtils.getFullCommandsDir(gameID);
+    	File dir = new File(commandsDir);
+    	if(!dir.exists()) return retList;
+    	
+    	//TODO complete
+    	return null;
     }
 
     /**
@@ -46,7 +54,11 @@ public class FileCommandDAO implements ICommandDAO {
      */
     @Override
     public boolean DeleteCommandFor(int gameID) {
-        return false;
+    	String commandsDir = FilenameUtils.getFullCommandsDir(gameID);
+    	File dir = new File(commandsDir);
+    	FilePersistenceUtils.deleteFolder(dir);
+    	return true;
+    	
     }
 
     /**
@@ -69,6 +81,7 @@ public class FileCommandDAO implements ICommandDAO {
     public int GetCommandCountFor(int gameID) {
     	String commandsDir = FilenameUtils.getFullCommandsDir(gameID);
     	File dir = new File(commandsDir);
+    	if(!dir.exists()) return 0;
     	int numCommands = dir.listFiles().length;
         return numCommands;
     }
