@@ -1,12 +1,12 @@
 package server.persistence.plugins.FilePlugin;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.TreeMap;
 
 import server.persistence.IGameDAO;
 
@@ -94,20 +94,7 @@ public class FileGameDAO implements IGameDAO {
     	String gameDirStr = FilenameUtils.getFullGameDir(gameID);
     	String cp = gameDirStr + File.separator + FilenameUtils.gameFilename;
     	
-    	//read all bytes and encode them into a string
-    	Charset encoding = Charset.defaultCharset();
-    	byte[] encoded = null;
-		try
-		{
-			encoded = Files.readAllBytes(Paths.get(cp));
-			return new String(encoded, encoding);
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-    	 
-    	//if we get here, and exception has been thrown
-        return null;
+    	return FilePersistenceUtils.getBlob(cp);
     }
 
     /**
@@ -115,7 +102,20 @@ public class FileGameDAO implements IGameDAO {
      */
     @Override
     public Map<Integer, String> GetAllGames() {
-        return null;
+    	Map<Integer, String> gameMap = new TreeMap<Integer, String>();
+        File rootDir = new File(FilenameUtils.dataDir);
+        for(File f : rootDir.listFiles())
+        {
+        	if(f.isDirectory() && f.getName().contains(FilenameUtils.gameDir))
+        	{
+        		int gameID = FilenameUtils.getGameIDFromDirString(f.getName());
+        		String gameBlobFile = f.getPath() + File.separator + FilenameUtils.gameFilename;
+        		String blob = FilePersistenceUtils.getBlob(gameBlobFile);
+        		gameMap.put(gameID, blob);
+        	}
+        }
+        
+        return gameMap;
     }
 
     private String pathToFileSystem = "";

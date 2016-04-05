@@ -40,7 +40,10 @@ public class FilenameUtils
 			return -1;
 		}
 		
-		return Integer.parseInt(gameStr.substring(4));
+//		if(gameStr.contains("."))
+//			return Integer.parseInt(gameStr.substring(gameDir.length(), gameStr.indexOf('.')));
+//		else
+		return Integer.parseInt(gameStr.substring(gameDir.length()));
 	}
 	
 	/**
