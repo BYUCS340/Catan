@@ -105,6 +105,7 @@ public class Server
 			
 			try {
 				ph.GetPlugin().Clear();
+				ph.GetPlugin().GetUserDAO().AddUser(5, "Matthew", "password");
 			} catch (PersistenceException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
