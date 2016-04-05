@@ -1,4 +1,4 @@
-package server.persistence.plugins.SQLPluginTmp;
+package server.persistence.plugins.SQLPlugin;
 
 import server.model.ServerPlayer;
 import server.persistence.IUserDAO;

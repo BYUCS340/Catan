@@ -1,4 +1,4 @@
-package server.persistence.plugins.FilePluginTmp;
+package server.persistence.plugins.FilePlugin;
 
 import server.persistence.ICommandDAO;
 import server.persistence.IGameDAO;
@@ -21,6 +21,7 @@ public class FilePlugin implements IPersistenceProvider {
 	public void Clear() 
 	{
 		// TODO Auto-generated method stub
+		System.out.println("FILE PLUGIN CLEARED");
 		
 	}
 

@@ -1,4 +1,4 @@
-package server.persistence.plugins.FilePluginTmp;
+package server.persistence.plugins.FilePlugin;
 
 import server.persistence.IGameDAO;
 

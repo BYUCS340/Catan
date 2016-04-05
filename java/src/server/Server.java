@@ -9,6 +9,8 @@ import java.util.logging.Level;
 
 import com.sun.net.httpserver.HttpServer;
 
+import server.persistence.PersistenceException;
+import server.persistence.PersistenceHandler;
 import server.swagger.SwaggerHandlers;
 
 /**
@@ -79,6 +81,15 @@ public class Server
 	{	
 		try 
 		{
+			
+			PersistenceHandler ph = new PersistenceHandler("SQL");
+			
+			try {
+				ph.GetPlugin().Clear();
+			} catch (PersistenceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			Level defaultLevel = Level.FINE;
 			
 			Log.GetLog().log(defaultLevel, "Starting server");
