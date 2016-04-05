@@ -27,6 +27,8 @@
     <property name="client.jar.file" value="${demo.dir}/client.jar"/>
     <property name="server" value="localhost"/>
 	<property name="port" value="8081"/>
+    <property name="commands" value="10"/>
+    <property name="plugin" value=""/>
 
 	<!-- CLASSPATHS -->
 	<!-- ********** -->
@@ -40,6 +42,7 @@
 	<path id="java.lib.classpath">
 		<fileset dir="${java.lib.dir}">
 			<include name="**/*.jar" />
+            <include name="*.jar" />
 		</fileset>
 	</path>
 
@@ -146,22 +149,32 @@
 			</manifest>
 		</jar>
 
-		<manifestclasspath property="lib.list.server" jarfile="${java.dist}/catan-client.jar">
+
+        <manifestclasspath property="lib.list.file-plugin" jarfile="${java.dist}/plugins/catan-client.jar">
 			<classpath refid="build-classpath"/>
 		</manifestclasspath>
- 		<jar jarfile="${java.dist}/catan-server.jar" basedir="${java.build}">
+
+ 		<jar jarfile="${java.dist}/catan-server.jar" excludes="${java.build}/server/persistence/plugins/**/*.class">
+            <fileset dir="${java.build}"
+              includes="**/*.class"
+              excludes="server/persistence/plugins/**/*.class"/>
 			<zipgroupfileset includes="*.jar" dir="${java.lib.dir}"/>
-			<manifest>
+            <manifest>
 				<attribute name="Main-Class" value="server.Server"/>
 				<attribute name="Class-Path" value="${lib.list.server}" />
+
 			</manifest>
 		</jar>
 
-        <jar jarfile="${java.dist}/plugin/file-plugin.jar" basedir="${java.build}/server/persistence/plugins/FilePluginTmp">
-			<zipgroupfileset includes="*.jar" dir="${java.lib.dir}"/>
+        <jar jarfile="${java.dist}/plugins/file-plugin.jar" basedir="${java.build}/server/persistence/plugins/FilePlugin" update="yes">
 			<manifest>
-				<attribute name="Class-Path"
-					value="${lib.list.server}" />
+                <attribute name="Class-Path" value="${java.dist}/plugins/file-plugin.jar" />
+			</manifest>
+		</jar>
+
+        <jar jarfile="${java.dist}/plugins/sql-plugin.jar" basedir="${java.build}/server/persistence/plugins/SQLPlugin" update="yes">
+			<manifest>
+
 			</manifest>
 		</jar>
 	</target>
@@ -171,6 +184,8 @@
 		<java jar="${java.dist}/catan-client.jar" dir="${java.dist}" fork="yes">
 			<arg value="${server}"/>
 			<arg value="${port}"/>
+            <arg value="${commands}"/>
+            <arg value="${plugin}"/>
 			<sysproperty key="com.sun.management.jmxremote" value=""/>
 			<assertions>
 				<enable/>

@@ -21,6 +21,7 @@ public class FilePlugin implements IPersistenceProvider {
 	public void Clear() 
 	{
 		// TODO Auto-generated method stub
+		System.out.println("FILE PLUGIN CLEARED");
 		
 	}
 
