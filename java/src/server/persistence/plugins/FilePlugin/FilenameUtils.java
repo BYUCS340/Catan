@@ -66,5 +66,38 @@ public class FilenameUtils
 	{
 		return dataDir + File.separator + getGameDirString(gameID) + File.separator + commandDir;
 	}
+	
+	/**
+	 * Returns a fully constructed filename path to the specified user
+	 * @param userID
+	 * @return a string that represents the path of the user
+	 */
+	public static String getFullUserPath(int userID)
+	{
+		return userDirFull + File.separator + userID + fileSuffix;
+	}
+	
+	/**
+	 * Gets the userID from the passed in string
+	 * @param path
+	 * @return
+	 */
+	public static int getUserIDFromString(String path)
+	{
+		//if we know that this is a path and not a name, handle it specially
+		if(path.contains(userDir))
+		{
+			String ret = path.substring(path.lastIndexOf("/")+1, path.lastIndexOf('.'));
+			return Integer.parseInt(ret);
+		}
+		else
+		{
+			if(!Character.isDigit(path.charAt(0)))
+			{
+				return -1;
+			}
+			return Integer.parseInt(path.substring(0, path.indexOf('.')));
+		}
+	}
 
 }

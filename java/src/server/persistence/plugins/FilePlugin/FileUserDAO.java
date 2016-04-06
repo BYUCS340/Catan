@@ -4,6 +4,7 @@ import server.model.ServerPlayer;
 import server.persistence.IUserDAO;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class FileUserDAO implements IUserDAO {
     	FilePersistenceUtils.makeDirs(theDir);
     	
     	
-    	File theFile = new File(userDir + File.separator + id);
+    	File theFile = new File(userDir + File.separator + id + FilenameUtils.fileSuffix);
     	String blob = username + "," + password;
     	return FilePersistenceUtils.writeFile(theFile, blob);
     }
@@ -52,7 +53,18 @@ public class FileUserDAO implements IUserDAO {
      */
     @Override
     public ServerPlayer GetUser(int playerID) {
-        return null;
+    	String userPath = FilenameUtils.getFullUserPath(playerID);
+    	
+    	//double check that the player exists first
+    	File userFile = new File(userPath);
+    	if(!userFile.exists()) return null;
+    	
+    	String blob = FilePersistenceUtils.getBlob(userFile.getPath());
+    	List<String> splitList = Arrays.asList(blob.split(","));
+    	
+    	ServerPlayer retPlayer = new ServerPlayer(splitList.get(0), splitList.get(1), playerID);
+   
+    	return retPlayer;
     }
 
     /**
