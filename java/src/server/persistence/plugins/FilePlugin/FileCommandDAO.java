@@ -32,8 +32,15 @@ public class FileCommandDAO implements ICommandDAO {
     	File dir = new File(commandsDir);
     	if(!dir.exists()) return retList;
     	
-    	//TODO complete
-    	return null;
+    	for(File f : dir.listFiles())
+    	{
+    		//check to see if this file is a command
+    		if(f.getName().contains(FilenameUtils.commandPrefix))
+    		{
+    			retList.add(FilePersistenceUtils.getBlob(f.getPath()));
+    		}
+    	}
+    	return retList;
     }
 
     /**
@@ -58,12 +65,16 @@ public class FileCommandDAO implements ICommandDAO {
 
     /**
      * @param gameID
-     * @return
+     * @return false if the commands have already been cleared
      */
     @Override
     public boolean DeleteCommandFor(int gameID) {
-    	String commandsDir = FilenameUtils.getFullCommandsDir(gameID);
-    	File dir = new File(commandsDir);
+    	String commandsDirPath = FilenameUtils.getFullCommandsDir(gameID);
+    	File commandsDir = new File(commandsDirPath);
+    	
+    	//make sure the commands dir actually exists
+    	if(!commandsDir.exists()) return false;
+    	File dir = new File(commandsDirPath);
     	FilePersistenceUtils.deleteFolder(dir);
     	return true;
     	
@@ -71,12 +82,13 @@ public class FileCommandDAO implements ICommandDAO {
 
     /**
      * Deletes all commands for all games
+     * Currently unimplemented 4/5/2016, not needed
      *
-     * @return
+     * @return false
      */
     @Override
     public boolean DeleteAllCommands() {
-        return false;
+    	return false;
     }
 
     /**

@@ -2,6 +2,11 @@ package server.persistence;
 
 import java.util.Map;
 
+/**
+ * 
+ * @author Parker Ridd
+ *
+ */
 public interface IGameDAO 
 {
 	/**

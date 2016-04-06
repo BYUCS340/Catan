@@ -16,7 +16,7 @@ import server.persistence.IGameDAO;
  */
 public class FileGameDAO implements IGameDAO {
     /**
-     * Initialize path to persistant local file system
+     * Initialize path to persistent local file system
      */
     public FileGameDAO(){
 
@@ -53,12 +53,14 @@ public class FileGameDAO implements IGameDAO {
 
     /**
      * @param gameID
-     * @return
+     * @return false if the game does not exist
      */
     @Override
     public boolean DeleteGame(int gameID) {
     	String gameDir = FilenameUtils.getFullGameDir(gameID);
     	File theDir = new File(gameDir);
+    	
+    	if(!theDir.exists()) return false;
     	
     	FilePersistenceUtils.deleteFolder(theDir);
     	
