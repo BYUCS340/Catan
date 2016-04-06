@@ -1,11 +1,12 @@
 package server.persistence.plugins.FilePlugin;
 
-import server.model.ServerPlayer;
-import server.persistence.IUserDAO;
-
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import server.model.ServerPlayer;
+import server.persistence.IUserDAO;
 
 /**
  * Created by Tunadude09 on 4/4/2016.
@@ -33,7 +34,7 @@ public class FileUserDAO implements IUserDAO {
     	FilePersistenceUtils.makeDirs(theDir);
     	
     	
-    	File theFile = new File(userDir + File.separator + id + FilenameUtils.fileSuffix);
+    	File theFile = new File(FilenameUtils.getFullUserPath(Integer.parseInt(id)));
     	String blob = username + "," + password;
     	return FilePersistenceUtils.writeFile(theFile, blob);
     }
@@ -44,7 +45,30 @@ public class FileUserDAO implements IUserDAO {
      */
     @Override
     public ServerPlayer GetUser(String username) {
-        return null;
+        String userDirPath = FilenameUtils.userDirFull;
+        File userDir = new File(userDirPath);
+        
+        ServerPlayer retPlayer = null;
+        if(!userDir.exists()) return retPlayer;
+        
+        for(File f: userDir.listFiles())
+        {
+        	if(Character.isDigit(f.getName().charAt(0)))
+        	{
+        		String blob = FilePersistenceUtils.getBlob(f.getPath());
+            	List<String> splitList = Arrays.asList(blob.split(","));
+            	
+            	//check if we found the username
+            	if(splitList.get(0).equals(username))
+            	{
+            		retPlayer = new ServerPlayer(splitList.get(0), splitList.get(1), 
+            				FilenameUtils.getUserIDFromString(f.getPath()));
+            		return retPlayer;
+            	}
+        	}
+        }
+        
+        return retPlayer;
     }
 
     /**
@@ -74,17 +98,37 @@ public class FileUserDAO implements IUserDAO {
      */
     @Override
     public List<ServerPlayer> GetAllUsers() {
-        return null;
+    	String userDirPath = FilenameUtils.userDirFull;
+        File userDir = new File(userDirPath);
+        
+        List<ServerPlayer> retList = new ArrayList<ServerPlayer>()	;
+        if(!userDir.exists()) return retList;
+        
+        for(File f: userDir.listFiles())
+        {
+        	if(Character.isDigit(f.getName().charAt(0)))
+        	{
+        		String blob = FilePersistenceUtils.getBlob(f.getPath());
+            	List<String> splitList = Arrays.asList(blob.split(","));
+        		retList.add(new ServerPlayer(splitList.get(0), splitList.get(1), 
+        				FilenameUtils.getUserIDFromString(f.getPath())));
+        	}
+        }
+        
+        return retList;
     }
 
     /**
      * Deletes all users on server
      *
-     * @return
+     * @return true if successful 
      */
     @Override
     public boolean DeleteAllUsers() {
-        return false;
+    	File userDir = new File(FilenameUtils.userDirFull);
+    	if(!userDir.exists()) return true;
+        FilePersistenceUtils.deleteFolder(userDir);
+        return true;
     }
 
     private String pathToFileSystem = "";

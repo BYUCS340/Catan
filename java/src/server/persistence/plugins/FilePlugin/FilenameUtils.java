@@ -85,7 +85,7 @@ public class FilenameUtils
 	public static int getUserIDFromString(String path)
 	{
 		//if we know that this is a path and not a name, handle it specially
-		if(path.contains(userDir))
+		if(path.contains(File.separator))
 		{
 			String ret = path.substring(path.lastIndexOf("/")+1, path.lastIndexOf('.'));
 			return Integer.parseInt(ret);
