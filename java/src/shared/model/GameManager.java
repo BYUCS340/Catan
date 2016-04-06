@@ -350,7 +350,6 @@ public class GameManager
 		//Correctly rolls the dice
 		Random randomGen = new Random();
 		int diceRoll = randomGen.nextInt(5) + randomGen.nextInt(5) + 2;
-		diceRoll = 7;
 		DiceRoll(diceRoll);
 		return diceRoll;
 	}
