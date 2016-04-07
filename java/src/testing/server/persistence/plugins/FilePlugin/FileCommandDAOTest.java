@@ -121,5 +121,34 @@ public class FileCommandDAOTest
 		assertTrue(foundFirstSet);
 		assertTrue(foundSecondSet);
 	}
+	
+	@Test
+	public void testDeleteCommands() throws Exception
+	{
+		ICommandDAO commandDAO = new FileCommandDAO();
+		
+		String cmd1 = "I'M A COMMAND BUT I'M SO LONELY";
+		String cmd2 = "TWO IS BETTER THAN ONE";
+		String cmd3 = "THREE IS A CROWD";
+		String cmd4 = "WHY AM I STILL CODING AT 12:11 AM?";
+		int gameID = 4;
+		int gameID2 = 8;
+		
+		commandDAO.AddCommand(gameID, cmd1);
+		commandDAO.AddCommand(gameID, cmd2);
+		commandDAO.AddCommand(gameID, cmd3);
+		commandDAO.AddCommand(gameID2, cmd4);
+		
+		String deletedCommandsString = FilenameUtils.getFullCommandsDir(gameID);
+		File deletedCommandsDir = new File(deletedCommandsString);
+		assertTrue(deletedCommandsDir.exists());
+		
+		commandDAO.DeleteCommands(gameID);
+		assertTrue(commandDAO.GetCommandCount(gameID) == 0);
+		assertTrue(commandDAO.GetCommandCount(gameID2) == 1);
+		
+		
+		assertTrue(!deletedCommandsDir.exists());
+	}
 
 }
