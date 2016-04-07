@@ -50,13 +50,21 @@ public class GameHandler
 		}
 	}
 	
-	public GameInfo AddGame(ServerGameManager sgm)
+	public GameInfo AddGame(ServerGameManager sgm, boolean setID)
 	{
 		lock.writeLock().lock();
 		try
 		{
-			int index = gameIndex.size();
-			sgm.SetGameID(index);
+			int index;
+			if (setID)
+			{
+				index = gameIndex.size();
+				sgm.SetGameID(index);
+			}
+			else
+			{
+				index = sgm.GetGameID();
+			}
 			
 			gameIndex.put(index, sgm);
 			gameNames.add(sgm.GetGameTitle());

@@ -30,9 +30,16 @@ public class SerializationUtils
 	 */
 	public static String serialize(Serializable obj)
 	{
-		String retStr = SerializationUtils.gson().toJson(obj);
+		try
+		{
+			return SerializationUtils.gson().toJson(obj);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		
-		return retStr;
+		return null;
 	}
 	
 	/**

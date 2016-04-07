@@ -14,6 +14,8 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class UserLoginCommand implements ICommand 
 {
+	private static final long serialVersionUID = -4937366716195557362L;
+
 	private String username;
 	private String password;
 	private int playerID;

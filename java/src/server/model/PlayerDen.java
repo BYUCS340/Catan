@@ -33,6 +33,7 @@ public class PlayerDen
 		} 
 		catch (GameException e) 
 		{
+			
 		}
 	}
 	
@@ -65,24 +66,48 @@ public class PlayerDen
 	 */
 	public int RegisterPlayer(String username, String password) throws GameException
 	{
+		return RegisterPlayer(new ServerPlayer(username, password, -1));
+	}
+	
+	/**
+	 * Registers a new player
+	 * @param player The server player object
+	 * @return the if of the new player
+	 * @throws GameException if username is in use
+	 */
+	public int RegisterPlayer(ServerPlayer player) throws GameException
+	{
+		String username = player.GetName();
+		String password = player.GetPassword();
+		int index = player.GetID();
+		
 		if (username == null || password == null)
 			throw new GameException("Invalid username/password");
+		
 		if (username.length() < MIN_USERNAME_LENGTH || password.length() < MIN_PASSWORD_LENGTH)
 			throw new GameException("Username or password too short");
 		
 		//Check to make sure the player isn't already registered
 		if (playerNames.contains(username))
 			throw new GameException("This username is already in use");
+		
 		playerNames.add(username);
 		String key = username + password;
 		numberPlayers++;
-		int index = numberPlayers+50;
-		ServerPlayer sp = new ServerPlayer(username, password, index);
+		
+		
+		if (index == -1)
+		{
+			index = numberPlayers + 50;
+			player = new ServerPlayer(username, password, index);
+		}
+		
 		//Add the login credentials
 		playerLogin.put(key, index);
-		//add the player
 		
-		players.put(index, sp);
+		//add the player
+		players.put(index, player);
+		
 		return index;
 	}
 	
@@ -109,7 +134,4 @@ public class PlayerDen
 			throw new GameException("Player ID doesn't exist: "+playerID);
 		return players.get(playerID);
 	}
-	
-	
-	
 }

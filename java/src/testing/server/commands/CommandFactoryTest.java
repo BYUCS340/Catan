@@ -22,8 +22,6 @@ import server.commands.game.GameResetCommand;
 import server.commands.games.GamesCreateCommand;
 import server.commands.games.GamesJoinCommand;
 import server.commands.games.GamesListCommand;
-import server.commands.games.GamesLoadCommand;
-import server.commands.games.GamesSaveCommand;
 import server.commands.moves.MovesAcceptTradeCommand;
 import server.commands.moves.MovesBuildCityCommand;
 import server.commands.moves.MovesBuildRoadCommand;
@@ -180,26 +178,6 @@ public class CommandFactoryTest
 		ICommand command = factory.GetCommand(param, cookie, object);
 		assertTrue(command.getClass() == GamesJoinCommand.class);
 	}
-	
-	/*@Test
-	public void TestGamesSave() throws InvalidFactoryParameterException
-	{
-		String url = "games/save";
-		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, cookie, object);
-		
-		assertTrue(command.getClass() == GamesSaveCommand.class);
-	}
-	
-	@Test
-	public void TestGamesLoad() throws InvalidFactoryParameterException
-	{
-		String url = "games/load";
-		StringBuilder param = new StringBuilder(url.toUpperCase());
-		ICommand command = factory.GetCommand(param, cookie, object);
-		
-		assertTrue(command.getClass() == GamesLoadCommand.class);
-	}*/
 	
 	@Test
 	public void TestGameModel() throws InvalidFactoryParameterException

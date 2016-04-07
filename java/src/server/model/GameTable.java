@@ -23,7 +23,6 @@ import server.ai.AIHandler;
 import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.model.ModelException;
-import shared.model.Player;
 import shared.networking.SerializationUtils;
 import shared.data.GameInfo;
 import shared.data.PlayerInfo;
@@ -62,6 +61,17 @@ public class GameTable
 	public int RegisterPlayer(String username, String password) throws GameException
 	{
 		return playerTable.RegisterPlayer(username, password);
+	}
+	
+	/**
+	 * Registers the user
+	 * @param player The player to add
+	 * @return the player ID
+	 * @throws GameException if username is in use
+	 */
+	public int RegisterPlayer(ServerPlayer player) throws GameException
+	{
+		return playerTable.RegisterPlayer(player);
 	}
 	
 	/**
@@ -104,12 +114,12 @@ public class GameTable
 	 * Creates a new game on the server 
 	 * @return the game info of the new game created. Null if unable to create.
 	 */
-	public GameInfo CreateGame(ServerGameManager sgm)
+	public GameInfo CreateGame(ServerGameManager sgm, boolean setID)
 	{
 		if (games.ContainsGame(sgm.GetGameTitle()))
 			return null;
 		
-		return games.AddGame(sgm);
+		return games.AddGame(sgm, setID);
 	}
 	
 	/**
