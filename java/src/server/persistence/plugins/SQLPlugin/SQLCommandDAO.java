@@ -115,15 +115,10 @@ public class SQLCommandDAO implements ICommandDAO
 			
 			pStmt.setInt(1, gameID);
 			
-			if (pStmt.executeUpdate() == 1)
-			{
-				pStmt.close();
-			}
-			else
-			{
-				pStmt.close();
-				throw new PersistenceException("DeleteCommands update failed");
-			}
+			//this returns the number of rows deleted
+			pStmt.executeUpdate();
+			pStmt.close();
+			
 		}
     	catch (SQLException e)
     	{
