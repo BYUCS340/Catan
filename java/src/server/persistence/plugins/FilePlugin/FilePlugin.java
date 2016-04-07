@@ -33,6 +33,7 @@ public class FilePlugin implements IPersistenceProvider {
 	{
 		File dataDir = new File(FilenameUtils.dataDir);
         if(dataDir.exists()) FilePersistenceUtils.deleteFolder(dataDir);
+        FilePersistenceUtils.makeDirs(dataDir);
 		System.out.println("FILE PLUGIN CLEARED");
 		
 	}
