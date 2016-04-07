@@ -9,5 +9,4 @@ package server.persistence.plugins.FilePlugin.Commands;
  */
 public interface IFileCommand {
 	public boolean execute();
-	public String getResult();
 }
