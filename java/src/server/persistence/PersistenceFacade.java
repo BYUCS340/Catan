@@ -21,7 +21,7 @@ public class PersistenceFacade
 	 * @param type Specifies the persistence method to use.
 	 * @throws PersistenceException Thrown if unable to load persistence method.
 	 */
-	public void Initialize(String type, int commandLength) throws PersistenceException
+	public static void Initialize(String type, int commandLength) throws PersistenceException
 	{
 		if (facade != null)
 			throw new PersistenceException("Persistence already initialized");

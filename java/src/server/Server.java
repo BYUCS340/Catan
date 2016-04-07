@@ -9,6 +9,8 @@ import java.util.logging.Level;
 
 import com.sun.net.httpserver.HttpServer;
 
+import server.persistence.PersistenceException;
+import server.persistence.PersistenceFacade;
 import server.swagger.SwaggerHandlers;
 
 /**
@@ -27,46 +29,35 @@ public class Server
 	 * Starts the server.
 	 * @param args
 	 * <br/>Command line arguments can be the following:
-	 * <br/>[port];
-	 * <br/>[swagger path (path to swagger documentation)];
-	 * <br/>[port] [swagger path]
+	 * <br/>[plug-in][command limit][port];
+	 * <br/>[plug-in][command limit][swagger path (path to swagger documentation)];
+	 * <br/>[plug-in][command limit][port][swagger path]
 	 */
 	public static void main(final String[] args) 
 	{
 		int port = DEFAULT_PORT;
-		int commands = 10;
-		String plugin = "";
 		
-		if (args.length >= 1)
+		String plugin = args[0];
+		int commands = Integer.parseInt(args[1]);
+		
+		if (args.length >= 3)
 		{
-			int tempPort = TrySettingPort(args[0]);
+			int tempPort = TrySettingPort(args[2]);
 			
 			if (tempPort == -1)
 			{
-				TrySettingSwaggerPath(args[0]);
+				TrySettingSwaggerPath(args[2]);
 			}
 			else
 			{
 				port = tempPort;
 				
-				if (args.length == 2)
-					TrySettingSwaggerPath(args[1]);
+				if (args.length == 4)
+					TrySettingSwaggerPath(args[3]);
 			}
-			
 		}
 		
-		if (args.length >= 2)
-		{
-			plugin = args[1];
-		}
-		
-		if (args.length >= 3)
-		{
-			commands = Integer.parseInt(args[2]);
-			if (commands == -1) commands = 10;
-		}
-		
-		new Server().Initialize(port,plugin,commands);
+		new Server().Initialize(port, plugin, commands);
 	}
 	
 	private static int TrySettingPort(String value)
@@ -99,6 +90,8 @@ public class Server
 			Log.GetLog().log(defaultLevel, "Starting server");
 			HttpServer server = HttpServer.create(new InetSocketAddress(port), MAX_WAITING);
 			
+			PersistenceFacade.Initialize(plugin, commandLimit);
+			
 			server.createContext("/", new HTTPHandler());
 			server.createContext("/docs/api/data", new SwaggerHandlers.JSONAppender());
 			server.createContext("/docs/api/view", new SwaggerHandlers.BasicFile());
@@ -123,7 +116,7 @@ public class Server
 			Log.GetLog().log(defaultLevel, "IP: " + InetAddress.getLocalHost().getHostAddress());
 			Log.GetLog().log(defaultLevel, "Port: " + port);
 		}
-		catch (IOException e) 
+		catch (IOException | PersistenceException e) 
 		{
 			Log.GetLog().log(Level.SEVERE, e.getMessage(), e);
 			return;
