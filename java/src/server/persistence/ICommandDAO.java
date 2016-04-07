@@ -9,36 +9,34 @@ public interface ICommandDAO
 	 * gets command blobs for a game ID
 	 * @param gameID
 	 * @return
+	 * @throws PersistenceException
 	 */
-	List<String> GetCommandsFor(int gameID);
+	List<String> GetCommandsFor(int gameID) throws PersistenceException;
 	
 	/**
 	 * Adds a command to the DAO
 	 * @param gameID
 	 * @param blob
 	 * @return
+	 * @throws PersistenceException
 	 */
-	boolean AddCommand(int gameID, String blob);
+	void AddCommand(int gameID, String blob) throws PersistenceException;
 	
 	/**
 	 * Deletes all commands for a specific games
 	 * @param gameID
 	 * @return
+	 * @throws PersistenceException
 	 */
-	boolean DeleteCommandFor(int gameID);
-
-	/**
-	 * Deletes all commands for all games
-	 * @return
-     */
-	boolean DeleteAllCommands();
+	void DeleteCommandFor(int gameID) throws PersistenceException;
 	
 	/**
 	 * Gets the total number of commands for
 	 * @param gameID
 	 * @return
+	 * @throws PersistenceException
 	 */
-	int GetCommandCountFor(int gameID);
+	int GetCommandCountFor(int gameID) throws PersistenceException;
 	
 	
 	
