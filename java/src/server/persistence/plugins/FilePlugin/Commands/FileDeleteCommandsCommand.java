@@ -24,7 +24,7 @@ public class FileDeleteCommandsCommand implements IFileCommand
 	@Override
 	public void execute() throws PersistenceException
 	{
-		commandDAO.DeleteCommandFor(gameID);
+		commandDAO.DeleteCommands(gameID);
 	}
 
 }

@@ -31,14 +31,14 @@ public class SQLCommandDAO implements ICommandDAO
      * @return
      */
     @Override
-    public List<String> GetCommandsFor(int gameID)
+    public List<String> GetCommands()
     {
     	try
     	{
     		List<String> commands = new ArrayList<String>();
     		
     		Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * from COMMANDS where ID=" + gameID + ";");
+            ResultSet rs = stmt.executeQuery("SELECT * from COMMANDS");
             while (rs.next())
             {
                String  commandBlob = rs.getString("BLOB");
@@ -63,7 +63,7 @@ public class SQLCommandDAO implements ICommandDAO
      * @return
      */
     @Override
-    public boolean AddCommand(int gameID, String blob)
+    public void AddCommand(int gameID, String blob)
     {
     	try
     	{
@@ -74,12 +74,10 @@ public class SQLCommandDAO implements ICommandDAO
 		    stmt.executeUpdate(sql);
 
 		    stmt.close();
-		    return true;
 		}
     	catch (SQLException e)
     	{
 			e.printStackTrace();
-			return false;
 		}
     }
 
@@ -88,7 +86,7 @@ public class SQLCommandDAO implements ICommandDAO
      * @return
      */
     @Override
-    public boolean DeleteCommandFor(int gameID)
+    public void DeleteCommands(int gameID)
     {
     	try
     	{
@@ -97,36 +95,10 @@ public class SQLCommandDAO implements ICommandDAO
     	    stmt.executeUpdate(sql);
     	    
     	    stmt.close();
-		    return true;
 		}
     	catch (SQLException e)
     	{
 			e.printStackTrace();
-			return false;
-		}
-    }
-
-    /**
-     * Deletes all commands for all games
-     *
-     * @return
-     */
-    @Override
-    public boolean DeleteAllCommands()
-    {
-    	try
-    	{
-    		Statement stmt = connection.createStatement();
-    	    String sql = "DELETE from COMMANDS;";
-    	    stmt.executeUpdate(sql);
-    	    
-    	    stmt.close();
-		    return true;
-		}
-    	catch (SQLException e)
-    	{
-			e.printStackTrace();
-			return false;
 		}
     }
 
@@ -137,17 +109,9 @@ public class SQLCommandDAO implements ICommandDAO
      * @return
      */
     @Override
-    public int GetCommandCountFor(int gameID)
+    public int GetCommandCount(int gameID)
     {
-    	List<String> commands = GetCommandsFor(gameID);
-    	if (commands!= null)
-    	{
-    		return commands.size();
-    	}
-    	else
-    	{
-    		return 0;
-    	}
+    	return 0;
     }
 
     String mysqlDb;

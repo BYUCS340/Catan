@@ -1,11 +1,13 @@
 package server.commands;
 
+import java.io.Serializable;
+
 /**
  * Interface used for command objects.
  * @author Jonathan Sadler
  *
  */
-public interface ICommand 
+public interface ICommand extends Serializable
 {
 	/**
 	 * Executes a command

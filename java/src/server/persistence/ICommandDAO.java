@@ -4,15 +4,6 @@ import java.util.List;
 
 public interface ICommandDAO 
 {
-	
-	/**
-	 * gets command blobs for a game ID
-	 * @param gameID
-	 * @return
-	 * @throws PersistenceException
-	 */
-	List<String> GetCommandsFor(int gameID) throws PersistenceException;
-	
 	/**
 	 * Adds a command to the DAO
 	 * @param gameID
@@ -28,7 +19,14 @@ public interface ICommandDAO
 	 * @return
 	 * @throws PersistenceException
 	 */
-	void DeleteCommandFor(int gameID) throws PersistenceException;
+	void DeleteCommands(int gameID) throws PersistenceException;
+	
+	/**
+	 * Gets all the saved commands
+	 * @return A list of commands as strings
+	 * @throws PersistenceException Thrown if errors occur
+	 */
+	List<String> GetCommands() throws PersistenceException;
 	
 	/**
 	 * Gets the total number of commands for
@@ -36,8 +34,5 @@ public interface ICommandDAO
 	 * @return
 	 * @throws PersistenceException
 	 */
-	int GetCommandCountFor(int gameID) throws PersistenceException;
-	
-	
-	
+	int GetCommandCount(int gameID) throws PersistenceException;	
 }

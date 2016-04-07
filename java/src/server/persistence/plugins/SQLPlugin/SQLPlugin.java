@@ -39,18 +39,6 @@ public class SQLPlugin implements IPersistenceProvider
 	public void Clear() 
 	{
 
-		boolean deletedUsers = GetUserDAO().DeleteAllUsers();
-		boolean deletedGames = GetGameDAO().DeleteAllGames();
-		boolean deletedCommands = GetCommandDAO().DeleteAllCommands();
-		
-		if (deletedUsers && deletedGames && deletedCommands)
-		{
-			EndTransaction(true);
-		}
-		else
-		{
-			EndTransaction(false);
-		}
 	}
 
 	@Override

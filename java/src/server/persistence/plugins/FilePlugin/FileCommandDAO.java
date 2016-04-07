@@ -25,21 +25,22 @@ public class FileCommandDAO implements ICommandDAO {
      * @return
      */
     @Override
-    public List<String> GetCommandsFor(int gameID) {
+    public List<String> GetCommands() 
+    {
     	List<String> retList = new ArrayList<String>();
     	
-    	String commandsDir = FilenameUtils.getFullCommandsDir(gameID);
-    	File dir = new File(commandsDir);
-    	if(!dir.exists()) return retList;
-    	
-    	for(File f : dir.listFiles())
-    	{
-    		//check to see if this file is a command
-    		if(f.getName().contains(FilenameUtils.commandPrefix))
-    		{
-    			retList.add(FilePersistenceUtils.getBlob(f.getPath()));
-    		}
-    	}
+//    	String commandsDir = FilenameUtils.getFullCommandsDir(gameID);
+//    	File dir = new File(commandsDir);
+//    	if(!dir.exists()) return retList;
+//    	
+//    	for(File f : dir.listFiles())
+//    	{
+//    		//check to see if this file is a command
+//    		if(f.getName().contains(FilenameUtils.commandPrefix))
+//    		{
+//    			retList.add(FilePersistenceUtils.getBlob(f.getPath()));
+//    		}
+//    	}
     	return retList;
     }
 
@@ -51,12 +52,13 @@ public class FileCommandDAO implements ICommandDAO {
      * @return
      */
     @Override
-    public void AddCommand(int gameID, String blob) {
+    public void AddCommand(int gameID, String blob) 
+    {
     	String commandsDir = FilenameUtils.getFullCommandsDir(gameID);
     	File theDir = new File(commandsDir);
     	FilePersistenceUtils.makeDirs(theDir);
     	
-    	int num = this.GetCommandCountFor(gameID) + 1;
+    	int num = this.GetCommandCount(gameID) + 1;
     	
     	//Format: data/game1/commands/Command21.catan
     	File theFile = new File(commandsDir + File.separator + FilenameUtils.commandPrefix + num + FilenameUtils.fileSuffix);
@@ -68,7 +70,8 @@ public class FileCommandDAO implements ICommandDAO {
      * @return false if the commands have already been cleared
      */
     @Override
-    public void DeleteCommandFor(int gameID) {
+    public void DeleteCommands(int gameID) 
+    {
     	String commandsDirPath = FilenameUtils.getFullCommandsDir(gameID);
     	File commandsDir = new File(commandsDirPath);
     	
@@ -85,7 +88,8 @@ public class FileCommandDAO implements ICommandDAO {
      * @return
      */
     @Override
-    public int GetCommandCountFor(int gameID) {
+    public int GetCommandCount(int gameID) 
+    {
     	String commandsDir = FilenameUtils.getFullCommandsDir(gameID);
     	File dir = new File(commandsDir);
     	if(!dir.exists()) return 0;

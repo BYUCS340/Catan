@@ -16,7 +16,8 @@ import java.util.List;
 public class SQLUserDAO implements IUserDAO
 {
 	public Connection connection;
-    /**
+    
+	/**
      *  Setup mysql db connection
      */
     public SQLUserDAO(Connection c)
@@ -33,7 +34,7 @@ public class SQLUserDAO implements IUserDAO
      * @return
      */
     @Override
-    public boolean AddUser(int userID, String username, String password)
+    public void AddUser(int userID, String username, String password)
     {
     	try
     	{
@@ -41,80 +42,17 @@ public class SQLUserDAO implements IUserDAO
 			
 			String sql = "INSERT INTO USERS (ID, USERNAME, PASSWORD) " +
 		            "VALUES (" + userID + ", '"+ username + "', '"+ password + "');";
+
 		    stmt.executeUpdate(sql);
 
 		    stmt.close();
 		    //if we commit here it works but that defeats the purpose of the DAO plugin facade
 		    //connection.commit();
-		    return true;
 		}
     	catch (SQLException e)
     	{
 			e.printStackTrace();
-			return false;
 		}
-    }
-
-    /**
-     * @param username
-     * @return
-     */
-    @Override
-    public ServerPlayer GetUser(String username)
-    {
-    	try
-    	{
-    		ServerPlayer user = null;
-    		
-    		Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * from USERS where USERNAME='" + username + "';");
-            while (rs.next())
-            {
-               int userID = rs.getInt("ID");
-               String  userName = rs.getString("USERNAME");
-               String  password = rs.getString("PASSWORD");
-               user = new ServerPlayer(userName, password, userID);
-            }
-            rs.close();
-            stmt.close();
-            return user;
-    	}
-        catch (SQLException e)
-        {
-        	e.printStackTrace();
-        	return null;
-        }
-    }
-
-    /**
-     * @param playerID
-     * @return
-     */
-    @Override
-    public ServerPlayer GetUser(int playerID)
-    {
-    	try
-    	{
-    		ServerPlayer user = null;
-    		
-    		Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * from USERS where ID=" + playerID + ";");
-            while (rs.next())
-            {
-               int userID = rs.getInt("ID");
-               String  userName = rs.getString("USERNAME");
-               String  password = rs.getString("PASSWORD");
-               user = new ServerPlayer(userName, password, userID);
-            }
-            rs.close();
-            stmt.close();
-            return user;
-    	}
-        catch (SQLException e)
-        {
-        	e.printStackTrace();
-        	return null;
-        }
     }
 
     /**
@@ -149,30 +87,6 @@ public class SQLUserDAO implements IUserDAO
         	return null;
         }
     }
-
-    /**
-     * Deletes all users on server
-     *
-     * @return
-     */
-    @Override
-    public boolean DeleteAllUsers()
-    {
-    	try
-    	{
-    		Statement stmt = connection.createStatement();
-    	    String sql = "DELETE from USERS;";
-    	    stmt.executeUpdate(sql);
-    	    
-    	    stmt.close();
-		    return true;
-		}
-    	catch (SQLException e)
-    	{
-			e.printStackTrace();
-			return false;
-		}
-    }
-
+    
     String mysqlDb;
 }
