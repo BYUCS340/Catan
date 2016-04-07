@@ -4,6 +4,7 @@
 package server.persistence.plugins.FilePlugin.Commands;
 
 import server.persistence.ICommandDAO;
+import server.persistence.PersistenceException;
 
 /**
  * @author Parker Ridd
@@ -21,9 +22,9 @@ public class FileDeleteCommandsCommand implements IFileCommand
 	}
 
 	@Override
-	public boolean execute()
+	public void execute() throws PersistenceException
 	{
-		return commandDAO.DeleteCommandFor(gameID);
+		commandDAO.DeleteCommandFor(gameID);
 	}
 
 }

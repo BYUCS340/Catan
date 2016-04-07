@@ -1,12 +1,14 @@
 package server.persistence.plugins.FilePlugin.Commands;
 
 import server.persistence.IUserDAO;
+import server.persistence.PersistenceException;
 
 public class FileAddUserCommand implements IFileCommand{
-	String username, password, userID;
+	String username, password;
+	int userID;
 	IUserDAO userDAO;
 	
-	public FileAddUserCommand(IUserDAO userDAO, String username, String password, String userID)
+	public FileAddUserCommand(IUserDAO userDAO, String username, String password, int userID)
 	{
 		this.username = username;
 		this.password = password;
@@ -14,8 +16,8 @@ public class FileAddUserCommand implements IFileCommand{
 	}
 	
 	@Override
-	public boolean execute() {
-		return userDAO.AddUser(userID, username, password);
+	public void execute() throws PersistenceException {
+		userDAO.AddUser(userID, username, password);
 	}
 
 }

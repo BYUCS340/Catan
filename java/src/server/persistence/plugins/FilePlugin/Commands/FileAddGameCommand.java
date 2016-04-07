@@ -1,6 +1,7 @@
 package server.persistence.plugins.FilePlugin.Commands;
 
 import server.persistence.IGameDAO;
+import server.persistence.PersistenceException;
 
 public class FileAddGameCommand implements IFileCommand {
 
@@ -16,8 +17,8 @@ public class FileAddGameCommand implements IFileCommand {
 	}
 	
 	@Override
-	public boolean execute() {
-		return gameDAO.AddGame(gameID, blob);
+	public void execute() throws PersistenceException {
+		gameDAO.AddGame(gameID, blob);
 	}
 
 }

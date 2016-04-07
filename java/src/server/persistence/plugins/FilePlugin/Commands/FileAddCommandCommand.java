@@ -4,6 +4,7 @@
 package server.persistence.plugins.FilePlugin.Commands;
 
 import server.persistence.ICommandDAO;
+import server.persistence.PersistenceException;
 
 /**
  * @author Parker Ridd
@@ -26,9 +27,8 @@ public class FileAddCommandCommand implements IFileCommand
 	 * @see server.persistence.plugins.FilePlugin.Commands.IFileCommand#execute()
 	 */
 	@Override
-	public boolean execute()
+	public void execute() throws PersistenceException
 	{
-		commandDAO.AddCommand(gameID, command);
+			commandDAO.AddCommand(gameID, command);
 	}
-
 }
