@@ -23,7 +23,7 @@ public class FilenameUtils
 	 */
 	public static String getGameDirString(int gameID)
 	{
-		return "Game" + gameID;
+		return gameDir + gameID;
 	}
 	
 	
