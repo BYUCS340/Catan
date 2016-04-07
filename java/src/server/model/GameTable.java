@@ -176,18 +176,23 @@ public class GameTable
 		try
 		{
 			ServerGameManager manager = games.GetGame(gameID);
-			if (!IsPlayerJoined(playerID, manager))
+			if (!IsPlayerJoined(playerID, manager)){
+				Log.GetLog().severe("User is not joined to this game!");
 				return false;
+			}
 			
 			Set<CatanColor> notAvailable = new HashSet<CatanColor>();
 			List<Integer> ids = new ArrayList<Integer>();
 			int num = manager.getNumberPlayers();
+			
 			for (int i = 0; i < num; i++)
 			{
-				notAvailable.add(manager.getPlayerColorByIndex(i));
-				ids.add(manager.allCurrentPlayers()[i].getId());
+				CatanColor color = manager.getPlayerColorByIndex(i);
+				int takenPlayerID = manager.allCurrentPlayers()[i].getId();
+				notAvailable.add(color);
+				ids.add(takenPlayerID);
 			}
-				
+			
 			int aiID = AIHandler.GetHandler().GetAI(type, ids);
 			String name = AIHandler.GetHandler().GetName(aiID);
 			CatanColor color = AIHandler.GetHandler().PickColor(aiID, notAvailable);
@@ -195,8 +200,9 @@ public class GameTable
 			
 			return true;
 		}
-		catch (GameException | ModelException e)
+		catch (Exception e)
 		{
+			Log.GetLog().finest("We had an exception "+e.getClass().getName()+" adding an AI"+e.getMessage());
 			Log.GetLog().throwing("GameTable", "AddAI", e);
 			return false;
 		}

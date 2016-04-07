@@ -1,5 +1,6 @@
 package server.commands.game;
 
+import server.Log;
 import server.commands.CookieCommand;
 import server.model.GameArcade;
 import shared.definitions.AIType;
@@ -28,6 +29,7 @@ public class GameAddAICommand extends CookieCommand
 	@Override
 	public boolean Execute() 
 	{
+		Log.GetLog().fine("Adding AI");
 		return GameArcade.games().AddAI(playerID, gameID, type);
 	}
 
@@ -41,7 +43,7 @@ public class GameAddAICommand extends CookieCommand
 	@Override
 	public String GetResponse() 
 	{
-		return null;
+		return "success";
 	}
 
 	@Override

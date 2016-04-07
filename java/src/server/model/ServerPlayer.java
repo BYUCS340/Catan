@@ -39,4 +39,13 @@ public class ServerPlayer
 		return password.equals(pass);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ServerPlayer [" + (name != null ? "name=" + name + ", " : "") + "ID=" + ID + ", "
+				+ (password != null ? "password=" + password : "") + "]";
+	}
+
 }

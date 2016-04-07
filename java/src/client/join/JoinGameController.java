@@ -150,7 +150,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		getNewGameView().closeModal();
 	}
 
-	private boolean createdGame = false;
 	@Override
 	public void createNewGame()
 	{
@@ -175,7 +174,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		//this.refreshGameList();
 		getNewGameView().closeModal();
 		
-		createdGame = true;
 		startJoinGame(newgameinfo);
 
 		//Open the games list
@@ -217,7 +215,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void cancelJoinGame()
 	{
 		lastGameSelected = null;
-		createdGame = false;
 		getSelectColorView().closeModal();
 	}
 
@@ -238,14 +235,13 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		if (getJoinGameView().isModalShowing())
 			getJoinGameView().closeModal();
 		
-		if (createdGame){
+		/*if (createdGame){
 			getJoinGameView().showModal();
 			createdGame = false;
 			refreshGameList(); 
 			return;
-		}
-		createdGame = false;
-
+		}*/
+		
 		timer.stop();
 		timer.setRepeats(false);
 		System.out.println("joining game " + lastGameSelected);

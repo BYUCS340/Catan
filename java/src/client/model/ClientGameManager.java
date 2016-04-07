@@ -919,35 +919,35 @@ public class ClientGameManager extends GameManager implements ModelSubject
 		}
 		
 	//  check for trade offer, set to -1 if there is no trade in process
-			OfferedTrade offer = game.trade;
+		OfferedTrade offer = game.trade;
 
-			if(offer != null)
-			{
-				playerIndexWithTradeOffer =  offer.getToPlayerID();
-				playerIndexSendingOffer = offer.getFromPlayerID();
+		if(offer != null)
+		{
+			playerIndexWithTradeOffer =  offer.getToPlayerID();
+			playerIndexSendingOffer = offer.getFromPlayerID();
 
-				if(playerIndexWithTradeOffer == this.myPlayerIndex())
-				{
-					//  if the player has a trade waiting for them, get resources, then notify
-					resourceToTrade = new int[5];
-					resourceToTrade[0] = offer.getWantedResourceAmount(ResourceType.BRICK)
-							- offer.getOfferedResourceAmount(ResourceType.BRICK);
-					resourceToTrade[1] = offer.getWantedResourceAmount(ResourceType.ORE)
-							- offer.getOfferedResourceAmount(ResourceType.ORE);
-					resourceToTrade[2] = offer.getWantedResourceAmount(ResourceType.SHEEP)
-							- offer.getOfferedResourceAmount(ResourceType.SHEEP);
-					resourceToTrade[3] = offer.getWantedResourceAmount(ResourceType.WHEAT)
-							- offer.getOfferedResourceAmount(ResourceType.WHEAT);
-					resourceToTrade[4] = offer.getWantedResourceAmount(ResourceType.WOOD)
-							- offer.getOfferedResourceAmount(ResourceType.WOOD);
-				}
-			}
-			else
+			if(playerIndexWithTradeOffer == this.myPlayerIndex())
 			{
-				playerIndexWithTradeOffer = -2;
-				playerIndexSendingOffer = -2;
-				resourceToTrade = null;
+				//  if the player has a trade waiting for them, get resources, then notify
+				resourceToTrade = new int[5];
+				resourceToTrade[0] = offer.getWantedResourceAmount(ResourceType.BRICK)
+						- offer.getOfferedResourceAmount(ResourceType.BRICK);
+				resourceToTrade[1] = offer.getWantedResourceAmount(ResourceType.ORE)
+						- offer.getOfferedResourceAmount(ResourceType.ORE);
+				resourceToTrade[2] = offer.getWantedResourceAmount(ResourceType.SHEEP)
+						- offer.getOfferedResourceAmount(ResourceType.SHEEP);
+				resourceToTrade[3] = offer.getWantedResourceAmount(ResourceType.WHEAT)
+						- offer.getOfferedResourceAmount(ResourceType.WHEAT);
+				resourceToTrade[4] = offer.getWantedResourceAmount(ResourceType.WOOD)
+						- offer.getOfferedResourceAmount(ResourceType.WOOD);
 			}
+		}
+		else
+		{
+			playerIndexWithTradeOffer = -2;
+			playerIndexSendingOffer = -2;
+			resourceToTrade = null;
+		}
 
 		GameState newgamestate = game.gameState;
 		GameRound newstate = game.gameState.state;
@@ -1078,7 +1078,7 @@ public class ClientGameManager extends GameManager implements ModelSubject
 		
 		if (this.version == -1)
 			this.notifyCenter.notify(ModelNotification.ALL);
-		
+		updateInProgress = false;
 		this.version = game.version;
 		updateInProgress = false;
 	}

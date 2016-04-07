@@ -75,8 +75,8 @@ public class PlayerDen
 			throw new GameException("This username is already in use");
 		playerNames.add(username);
 		String key = username + password;
-		
-		int index = numberPlayers++;
+		numberPlayers++;
+		int index = numberPlayers+50;
 		ServerPlayer sp = new ServerPlayer(username, password, index);
 		//Add the login credentials
 		playerLogin.put(key, index);

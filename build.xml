@@ -98,6 +98,7 @@
 	<property name="java.build" location="${java.dir}/build"/>
 	<property name="java.dist" location="${java.dir}/dist"/>
 	<property name="java.lib" location="${java.dir}/lib"/>
+    <property name="java.savedata" location="${java.dir}/savedata"/>
 	<property name="java.swagger" location="${java.src}/server/docs"/>
 
 	<target name="clean" description="clean build files" >
@@ -136,6 +137,14 @@
 				<include name="**"/>
 			</fileset>
 		</copy>
+        <mkdir dir="${java.dist}/plugins"/>
+        <mkdir dir="${java.dist}/savedata"/>
+		<copy todir="${java.dist}/savedata">
+			<fileset dir="${java.savedata}">
+				<include name="**"/>
+			</fileset>
+		</copy>
+
 		<manifestclasspath property="lib.list.client" jarfile="${java.dist}/catan-client.jar">
 			<classpath refid="build-classpath"/>
 		</manifestclasspath>
