@@ -14,6 +14,8 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class GameListAICommand extends CookieCommand 
 {
+	private static final long serialVersionUID = -4350250084638678160L;
+	
 	List<String> types;
 	
 	/**

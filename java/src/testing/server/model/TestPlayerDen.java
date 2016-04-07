@@ -1,6 +1,3 @@
-/**
- * 
- */
 package testing.server.model;
 
 import static org.junit.Assert.*;

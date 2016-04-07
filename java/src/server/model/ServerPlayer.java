@@ -24,6 +24,11 @@ public class ServerPlayer
 		return this.name;
 	}
 	
+	public String GetPassword()
+	{
+		return this.password;
+	}
+	
 	public int GetID()
 	{
 		return this.ID;
