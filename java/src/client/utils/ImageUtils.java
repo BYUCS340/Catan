@@ -21,7 +21,7 @@ public class ImageUtils
 		}
 		catch(IOException e)
 		{
-			assert false;
+//			assert false;
 		}
 		
 		return DEFAULT_IMAGE;
