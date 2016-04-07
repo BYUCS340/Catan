@@ -27,6 +27,8 @@ public class TestSQLPlugin
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception
 	{
+		SQLPlugin plugin =  new SQLPlugin();
+		plugin.Clear();
 	}
 
 	@AfterClass
@@ -37,8 +39,8 @@ public class TestSQLPlugin
 	@Before
 	public void setUp() throws Exception
 	{
-		SQLPlugin plugin =  new SQLPlugin();
-		plugin.Clear();
+		
+		
 	}
 
 	@After
@@ -49,13 +51,14 @@ public class TestSQLPlugin
 
 	
 	@Test
-	public void testSQLGameDAO()
+	public void testSQLDAOs()
 	{
 		SQLPlugin plugin =  new SQLPlugin();
 		IGameDAO dao = null;
 		try 
 		{
 			dao = plugin.GetGameDAO();
+			
 		}
 		catch (PersistenceException e1) 
 		{
@@ -66,6 +69,7 @@ public class TestSQLPlugin
 		try 
 		{
 			assertEquals(dao.GetAllGames().size(),0);
+			plugin.StartTransaction();
 			dao.AddGame(1, "Bloby");
 			plugin.EndTransaction(true);
 			List<String> games = dao.GetAllGames();
@@ -96,18 +100,13 @@ public class TestSQLPlugin
 			}
 			fail("We probably shouldn't have failed to");
 		}
+		plugin.Close();
 		
-		
-	}
-	/*
-	@Test
-	public void testSQLUserDAO()
-	{
-		SQLPlugin plugin =  new SQLPlugin();
-		IUserDAO dao = null;
+		plugin =  new SQLPlugin();
+		IUserDAO userDao = null;
 		try 
 		{
-			dao = plugin.GetUserDAO();
+			userDao = plugin.GetUserDAO();
 			
 		}
 		catch (PersistenceException e1) 
@@ -118,18 +117,19 @@ public class TestSQLPlugin
 		}
 		try 
 		{
-			assertEquals(dao.GetAllUsers().size(),0);
-			dao.AddUser(1, "Matthew", "Tesitng");
+			plugin.StartTransaction();
+			assertEquals(userDao.GetAllUsers().size(),0);
+			userDao.AddUser(1, "Matthew", "Tesitng");
 			plugin.EndTransaction(true);
-			List<ServerPlayer> players = dao.GetAllUsers();
+			List<ServerPlayer> players = userDao.GetAllUsers();
 			assertEquals(players.size(),1);
-			ServerPlayer player = players.get(1);
+			ServerPlayer player = players.get(0);
 			assertEquals(player.GetID(), 1);
 			assertEquals(player.GetName(), "Matthew");
 			
-			dao.AddUser(3, "Matthew2", "Tesitng");
+			userDao.AddUser(3, "Matthew2", "Tesitng");
 			plugin.EndTransaction(true);
-			assertEquals(dao.GetAllUsers().size(),2);
+			assertEquals(userDao.GetAllUsers().size(),2);
 			
 		} 
 		catch (PersistenceException e) 
@@ -147,17 +147,13 @@ public class TestSQLPlugin
 			}
 			fail("We probably shouldn't have failed to");
 		}
+		plugin.Close();
 		
-	}
-	
-	@Test
-	public void testSQLCommandsDAO()
-	{
-		SQLPlugin plugin =  new SQLPlugin();
-		ICommandDAO dao = null;
+		plugin =  new SQLPlugin();
+		ICommandDAO commDao = null;
 		try 
 		{
-			dao = plugin.GetCommandDAO();
+			commDao = plugin.GetCommandDAO();
 			
 		} 
 		catch (PersistenceException e1) {
@@ -168,15 +164,16 @@ public class TestSQLPlugin
 		
 		try 
 		{
-			assertEquals(dao.GetCommandCount(1),0);
-			dao.AddCommand(1, "blob");
+			plugin.StartTransaction();
+			assertEquals(commDao.GetCommandCount(1),0);
+			commDao.AddCommand(1, "blob");
 			plugin.EndTransaction(true);
-			assertEquals(dao.GetCommandCount(1),1);
-			assertEquals(dao.GetCommandCount(2),0);
+			assertEquals(commDao.GetCommandCount(1),1);
+			assertEquals(commDao.GetCommandCount(2),0);
 			
-			dao.DeleteCommands(1);
+			commDao.DeleteCommands(1);
 			plugin.EndTransaction(true);
-			assertEquals(dao.GetCommandCount(1),0);
+			assertEquals(commDao.GetCommandCount(1),0);
 			
 		} 
 		catch (PersistenceException e) 
@@ -194,16 +191,9 @@ public class TestSQLPlugin
 			}
 			fail("We probably shouldn't have failed to");
 		}
+		plugin.Close();
 		
 	}
-	*/
-	
-	@Test
-	public void testSQLPlugin()
-	{
 		
-		
-	}
-	
 
 }

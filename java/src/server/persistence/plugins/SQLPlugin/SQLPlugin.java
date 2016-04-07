@@ -93,7 +93,7 @@ public class SQLPlugin implements IPersistenceProvider
 			pStmtCreateGames.close();
 			pStmtCreateCommands.close();
 			
-			connection.commit();
+			this.EndTransaction(true);
 		}
     	catch (SQLException e)
     	{
@@ -148,6 +148,22 @@ public class SQLPlugin implements IPersistenceProvider
 		catch (SQLException e)
 		{
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * Closes the connection
+	 */
+	public void Close()
+	{
+		try 
+		{
+			connection.close();
+		}
+		catch (SQLException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
