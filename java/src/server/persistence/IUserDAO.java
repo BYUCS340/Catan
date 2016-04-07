@@ -16,33 +16,16 @@ public interface IUserDAO
 	 * @param username
 	 * @param password
 	 * @return
+	 * @throws PersistenceException
 	 */
-	boolean AddUser(int id, String username, String password);
-
-	/**
-	 *
-	 * @param username
-	 * @return
-	 */
-	ServerPlayer GetUser(String username);
-
-	/**
-	 *
-	 * @param playerID
-	 * @return
-	 */
-	ServerPlayer GetUser(int playerID);
+	void AddUser(int id, String username, String password) throws PersistenceException;
 
 	/**
 	 * Gets all the players in the DAO
 	 * @return
+	 * @throws PersistenceException
 	 */
-	List<ServerPlayer> GetAllUsers();
+	List<ServerPlayer> GetAllUsers() throws PersistenceException;
 
-	/**
-	 * Deletes all users on server
-	 * @return
-     */
-	boolean DeleteAllUsers();
 	
 }

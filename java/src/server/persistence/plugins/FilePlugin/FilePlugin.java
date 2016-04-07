@@ -1,5 +1,7 @@
 package server.persistence.plugins.FilePlugin;
 
+import java.io.File;
+
 import server.persistence.ICommandDAO;
 import server.persistence.IGameDAO;
 import server.persistence.IPersistenceProvider;
@@ -7,6 +9,7 @@ import server.persistence.IUserDAO;
 
 /**
  * Created by Tunadude09 on 4/4/2016.
+ * Implemented by Parker Ridd on 4/6/2016
  */
 public class FilePlugin implements IPersistenceProvider {
     /**
@@ -15,12 +18,17 @@ public class FilePlugin implements IPersistenceProvider {
     public FilePlugin()
     {
         super();
+        
+        //create the data directory if it doesn't exist
+        File dataDir = new File(FilenameUtils.dataDir);
+        if(!dataDir.exists()) FilePersistenceUtils.makeDirs(dataDir);
     }
 
 	@Override
 	public void Clear() 
 	{
-		// TODO Auto-generated method stub
+		File dataDir = new File(FilenameUtils.dataDir);
+        if(dataDir.exists()) FilePersistenceUtils.deleteFolder(dataDir);
 		System.out.println("FILE PLUGIN CLEARED");
 		
 	}
@@ -28,14 +36,14 @@ public class FilePlugin implements IPersistenceProvider {
 	@Override
 	public void StartTransaction() 
 	{
-		// TODO Auto-generated method stub
+		FileTransactionManager.startTransaction();
 		
 	}
 
 	@Override
 	public void EndTransaction(boolean commit) 
 	{
-		// TODO Auto-generated method stub
+		FileTransactionManager.endTransaction(commit);
 		
 	}
 

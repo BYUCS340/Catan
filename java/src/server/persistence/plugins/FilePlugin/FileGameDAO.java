@@ -1,15 +1,18 @@
 package server.persistence.plugins.FilePlugin;
 
-import server.persistence.IGameDAO;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Map;
+import server.persistence.IGameDAO;
 
 /**
  * Created by Tunadude09 on 4/4/2016.
+ * Implemented by Parker Ridd on 4/4/2016
  */
 public class FileGameDAO implements IGameDAO {
     /**
-     * Initialize path to persistant local file system
+     * Initialize path to persistent local file system
      */
     public FileGameDAO(){
 
@@ -21,8 +24,13 @@ public class FileGameDAO implements IGameDAO {
      * @return
      */
     @Override
-    public boolean AddGame(int gameID, String blob) {
-        return false;
+    public void AddGame(int gameID, String blob) {
+    	String gameDir = FilenameUtils.getFullGameDir(gameID);
+    	File theDir = new File(gameDir);
+    	FilePersistenceUtils.makeDirs(theDir);
+    	
+    	File theFile = new File(gameDir + File.separator + FilenameUtils.gameFilename);
+    	FilePersistenceUtils.writeFile(theFile, blob);
     }
 
     /**
@@ -31,46 +39,33 @@ public class FileGameDAO implements IGameDAO {
      * @return
      */
     @Override
-    public boolean UpdateGame(int gameID, String blob) {
-        return false;
-    }
-
-    /**
-     * @param gameID
-     * @return
-     */
-    @Override
-    public boolean DeleteGame(int gameID) {
-        return false;
-    }
-
-    /**
-     * Deletes all games
-     *
-     * @return
-     */
-    @Override
-    public boolean DeleteAllGames() {
-        return false;
-    }
-
-    /**
-     * @param gameID
-     * @return
-     */
-    @Override
-    public String GetCheckpoint(int gameID) {
-        return null;
+    public void UpdateGame(int gameID, String blob) {
+    	String gameDir = FilenameUtils.getFullGameDir(gameID);
+    	
+    	File theFile = new File(gameDir + File.separator + FilenameUtils.gameFilename);
+    	FilePersistenceUtils.writeFile(theFile, blob);
     }
 
     /**
      * @return a map of Game ID to blobs
      */
     @Override
-    public Map<Integer, String> GetAllGames() {
-        return null;
+    public List<String> GetAllGames() {
+    	List<String> gameMap = new ArrayList<String>();
+        File rootDir = new File(FilenameUtils.dataDir);
+        for(File f : rootDir.listFiles())
+        {
+        	if(f.isDirectory() && f.getName().contains(FilenameUtils.gameDir))
+        	{
+        		String gameBlobFile = f.getPath() + File.separator + FilenameUtils.gameFilename;
+        		String blob = FilePersistenceUtils.getBlob(gameBlobFile);
+        		gameMap.add(blob);
+        	}
+        }
+        return gameMap;
     }
 
     private String pathToFileSystem = "";
 
+    
 }
