@@ -9,9 +9,6 @@ import java.util.logging.Level;
 
 import com.sun.net.httpserver.HttpServer;
 
-import server.persistence.IPersistenceProvider;
-import server.persistence.PersistenceException;
-import server.persistence.PersistenceHandler;
 import server.swagger.SwaggerHandlers;
 
 /**
@@ -97,24 +94,6 @@ public class Server
 	{	
 		try 
 		{
-			
-			PersistenceHandler ph = new PersistenceHandler(plugin);
-			
-			try 
-			{
-				IPersistenceProvider pp = ph.GetPlugin();
-				pp.StartTransaction();
-				if (!ph.GetPlugin().GetUserDAO().AddUser(8, "Matthew", "password")) System.err.println("UNABLE TO SAVE");
-				pp.EndTransaction(true);
-				//System.out.println("User: "+ph.GetPlugin().GetUserDAO().GetUser(5));
-				//System.out.println("User: "+ph.GetPlugin().GetUserDAO().GetUser(3));
-				
-			} 
-			catch (PersistenceException e) 
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			Level defaultLevel = Level.FINE;
 			
 			Log.GetLog().log(defaultLevel, "Starting server");
