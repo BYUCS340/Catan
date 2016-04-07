@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +27,11 @@ public class SQLUserDAO implements IUserDAO
     }
 
     /**
-     * Adds a user to the DAO
+     * Adds a user to the USERS table
      *
-     * @param id
+     * @param userID
      * @param username
      * @param password
-     * @return
      * @throws PersistenceException 
      */
     @Override
@@ -63,13 +61,15 @@ public class SQLUserDAO implements IUserDAO
     	catch (SQLException e)
     	{
 			e.printStackTrace();
+			throw new PersistenceException("AddUser SQLException", e);
 		}
     }
 
     /**
-     * Gets all the players in the DAO
+     * Gets all the players in the USERS table
      *
-     * @return
+     * @return List of ServerPlayer
+     * @throws PersistenceException
      */
     @Override
     public List<ServerPlayer> GetAllUsers() throws PersistenceException

@@ -1,11 +1,12 @@
 package server.persistence.plugins.SQLPlugin;
 
 import server.persistence.IGameDAO;
+import server.persistence.PersistenceException;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,76 +26,110 @@ public class SQLGameDAO implements IGameDAO
     }
 
     /**
+     * Adds a Game to the GAMES table
+     * 
      * @param gameID
      * @param blob
-     * @return
+     * @throws PersistenceException
      */
     @Override
-    public void AddGame(int gameID, String blob)
+    public void AddGame(int gameID, String blob) throws PersistenceException
     {
     	try
     	{
-			Statement stmt = connection.createStatement();
+    		PreparedStatement pStmt = null;
 			
-			String sql = "INSERT INTO GAMES (ID, BLOB) " +
-		            "VALUES (" + gameID + ", '" + blob + "');";
-		    stmt.executeUpdate(sql);
-
-		    stmt.close();
+			String sql = "INSERT INTO GAMES (ID, BLOB) VALUES (?, ?)";
+			pStmt = connection.prepareStatement(sql);
+			
+			pStmt.setInt(1, gameID);
+			pStmt.setString(2, blob);
+		    
+		    if (pStmt.executeUpdate() == 1)
+			{
+				pStmt.close();
+			}
+			else
+			{
+				pStmt.close();
+				throw new PersistenceException("AddGame update failed");
+			}
 		}
     	catch (SQLException e)
     	{
 			e.printStackTrace();
+			throw new PersistenceException("AddGame SQLException", e);
 		}
     }
 
     /**
+     * Updates a Game in the GAMES table
+     * 
      * @param gameID
      * @param blob
-     * @return
+     * @throws PersistenceException
      */
     @Override
-    public void UpdateGame(int gameID, String blob)
+    public void UpdateGame(int gameID, String blob) throws PersistenceException
     {
     	try
     	{
-    		Statement stmt = connection.createStatement();
-    	    String sql = "UPDATE GAMES set BLOB = " + blob + " where ID=" + gameID + ";";
-    	    stmt.executeUpdate(sql);
-    	    
-    	    stmt.close();
+    		PreparedStatement pStmt = null;
+    		
+    	    String sql = "UPDATE GAMES set BLOB=? where ID=?";
+    	    pStmt = connection.prepareStatement(sql);
+			
+    	    pStmt.setString(1, blob);
+			pStmt.setInt(2, gameID);
+			
+    	    if (pStmt.executeUpdate() == 1)
+			{
+				pStmt.close();
+			}
+			else
+			{
+				pStmt.close();
+				throw new PersistenceException("UpdateGame update failed");
+			}
 		}
     	catch (SQLException e)
     	{
 			e.printStackTrace();
+			throw new PersistenceException("UpdateGame SQLException", e);
 		}
     }
 
     /**
-     * @return a map of Game ID to blobs
+     * Get a List of all Games in GAMES table
+     * 
+     * @return List of Game as String
+     * @throws PersistenceException
      */
     @Override
-    public List<String> GetAllGames()
+    public List<String> GetAllGames() throws PersistenceException
     {
     	try
     	{
     		List<String> games = new ArrayList<String>();
+    		PreparedStatement pStmt = null;
     		
-    		Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * from GAMES;");
+    		String sql = "SELECT * from GAMES";
+    		pStmt = connection.prepareStatement(sql);
+    		
+            ResultSet rs = pStmt.executeQuery();
             while (rs.next())
             {
-               String  gameBlob = rs.getString("USERNAME");
+               String  gameBlob = rs.getString("BLOB");
                games.add(gameBlob);
             }
             rs.close();
-            stmt.close();
+            pStmt.close();
             return games;
     	}
         catch (SQLException e)
         {
         	e.printStackTrace();
-        	return null;
+        	throw new PersistenceException("GetAllGames SQLException", e);
         }
     }
 
