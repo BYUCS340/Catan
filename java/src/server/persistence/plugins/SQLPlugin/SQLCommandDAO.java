@@ -1,8 +1,12 @@
 package server.persistence.plugins.SQLPlugin;
 
-import server.commands.ICommand;
 import server.persistence.ICommandDAO;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,12 +14,14 @@ import java.util.List;
  */
 public class SQLCommandDAO implements ICommandDAO
 {
+	Connection connection;
+	
     /**
      *  Setup mysql db connection
      */
-    public SQLCommandDAO()
+    public SQLCommandDAO(Connection c)
     {
-
+    	connection = c;
     }
 
     /**
@@ -25,9 +31,28 @@ public class SQLCommandDAO implements ICommandDAO
      * @return
      */
     @Override
-    public List<String> GetCommandsFor(int gameID)
+    public List<String> GetCommands()
     {
-        return null;
+    	try
+    	{
+    		List<String> commands = new ArrayList<String>();
+    		
+    		Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * from COMMANDS");
+            while (rs.next())
+            {
+               String  commandBlob = rs.getString("BLOB");
+               commands.add(commandBlob);
+            }
+            rs.close();
+            stmt.close();
+            return commands;
+    	}
+        catch (SQLException e)
+        {
+        	e.printStackTrace();
+        	return null;
+        }
     }
 
     /**
@@ -38,9 +63,22 @@ public class SQLCommandDAO implements ICommandDAO
      * @return
      */
     @Override
-    public boolean AddCommand(int gameID, String blob)
+    public void AddCommand(int gameID, String blob)
     {
-        return false;
+    	try
+    	{
+			Statement stmt = connection.createStatement();
+			
+			String sql = "INSERT INTO COMMANDS (ID, BLOB) " +
+		            "VALUES (" + gameID + ", '" + blob + "');";
+		    stmt.executeUpdate(sql);
+
+		    stmt.close();
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -48,20 +86,20 @@ public class SQLCommandDAO implements ICommandDAO
      * @return
      */
     @Override
-    public boolean DeleteCommandFor(int gameID)
+    public void DeleteCommands(int gameID)
     {
-        return false;
-    }
-
-    /**
-     * Deletes all commands for all games
-     *
-     * @return
-     */
-    @Override
-    public boolean DeleteAllCommands()
-    {
-        return false;
+    	try
+    	{
+    		Statement stmt = connection.createStatement();
+    	    String sql = "DELETE from COMMANDS where ID=" + gameID + ";";
+    	    stmt.executeUpdate(sql);
+    	    
+    	    stmt.close();
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -71,9 +109,9 @@ public class SQLCommandDAO implements ICommandDAO
      * @return
      */
     @Override
-    public int GetCommandCountFor(int gameID)
+    public int GetCommandCount(int gameID)
     {
-        return 0;
+    	return 0;
     }
 
     String mysqlDb;

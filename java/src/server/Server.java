@@ -9,8 +9,6 @@ import java.util.logging.Level;
 
 import com.sun.net.httpserver.HttpServer;
 
-import server.persistence.PersistenceException;
-import server.persistence.PersistenceHandler;
 import server.swagger.SwaggerHandlers;
 
 /**
@@ -91,24 +89,11 @@ public class Server
 			SwaggerPath = file.getPath() + "\\";
 	}
 	
-	private void Initialize(int port)
-	{
-		Initialize(port,"",10);
-	}
 	
 	private void Initialize(int port, String plugin, int commandLimit)
 	{	
 		try 
 		{
-			
-			PersistenceHandler ph = new PersistenceHandler(plugin);
-			
-			try {
-				ph.GetPlugin().Clear();
-			} catch (PersistenceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			Level defaultLevel = Level.FINE;
 			
 			Log.GetLog().log(defaultLevel, "Starting server");

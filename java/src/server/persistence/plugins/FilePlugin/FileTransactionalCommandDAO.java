@@ -8,7 +8,7 @@ import server.persistence.PersistenceException;
 public class FileTransactionalCommandDAO implements ICommandDAO {
 
 	@Override
-	public List<String> GetCommandsFor(int gameID) throws PersistenceException
+	public List<String> GetCommands() throws PersistenceException
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -22,14 +22,14 @@ public class FileTransactionalCommandDAO implements ICommandDAO {
 	}
 
 	@Override
-	public void DeleteCommandFor(int gameID) throws PersistenceException
+	public void DeleteCommands(int gameID) throws PersistenceException
 	{
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public int GetCommandCountFor(int gameID) throws PersistenceException
+	public int GetCommandCount(int gameID) throws PersistenceException
 	{
 		// TODO Auto-generated method stub
 		return 0;

@@ -2,19 +2,26 @@ package server.persistence.plugins.SQLPlugin;
 
 import server.persistence.IGameDAO;
 
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Tunadude09 on 4/4/2016.
  */
 public class SQLGameDAO implements IGameDAO
 {
+	Connection connection;
+	
     /**
      *  Setup mysql db connection
      */
-    public SQLGameDAO()
+    public SQLGameDAO(Connection c)
     {
-
+    	connection = c;
     }
 
     /**
@@ -23,9 +30,22 @@ public class SQLGameDAO implements IGameDAO
      * @return
      */
     @Override
-    public boolean AddGame(int gameID, String blob)
+    public void AddGame(int gameID, String blob)
     {
-        return false;
+    	try
+    	{
+			Statement stmt = connection.createStatement();
+			
+			String sql = "INSERT INTO GAMES (ID, BLOB) " +
+		            "VALUES (" + gameID + ", '" + blob + "');";
+		    stmt.executeUpdate(sql);
+
+		    stmt.close();
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -34,49 +54,48 @@ public class SQLGameDAO implements IGameDAO
      * @return
      */
     @Override
-    public boolean UpdateGame(int gameID, String blob)
+    public void UpdateGame(int gameID, String blob)
     {
-        return false;
-    }
-
-    /**
-     * @param gameID
-     * @return
-     */
-    @Override
-    public boolean DeleteGame(int gameID)
-    {
-        return false;
-    }
-
-    /**
-     * Deletes all games
-     *
-     * @return
-     */
-    @Override
-    public boolean DeleteAllGames()
-    {
-        return false;
-    }
-
-    /**
-     * @param gameID
-     * @return
-     */
-    @Override
-    public String GetCheckpoint(int gameID)
-    {
-        return null;
+    	try
+    	{
+    		Statement stmt = connection.createStatement();
+    	    String sql = "UPDATE GAMES set BLOB = " + blob + " where ID=" + gameID + ";";
+    	    stmt.executeUpdate(sql);
+    	    
+    	    stmt.close();
+		}
+    	catch (SQLException e)
+    	{
+			e.printStackTrace();
+		}
     }
 
     /**
      * @return a map of Game ID to blobs
      */
     @Override
-    public Map<Integer, String> GetAllGames()
+    public List<String> GetAllGames()
     {
-        return null;
+    	try
+    	{
+    		List<String> games = new ArrayList<String>();
+    		
+    		Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * from GAMES;");
+            while (rs.next())
+            {
+               String  gameBlob = rs.getString("USERNAME");
+               games.add(gameBlob);
+            }
+            rs.close();
+            stmt.close();
+            return games;
+    	}
+        catch (SQLException e)
+        {
+        	e.printStackTrace();
+        	return null;
+        }
     }
 
     String mysqlDb;

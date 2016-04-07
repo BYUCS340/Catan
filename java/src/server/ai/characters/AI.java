@@ -130,4 +130,53 @@ public abstract class AI
 	{
 		personality.ChatReceived(gameID, message);
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "AI [id=" + id + ", " + (type != null ? "type=" + type + ", " : "")
+				+ (personality != null ? "personality=" + personality : "") + "]";
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		result = prime * result + ((personality == null) ? 0 : personality.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof AI))
+			return false;
+		AI other = (AI) obj;
+		if (id != other.id)
+			return false;
+		if (personality == null) 
+		{
+			if (other.personality != null)
+				return false;
+		}
+		else if (!personality.equals(other.personality))
+			return false;
+		if (type != other.type)
+			return false;
+		return true;
+	}
 }

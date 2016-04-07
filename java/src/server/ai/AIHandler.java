@@ -3,6 +3,7 @@ package server.ai;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -37,7 +38,7 @@ public class AIHandler
 	private List<String> types;
 	private Map<AIType, Set<AI>> AIbyType;
 	private Map<String, AI> AIbyName;
-	private Map<Integer, AI> AIbyIndex;
+	private Map<Integer, AI> AIbyID;
 	
 	/**
 	 * Creates an AI Handler
@@ -47,7 +48,7 @@ public class AIHandler
 		CompileTypes();
 		AIbyType = new HashMap<AIType, Set<AI>>();
 		AIbyName = new HashMap<String, AI>();
-		AIbyIndex = new HashMap<Integer, AI>();
+		AIbyID = new HashMap<Integer, AI>();
 		
 		AddAI(new B_Groot());
 		AddAI(new B_JarJar());
@@ -63,7 +64,7 @@ public class AIHandler
 	{
 		AI ai = AIbyName.get(name);
 		ai.SetID(playerID);
-		AIbyIndex.put(playerID, ai);
+		AIbyID.put(playerID, ai);
 	}
 	
 	/**
@@ -91,7 +92,7 @@ public class AIHandler
 	 */
 	public String GetName(int id)
 	{
-		return AIbyIndex.get(id).GetName();
+		return AIbyID.get(id).GetName();
 	}
 	
 	/**
@@ -102,11 +103,10 @@ public class AIHandler
 	 */
 	public int GetAI(AIType type, List<Integer> inGame)
 	{
-		Set<AI> ais = null;
-		
+		Set<AI> ais = new HashSet<AI>();
+		Set<Integer> aiIndexs = new HashSet<>();
 		if (type == AIType.RANDOM)
 		{
-			ais = new HashSet<AI>();
 			ais.addAll(AIbyType.get(AIType.BEGINNER));
 //			ais.addAll(AIbyType.get(AIType.MODERATE));
 //			ais.addAll(AIbyType.get(AIType.EXPERT));
@@ -116,21 +116,32 @@ public class AIHandler
 			ais = AIbyType.get(type);
 		}
 		
+		Iterator<AI> iter = ais.iterator();
+		while(iter.hasNext())
+		{
+			aiIndexs.add(iter.next().GetID());
+		}
+		//Log.GetLog().fine(aiIndexs.toString());
+		//remove the AI's in use for this game
 		for (int gamer : inGame)
 		{
-			if (AIbyIndex.containsKey(gamer))
-			{
-				AI ai = AIbyIndex.get(gamer);
-				ais.remove(ai);
-			}
+			//Log.GetLog().fine("Removing AI" + gamer);
+			aiIndexs.remove(gamer);
 		}
+		//Log.GetLog().fine(aiIndexs.toString());
+		
 			
 		Random random = new Random();
-		int aiIndex = random.nextInt(ais.size());
+		if (aiIndexs.size() == 0) 
+		{
+			Log.GetLog().severe("NO AIS TO ADD");
+			
+		}
+		int aiIndex = random.nextInt(aiIndexs.size());
+		Object[] aiList = aiIndexs.toArray();
 		
-		AI[] aiList = ais.toArray(new AI[0]);
 		
-		return aiList[aiIndex].GetID();
+		return (int) aiList[aiIndex];
 	}
 	
 	/**
@@ -141,7 +152,7 @@ public class AIHandler
 	 */
 	public CatanColor PickColor(int id, Set<CatanColor> notAvailable)
 	{
-		return AIbyIndex.get(id).PickColor(notAvailable);
+		return AIbyID.get(id).PickColor(notAvailable);
 	}
 	
 	/**
@@ -223,7 +234,7 @@ public class AIHandler
 			try 
 			{
 				Thread.sleep(1000);
-				AIbyIndex.get(aiID).TakeTurn(gameID);
+				AIbyID.get(aiID).TakeTurn(gameID);
 			}
 			catch (InterruptedException e) 
 			{
@@ -250,7 +261,7 @@ public class AIHandler
 			try 
 			{
 				Thread.sleep(1000);
-				AIbyIndex.get(aiID).Discard(gameID);
+				AIbyID.get(aiID).Discard(gameID);
 			}
 			catch (InterruptedException e) 
 			{
@@ -279,7 +290,7 @@ public class AIHandler
 			try 
 			{
 				Thread.sleep(1000);
-				AIbyIndex.get(aiID).Chat(gameID, message);
+				AIbyID.get(aiID).Chat(gameID, message);
 			}
 			catch (InterruptedException e) 
 			{
@@ -307,7 +318,7 @@ public class AIHandler
 			try 
 			{
 				Thread.sleep(1000);
-				AIbyIndex.get(aiID).ReceivedOffer(gameID, trade);
+				AIbyID.get(aiID).ReceivedOffer(gameID, trade);
 			}
 			catch (InterruptedException e) 
 			{

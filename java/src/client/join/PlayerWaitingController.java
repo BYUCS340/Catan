@@ -46,6 +46,15 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		
 		getView().showModal();
 		refreshPlayersWaiting();
+		try 
+		{
+			ClientGame.getGame().RefreshFromServer();
+		} 
+		catch (ModelException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**

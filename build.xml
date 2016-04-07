@@ -98,6 +98,7 @@
 	<property name="java.build" location="${java.dir}/build"/>
 	<property name="java.dist" location="${java.dir}/dist"/>
 	<property name="java.lib" location="${java.dir}/lib"/>
+    <property name="java.savedata" location="${java.dir}/savedata"/>
 	<property name="java.swagger" location="${java.src}/server/docs"/>
 
 	<target name="clean" description="clean build files" >
@@ -109,6 +110,19 @@
 		<tstamp/>
 		<mkdir dir="${java.build}"/>
 		<mkdir dir="${java.dist}"/>
+        <mkdir dir="${java.dist}/plugins"/>
+        <mkdir dir="${java.dist}/savedata"/>
+		<copy todir="${java.dist}/savedata">
+			<fileset dir="${java.savedata}">
+				<include name="**"/>
+			</fileset>
+		</copy>
+        <mkdir dir="savedata"/>
+		<copy todir="savedata">
+			<fileset dir="${java.savedata}">
+				<include name="**"/>
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="compile" depends="init" description="compile the source " >
@@ -136,6 +150,8 @@
 				<include name="**"/>
 			</fileset>
 		</copy>
+
+
 		<manifestclasspath property="lib.list.client" jarfile="${java.dist}/catan-client.jar">
 			<classpath refid="build-classpath"/>
 		</manifestclasspath>
@@ -229,7 +245,7 @@
 		</java>
 	</target>
 
-	<target name="test-travisci" depends="compile" description="compiles and runs all JUNIT tests, fails if a test fails">
+	<target name="test-travisci" depends="clean,compile" description="compiles and runs all JUNIT tests, fails if a test fails">
 		<junit printsummary="yes" haltonfailure="yes" fork="yes">
 			<classpath>
 				<path refid="lib-classpath"/>

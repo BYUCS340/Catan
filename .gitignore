@@ -138,5 +138,6 @@ tester/images/building/card.jpg
 
 tester.zip
 java/src/server/docs/java/
+savedata/
 java/src/server/docs/javascript/
 *.lck
