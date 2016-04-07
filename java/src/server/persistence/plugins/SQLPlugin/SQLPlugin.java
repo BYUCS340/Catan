@@ -59,19 +59,13 @@ public class SQLPlugin implements IPersistenceProvider
     		pStmtDropGames = connection.prepareStatement(sqlDropGames);
     		pStmtDropCommands = connection.prepareStatement(sqlDropCommands);
 			
-			if (pStmtDropUsers.execute() && pStmtDropGames.execute() && pStmtDropCommands.execute())
-			{
-				pStmtDropUsers.close();
-				pStmtDropGames.close();
-				pStmtDropCommands.close();
-			}
-			else
-			{
-				pStmtDropUsers.close();
-				pStmtDropGames.close();
-				pStmtDropCommands.close();
-				throw new PersistenceException("Clear unable to drop tables");
-			}
+			pStmtDropUsers.execute();
+			pStmtDropGames.execute();
+			pStmtDropCommands.execute();
+			
+			pStmtDropUsers.close();
+			pStmtDropGames.close();
+			pStmtDropCommands.close();
 			
 			//Create Tables
     		PreparedStatement pStmtCreateUsers = null;
@@ -89,19 +83,13 @@ public class SQLPlugin implements IPersistenceProvider
     		pStmtCreateGames = connection.prepareStatement(sqlCreateGames);
     		pStmtCreateCommands = connection.prepareStatement(sqlCreateCommands);
 			
-			if (pStmtCreateUsers.execute() && pStmtCreateGames.execute() && pStmtCreateCommands.execute())
-			{
-				pStmtCreateUsers.close();
-				pStmtCreateGames.close();
-				pStmtCreateCommands.close();
-			}
-			else
-			{
-				pStmtCreateUsers.close();
-				pStmtCreateGames.close();
-				pStmtCreateCommands.close();
-				throw new PersistenceException("Clear unable to create tables");
-			}
+			pStmtCreateUsers.execute();
+			pStmtCreateGames.execute();
+			pStmtCreateCommands.execute();
+			
+			pStmtCreateUsers.close();
+			pStmtCreateGames.close();
+			pStmtCreateCommands.close();
 		}
     	catch (SQLException e)
     	{
