@@ -1,5 +1,6 @@
 package server.persistence;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,10 +76,12 @@ public class PersistenceFacade
 			{
 				success = false;
 			}
+			
+			provider.EndTransaction(true);
 		}
-		finally
+		catch (PersistenceException e)
 		{
-			provider.EndTransaction(success);
+			provider.EndTransaction(false);
 		}
 		
 		return success;
@@ -98,7 +101,8 @@ public class PersistenceFacade
 			provider.StartTransaction();
 			
 			int gameID = sgm.GetGameID();
-			String blob = SerializationUtils.serialize(sgm);
+			
+			String blob = SerializationUtils.serialize((Serializable) sgm);
 			provider.GetGameDAO().AddGame(gameID, blob);
 			
 			provider.EndTransaction(true);

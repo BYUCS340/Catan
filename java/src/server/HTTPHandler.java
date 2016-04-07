@@ -138,7 +138,7 @@ public class HTTPHandler implements HttpHandler
 				GamesCreateCommand game = (GamesCreateCommand)command;
 				facade.AddGame(game.GetGame());
 			}
-			else if (command.getClass() == MovesCommand.class)
+			else if (MovesCommand.class.isAssignableFrom(command.getClass()))
 			{
 				MovesCommand move = (MovesCommand)command;
 				int gameID = move.GetGameID();

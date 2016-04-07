@@ -37,9 +37,6 @@ import shared.model.map.model.MapGenerator;
 public class RealServerGameManager extends ServerGameManager implements Serializable
 {
 	private static final long serialVersionUID = 1293281;
-	private	boolean randomTiles;
-	private boolean randomNumbers;
-	private boolean randomPorts;
 
 	private Map<Integer,Integer> playerIndexLookup;
 
