@@ -4,6 +4,7 @@
 package server.persistence.plugins.FilePlugin.Commands;
 
 import server.persistence.IGameDAO;
+import server.persistence.PersistenceException;
 
 /**
  * @author Parker Ridd
@@ -23,9 +24,9 @@ public class FileUpdateGameCommand implements IFileCommand
 	}
 
 	@Override
-	public boolean execute()
+	public void execute() throws PersistenceException
 	{
-		return gameDAO.UpdateGame(gameID, blob);
+		gameDAO.UpdateGame(gameID, blob);
 	}
 
 }
