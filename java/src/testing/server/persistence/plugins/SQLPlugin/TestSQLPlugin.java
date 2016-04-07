@@ -186,6 +186,17 @@ public class TestSQLPlugin
 			
 			assertEquals(commDao.GetCommandCount(1),0);
 			
+			plugin.StartTransaction();
+			commDao.AddCommand(2, "blob");
+			plugin.EndTransaction(true);
+			
+			assertEquals(commDao.GetCommandCount(1),0);
+			assertEquals(commDao.GetCommandCount(2),1);
+			List<String> commands = commDao.GetCommands();
+			assertEquals(commands.size(),1);
+			assertEquals(commands.get(0), "blob");
+			
+			
 		} 
 		catch (PersistenceException e) 
 		{
