@@ -51,9 +51,9 @@ public class SQLPlugin implements IPersistenceProvider
     		PreparedStatement pStmtDropGames = null;
     		PreparedStatement pStmtDropCommands = null;
     		
-    		String sqlDropUsers = "DROP TABLE USERS";
-    		String sqlDropGames = "DROP TABLE GAMES";
-    		String sqlDropCommands = "DROP TABLE COMMANDS";
+    		String sqlDropUsers = "DROP TABLE IF EXISTS USERS";
+    		String sqlDropGames = "DROP TABLE IF EXISTS GAMES";
+    		String sqlDropCommands = "DROP TABLE IF EXISTS COMMANDS";
     		
     		pStmtDropUsers = connection.prepareStatement(sqlDropUsers);
     		pStmtDropGames = connection.prepareStatement(sqlDropGames);
