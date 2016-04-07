@@ -2,8 +2,10 @@ package server.persistence.plugins.SQLPlugin;
 
 import server.model.ServerPlayer;
 import server.persistence.IUserDAO;
+import server.persistence.PersistenceException;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,8 +18,8 @@ import java.util.List;
 public class SQLUserDAO implements IUserDAO
 {
 	public Connection connection;
-    
-	/**
+	
+    /**
      *  Setup mysql db connection
      */
     public SQLUserDAO(Connection c)
@@ -32,22 +34,31 @@ public class SQLUserDAO implements IUserDAO
      * @param username
      * @param password
      * @return
+     * @throws PersistenceException 
      */
     @Override
-    public void AddUser(int userID, String username, String password)
+    public void AddUser(int userID, String username, String password) throws PersistenceException
     {
     	try
     	{
-			Statement stmt = connection.createStatement();
+    		PreparedStatement pStmt = null;
+    		
+			String sql = "INSERT INTO USERS (ID, USERNAME, PASSWORD) VALUES (?, ?, ?)";
+			pStmt = connection.prepareStatement(sql);
 			
-			String sql = "INSERT INTO USERS (ID, USERNAME, PASSWORD) " +
-		            "VALUES (" + userID + ", '"+ username + "', '"+ password + "');";
-
-		    stmt.executeUpdate(sql);
-
-		    stmt.close();
-		    //if we commit here it works but that defeats the purpose of the DAO plugin facade
-		    //connection.commit();
+			pStmt.setInt(1, userID);
+			pStmt.setString(2, username);
+			pStmt.setString(3, password);
+			
+			if (pStmt.executeUpdate() == 1)
+			{
+				pStmt.close();
+			}
+			else
+			{
+				pStmt.close();
+				throw new PersistenceException("AddUser update failed");
+			}
 		}
     	catch (SQLException e)
     	{
@@ -61,14 +72,18 @@ public class SQLUserDAO implements IUserDAO
      * @return
      */
     @Override
-    public List<ServerPlayer> GetAllUsers()
+    public List<ServerPlayer> GetAllUsers() throws PersistenceException
     {
     	try
     	{
+    		PreparedStatement pStmt = null;
+    		
     		List<ServerPlayer> players = new ArrayList<ServerPlayer>();
     		
-    		Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * from USERS;");
+    		String sql = "SELECT * from USERS";
+			pStmt = connection.prepareStatement(sql);
+			
+			ResultSet rs = pStmt.executeQuery();
             while (rs.next())
             {
                int userID = rs.getInt("ID");
@@ -78,15 +93,15 @@ public class SQLUserDAO implements IUserDAO
                players.add(user);
             }
             rs.close();
-            stmt.close();
+            pStmt.close();
             return players;
     	}
         catch (SQLException e)
         {
         	e.printStackTrace();
-        	return null;
+        	throw new PersistenceException("GetAllUsers SQLException", e);
         }
     }
-    
+
     String mysqlDb;
 }

@@ -63,6 +63,7 @@ public class SQLPlugin implements IPersistenceProvider
 			else
 			{
 				connection.rollback();
+				System.out.println("Rolled-Back");
 			}
 			connection.close();
 			System.out.println("Closed");
