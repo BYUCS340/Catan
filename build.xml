@@ -117,6 +117,12 @@
 				<include name="**"/>
 			</fileset>
 		</copy>
+        <mkdir dir="savedata"/>
+		<copy todir="savedata">
+			<fileset dir="${java.savedata}">
+				<include name="**"/>
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="compile" depends="init" description="compile the source " >
@@ -144,7 +150,7 @@
 				<include name="**"/>
 			</fileset>
 		</copy>
-    
+
 
 		<manifestclasspath property="lib.list.client" jarfile="${java.dist}/catan-client.jar">
 			<classpath refid="build-classpath"/>
