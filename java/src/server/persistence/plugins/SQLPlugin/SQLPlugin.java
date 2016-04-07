@@ -67,6 +67,8 @@ public class SQLPlugin implements IPersistenceProvider
 			pStmtDropGames.close();
 			pStmtDropCommands.close();
 			
+			
+			
 			//Create Tables
     		PreparedStatement pStmtCreateUsers = null;
     		PreparedStatement pStmtCreateGames = null;
@@ -90,10 +92,21 @@ public class SQLPlugin implements IPersistenceProvider
 			pStmtCreateUsers.close();
 			pStmtCreateGames.close();
 			pStmtCreateCommands.close();
+			
+			connection.commit();
 		}
     	catch (SQLException e)
     	{
 			e.printStackTrace();
+			try 
+			{
+				connection.rollback();
+			}
+			catch (SQLException e1) 
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			throw new PersistenceException("Clear SQLException");
 		}
 	}
@@ -129,8 +142,8 @@ public class SQLPlugin implements IPersistenceProvider
 				connection.rollback();
 				System.out.println("Rolled-Back");
 			}
-			connection.close();
-			System.out.println("Closed");
+			//connection.close();
+			//System.out.println("Closed");
 		}
 		catch (SQLException e)
 		{

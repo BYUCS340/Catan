@@ -99,7 +99,7 @@ public class TestSQLPlugin
 		
 		
 	}
-	
+	/*
 	@Test
 	public void testSQLUserDAO()
 	{
@@ -196,6 +196,7 @@ public class TestSQLPlugin
 		}
 		
 	}
+	*/
 	
 	@Test
 	public void testSQLPlugin()
