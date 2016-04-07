@@ -3,6 +3,7 @@ package server.persistence.plugins.FilePlugin;
 import java.util.ArrayList;
 import java.util.List;
 
+import server.persistence.PersistenceException;
 import server.persistence.plugins.FilePlugin.Commands.IFileCommand;
 
 public class FileTransactionManager {
@@ -32,7 +33,14 @@ public class FileTransactionManager {
 			boolean successful = true;
 			for(IFileCommand ifc : transaction)
 			{
-				successful = ifc.execute();
+				try{
+					ifc.execute();
+				}
+				catch(PersistenceException e)
+				{
+					//TODO make it roll back transactions
+					return false;
+				}
 			}
 			transactionBegun = false;
 			
