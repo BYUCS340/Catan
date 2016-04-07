@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import server.Log;
 import server.persistence.ICommandDAO;
 import server.persistence.IGameDAO;
 import server.persistence.IPersistenceProvider;
@@ -17,7 +19,8 @@ import server.persistence.PersistenceException;
 public class SQLPlugin implements IPersistenceProvider
 {
 	private Connection connection;
-	
+	private static boolean inUse = false;
+	private static long lastRequested = System.currentTimeMillis();
     /**
      * Initialize sqlite db in plugins/sqlPlugin
      */
@@ -46,6 +49,7 @@ public class SQLPlugin implements IPersistenceProvider
 	{
 		try
     	{
+			StartTransaction();
 			//Drop Tables
     		PreparedStatement pStmtDropUsers = null;
     		PreparedStatement pStmtDropGames = null;
@@ -118,7 +122,24 @@ public class SQLPlugin implements IPersistenceProvider
 	@Override
 	public void StartTransaction() throws PersistenceException
 	{
-		//do nothing...?
+		//while someone else is using the system
+		while (SQLPlugin.inUse && SQLPlugin.lastRequested+1000 > System.currentTimeMillis())
+		{
+			try 
+			{
+				Log.GetLog().fine("Waiting for SQL Database...");
+				Thread.sleep(1);
+			} 
+			catch (InterruptedException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		SQLPlugin.lastRequested = System.currentTimeMillis();
+		SQLPlugin.inUse = true;
+		
 	}
 
 	/**
@@ -134,14 +155,14 @@ public class SQLPlugin implements IPersistenceProvider
 			if (commit)
 			{
 				connection.commit();
-				System.out.println("Committed");
-				
+				//System.out.println("Committed");
 			}
 			else
 			{
 				connection.rollback();
 				System.out.println("Rolled-Back");
 			}
+			SQLPlugin.inUse = false;
 			//connection.close();
 			//System.out.println("Closed");
 		}

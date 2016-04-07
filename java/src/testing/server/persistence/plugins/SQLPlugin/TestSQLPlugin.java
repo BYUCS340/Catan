@@ -11,15 +11,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import server.model.RealServerGameManager;
-import server.model.ServerGameManager;
 import server.model.ServerPlayer;
 import server.persistence.ICommandDAO;
 import server.persistence.IGameDAO;
 import server.persistence.IUserDAO;
 import server.persistence.PersistenceException;
 import server.persistence.plugins.SQLPlugin.*;
-import shared.networking.SerializationUtils;
 
 public class TestSQLPlugin
 {
@@ -51,7 +48,7 @@ public class TestSQLPlugin
 
 	
 	@Test
-	public void testSQLDAOs()
+	public void testSQLGameDAO()
 	{
 		SQLPlugin plugin =  new SQLPlugin();
 		IGameDAO dao = null;
@@ -77,6 +74,7 @@ public class TestSQLPlugin
 			
 			assertEquals(games.get(0),"Bloby");
 			
+			plugin.StartTransaction();
 			dao.UpdateGame(1, "blob");
 			plugin.EndTransaction(true);
 			
@@ -101,8 +99,12 @@ public class TestSQLPlugin
 			fail("We probably shouldn't have failed to");
 		}
 		plugin.Close();
-		
-		plugin =  new SQLPlugin();
+	}
+
+	@Test
+	public void testSQLUserDAO()
+	{
+		SQLPlugin plugin =  new SQLPlugin();
 		IUserDAO userDao = null;
 		try 
 		{
@@ -121,14 +123,17 @@ public class TestSQLPlugin
 			assertEquals(userDao.GetAllUsers().size(),0);
 			userDao.AddUser(1, "Matthew", "Tesitng");
 			plugin.EndTransaction(true);
+			
 			List<ServerPlayer> players = userDao.GetAllUsers();
 			assertEquals(players.size(),1);
 			ServerPlayer player = players.get(0);
 			assertEquals(player.GetID(), 1);
 			assertEquals(player.GetName(), "Matthew");
 			
+			plugin.StartTransaction();
 			userDao.AddUser(3, "Matthew2", "Tesitng");
 			plugin.EndTransaction(true);
+			
 			assertEquals(userDao.GetAllUsers().size(),2);
 			
 		} 
@@ -148,8 +153,11 @@ public class TestSQLPlugin
 			fail("We probably shouldn't have failed to");
 		}
 		plugin.Close();
-		
-		plugin =  new SQLPlugin();
+	}
+	@Test
+	public void testSQLCommandDAO()
+	{
+		SQLPlugin plugin =  new SQLPlugin();
 		ICommandDAO commDao = null;
 		try 
 		{
@@ -168,11 +176,14 @@ public class TestSQLPlugin
 			assertEquals(commDao.GetCommandCount(1),0);
 			commDao.AddCommand(1, "blob");
 			plugin.EndTransaction(true);
+			
 			assertEquals(commDao.GetCommandCount(1),1);
 			assertEquals(commDao.GetCommandCount(2),0);
 			
+			plugin.StartTransaction();
 			commDao.DeleteCommands(1);
 			plugin.EndTransaction(true);
+			
 			assertEquals(commDao.GetCommandCount(1),0);
 			
 		} 
