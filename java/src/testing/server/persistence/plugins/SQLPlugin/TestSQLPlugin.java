@@ -48,6 +48,7 @@ public class TestSQLPlugin
 		plugin.Clear();
 	}
 
+	/*
 	@Test
 	public void testSQLGameDAO()
 	{
@@ -129,7 +130,7 @@ public class TestSQLPlugin
 			fail("We probably shouldn't have failed to");
 		}
 		
-	}
+	}*/
 	
 
 }
