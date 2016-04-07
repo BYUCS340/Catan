@@ -29,67 +29,15 @@ public class FileUserDAO implements IUserDAO {
      * @return
      */
     @Override
-    public boolean AddUser(String id, String username, String password) {
+    public void AddUser(int id, String username, String password) {
     	String userDir = FilenameUtils.userDirFull;
     	File theDir = new File(userDir);
     	FilePersistenceUtils.makeDirs(theDir);
     	
     	
-    	File theFile = new File(FilenameUtils.getFullUserPath(Integer.parseInt(id)));
+    	File theFile = new File(FilenameUtils.getFullUserPath(id));
     	String blob = username + "," + password;
-    	return FilePersistenceUtils.writeFile(theFile, blob);
-    }
-
-    /**
-     * @param username
-     * @return
-     */
-    @Override
-    public ServerPlayer GetUser(String username) {
-        String userDirPath = FilenameUtils.userDirFull;
-        File userDir = new File(userDirPath);
-        
-        ServerPlayer retPlayer = null;
-        if(!userDir.exists()) return retPlayer;
-        
-        for(File f: userDir.listFiles())
-        {
-        	if(Character.isDigit(f.getName().charAt(0)))
-        	{
-        		String blob = FilePersistenceUtils.getBlob(f.getPath());
-            	List<String> splitList = Arrays.asList(blob.split(","));
-            	
-            	//check if we found the username
-            	if(splitList.get(0).equals(username))
-            	{
-            		retPlayer = new ServerPlayer(splitList.get(0), splitList.get(1), 
-            				FilenameUtils.getUserIDFromString(f.getPath()));
-            		return retPlayer;
-            	}
-        	}
-        }
-        
-        return retPlayer;
-    }
-
-    /**
-     * @param playerID
-     * @return
-     */
-    @Override
-    public ServerPlayer GetUser(int playerID) {
-    	String userPath = FilenameUtils.getFullUserPath(playerID);
-    	
-    	//double check that the player exists first
-    	File userFile = new File(userPath);
-    	if(!userFile.exists()) return null;
-    	
-    	String blob = FilePersistenceUtils.getBlob(userFile.getPath());
-    	List<String> splitList = Arrays.asList(blob.split(","));
-    	
-    	ServerPlayer retPlayer = new ServerPlayer(splitList.get(0), splitList.get(1), playerID);
-   
-    	return retPlayer;
+    	FilePersistenceUtils.writeFile(theFile, blob);
     }
 
     /**
@@ -117,19 +65,6 @@ public class FileUserDAO implements IUserDAO {
         }
         
         return retList;
-    }
-
-    /**
-     * Deletes all users on server
-     *
-     * @return true if successful 
-     */
-    @Override
-    public boolean DeleteAllUsers() {
-    	File userDir = new File(FilenameUtils.userDirFull);
-    	if(!userDir.exists()) return true;
-        FilePersistenceUtils.deleteFolder(userDir);
-        return true;
     }
 
     private String pathToFileSystem = "";

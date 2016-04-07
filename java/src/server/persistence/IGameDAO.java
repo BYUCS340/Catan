@@ -1,6 +1,6 @@
 package server.persistence;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * 
@@ -14,41 +14,25 @@ public interface IGameDAO
 	 * @param gameID
 	 * @param blob
 	 * @return
+	 * @throws PersistenceException
 	 */
-	boolean AddGame(int gameID, String blob);
+	void AddGame(int gameID, String blob) throws PersistenceException;
 	
 	/**
 	 * Updates an existing game
 	 * @param gameID
 	 * @param blob
 	 * @return
+	 * @throws PersistenceException
 	 */
-	boolean UpdateGame(int gameID, String blob);
+	void UpdateGame(int gameID, String blob) throws PersistenceException;
 	
-	/**
-	 * Deletes a single game
-	 * @param gameID
-	 * @return
-	 */
-	boolean DeleteGame(int gameID);
-
-	/**
-	 * Deletes all games
-	 * @return
-     */
-	boolean DeleteAllGames();
-	
-	/**
-	 * Gets the current persisted checkpoint for the given gameID
-	 * @param gameID
-	 * @return
-	 */
-	String GetCheckpoint(int gameID);
 	
 	/**
 	 * Returns all games
 	 * @return a map of Game ID to blobs
+	 * @throws PersistenceException
 	 */
-	Map<Integer, String> GetAllGames();
+	List<String> GetAllGames() throws PersistenceException;
 	
 }

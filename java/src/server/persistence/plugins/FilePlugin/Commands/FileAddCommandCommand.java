@@ -28,7 +28,7 @@ public class FileAddCommandCommand implements IFileCommand
 	@Override
 	public boolean execute()
 	{
-		return commandDAO.AddCommand(gameID, command);
+		commandDAO.AddCommand(gameID, command);
 	}
 
 }

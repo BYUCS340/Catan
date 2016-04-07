@@ -9,6 +9,7 @@ import server.persistence.IUserDAO;
 
 /**
  * Created by Tunadude09 on 4/4/2016.
+ * Implemented by Parker Ridd on 4/6/2016
  */
 public class FilePlugin implements IPersistenceProvider {
     /**
@@ -35,14 +36,14 @@ public class FilePlugin implements IPersistenceProvider {
 	@Override
 	public void StartTransaction() 
 	{
-		// TODO Auto-generated method stub
+		FileTransactionManager.startTransaction();
 		
 	}
 
 	@Override
 	public void EndTransaction(boolean commit) 
 	{
-		// TODO Auto-generated method stub
+		FileTransactionManager.endTransaction(commit);
 		
 	}
 
