@@ -130,7 +130,14 @@ public class TestSQLPlugin
 			fail("We probably shouldn't have failed to");
 		}
 		
-	}*/
+	}
+	*/
+	@Test
+	public void testSQLPlugin()
+	{
+		
+		
+	}
 	
 
 }
