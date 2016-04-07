@@ -22,6 +22,7 @@ public class ImageUtils
 		catch(IOException e)
 		{
 //			assert false;
+			System.out.println("Couldn't load image at " + file);
 		}
 		
 		return DEFAULT_IMAGE;
