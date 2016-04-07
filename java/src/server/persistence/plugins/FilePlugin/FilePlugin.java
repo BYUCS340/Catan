@@ -12,6 +12,10 @@ import server.persistence.IUserDAO;
  * Implemented by Parker Ridd on 4/6/2016
  */
 public class FilePlugin implements IPersistenceProvider {
+	private IUserDAO userDAO = null;
+	private IGameDAO gameDAO = null;
+	private ICommandDAO commandDAO = null;
+	
     /**
      * Initialize filesystem in plugins/filePlugin
      */
@@ -37,34 +41,41 @@ public class FilePlugin implements IPersistenceProvider {
 	public void StartTransaction() 
 	{
 		FileTransactionManager.startTransaction();
-		
 	}
 
 	@Override
 	public void EndTransaction(boolean commit) 
 	{
 		FileTransactionManager.endTransaction(commit);
-		
 	}
 
 	@Override
 	public IUserDAO GetUserDAO() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(userDAO == null)
+		{
+			userDAO = new FileTransactionalUserDAO(new FileUserDAO());
+		}
+		return userDAO;
 	}
 
 	@Override
 	public IGameDAO GetGameDAO() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(gameDAO == null)
+		{
+			gameDAO = new FileTransactionalGameDAO(new FileGameDAO());
+		}
+		return gameDAO;
 	}
 
 	@Override
 	public ICommandDAO GetCommandDAO() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(commandDAO == null)
+		{
+			commandDAO = new FileTransactionalCommandDAO(new FileCommandDAO());
+		}
+		return commandDAO;
 	}
 }
