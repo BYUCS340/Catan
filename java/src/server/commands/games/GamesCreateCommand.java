@@ -14,6 +14,8 @@ import shared.networking.SerializationUtils;
  */
 public class GamesCreateCommand implements ICommand 
 {
+	private static final long serialVersionUID = 5605554739034264519L;
+
 	ServerGameManager sgm;
 	
 	private GameInfo info;
@@ -42,7 +44,7 @@ public class GamesCreateCommand implements ICommand
 	@Override
 	public boolean Execute() 
 	{
-		info = GameArcade.games().CreateGame(sgm);
+		info = GameArcade.games().CreateGame(sgm, true);
 		return info != null;
 	}
 

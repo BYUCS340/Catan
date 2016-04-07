@@ -6,12 +6,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import server.cookie.ServerCookie;
 import server.model.GameException;
 import server.model.GameTable;
-import server.model.ServerGameManager;
 import server.model.ServerPlayer;
-import shared.data.GameInfo;
 
 public class TestGameTable 
 {

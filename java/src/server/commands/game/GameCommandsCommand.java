@@ -13,6 +13,8 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class GameCommandsCommand extends CookieCommand 
 {
+	private static final long serialVersionUID = -8283458741743309988L;
+	
 	private List<ICommand> commands;
 	
 	/**

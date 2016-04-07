@@ -5,10 +5,16 @@ import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.logging.Level;
 
 import com.sun.net.httpserver.HttpServer;
 
+import server.commands.ICommand;
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
+import server.model.ServerPlayer;
 import server.persistence.PersistenceException;
 import server.persistence.PersistenceFacade;
 import server.swagger.SwaggerHandlers;
@@ -91,6 +97,7 @@ public class Server
 			HttpServer server = HttpServer.create(new InetSocketAddress(port), MAX_WAITING);
 			
 			PersistenceFacade.Initialize(plugin, commandLimit);
+			TryInitializingData();
 			
 			server.createContext("/", new HTTPHandler());
 			server.createContext("/docs/api/data", new SwaggerHandlers.JSONAppender());
@@ -116,10 +123,27 @@ public class Server
 			Log.GetLog().log(defaultLevel, "IP: " + InetAddress.getLocalHost().getHostAddress());
 			Log.GetLog().log(defaultLevel, "Port: " + port);
 		}
-		catch (IOException | PersistenceException e) 
+		catch (IOException | PersistenceException | GameException e) 
 		{
 			Log.GetLog().log(Level.SEVERE, e.getMessage(), e);
 			return;
 		}
+	}
+	
+	private void TryInitializingData() throws PersistenceException, GameException
+	{
+		PersistenceFacade facade = PersistenceFacade.GetPersistence();
+		
+		List<ServerPlayer> players = facade.GetAllUsers();
+		for (ServerPlayer player : players)
+			GameArcade.games().RegisterPlayer(player);
+		
+		List<ServerGameManager> games = facade.GetAllGames();
+		for (ServerGameManager game : games)
+			GameArcade.games().CreateGame(game, false);
+		
+		List<ICommand> commands = facade.GetAllCommands();
+		for (ICommand command : commands)
+			command.Execute();
 	}
 }

@@ -12,6 +12,8 @@ import server.model.GameException;
  */
 public class UserRegisterCommand implements ICommand 
 {
+	private static final long serialVersionUID = 2490805469832468054L;
+
 	private String username;
 	private String password;
 	
