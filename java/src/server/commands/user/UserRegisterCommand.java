@@ -4,6 +4,7 @@ import server.Log;
 import server.commands.ICommand;
 import server.model.GameArcade;
 import server.model.GameException;
+import server.model.ServerPlayer;
 
 /**
  * Handles registering a user.
@@ -14,6 +15,7 @@ public class UserRegisterCommand implements ICommand
 {
 	private static final long serialVersionUID = 2490805469832468054L;
 
+	private int playerID;
 	private String username;
 	private String password;
 	
@@ -35,7 +37,7 @@ public class UserRegisterCommand implements ICommand
 	{
 		try 
 		{
-			GameArcade.games().RegisterPlayer(username, password);
+			playerID = GameArcade.games().RegisterPlayer(username, password);
 			Log.GetLog().finer("Registered: " + username);
 			response = "Success";
 			return true;
@@ -67,5 +69,10 @@ public class UserRegisterCommand implements ICommand
 	{
 		//Response isn't necessary as it will be followed by a login command.
 		return null;
+	}
+	
+	public ServerPlayer GetPlayer()
+	{
+		return new ServerPlayer(username, password, playerID);
 	}
 }

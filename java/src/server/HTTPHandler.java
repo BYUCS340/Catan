@@ -8,6 +8,14 @@ import com.sun.net.httpserver.*;
 import server.commands.CommandFactory;
 import server.commands.ICommand;
 import server.commands.InvalidFactoryParameterException;
+import server.commands.games.GamesCreateCommand;
+import server.commands.moves.MovesCommand;
+import server.commands.user.UserRegisterCommand;
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
+import server.persistence.PersistenceException;
+import server.persistence.PersistenceFacade;
 import server.swagger.SwaggerHandlers;
 import shared.networking.SerializationUtils;
 import shared.networking.cookie.NetworkCookie;
@@ -68,6 +76,8 @@ public class HTTPHandler implements HttpHandler
 			
 			if (command.Execute())
 			{
+				HandlePersistence(command);
+				
 				String response = command.GetResponse();
 				String cookieHeader = command.GetHeader();
 				
@@ -110,5 +120,39 @@ public class HTTPHandler implements HttpHandler
 		OutputStream oStream = exchange.getResponseBody();
 		oStream.write(responseMessage.getBytes());
 		oStream.close();
+	}
+	
+	private void HandlePersistence(ICommand command)
+	{
+		PersistenceFacade facade = PersistenceFacade.GetPersistence();
+		
+		try
+		{
+			if (command.getClass() == UserRegisterCommand.class)
+			{
+				UserRegisterCommand user = (UserRegisterCommand)command;
+				facade.AddUser(user.GetPlayer());
+			}
+			else if (command.getClass() == GamesCreateCommand.class)
+			{
+				GamesCreateCommand game = (GamesCreateCommand)command;
+				facade.AddGame(game.GetGame());
+			}
+			else if (command.getClass() == MovesCommand.class)
+			{
+				MovesCommand move = (MovesCommand)command;
+				int gameID = move.GetGameID();
+				
+				if (!facade.AddCommand(gameID, command))
+				{
+					ServerGameManager sgm = GameArcade.games().GetGame(gameID);
+					facade.UpdateGame(sgm);
+				}
+			}
+		}
+		catch (PersistenceException | GameException e)
+		{
+			Log.GetLog().throwing("HTTPHandler", "HandlePersistence", e);
+		}
 	}
 }

@@ -70,4 +70,8 @@ public class GamesCreateCommand implements ICommand
 		return null;
 	}
 
+	public ServerGameManager GetGame()
+	{
+		return sgm;
+	}
 }
