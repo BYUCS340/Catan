@@ -1,5 +1,10 @@
 package server.persistence;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,8 +73,12 @@ public class PersistenceFacade
 			
 			if (commandDAO.GetCommandCount(gameID) <= commandLength)
 			{
-				String blob = SerializationUtils.serialize(command);
-				provider.GetCommandDAO().AddCommand(gameID, blob);
+				ByteArrayOutputStream baoStream = new ByteArrayOutputStream();
+				ObjectOutputStream ooStream = new ObjectOutputStream(baoStream);
+				ooStream.writeObject(command);
+				
+				provider.GetCommandDAO().AddCommand(gameID, baoStream.toString());
+				ooStream.close();
 				success = true;
 			}
 			else
@@ -79,7 +88,7 @@ public class PersistenceFacade
 			
 			provider.EndTransaction(true);
 		}
-		catch (PersistenceException e)
+		catch (PersistenceException | IOException e)
 		{
 			provider.EndTransaction(false);
 		}
@@ -167,8 +176,18 @@ public class PersistenceFacade
 		List<ICommand> convertedCommands = new ArrayList<ICommand>(commands.size());
 		for (String command : commands)
 		{
-			//ICommand convertedCommand = SerializationUtils.deserialize(command, ICommand.class);
-			//convertedCommands.add(convertedCommand);
+			try
+			{
+				ByteArrayInputStream baiStream = new ByteArrayInputStream(command.getBytes());
+				ObjectInputStream oiStream = new ObjectInputStream(baiStream);
+				
+				ICommand convertedCommand = (ICommand)oiStream.readObject();
+				convertedCommands.add(convertedCommand);
+			}
+			catch (IOException | ClassNotFoundException e)
+			{
+				e.printStackTrace();
+			}
 		}
 		
 		return convertedCommands;
