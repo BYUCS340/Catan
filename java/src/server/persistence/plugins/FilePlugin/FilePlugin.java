@@ -6,6 +6,7 @@ import server.persistence.ICommandDAO;
 import server.persistence.IGameDAO;
 import server.persistence.IPersistenceProvider;
 import server.persistence.IUserDAO;
+import server.persistence.PersistenceException;
 
 /**
  * Created by Tunadude09 on 4/4/2016.
@@ -39,15 +40,23 @@ public class FilePlugin implements IPersistenceProvider {
 	}
 
 	@Override
-	public void StartTransaction() 
+	public void StartTransaction() throws PersistenceException
 	{
-		FileTransactionManager.startTransaction();
+		boolean successful = FileTransactionManager.startTransaction();
+		if(!successful)
+		{
+			throw new PersistenceException("The transaction could not be started! Resuld false");
+		}
 	}
 
 	@Override
-	public void EndTransaction(boolean commit) 
+	public void EndTransaction(boolean commit) throws PersistenceException
 	{
-		FileTransactionManager.endTransaction(commit);
+		boolean successful = FileTransactionManager.endTransaction(commit);
+		if(!successful)
+		{
+			throw new PersistenceException("The transaction couldn't be committed! Result false");
+		}
 	}
 
 	@Override

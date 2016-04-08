@@ -27,7 +27,7 @@ public class FileTransactionManager {
 		return false;
 	}
 	
-	public static boolean endTransaction(boolean commit)
+	public static boolean endTransaction(boolean commit) throws PersistenceException
 	{
 		if(!transactionBegun)
 			return false;
