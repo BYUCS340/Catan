@@ -9,6 +9,12 @@ import java.util.Random;
 import server.commands.CommandFactory;
 import server.commands.ICommand;
 import server.commands.InvalidFactoryParameterException;
+import server.commands.moves.MovesCommand;
+import server.model.GameArcade;
+import server.model.GameException;
+import server.model.ServerGameManager;
+import server.persistence.PersistenceException;
+import server.persistence.PersistenceFacade;
 import shared.definitions.CatanColor;
 import shared.definitions.PieceType;
 import shared.model.Bank;
@@ -298,7 +304,10 @@ public abstract class Personality
 		{
 			ICommand command = CommandFactory.GetCommandFactory().GetCommand(param, cookie, object);
 			if (command.Execute())
+			{
+				HandlePersistence(command);
 				return command.GetResponse();
+			}
 			return null;
 		}
 		catch (InvalidFactoryParameterException e)
@@ -320,6 +329,30 @@ public abstract class Personality
 		if (response == null) return null;
 		
 		return SerializationUtils.deserialize(response, objClass);
+	}
+	
+	private void HandlePersistence(ICommand command)
+	{
+		try
+		{
+			if (MovesCommand.class.isAssignableFrom(command.getClass()))
+			{
+				PersistenceFacade facade = PersistenceFacade.GetPersistence();
+				
+				MovesCommand move = (MovesCommand)command;
+				int gameID = move.GetGameID();
+				
+				if (!facade.AddCommand(gameID, command))
+				{
+					ServerGameManager sgm = GameArcade.games().GetGame(gameID);
+					facade.UpdateGame(sgm);
+				}
+			}
+		}
+		catch (PersistenceException | GameException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public abstract void TakeTurn(int gameID);
