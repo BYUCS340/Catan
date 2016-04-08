@@ -1,11 +1,12 @@
 package server.persistence.plugins.SQLPlugin;
 
 import server.persistence.ICommandDAO;
+import server.persistence.PersistenceException;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,93 +26,142 @@ public class SQLCommandDAO implements ICommandDAO
     }
 
     /**
-     * gets command blobs for a game ID
+     * Get a List of all Commands in COMMANDS table
      *
      * @param gameID
-     * @return
+     * @return List of Command as String
+     * @throws PersistenceException
      */
     @Override
-    public List<String> GetCommands()
+    public List<String> GetCommands() throws PersistenceException
     {
     	try
     	{
     		List<String> commands = new ArrayList<String>();
+    		PreparedStatement pStmt = null;
     		
-    		Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * from COMMANDS");
+    		String sql = "SELECT * from COMMANDS";
+			pStmt = connection.prepareStatement(sql);
+    		
+            ResultSet rs = pStmt.executeQuery();
             while (rs.next())
             {
                String  commandBlob = rs.getString("BLOB");
                commands.add(commandBlob);
             }
             rs.close();
-            stmt.close();
+            pStmt.close();
             return commands;
     	}
         catch (SQLException e)
         {
         	e.printStackTrace();
-        	return null;
+        	throw new PersistenceException("GetCommands SQLException", e);
         }
     }
 
     /**
-     * Adds a command to the DAO
+     * Adds a command to the COMMANDS table
      *
      * @param gameID
      * @param blob
-     * @return
+     * @throws PersistenceException
      */
     @Override
-    public void AddCommand(int gameID, String blob)
+    public void AddCommand(int gameID, String blob) throws PersistenceException
     {
     	try
     	{
-			Statement stmt = connection.createStatement();
+    		PreparedStatement pStmt = null;
+    		
+    		String sql = "INSERT INTO COMMANDS (ID, BLOB) VALUES (?, ?)";
+			pStmt = connection.prepareStatement(sql);
 			
-			String sql = "INSERT INTO COMMANDS (ID, BLOB) " +
-		            "VALUES (" + gameID + ", '" + blob + "');";
-		    stmt.executeUpdate(sql);
-
-		    stmt.close();
+			pStmt.setInt(1, gameID);
+			pStmt.setString(2, blob);
+			
+			if (pStmt.executeUpdate() == 1)
+			{
+				pStmt.close();
+			}
+			else
+			{
+				pStmt.close();
+				throw new PersistenceException("AddCommand update failed");
+			}
 		}
     	catch (SQLException e)
     	{
 			e.printStackTrace();
+			throw new PersistenceException("AddCommand SQLException", e);
 		}
     }
 
     /**
+     * Deletes a Command from COMMANDS table
+     * 
      * @param gameID
-     * @return
+     * @throws PersistenceException
      */
     @Override
-    public void DeleteCommands(int gameID)
+    public void DeleteCommands(int gameID) throws PersistenceException
     {
     	try
     	{
-    		Statement stmt = connection.createStatement();
-    	    String sql = "DELETE from COMMANDS where ID=" + gameID + ";";
-    	    stmt.executeUpdate(sql);
-    	    
-    	    stmt.close();
+    		PreparedStatement pStmt = null;
+    		
+    		String sql = "DELETE from COMMANDS where ID=?";
+			pStmt = connection.prepareStatement(sql);
+			
+			pStmt.setInt(1, gameID);
+			
+			//this returns the number of rows deleted
+			pStmt.executeUpdate();
+			pStmt.close();
+			
 		}
     	catch (SQLException e)
     	{
 			e.printStackTrace();
+			throw new PersistenceException("DeleteCommands SQLException");
 		}
     }
 
     /**
-     * Gets the total number of commands for
+     * Gets the number of Commands in COMMANDS table for a specified Game
      *
      * @param gameID
-     * @return
+     * @return Number of Commands
+     * @throws PersistenceException
      */
     @Override
-    public int GetCommandCount(int gameID)
+    public int GetCommandCount(int gameID) throws PersistenceException
     {
-    	return 0;
+    	try
+    	{
+    		List<String> commands = new ArrayList<String>();
+    		PreparedStatement pStmt = null;
+    		
+    		String sql = "SELECT * from COMMANDS where ID=?";
+			pStmt = connection.prepareStatement(sql);
+			
+			pStmt.setInt(1, gameID);
+    		
+            ResultSet rs = pStmt.executeQuery();
+            while (rs.next())
+            {
+               String  commandBlob = rs.getString("BLOB");
+               commands.add(commandBlob);
+            }
+            rs.close();
+            pStmt.close();
+            return commands.size();
+    	}
+        catch (SQLException e)
+        {
+        	e.printStackTrace();
+        	throw new PersistenceException("GetCommandCount SQLException", e);
+        }
     }
 
     String mysqlDb;

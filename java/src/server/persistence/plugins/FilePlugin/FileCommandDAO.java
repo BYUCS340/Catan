@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import server.persistence.ICommandDAO;
+import server.persistence.PersistenceException;
 
 /**
  * Created by Tunadude09 on 4/4/2016.
@@ -25,22 +26,38 @@ public class FileCommandDAO implements ICommandDAO {
      * @return
      */
     @Override
-    public List<String> GetCommands() 
+    public List<String> GetCommands() throws PersistenceException
     {
     	List<String> retList = new ArrayList<String>();
     	
-//    	String commandsDir = FilenameUtils.getFullCommandsDir(gameID);
-//    	File dir = new File(commandsDir);
-//    	if(!dir.exists()) return retList;
-//    	
-//    	for(File f : dir.listFiles())
-//    	{
-//    		//check to see if this file is a command
-//    		if(f.getName().contains(FilenameUtils.commandPrefix))
-//    		{
-//    			retList.add(FilePersistenceUtils.getBlob(f.getPath()));
-//    		}
-//    	}
+    	File dataDir = new File(FilenameUtils.dataDir);
+    	for(File gdfile : dataDir.listFiles())
+    	{
+    		if(gdfile.getName().contains(FilenameUtils.gameDir))
+			{
+    			int gameID = FilenameUtils.getGameIDFromDirString(gdfile.getName());
+    			String commandPath = FilenameUtils.getFullCommandsDir(gameID);
+    			File dir = new File(commandPath);
+    			if(!dir.exists()) continue;
+    	    	
+    			int commandCount = this.GetCommandCount(gameID);
+    			
+    			//iterate through all of the commands that should exist in this folder
+    			for(int i = 0; i < commandCount; i++)
+				{
+    				//Get file name of the specified command
+    				String fileName = commandPath + File.separator + FilenameUtils.commandPrefix + i + FilenameUtils.fileSuffix;
+    				File tempFile = new File(fileName);
+    				if(!tempFile.exists())
+    				{
+    					throw new PersistenceException("Path " + fileName + " should have existed but didn't");
+    				}
+    				
+    	    		retList.add(FilePersistenceUtils.getBlob(fileName));
+				}	
+			}
+    	}
+    	
     	return retList;
     }
 
@@ -58,7 +75,7 @@ public class FileCommandDAO implements ICommandDAO {
     	File theDir = new File(commandsDir);
     	FilePersistenceUtils.makeDirs(theDir);
     	
-    	int num = this.GetCommandCount(gameID) + 1;
+    	int num = this.GetCommandCount(gameID);
     	
     	//Format: data/game1/commands/Command21.catan
     	File theFile = new File(commandsDir + File.separator + FilenameUtils.commandPrefix + num + FilenameUtils.fileSuffix);

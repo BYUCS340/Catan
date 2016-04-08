@@ -167,8 +167,8 @@ public class PersistenceFacade
 		List<ICommand> convertedCommands = new ArrayList<ICommand>(commands.size());
 		for (String command : commands)
 		{
-			ICommand convertedCommand = SerializationUtils.deserialize(command, ICommand.class);
-			convertedCommands.add(convertedCommand);
+			//ICommand convertedCommand = SerializationUtils.deserialize(command, ICommand.class);
+			//convertedCommands.add(convertedCommand);
 		}
 		
 		return convertedCommands;
@@ -199,7 +199,7 @@ public class PersistenceFacade
 		List<ServerGameManager> convertedGames = new ArrayList<ServerGameManager>(games.size());
 		for (String game : games)
 		{
-			ServerGameManager convertedGame = SerializationUtils.deserialize(game, ServerGameManager.class);
+			ServerGameManager convertedGame = SerializationUtils.deserialize(game, RealServerGameManager.class);
 			convertedGames.add(convertedGame);
 		}
 		
