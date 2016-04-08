@@ -14,10 +14,12 @@ import org.junit.Test;
 import server.model.ServerPlayer;
 import server.persistence.IUserDAO;
 import server.persistence.plugins.FilePlugin.FilePersistenceUtils;
+import server.persistence.plugins.FilePlugin.FileTransactionManager;
+import server.persistence.plugins.FilePlugin.FileTransactionalUserDAO;
 import server.persistence.plugins.FilePlugin.FileUserDAO;
 import server.persistence.plugins.FilePlugin.FilenameUtils;
 
-public class FileUserDAOTest
+public class FileTransactionalUserDAOTest
 {
 
 	@BeforeClass
@@ -27,7 +29,7 @@ public class FileUserDAOTest
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception
-	{	
+	{
 	}
 
 	@Before
@@ -53,8 +55,12 @@ public class FileUserDAOTest
 	@Test
 	public void testAddUser() throws Exception
 	{
-		IUserDAO userDAO = new FileUserDAO();
+		IUserDAO userDAO = new FileTransactionalUserDAO(new FileUserDAO());
+		
+		FileTransactionManager.startTransaction();
 		userDAO.AddUser(1, "johnny", "pills123");
+		FileTransactionManager.endTransaction(true);
+		
 		File userFile = new File(FilenameUtils.getFullUserPath(1));
 		assertTrue(userFile.exists());
 		String blob = FilePersistenceUtils.getBlob(userFile.getPath());
@@ -64,11 +70,14 @@ public class FileUserDAOTest
 	@Test
 	public void testGetUsers() throws Exception
 	{
-		IUserDAO userDAO = new FileUserDAO();
+		IUserDAO userDAO = new FileTransactionalUserDAO(new FileUserDAO());
+		
+		FileTransactionManager.startTransaction();
 		userDAO.AddUser(1, "johnny", "pills123");
 		userDAO.AddUser(2, "james", "excellence1");
 		userDAO.AddUser(3, "joni", "john123");
 		userDAO.AddUser(4, "orange", "red567");
+		FileTransactionManager.endTransaction(true);
 		
 		List<ServerPlayer> players = userDAO.GetAllUsers();
 		assertTrue(players.size() == 4);
@@ -95,4 +104,5 @@ public class FileUserDAOTest
 		assertTrue(user3Found);
 		assertTrue(user4Found);
 	}
+
 }

@@ -10,6 +10,7 @@ public class FileAddUserCommand implements IFileCommand{
 	
 	public FileAddUserCommand(IUserDAO userDAO, int userID, String username, String password)
 	{
+		this.userDAO = userDAO;
 		this.username = username;
 		this.password = password;
 		this.userID = userID;
