@@ -195,13 +195,13 @@
 
 			</manifest>
 		</jar>
-		
+
         <jar jarfile="${java.dist}/plugins/mock-plugin.jar"  update="yes">
             <fileset dir="${java.build}" includes="server/persistence/plugins/MockPlugin/*.class"/>
 			<manifest>
 
 			</manifest>
-		</jar>		
+		</jar>
 	</target>
 
 
@@ -220,9 +220,9 @@
 
 	<target name="our-server" depends="package" description="compiles, packages, and runs the student server">
 		<java jar="${java.dist}/catan-server.jar" dir="${java.dist}" fork="yes">
-			<arg value="${port}"/>
             <arg value="${plugin}"/>
             <arg value="${commands}"/>
+            <arg value="${port}"/>
 			<sysproperty key="com.sun.management.jmxremote" value=""/>
 			<assertions>
 				<enable/>

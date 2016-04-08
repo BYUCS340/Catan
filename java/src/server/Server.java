@@ -42,9 +42,17 @@ public class Server
 	public static void main(final String[] args) 
 	{
 		int port = DEFAULT_PORT;
+		int commands = 10;
+		String plugin = ""; 
 		
-		String plugin = args[0];
-		int commands = Integer.parseInt(args[1]);
+		
+		if (args.length >= 1)
+			plugin = args[0];
+		
+		if (args.length >= 2)
+			commands = Integer.parseInt(args[1]);
+		
+		
 		
 		if (args.length >= 3)
 		{
@@ -96,8 +104,17 @@ public class Server
 			Log.GetLog().log(defaultLevel, "Starting server");
 			HttpServer server = HttpServer.create(new InetSocketAddress(port), MAX_WAITING);
 			
-			PersistenceFacade.Initialize(plugin, commandLimit);
-			TryInitializingData();
+			try 
+			{
+				PersistenceFacade.Initialize(plugin, commandLimit);
+				TryInitializingData();
+			} 
+			catch (PersistenceException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			
 			server.createContext("/", new HTTPHandler());
 			server.createContext("/docs/api/data", new SwaggerHandlers.JSONAppender());
@@ -123,7 +140,7 @@ public class Server
 			Log.GetLog().log(defaultLevel, "IP: " + InetAddress.getLocalHost().getHostAddress());
 			Log.GetLog().log(defaultLevel, "Port: " + port);
 		}
-		catch (IOException | PersistenceException | GameException e) 
+		catch (IOException | GameException e) 
 		{
 			Log.GetLog().log(Level.SEVERE, e.getMessage(), e);
 			return;
