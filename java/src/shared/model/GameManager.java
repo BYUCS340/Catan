@@ -119,7 +119,7 @@ public class GameManager
 	 */
 	public int AddPlayer(String name, CatanColor color, boolean isHuman, int playerID) throws ModelException
 	{
-		System.out.println("Adding player to game");
+		//System.out.println("Adding player to game");
 		//check if that color has already been used
 		if (playerColors[color.ordinal()] != -1)
 			throw new ModelException();
