@@ -1,32 +1,36 @@
 package server.persistence.plugins.FilePlugin;
 
 import java.util.List;
-import java.util.Map;
 
 import server.persistence.IGameDAO;
 import server.persistence.PersistenceException;
+import server.persistence.plugins.FilePlugin.Commands.FileAddGameCommand;
+import server.persistence.plugins.FilePlugin.Commands.FileUpdateGameCommand;
 
 public class FileTransactionalGameDAO implements IGameDAO {
-
+	private IGameDAO gameDAO;
+	
+	public FileTransactionalGameDAO(IGameDAO gameDAO)
+	{
+		this.gameDAO = gameDAO;
+	}
+	
 	@Override
 	public void AddGame(int gameID, String blob) throws PersistenceException
 	{
-		// TODO Auto-generated method stub
-		
+		FileTransactionManager.addCommand(new FileAddGameCommand(gameDAO, gameID, blob));		
 	}
 
 	@Override
 	public void UpdateGame(int gameID, String blob) throws PersistenceException
 	{
-		// TODO Auto-generated method stub
-		
+		FileTransactionManager.addCommand(new FileUpdateGameCommand(gameDAO, gameID, blob));		
 	}
 
 	@Override
 	public List<String> GetAllGames() throws PersistenceException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return gameDAO.GetAllGames();
 	}
 
 }

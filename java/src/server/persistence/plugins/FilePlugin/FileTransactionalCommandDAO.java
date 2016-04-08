@@ -4,35 +4,39 @@ import java.util.List;
 
 import server.persistence.ICommandDAO;
 import server.persistence.PersistenceException;
+import server.persistence.plugins.FilePlugin.Commands.FileAddCommandCommand;
+import server.persistence.plugins.FilePlugin.Commands.FileDeleteCommandsCommand;
 
 public class FileTransactionalCommandDAO implements ICommandDAO {
+	private ICommandDAO commandDAO;
+	
+	public FileTransactionalCommandDAO(ICommandDAO commandDAO)
+	{
+		this.commandDAO = commandDAO;
+	}
 
 	@Override
 	public List<String> GetCommands() throws PersistenceException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return commandDAO.GetCommands();
 	}
 
 	@Override
 	public void AddCommand(int gameID, String blob) throws PersistenceException
 	{
-		// TODO Auto-generated method stub
-		
+		FileTransactionManager.addCommand(new FileAddCommandCommand(commandDAO, gameID, blob));
 	}
 
 	@Override
 	public void DeleteCommands(int gameID) throws PersistenceException
 	{
-		// TODO Auto-generated method stub
-		
+		FileTransactionManager.addCommand(new FileDeleteCommandsCommand(commandDAO, gameID));
 	}
 
 	@Override
 	public int GetCommandCount(int gameID) throws PersistenceException
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return commandDAO.GetCommandCount(gameID);
 	}
 
 }

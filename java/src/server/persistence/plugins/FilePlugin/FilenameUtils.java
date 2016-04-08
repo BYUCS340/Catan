@@ -23,7 +23,7 @@ public class FilenameUtils
 	 */
 	public static String getGameDirString(int gameID)
 	{
-		return "Game" + gameID;
+		return gameDir + gameID;
 	}
 	
 	
@@ -87,7 +87,7 @@ public class FilenameUtils
 		//if we know that this is a path and not a name, handle it specially
 		if(path.contains(File.separator))
 		{
-			String ret = path.substring(path.lastIndexOf("/")+1, path.lastIndexOf('.'));
+			String ret = path.substring(path.lastIndexOf(File.separator)+1, path.lastIndexOf('.'));
 			return Integer.parseInt(ret);
 		}
 		else
