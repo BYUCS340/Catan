@@ -195,6 +195,13 @@
 
 			</manifest>
 		</jar>
+		
+        <jar jarfile="${java.dist}/plugins/mock-plugin.jar"  update="yes">
+            <fileset dir="${java.build}" includes="server/persistence/plugins/MockPlugin/*.class"/>
+			<manifest>
+
+			</manifest>
+		</jar>		
 	</target>
 
 

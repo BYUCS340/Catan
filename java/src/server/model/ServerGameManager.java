@@ -1,9 +1,7 @@
 package server.model;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import shared.definitions.ResourceType;
 import shared.model.GameManager;
@@ -26,10 +24,6 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 	protected boolean randomNumbers;
 	protected boolean randomPorts;
 
-	protected Map<Integer,Integer> playerIndexLookup;
-
-	protected List<Boolean> discardList;
-
 	public ServerGameManager(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
 	{
 		super();
@@ -37,7 +31,6 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 		this.randomNumbers = randomNumbers;
 		this.randomPorts = randomPorts;
 		this.randomTiles = randomTiles;
-		this.playerIndexLookup = new HashMap<Integer,Integer>();
 		this.map = MapGenerator.GenerateMap(randomTiles, randomNumbers, randomPorts);
 	}
 
@@ -49,7 +42,6 @@ public abstract class ServerGameManager extends GameManager implements Serializa
 		this.randomNumbers = false;
 		this.randomPorts = false;
 		this.randomTiles = false;
-		this.playerIndexLookup = new HashMap<Integer,Integer>();
 
 		this.map = MapGenerator.GenerateMap(false, false, false);
 	}

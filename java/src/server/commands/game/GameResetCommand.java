@@ -15,6 +15,8 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class GameResetCommand extends CookieCommand
 {
+	private static final long serialVersionUID = 8767925065146797291L;
+	
 	private GameModel gm;
 	/**
 	 * Creates a command that allows the game to be reset.

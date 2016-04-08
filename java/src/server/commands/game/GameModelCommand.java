@@ -14,6 +14,8 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class GameModelCommand extends CookieCommand
 {
+	private static final long serialVersionUID = 7071448787665345669L;
+	
 	private int version;
 	private ServerGameManager sgm;
 	
