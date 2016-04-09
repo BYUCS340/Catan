@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import server.model.GameException;
 import server.model.GameTable;
-import server.model.ServerPlayer;
 
 public class TestGameTable 
 {
@@ -29,34 +28,31 @@ public class TestGameTable
 	{
 		String username = "amIhuman";
 		String password = "orAmIdancer";
-		int sc = -1;
-		ServerPlayer sp = null;
-		int playerID = -1;
 		
 		String username2 = "mrBrightside";
 		String password2 = "feelingfine";
-		int sc2 = -1;
-		ServerPlayer sp2 = null;
-		int playerID2 = -1;
 		
 		//try to login
 		try 
 		{
-			sc = gt.Login(username, password);
+			gt.Login(username, password);
 			fail("We shouldn't have been able to login");
 		}
 		catch (GameException e){}
 		
 		//Register the player
-		try{
-			sc = gt.RegisterPlayer(username, password);
+		try
+		{
+			gt.RegisterPlayer(username, password);
 		}
-		catch (GameException e){
+		catch (GameException e)
+		{
 			fail("We should be able to register the player");
 		}
 		
 		//Re-register the player
-		try{
+		try
+		{
 			gt.RegisterPlayer(username, password);
 			fail("We shouldn't be able to register the player again");
 		}
@@ -67,22 +63,24 @@ public class TestGameTable
 		//try to login
 		try 
 		{
-			sc2 = gt.Login(username2, password2);
+			gt.Login(username2, password2);
 			fail("We shouldn't have been able to login");
 		}
 		catch (GameException e){}
 		
 		
 		//Register the player
-		try{
-			sc2 = gt.RegisterPlayer(username2, password2);
+		try
+		{
+			gt.RegisterPlayer(username2, password2);
 		}
 		catch (GameException e){
 			fail("We should be able to register the player");
 		}
 		
 		//Re-register the player
-		try{
+		try
+		{
 			gt.RegisterPlayer(username2, password2);
 			fail("We shouldn't be able to register the player again");
 		}

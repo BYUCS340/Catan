@@ -7,7 +7,6 @@ import client.base.Controller;
 import client.misc.IWaitView;
 import client.model.ClientGame;
 import client.model.ClientGameManager;
-import shared.definitions.GameRound;
 import shared.definitions.ModelNotification;
 import shared.definitions.ResourceType;
 import shared.definitions.TurnState;

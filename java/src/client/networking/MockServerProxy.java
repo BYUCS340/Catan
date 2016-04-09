@@ -533,14 +533,14 @@ public class MockServerProxy implements EarlyServerProxy
 		aplayer1.setHasDiscarded(false);
 		aplayer1.setNumMonuments(0);
 		aplayer1.setName("Pete");
-		NetDevCardList adevCardList1 = new NetDevCardList();
+
 		aplayer1.setOldNetDevCardList(devCardList1);
-		NetDevCardList adevCardList2 = new NetDevCardList();
+
 		aplayer1.setNewNetDevCardList(devCardList2);
 		aplayer1.setPlayerIndex(0);
 		aplayer1.setPlayedDevCard(false);
 		aplayer1.setPlayerID(10);
-		NetResourceList aresourceList = new NetResourceList();
+
 		aplayer1.setNetResourceList(resourceList);
 		aplayer1.setNumRoads(15);
 		aplayer1.setNumSoldiers(0);
@@ -554,14 +554,14 @@ public class MockServerProxy implements EarlyServerProxy
 		aplayer2.setHasDiscarded(false);
 		aplayer2.setNumMonuments(0);
 		aplayer2.setName("Hannah");
-		NetDevCardList adevCardList3 = new NetDevCardList();
+
 		aplayer2.setOldNetDevCardList(devCardList3);
-		NetDevCardList adevCardList4 = new NetDevCardList();
+
 		aplayer2.setNewNetDevCardList(devCardList4);
 		aplayer2.setPlayerIndex(0);
 		aplayer2.setPlayedDevCard(false);
 		aplayer2.setPlayerID(-2);
-		NetResourceList aresourceList2 = new NetResourceList();
+
 		aplayer2.setNetResourceList(resourceList2);
 		aplayer2.setNumRoads(15);
 		aplayer2.setNumSoldiers(0);
@@ -575,14 +575,14 @@ public class MockServerProxy implements EarlyServerProxy
 		aplayer3.setHasDiscarded(false);
 		aplayer3.setNumMonuments(0);
 		aplayer3.setName("Squall");
-		NetDevCardList adevCardList5 = new NetDevCardList();
+
 		aplayer3.setOldNetDevCardList(devCardList5);
-		NetDevCardList adevCardList6 = new NetDevCardList();
+
 		aplayer3.setNewNetDevCardList(devCardList6);
 		aplayer3.setPlayerIndex(0);
 		aplayer3.setPlayedDevCard(false);
 		aplayer3.setPlayerID(-3);
-		NetResourceList aresourceList3 = new NetResourceList();
+
 		aplayer3.setNetResourceList(resourceList3);
 		aplayer3.setNumRoads(15);
 		aplayer3.setNumSoldiers(0);
@@ -596,14 +596,14 @@ public class MockServerProxy implements EarlyServerProxy
 		aplayer4.setHasDiscarded(false);
 		aplayer4.setNumMonuments(0);
 		aplayer4.setName("Quinn");
-		NetDevCardList adevCardList7 = new NetDevCardList();
+	
 		aplayer4.setOldNetDevCardList(devCardList7);
-		NetDevCardList adevCardList8 = new NetDevCardList();
+		
 		aplayer4.setNewNetDevCardList(devCardList8);
 		aplayer4.setPlayerIndex(0);
 		aplayer4.setPlayedDevCard(false);
 		aplayer4.setPlayerID(-4);
-		NetResourceList aresourceList4 = new NetResourceList();
+		
 		aplayer4.setNetResourceList(resourceList4);
 		aplayer4.setNumRoads(15);
 		aplayer4.setNumSoldiers(0);

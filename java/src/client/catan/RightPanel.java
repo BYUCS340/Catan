@@ -2,7 +2,6 @@ package client.catan;
 
 import javax.swing.*;
 
-import shared.definitions.PieceType;
 import client.points.*;
 import client.resources.*;
 import client.base.*;
@@ -31,24 +30,7 @@ public class RightPanel extends JPanel
 		//
 		playCardView = new PlayDevCardView();
 		buyCardView = new BuyDevCardView();
-		IAction soldierAction = new IAction() {
-			@Override
-			public void execute()
-			{
-				//TODO Handle. Likely don't want this going through the map.
-				//mapController.playSoldierCard();
-			}
-		};
-		IAction roadAction = new IAction() {
-			@Override
-			public void execute()
-			{
-				//TODO Handle. Likely don't want this going through the map.
-				//mapController.playRoadBuildingCard();
-			}
-		};
-		devCardController = new DevCardController(playCardView, buyCardView,
-												  soldierAction, roadAction);
+		devCardController = new DevCardController(playCardView, buyCardView);
 		playCardView.setController(devCardController);
 		buyCardView.setController(devCardController);
 		
@@ -63,15 +45,7 @@ public class RightPanel extends JPanel
 		//
 		resourceView = new ResourceBarView();
 		resourceController = new ResourceBarController(resourceView);
-		resourceController.setElementAction(ResourceBarElement.ROAD,
-											createStartMoveAction(mapController,
-																  PieceType.ROAD));
-		resourceController.setElementAction(ResourceBarElement.SETTLEMENT,
-											createStartMoveAction(mapController,
-																  PieceType.SETTLEMENT));
-		resourceController.setElementAction(ResourceBarElement.CITY,
-											createStartMoveAction(mapController,
-																  PieceType.CITY));
+
 		resourceController.setElementAction(ResourceBarElement.BUY_CARD,
 											new IAction() {
 												@Override
@@ -93,24 +67,5 @@ public class RightPanel extends JPanel
 		this.add(pointsView);
 		this.add(resourceView);
 	}
-	
-	private IAction createStartMoveAction(final IMapController mapController,
-										  final PieceType pieceType)
-	{
-		
-		return new IAction() {
-			
-			@Override
-			public void execute()
-			{
-				boolean isFree = false;
-				boolean allowDisconnected = false;
-				boolean temp = isFree;
-				//TODO Put this back in.
-				//mapController.StartMove(pieceType, isFree, allowDisconnected);
-			}
-		};
-	}
-	
 }
 

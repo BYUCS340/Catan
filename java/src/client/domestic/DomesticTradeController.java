@@ -389,8 +389,6 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	 */
 	private void enableUpDownButtonsForReceiveResource(ResourceType type)
 	{
-		
-		int playerCount = ClientGame.getGame().playerResourceCount(type);
 		boolean canIncrease = true, canDecrease;
 		if(resourcesToTrade[getResourceIndex(type)] <= 0)
 		{

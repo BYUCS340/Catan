@@ -789,7 +789,6 @@ public class GSONServerProxy implements ServerProxy
 		return ret;
 	}
 	
-	@SuppressWarnings("deprecation")
 	private String doJSONPost(String urlPath, String postData, boolean getUserCookie, 
 			boolean getGameCookie) throws ServerProxyException
 	{

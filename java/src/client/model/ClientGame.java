@@ -2,7 +2,6 @@ package client.model;
 
 import client.networking.GSONServerProxy;
 import client.networking.Poller;
-import client.networking.RealEarlyServerProxy;
 import client.networking.ServerProxy;
 
 public class ClientGame {

@@ -36,7 +36,6 @@ import shared.model.map.MapException;
 import shared.model.map.model.IMapModel;
 import shared.model.map.model.MapModel;
 import shared.model.map.model.UnmodifiableMapModel;
-import shared.networking.transport.NetResourceList;
 
 public class ClientGameManager extends GameManager implements ModelSubject
 {

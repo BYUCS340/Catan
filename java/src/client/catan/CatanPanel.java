@@ -1,13 +1,9 @@
 package client.catan;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import shared.definitions.ResourceType;
 import client.discard.DiscardController;
 import client.discard.DiscardView;
 import client.misc.WaitView;
