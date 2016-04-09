@@ -1,5 +1,6 @@
 package shared.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -24,8 +25,13 @@ import shared.model.chat.ChatBox;
  * @author matthewcarlson, garrettegan
  *
  */
-public class GameManager
+public class GameManager implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1031203213232L;
+	
 	protected int gameID;
 	protected String gameTitle;
 	protected GameState gameState;
@@ -1199,5 +1205,69 @@ public class GameManager
 	 */
 	public int getBankResourceCount(ResourceType resourceType){
 		return gameBank.getResourceCount(resourceType);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("GameManager [gameID=");
+		builder.append(gameID);
+		builder.append(", ");
+		if (gameTitle != null) {
+			builder.append("gameTitle=");
+			builder.append(gameTitle);
+			builder.append(", ");
+		}
+		if (gameState != null) {
+			builder.append("gameState=");
+			builder.append(gameState);
+			builder.append(", ");
+		}
+		if (victoryPointManager != null) {
+			builder.append("victoryPointManager=");
+			builder.append(victoryPointManager);
+			builder.append(", ");
+		}
+		builder.append("version=");
+		builder.append(version);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + gameID;
+		result = prime * result + ((gameTitle == null) ? 0 : gameTitle.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof GameManager))
+			return false;
+		GameManager other = (GameManager) obj;
+		if (gameID != other.gameID)
+			return false;
+		if (gameTitle == null) {
+			if (other.gameTitle != null)
+				return false;
+		} else if (!gameTitle.equals(other.gameTitle))
+			return false;
+		return true;
 	}
 }

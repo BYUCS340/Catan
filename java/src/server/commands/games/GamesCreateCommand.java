@@ -16,9 +16,9 @@ public class GamesCreateCommand implements ICommand
 {
 	private static final long serialVersionUID = 5605554739034264519L;
 
-	ServerGameManager sgm;
+	private transient ServerGameManager sgm;
 	
-	private GameInfo info;
+	private transient GameInfo info;
 	
 	/**
 	 * Creates a command object to create a game.

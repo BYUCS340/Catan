@@ -61,4 +61,13 @@ public class GamesJoinCommand implements ICommand
 	{
 		return SerializationUtils.serialize(cookie);
 	}
+	
+	/**
+	 * Gets the game ID this command is related to
+	 * @return
+	 */
+	public int GetGameID()
+	{
+		return gameID;
+	}
 }

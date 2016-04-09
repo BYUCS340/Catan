@@ -8,8 +8,11 @@ import com.sun.net.httpserver.*;
 import server.commands.CommandFactory;
 import server.commands.ICommand;
 import server.commands.InvalidFactoryParameterException;
+import server.commands.game.GameAddAICommand;
 import server.commands.games.GamesCreateCommand;
+import server.commands.games.GamesJoinCommand;
 import server.commands.moves.MovesCommand;
+import server.commands.moves.MovesRobPlayerCommand;
 import server.commands.user.UserRegisterCommand;
 import server.model.GameArcade;
 import server.model.GameException;
@@ -140,6 +143,22 @@ public class HTTPHandler implements HttpHandler
 				Log.GetLog().finest("Adding Game :"+game.GetGame().GetGameTitle());
 				facade.AddGame(game.GetGame());
 			}
+			else if (command.getClass() == GameAddAICommand.class)
+			{
+				GameAddAICommand game = (GameAddAICommand)command;
+				int gameID = game.GetGameID();
+				ServerGameManager sgm = GameArcade.games().GetGame(gameID);
+				Log.GetLog().finest("Updating Game: "+sgm.GetGameID());
+				facade.UpdateGame(sgm);
+			}
+			else if (command.getClass() == MovesRobPlayerCommand.class)
+			{
+				MovesCommand move = (MovesCommand)command;
+				int gameID = move.GetGameID();
+				ServerGameManager sgm = GameArcade.games().GetGame(gameID);
+				Log.GetLog().finest("Updating Game: "+sgm.GetGameID());
+				facade.UpdateGame(sgm);
+			}
 			else if (MovesCommand.class.isAssignableFrom(command.getClass()))
 			{
 				MovesCommand move = (MovesCommand)command;
@@ -150,8 +169,10 @@ public class HTTPHandler implements HttpHandler
 				if (!facade.AddCommand(gameID, command))
 				{
 					ServerGameManager sgm = GameArcade.games().GetGame(gameID);
+					Log.GetLog().finest("Updating Game: "+sgm.GetGameID());
 					facade.UpdateGame(sgm);
 				}
+				
 			}
 		}
 		catch (PersistenceException | GameException e)

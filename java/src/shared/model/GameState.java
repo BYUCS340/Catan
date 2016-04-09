@@ -170,5 +170,22 @@ public class GameState implements Serializable
 			return false;
 		return true;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("GameState [");
+		if (state != null) {
+			builder.append("state=");
+			builder.append(state);
+			builder.append(", ");
+		}
+		builder.append("activePlayerIndex=");
+		builder.append(activePlayerIndex);
+		builder.append("]");
+		return builder.toString();
+	}
 	
 }
