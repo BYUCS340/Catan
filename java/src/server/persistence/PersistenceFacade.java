@@ -1,5 +1,10 @@
 package server.persistence;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,8 +73,9 @@ public class PersistenceFacade
 			
 			if (commandDAO.GetCommandCount(gameID) <= commandLength)
 			{
-				String blob = SerializationUtils.serialize(command);
-				provider.GetCommandDAO().AddCommand(gameID, blob);
+				String serializedCommand = Serialize(command);
+				
+				provider.GetCommandDAO().AddCommand(gameID, serializedCommand);
 				success = true;
 			}
 			else
@@ -79,9 +85,10 @@ public class PersistenceFacade
 			
 			provider.EndTransaction(true);
 		}
-		catch (PersistenceException e)
+		catch (PersistenceException | IOException e)
 		{
 			provider.EndTransaction(false);
+			throw new PersistenceException("Error saving command", e);
 		}
 		
 		return success;
@@ -102,15 +109,15 @@ public class PersistenceFacade
 			
 			int gameID = sgm.GetGameID();
 			
-			String blob = SerializationUtils.serialize((Serializable) sgm);
+			String blob = Serialize(sgm);
 			provider.GetGameDAO().AddGame(gameID, blob);
 			
 			provider.EndTransaction(true);
 		}
-		catch (PersistenceException e)
+		catch (PersistenceException | IOException e)
 		{
 			provider.EndTransaction(false);
-			throw e;
+			throw new PersistenceException("Error saving game", e);
 		}
 	}
 	
@@ -167,8 +174,15 @@ public class PersistenceFacade
 		List<ICommand> convertedCommands = new ArrayList<ICommand>(commands.size());
 		for (String command : commands)
 		{
-			//ICommand convertedCommand = SerializationUtils.deserialize(command, ICommand.class);
-			//convertedCommands.add(convertedCommand);
+			try
+			{
+				ICommand convertedCommand = Deserialize(command, ICommand.class);
+				convertedCommands.add(convertedCommand);
+			}
+			catch (IOException | ClassNotFoundException e)
+			{
+				e.printStackTrace();
+			}
 		}
 		
 		return convertedCommands;
@@ -199,8 +213,15 @@ public class PersistenceFacade
 		List<ServerGameManager> convertedGames = new ArrayList<ServerGameManager>(games.size());
 		for (String game : games)
 		{
-			ServerGameManager convertedGame = SerializationUtils.deserialize(game, RealServerGameManager.class);
-			convertedGames.add(convertedGame);
+			try
+			{
+				ServerGameManager convertedGame = Deserialize(game, ServerGameManager.class);
+				convertedGames.add(convertedGame);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 		
 		return convertedGames;
@@ -258,5 +279,26 @@ public class PersistenceFacade
 			provider.EndTransaction(false);
 			throw e;
 		}
+	}
+	
+	private String Serialize(Object object) throws IOException
+	{
+		ByteArrayOutputStream baoStream = new ByteArrayOutputStream();
+		ObjectOutputStream ooStream = new ObjectOutputStream(baoStream);
+		ooStream.writeObject(object);
+		
+		String result = baoStream.toString();
+		ooStream.close();
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private <T extends Serializable> T Deserialize(String object, java.lang.Class<T> objClass) throws IOException, ClassNotFoundException
+	{
+		ByteArrayInputStream baiStream = new ByteArrayInputStream(object.getBytes());
+		ObjectInputStream oiStream = new ObjectInputStream(baiStream);
+		
+		 return (T)oiStream.readObject();
 	}
 }

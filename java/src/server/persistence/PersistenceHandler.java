@@ -31,7 +31,6 @@ class PersistenceHandler
 			//Load the jar
 			LoadJar(pathToJar);
 		}
-		
 	}
 	
 	/**

@@ -183,7 +183,7 @@
 		</jar>
 
         <jar jarfile="${java.dist}/plugins/file-plugin.jar" update="yes">
-            <fileset dir="${java.build}" includes="server/persistence/plugins/FilePlugin/*.class"/>
+            <fileset dir="${java.build}" includes="server/persistence/plugins/FilePlugin/**/*.class"/>
             <manifest>
 
 			</manifest>
