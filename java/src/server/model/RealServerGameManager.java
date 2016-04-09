@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import server.Log;
 import server.ai.AIHandler;
@@ -144,8 +146,10 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 	public boolean ServerSendChat(int playerID, String message)
 	{
 		int playerIndex = GetPlayerIndexByID(playerID);
+		
 		if (super.canChat(playerIndex))
 		{
+			message = removeTags(message);
 			super.PlayerChat(playerIndex, message);
 			ServerChatCommand(playerIndex,message);
 			this.updateVersion();
@@ -157,6 +161,30 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 			return true;
 		}
 		return false;
+	}
+	
+	
+	private static Pattern removeTagPatterns = Pattern.compile("<.+?>");
+	/**
+	 * Removes HTML tags (for the chat bots)
+	 * @param string
+	 * @return
+	 */
+	private String removeTags(String string) {
+		try
+		{
+		    if (string == null || string.length() == 0) {
+		        return string;
+		    }
+	
+		    Matcher m = RealServerGameManager.removeTagPatterns.matcher(string);
+		    return m.replaceAll("").trim();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return string;
 	}
 
 	/**
