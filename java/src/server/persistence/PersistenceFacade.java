@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import server.commands.ICommand;
@@ -286,18 +287,18 @@ public class PersistenceFacade
 		ByteArrayOutputStream baoStream = new ByteArrayOutputStream();
 		ObjectOutputStream ooStream = new ObjectOutputStream(baoStream);
 		ooStream.writeObject(object);
-		
-		String result = baoStream.toString();
 		ooStream.close();
 		
-		return result;
+		return Base64.getEncoder().encodeToString(baoStream.toByteArray());
 	}
 	
 	@SuppressWarnings("unchecked")
 	private <T extends Serializable> T Deserialize(String object, java.lang.Class<T> objClass) throws IOException, ClassNotFoundException
 	{
-		ByteArrayInputStream baiStream = new ByteArrayInputStream(object.getBytes());
+		byte[] data = Base64.getDecoder().decode(object); 
+		ByteArrayInputStream baiStream = new ByteArrayInputStream(data);
 		ObjectInputStream oiStream = new ObjectInputStream(baiStream);
+		oiStream.close();
 		
 		 return (T)oiStream.readObject();
 	}
