@@ -1,7 +1,6 @@
 package client.join;
 
 import client.base.*;
-import client.data.*;
 import shared.data.GameInfo;
 import shared.data.PlayerInfo;
 
@@ -10,7 +9,6 @@ import shared.data.PlayerInfo;
  */
 public interface IJoinGameView extends IOverlayView
 {
-	
 	/**
 	 * Sets the list of available games to be displayed
 	 * 
@@ -20,6 +18,5 @@ public interface IJoinGameView extends IOverlayView
 	 *            Information about the local player
 	 */
 	void setGames(GameInfo[] games, PlayerInfo localPlayer);
-	
 }
 

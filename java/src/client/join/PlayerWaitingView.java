@@ -7,7 +7,6 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import client.base.*;
-import client.data.*;
 import client.utils.*;
 import shared.data.PlayerInfo;
 

@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import client.model.ClientGame;
-import client.networking.MockServerProxy;
 import client.networking.Poller;
 import shared.model.ModelException;
 

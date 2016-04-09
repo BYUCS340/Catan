@@ -2,7 +2,6 @@ package testing.shared.networking;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -13,7 +12,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import shared.definitions.AIType;
 import shared.definitions.CatanColor;
 import shared.networking.Deserializer;
 import shared.networking.JSONDeserializer;

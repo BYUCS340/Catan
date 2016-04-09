@@ -2,7 +2,6 @@ package testing.server.persistence.plugins.SQLPlugin;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.util.List;
 
 import org.junit.After;

@@ -1,7 +1,6 @@
 package client.devcards;
 
 import shared.definitions.ResourceType;
-import shared.model.ModelException;
 import shared.model.ModelObserver;
 import shared.definitions.*;
 import client.base.*;
@@ -14,10 +13,7 @@ import client.model.ClientGameManager;
  */
 public class DevCardController extends Controller implements IDevCardController, ModelObserver
 {
-
 	private IBuyDevCardView buyCardView;
-	private IAction soldierAction;
-	private IAction roadAction;
 	
 	/**
 	 * DevCardController constructor
@@ -27,14 +23,11 @@ public class DevCardController extends Controller implements IDevCardController,
 	 * @param soldierAction Action to be executed when the user plays a soldier card.  It calls "mapController.playSoldierCard()".
 	 * @param roadAction Action to be executed when the user plays a road building card.  It calls "mapController.playRoadBuildingCard()".
 	 */
-	public DevCardController(IPlayDevCardView view, IBuyDevCardView buyCardView, 
-								IAction soldierAction, IAction roadAction)
+	public DevCardController(IPlayDevCardView view, IBuyDevCardView buyCardView)
 	{
 		super(view);
 		
 		this.buyCardView = buyCardView;
-		this.soldierAction = soldierAction;
-		this.roadAction = roadAction;
 		
 		ClientGame.getGame().startListening(this, ModelNotification.RESOURCES);
 		ClientGame.getGame().startListening(this, ModelNotification.STATE);
@@ -102,7 +95,6 @@ public class DevCardController extends Controller implements IDevCardController,
 	{
 		if (ClientGame.getGame().PlayRoadBuilder())
 			cancelPlayCard();
-		roadAction.execute();
 	}
 
 	@Override
@@ -110,7 +102,6 @@ public class DevCardController extends Controller implements IDevCardController,
 	{
 		if (ClientGame.getGame().PlaySolider())
 			cancelPlayCard();
-		soldierAction.execute();
 	}
 
 	@Override

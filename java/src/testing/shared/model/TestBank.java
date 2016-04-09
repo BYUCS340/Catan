@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import shared.definitions.DevCardType;
-import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.Bank;
 import shared.model.ModelException;

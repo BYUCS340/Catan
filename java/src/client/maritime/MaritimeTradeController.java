@@ -226,6 +226,8 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 				case WOOD:
 					tradeRates[ResourcePositions.iWOOD.ordinal()] = 2;
 					break;
+				default:
+					break;
 				}
 			}
 		}

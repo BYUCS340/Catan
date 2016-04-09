@@ -15,7 +15,6 @@ import javax.swing.*;
 import shared.data.PlayerInfo;
 import shared.definitions.*;
 import client.base.*;
-import client.data.*;
 import client.utils.FontUtils;
 
 
@@ -109,12 +108,12 @@ public class DomesticTradeOverlay extends OverlayView implements IDomesticTradeO
 		this.cancelButton = new JButton("Cancel");
 		FontUtils.setFont(this.cancelButton, BUTTON_TEXT_SIZE);
 		this.cancelButton.setAlignmentX(CENTER_ALIGNMENT);
-		this.cancelButton.addActionListener(new ActionListener(){
-
+		this.cancelButton.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) 
+			{
 				getController().cancelTrade();
-//				reset();// TODO, this may not be needed here
 			}
 		});
 		

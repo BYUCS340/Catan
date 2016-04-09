@@ -11,11 +11,9 @@ import client.base.IAction;
 import client.misc.IMessageView;
 import client.model.ClientGame;
 import client.networking.ServerProxyException;
-import shared.data.DataTranslator;
 import shared.data.GameInfo;
 import shared.data.PlayerInfo;
 import shared.definitions.CatanColor;
-import shared.networking.transport.NetGame;
 
 
 /**
