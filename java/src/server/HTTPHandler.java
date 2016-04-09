@@ -164,7 +164,7 @@ public class HTTPHandler implements HttpHandler
 				MovesCommand move = (MovesCommand)command;
 				int gameID = move.GetGameID();
 				
-				Log.GetLog().finest("Adding Command :"+move.getClass().getName());
+				//Log.GetLog().finest("Adding Command :"+move.getClass().getName());
 				
 				if (!facade.AddCommand(gameID, command))
 				{
