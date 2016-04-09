@@ -14,9 +14,10 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesBuildCityCommand extends MovesCommand 
 {
-	private Coordinate point;
-	private ServerGameManager sgm;
+	private static final long serialVersionUID = -2985094393425419802L;
 
+	transient private ServerGameManager sgm;
+	private Coordinate point;
 
 	/**
 	 * Creates a command that builds a city.

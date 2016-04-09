@@ -13,7 +13,9 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesAcceptTradeCommand extends MovesCommand 
 {
-	private ServerGameManager sgm;
+	private static final long serialVersionUID = -785063697753701908L;
+
+	transient private ServerGameManager sgm;
 	private boolean willAccept;
 	
 	/**

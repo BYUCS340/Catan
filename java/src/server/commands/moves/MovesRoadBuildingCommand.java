@@ -15,11 +15,13 @@ import shared.model.GameModel;
  */
 public class MovesRoadBuildingCommand extends MovesCommand 
 {
+	private static final long serialVersionUID = 7141582360298763934L;
+
+	transient private GameModel gm;
 	private Coordinate start1;
 	private Coordinate end1;
 	private Coordinate start2;
 	private Coordinate end2;
-	private GameModel gm;
 	
 	/**
 	 * Creates a command object for building roads.

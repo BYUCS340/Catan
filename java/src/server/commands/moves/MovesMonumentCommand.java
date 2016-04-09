@@ -14,7 +14,9 @@ import shared.model.GameModel;
  */
 public class MovesMonumentCommand extends MovesCommand 
 {
-	private GameModel gm;
+	private static final long serialVersionUID = -3986184261159150802L;
+	
+	transient private GameModel gm;
 	
 	/**
 	 * Creates a command object to play the monument card.

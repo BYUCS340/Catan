@@ -14,7 +14,9 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesMaritimeTradeCommand extends MovesCommand 
 {
-	private ServerGameManager sgm;
+	private static final long serialVersionUID = -2140721103499008797L;
+
+	transient private ServerGameManager sgm;
 	private int ratio;
 	private ResourceType input;
 	private ResourceType output;

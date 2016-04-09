@@ -13,7 +13,9 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesBuyDevCardCommand extends MovesCommand 
 {
-	private ServerGameManager sgm;
+	private static final long serialVersionUID = -2312144013203230759L;
+
+	transient private ServerGameManager sgm;
 
 	/**
 	 * Creates a command object that buys a Dev card.

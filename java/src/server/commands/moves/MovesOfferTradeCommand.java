@@ -15,7 +15,10 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesOfferTradeCommand extends MovesCommand 
 {
-	private ServerGameManager sgm;
+	private static final long serialVersionUID = 9117894924760177797L;
+
+	transient private ServerGameManager sgm;
+	
 	private int receiverIndex;
 	private List<Integer> offer;
 	

@@ -14,9 +14,11 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesRobPlayerCommand extends MovesCommand 
 {
+	private static final long serialVersionUID = 3890399713834184273L;
+
+	transient private ServerGameManager sgm;
 	private int victimIndex;
 	private Coordinate point;
-	private ServerGameManager sgm;
 	
 	/**
 	 * Creates a command class that robs a player.

@@ -15,8 +15,10 @@ import shared.model.GameModel;
  */
 public class MovesMonopolyCommand extends MovesCommand 
 {
+	private static final long serialVersionUID = 1098691127093527138L;
+	
+	transient private GameModel gm;
 	private ResourceType resource;
-	private GameModel gm;
 	
 	/**
 	 * Creates a command object to play the monopoly card.

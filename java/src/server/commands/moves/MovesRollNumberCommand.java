@@ -18,8 +18,11 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesRollNumberCommand extends MovesCommand 
 {
+	private static final long serialVersionUID = 147194849952376560L;
+
+	transient private GameModel model;
 	private int roll;
-	private GameModel model;
+	
 	/**
 	 * Creates a command object to handle dice rolls.
 	 * @param playerID The player ID.

@@ -14,9 +14,11 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesSoldierCommand extends MovesCommand 
 {
+	private static final long serialVersionUID = 2521760991150857855L;
+
+	transient private ServerGameManager sgm;
 	private int victimIndex;
 	private Coordinate point;
-	ServerGameManager sgm;
 	
 	/**
 	 * Creates a command object to place a soldier card.

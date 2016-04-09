@@ -13,7 +13,10 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesFinishTurnCommand extends MovesCommand 
 {
-	private ServerGameManager sgm;
+	private static final long serialVersionUID = -475612965248775620L;
+
+	transient private ServerGameManager sgm;
+	
 	/**
 	 * Creates a command object that finishes a player's turn.
 	 * @param playerID The player ID.
