@@ -152,7 +152,18 @@ public class Server
 		
 		List<ServerPlayer> players = facade.GetAllUsers();
 		for (ServerPlayer player : players)
-			GameArcade.games().RegisterPlayer(player);
+		{
+			try
+			{
+				Log.GetLog().finest("Reloading player:" +player);
+				GameArcade.games().RegisterPlayer(player);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+			
 		
 		List<ServerGameManager> games = facade.GetAllGames();
 		for (ServerGameManager game : games)

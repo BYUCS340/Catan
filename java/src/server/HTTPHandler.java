@@ -131,17 +131,21 @@ public class HTTPHandler implements HttpHandler
 			if (command.getClass() == UserRegisterCommand.class)
 			{
 				UserRegisterCommand user = (UserRegisterCommand)command;
+				Log.GetLog().finest("Adding User :"+user.GetPlayer());
 				facade.AddUser(user.GetPlayer());
 			}
 			else if (command.getClass() == GamesCreateCommand.class)
 			{
 				GamesCreateCommand game = (GamesCreateCommand)command;
+				Log.GetLog().finest("Adding Game :"+game.GetGame().GetGameTitle());
 				facade.AddGame(game.GetGame());
 			}
 			else if (MovesCommand.class.isAssignableFrom(command.getClass()))
 			{
 				MovesCommand move = (MovesCommand)command;
 				int gameID = move.GetGameID();
+				
+				Log.GetLog().finest("Adding Command :"+move.getClass().getName());
 				
 				if (!facade.AddCommand(gameID, command))
 				{

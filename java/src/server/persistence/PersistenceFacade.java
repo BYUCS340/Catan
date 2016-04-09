@@ -216,7 +216,7 @@ public class PersistenceFacade
 		{
 			try
 			{
-				ServerGameManager convertedGame = Deserialize(game, ServerGameManager.class);
+				ServerGameManager convertedGame = Deserialize(game, RealServerGameManager.class);
 				convertedGames.add(convertedGame);
 			}
 			catch (Exception e)
@@ -270,7 +270,7 @@ public class PersistenceFacade
 			int gameID = sgm.GetGameID();
 			provider.GetCommandDAO().DeleteCommands(gameID);
 			
-			String blob = SerializationUtils.serialize(sgm);
+			String blob = Serialize(sgm);
 			provider.GetGameDAO().UpdateGame(gameID, blob);
 			
 			provider.EndTransaction(true);
@@ -279,6 +279,13 @@ public class PersistenceFacade
 		{
 			provider.EndTransaction(false);
 			throw e;
+		} 
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			provider.EndTransaction(false);
+			throw new PersistenceException("Unable to serialize");
+		
 		}
 	}
 	
