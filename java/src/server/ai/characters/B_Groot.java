@@ -1,6 +1,5 @@
 package server.ai.characters;
 
-import server.ai.characters.personalities.BeginnerPersonality;
 import server.ai.characters.personalities.GrootPersonality;
 import shared.definitions.AIType;
 

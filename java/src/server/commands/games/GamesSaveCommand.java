@@ -10,6 +10,8 @@ import server.model.GameArcade;
  */
 public class GamesSaveCommand implements ICommand 
 {
+	private static final long serialVersionUID = -67513555744288056L;
+
 	private int id;
 	private String name;
 	

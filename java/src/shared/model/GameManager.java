@@ -6,13 +6,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import server.ai.AIHandler;
 import shared.data.DataTranslator;
 import shared.data.PlayerInfo;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.GameRound;
-import shared.definitions.ModelNotification;
 import shared.definitions.PieceType;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;

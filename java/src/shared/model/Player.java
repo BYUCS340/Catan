@@ -3,7 +3,7 @@ package shared.model;
 import java.io.Serializable;
 
 import shared.definitions.CatanColor;
-import shared.definitions.ResourceType;
+
 /**
  * A player in the game. Can be an AI player or a human player
  * @author matthewcarlson, garrettegan
