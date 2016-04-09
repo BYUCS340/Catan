@@ -36,7 +36,7 @@ import shared.model.map.model.MapGenerator;
  */
 public class RealServerGameManager extends ServerGameManager implements Serializable
 {
-	private static final long serialVersionUID = 1293281;
+	private static final long serialVersionUID = 1919421898211387166L;
 
 	private Map<Integer,Integer> playerIndexLookup;
 
@@ -1102,5 +1102,45 @@ public class RealServerGameManager extends ServerGameManager implements Serializ
 		return gm;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() 
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("RealServerGameManager [");
+		if (gameTitle != null) 
+		{
+			builder.append("gameTitle=");
+			builder.append(gameTitle);
+			builder.append(", ");
+		}
+		builder.append("gameID=");
+		builder.append(gameID);
+		builder.append(", randomTiles=");
+		builder.append(randomTiles);
+		builder.append(", randomNumbers=");
+		builder.append(randomNumbers);
+		builder.append(", randomPorts=");
+		builder.append(randomPorts);
+		builder.append(", ");
+		if (gameState != null) 
+		{
+			builder.append("gameState=");
+			builder.append(gameState);
+			builder.append(", ");
+		}
+		if (players != null) 
+		{
+			builder.append("players=");
+			builder.append(players);
+			builder.append(", ");
+		}
+		builder.append("version=");
+		builder.append(version);
+		builder.append("]");
+		return builder.toString();
+	}
 
 }

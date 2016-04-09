@@ -1,5 +1,6 @@
 package server.persistence.plugins.SQLPlugin;
 
+import server.Log;
 import server.persistence.ICommandDAO;
 import server.persistence.PersistenceException;
 
@@ -139,23 +140,23 @@ public class SQLCommandDAO implements ICommandDAO
     {
     	try
     	{
-    		List<String> commands = new ArrayList<String>();
     		PreparedStatement pStmt = null;
     		
-    		String sql = "SELECT * from COMMANDS where ID=?";
+    		String sql = "SELECT COUNT(*) total from COMMANDS where ID=?";
 			pStmt = connection.prepareStatement(sql);
 			
 			pStmt.setInt(1, gameID);
     		
             ResultSet rs = pStmt.executeQuery();
+            int commandBlobCount = 0;
             while (rs.next())
             {
-               String  commandBlob = rs.getString("BLOB");
-               commands.add(commandBlob);
+            	commandBlobCount += rs.getInt("total");
             }
             rs.close();
             pStmt.close();
-            return commands.size();
+            //Log.GetLog().finest("# of commands for game "+gameID+" is "+commandBlobCount);
+            return commandBlobCount;
     	}
         catch (SQLException e)
         {

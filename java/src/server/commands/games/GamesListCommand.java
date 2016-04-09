@@ -14,10 +14,13 @@ import shared.networking.SerializationUtils;
  */
 public class GamesListCommand implements ICommand 
 {
+	private static final long serialVersionUID = 6040602245599921636L;
+
+	private List<GameInfo> games;
+	
 	/**
 	 * Creates a command to get a list of games.
 	 */
-	private List<GameInfo> games;
 	public GamesListCommand()
 	{
 		return;

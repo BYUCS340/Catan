@@ -13,6 +13,8 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class GamesJoinCommand implements ICommand 
 {
+	private static final long serialVersionUID = -6891970087928916194L;
+
 	private NetworkCookie cookie;
 	private int gameID;
 	private CatanColor color;
@@ -58,5 +60,14 @@ public class GamesJoinCommand implements ICommand
 	public String GetHeader() 
 	{
 		return SerializationUtils.serialize(cookie);
+	}
+	
+	/**
+	 * Gets the game ID this command is related to
+	 * @return
+	 */
+	public int GetGameID()
+	{
+		return gameID;
 	}
 }

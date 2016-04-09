@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import shared.definitions.CatanColor;
-
 /**
  * This keeps track of all the actions in the game
  * @author matthewcarlson, parker ridd

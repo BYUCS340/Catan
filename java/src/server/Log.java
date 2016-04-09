@@ -36,21 +36,6 @@ public class Log
 		return logger;
 	}
 	
-	static boolean inFirePlace = false;
-	private static void putInFirePlace()
-	{
-		inFirePlace = true;
-	}
-	
-	private static void litOnFire()
-	{
-		if (!inFirePlace)
-		{
-			logger = null;
-			logger.fine("BURNINATE");
-		}
-	}
-	
 	private static void InitializeLogger()
 	{
 		logger = Logger.getLogger(DEFAULT_LOG);

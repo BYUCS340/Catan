@@ -13,6 +13,8 @@ import server.commands.ICommand;
  */
 public class UtilChangeLogLevelCommand implements ICommand 
 {
+	private static final long serialVersionUID = 7828236286740465282L;
+
 	private Logger logger;
 	
 	private Level level;

@@ -83,7 +83,7 @@ public class SQLPlugin implements IPersistenceProvider
     		String sqlCreateGames = "CREATE TABLE GAMES (ID INTEGER not NULL, " + 
     					"BLOB STRING not NULL, PRIMARY KEY (ID))";
     		String sqlCreateCommands = "CREATE TABLE COMMANDS (ID INTEGER not NULL, " + 
-    					"BLOB STRING not NULL, PRIMARY KEY (ID))";
+    					"BLOB STRING not NULL)";
     		
     		pStmtCreateUsers = connection.prepareStatement(sqlCreateUsers);
     		pStmtCreateGames = connection.prepareStatement(sqlCreateGames);
