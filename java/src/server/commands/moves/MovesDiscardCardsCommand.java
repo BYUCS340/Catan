@@ -15,7 +15,9 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesDiscardCardsCommand extends MovesCommand 
 {
-	private ServerGameManager sgm;
+	private static final long serialVersionUID = -165151639575457077L;
+	
+	transient private ServerGameManager sgm;
 	private List<Integer> toDiscard;
 	
 	/**

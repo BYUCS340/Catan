@@ -15,10 +15,12 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesBuildRoadCommand extends MovesCommand
 {
+	private static final long serialVersionUID = 365330419501017038L;
+
+	transient private GameModel gm;
 	private Coordinate start;
 	private Coordinate end;
 	private boolean free;
-	private GameModel gm;
 	
 	/**
 	 * Creates a command object that builds a road.

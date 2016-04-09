@@ -14,9 +14,11 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesBuildSettlementCommand extends MovesCommand
 {
+	private static final long serialVersionUID = 2614637999252976183L;
+
+	transient private ServerGameManager sgm;
 	private Coordinate point;
 	private boolean free;
-	private ServerGameManager sgm;
 	
 	/**
 	 * Creates a command the builds a settlement.

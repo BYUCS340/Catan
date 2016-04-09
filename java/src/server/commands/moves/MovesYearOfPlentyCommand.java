@@ -15,9 +15,11 @@ import shared.model.GameModel;
  */
 public class MovesYearOfPlentyCommand extends MovesCommand 
 {
+	private static final long serialVersionUID = 1411132109078150814L;
+
+	transient private GameModel gm;
 	private ResourceType resource1;
 	private ResourceType resource2;
-	private GameModel gm;
 	
 	/**
 	 * Creates a command object that plays the Year of Plenty card.

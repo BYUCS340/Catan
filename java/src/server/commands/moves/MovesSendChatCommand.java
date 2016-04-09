@@ -13,8 +13,11 @@ import shared.networking.cookie.NetworkCookie;
  */
 public class MovesSendChatCommand extends MovesCommand 
 {
+	private static final long serialVersionUID = -6217710605178981285L;
+
+	transient private ServerGameManager sgm;
 	private String message;
-	private ServerGameManager sgm;
+	
 	/**
 	 * Creates a command to send a chat.
 	 * @param playerID The player ID.
