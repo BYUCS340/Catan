@@ -56,6 +56,10 @@ public class AIHandler
 		AddAI(new B_Trogdor());
 	}
 	
+	/**
+	 * Enables the AI handler.
+	 * @param enable True to enable, else false.
+	 */
 	public void EnableAIHandling(Boolean enable)
 	{
 		enabled = enable;
