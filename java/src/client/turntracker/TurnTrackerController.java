@@ -111,21 +111,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		
 		if (game.CurrentState() == GameRound.ROLLING && currPlayerIndex == myIndex)
 		{
-			String soundName = "images"+File.separator+"yourTurn.wav";    
-			AudioInputStream audioInputStream;
-			audioInputStream = null;
-			try 
-			{
-				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
-				
-				Clip clip = AudioSystem.getClip();
-				clip.open(audioInputStream);
-				clip.start();
-			}
-			catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
-			{
-				e.printStackTrace();
-			}	
+			attemptPlayNoise("yourTurn.wav");
 		}
 
 		//check first to see if the game is over
@@ -204,22 +190,54 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			if (ClientGame.getGame().getChat().lastChatter() == ClientGame.getGame().myPlayerIndex()) 
 				return;
 			
-			String soundName = "images" + File.separator + "chat.wav";    
-			AudioInputStream audioInputStream;
-			audioInputStream = null;
-			try 
-			{
-				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
-				
-				Clip clip = AudioSystem.getClip();
-				clip.open(audioInputStream);
-				clip.start();
-			}
-			catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
-			{
-				e.printStackTrace();
-			}
+			attemptPlayNoise("chat.wav");
+			
 		}
 	};
+	
+	private String OSName = "";
+	private boolean isWindows = false; 
+	private void attemptPlayNoise(String noiseFile)
+	{
+		if (OSName.equals(""))
+		{
+			OSName = System.getProperty("os.name");
+			isWindows = OSName.startsWith("Windows");
+		}
+		if (isWindows)
+			return;
+		String soundName = "images" + File.separator + noiseFile;    
+		AudioInputStream audioInputStream;
+		audioInputStream = null;
+		try 
+		{
+			audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+			
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+			clip.start();
+		}
+		catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
+		{
+			e.printStackTrace();
+		}			
+	}
+	/*
+	 * String soundName = "images"+File.separator+"yourTurn.wav";    
+		AudioInputStream audioInputStream;
+		audioInputStream = null;
+		try 
+		{
+			audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+			
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+			clip.start();
+		}
+		catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
+		{
+			e.printStackTrace();
+		}	
+	 */
 }
 
