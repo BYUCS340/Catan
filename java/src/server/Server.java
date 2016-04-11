@@ -10,6 +10,7 @@ import java.util.logging.Level;
 
 import com.sun.net.httpserver.HttpServer;
 
+import server.ai.AIHandler;
 import server.commands.ICommand;
 import server.model.GameArcade;
 import server.model.GameException;
@@ -114,6 +115,7 @@ public class Server
 				e.printStackTrace();
 			}
 			
+			AIHandler.GetHandler().EnableAIHandling(true);
 			
 			server.createContext("/", new HTTPHandler());
 			server.createContext("/docs/api/data", new SwaggerHandlers.JSONAppender());

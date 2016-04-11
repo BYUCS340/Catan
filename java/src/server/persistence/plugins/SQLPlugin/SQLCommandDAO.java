@@ -1,6 +1,5 @@
 package server.persistence.plugins.SQLPlugin;
 
-import server.Log;
 import server.persistence.ICommandDAO;
 import server.persistence.PersistenceException;
 

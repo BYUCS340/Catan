@@ -37,6 +37,7 @@ public class AIHandler
 		return handler;
 	}
 	
+	private boolean enabled = false;
 	private List<String> types;
 	private Map<AIType, Set<AI>> AIbyType;
 	private Map<String, AI> AIbyName;
@@ -57,6 +58,15 @@ public class AIHandler
 		AddAI(new B_Trogdor());
 		AddAI(new B_Steve());
 		AddAI(new B_Hobo());
+	}
+	
+	/**
+	 * Enables the AI handler.
+	 * @param enable True to enable, else false.
+	 */
+	public void EnableAIHandling(Boolean enable)
+	{
+		enabled = enable;
 	}
 	
 	/**
@@ -237,6 +247,9 @@ public class AIHandler
 		@Override
 		public void run()
 		{
+			if (!enabled)
+				return;
+			
 			try 
 			{
 				Thread.sleep(1000);
@@ -264,6 +277,9 @@ public class AIHandler
 		@Override
 		public void run()
 		{
+			if (!enabled)
+				return;
+			
 			try 
 			{
 				Thread.sleep(1000);
@@ -293,6 +309,9 @@ public class AIHandler
 		@Override
 		public void run()
 		{
+			if (!enabled)
+				return;
+			
 			try 
 			{
 				Thread.sleep(1000);
@@ -321,6 +340,9 @@ public class AIHandler
 		@Override
 		public void run()
 		{
+			if (!enabled)
+				return;
+			
 			try 
 			{
 				Thread.sleep(1000);
