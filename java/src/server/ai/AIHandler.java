@@ -12,7 +12,9 @@ import java.util.Set;
 import server.Log;
 import server.ai.characters.AI;
 import server.ai.characters.B_Groot;
+import server.ai.characters.B_Hobo;
 import server.ai.characters.B_JarJar;
+import server.ai.characters.B_Steve;
 import server.ai.characters.B_Trogdor;
 import shared.definitions.AIType;
 import shared.definitions.CatanColor;
@@ -54,6 +56,8 @@ public class AIHandler
 		AddAI(new B_Groot());
 		AddAI(new B_JarJar());
 		AddAI(new B_Trogdor());
+		AddAI(new B_Steve());
+		AddAI(new B_Hobo());
 	}
 	
 	/**
@@ -148,7 +152,9 @@ public class AIHandler
 			
 		}
 		int aiIndex = random.nextInt(aiIndexs.size());
+		//Log.GetLog().finest("Adding AI id: "+aiIndex);
 		Object[] aiList = aiIndexs.toArray();
+		//Log.GetLog().finest(aiList.toString());
 		
 		
 		return (int) aiList[aiIndex];

@@ -10,8 +10,10 @@ public class GrootPersonality extends server.ai.characters.personalities.Beginne
 	@Override
 	public void ChatReceived(int gameID, String message)
 	{
-		if (message.indexOf('?') >= 0)
+		if (message.toLowerCase().equals("i am groot"))
 			this.SendChat(gameID, "I AM "+this.username);
+		else if (message.indexOf('?') >= 0)
+			this.SendChat(gameID, "I am "+this.username);
 	}
 
 }
