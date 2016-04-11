@@ -21,7 +21,8 @@ public class ImageUtils
 		}
 		catch(IOException e)
 		{
-			assert false;
+			System.out.println("Image loading failed! " + file);
+			e.printStackTrace();
 		}
 		
 		return DEFAULT_IMAGE;
